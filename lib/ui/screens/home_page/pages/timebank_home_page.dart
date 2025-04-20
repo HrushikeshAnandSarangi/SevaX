@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart'
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -36,7 +37,9 @@ class TimebankHomePage extends StatefulWidget {
   final TimebankModel primaryTimebankModel;
 
   const TimebankHomePage(
-      {Key key, this.selectedCommuntityGroup, this.primaryTimebankModel})
+      {Key? key,
+      required this.selectedCommuntityGroup,
+      required this.primaryTimebankModel})
       : super(key: key);
   @override
   _TimebankHomePageState createState() => _TimebankHomePageState();
@@ -44,21 +47,21 @@ class TimebankHomePage extends StatefulWidget {
 
 class _TimebankHomePageState extends State<TimebankHomePage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  HomeDashBoardBloc _homeDashBoardBloc;
-  TabController controller;
-  ScrollController _scrollController;
+  HomeDashBoardBloc? _homeDashBoardBloc;
+  TabController? controller;
+  ScrollController? _scrollController;
   bool isTitleVisible = false;
 
   @override
   void initState() {
     controller = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 260 && !isTitleVisible) {
+    _scrollController?.addListener(() {
+      if ((_scrollController?.offset ?? 0) > 260 && !isTitleVisible) {
         isTitleVisible = true;
         setState(() {});
       }
-      if (_scrollController.offset < 250 && isTitleVisible) {
+      if ((_scrollController?.offset ?? 0) < 250 && isTitleVisible) {
         isTitleVisible = false;
         setState(() {});
       }
@@ -71,15 +74,15 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   @override
   void dispose() {
-    _homeDashBoardBloc.dispose();
-    controller.dispose();
+    _homeDashBoardBloc?.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   void navigateToCreateGroup() {
     if (widget.primaryTimebankModel.id == FlavorConfig.values.timebankId &&
         !isAccessAvailable(widget.primaryTimebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+            SevaCore.of(context).loggedInUser.sevaUserID ?? '')) {
       showAdminAccessMessage(context: context);
     } else {
       createEditCommunityBloc
@@ -88,9 +91,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         context,
         MaterialPageRoute(
           builder: (context) => TimebankCreate(
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank ?? '',
             communityCreatorId:
-                _homeDashBoardBloc.selectedCommunityModel.created_by,
+                _homeDashBoardBloc?.selectedCommunityModel?.created_by ?? '',
           ),
         ),
       );
@@ -113,7 +116,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   @override
   Widget build(BuildContext context) {
     final user = BlocProvider.of<UserDataBloc>(context);
-    final covidcheck = json.decode(AppConfig.remoteConfig.getString('covid'));
+    final covidcheck = json.decode(AppConfig.remoteConfig!.getString('covid'));
     super.build(context);
     return NestedScrollView(
       controller: _scrollController,
@@ -190,8 +193,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                               widget.primaryTimebankModel.requestedSoftDelete,
                           child: ConfigurationCheck(
                             actionType: 'create_group',
-                            role: memberType(widget.primaryTimebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            role: MemberType.CREATOR,
                             child: IconButton(
                               icon: Icon(Icons.add_circle),
                               color: Theme.of(context).primaryColor,
@@ -199,8 +201,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                   ? isAccessAvailable(
                                           widget.primaryTimebankModel,
                                           SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID)
+                                                  .loggedInUser
+                                                  .sevaUserID ??
+                                              '')
                                       ? navigateToCreateGroup
                                       : showProtctedTImebankDialog
                                   : navigateToCreateGroup,
@@ -212,7 +215,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     ),
                     Container(
                       height: 210,
-                      child: getTimebanks(user),
+                      child: getTimebanks(user!),
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -264,8 +267,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           controller: controller,
           children: <Widget>[
             MyTaskList(
-              email: SevaCore.of(context).loggedInUser.email,
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+              email: SevaCore.of(context).loggedInUser.email!,
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
             ),
             NotAcceptedTaskList(),
             CompletedList()
@@ -288,7 +291,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
             // usually buttons at the bottom of the dialog
             CustomTextButton(
               shape: StadiumBorder(),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               textColor: Colors.white,
               child: Text(
                 S.of(context).close,
@@ -338,7 +341,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   void showGroupsWebPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString("links_${S.of(context).localeName}"),
+      AppConfig.remoteConfig!.getString("links_${S.of(context).localeName}"),
     );
     navigateToWebView(
       aboutMode: AboutMode(

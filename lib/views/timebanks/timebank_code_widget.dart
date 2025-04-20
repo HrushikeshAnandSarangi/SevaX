@@ -5,15 +5,15 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../flavor_config.dart';
 
 class TimebankCodeWidget extends StatefulWidget {
-  final Color buttonColor;
-  final TimebankCodeModel timebankCodeModel;
-  final String timebankName;
-  final UserModel user;
+  final Color? buttonColor;
+  final TimebankCodeModel? timebankCodeModel;
+  final String? timebankName;
+  final UserModel? user;
 
   TimebankCodeWidget(this.buttonColor,
       {this.timebankCodeModel, this.timebankName, @required this.user});
@@ -101,7 +101,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                             children: <Widget>[
                               SelectableText(
                                 S.of(context).timebank_code +
-                                    widget.timebankCodeModel.timebankCode,
+                                    widget.timebankCodeModel!.timebankCode!,
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 16,
@@ -122,7 +122,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                               ),
                               Text(
                                 DateTime.now().millisecondsSinceEpoch >
-                                        widget.timebankCodeModel.validUpto
+                                        widget.timebankCodeModel!.validUpto!
                                     ? S.of(context).expired
                                     : S.of(context).active,
                                 style: TextStyle(
@@ -140,8 +140,8 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                       onTap: () {
                                         ClipboardData data = ClipboardData(
                                             text: shareText(
-                                          widget.timebankCodeModel,
-                                          widget.user.fullname,
+                                          widget!.timebankCodeModel!,
+                                          widget.user!.fullname!,
                                         ));
                                         Clipboard.setData(data);
 
@@ -172,7 +172,8 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                       iconSize: 25,
                                       onPressed: () async {
                                         await deleteShareCode(widget
-                                            .timebankCodeModel.timebankCodeId);
+                                            .timebankCodeModel!
+                                            .timebankCodeId!);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -189,7 +190,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                     ),
                     Center(
                         child: Text(
-                      widget.timebankCodeModel.timebankCode,
+                      widget.timebankCodeModel!.timebankCode!,
                       style: TextStyle(fontSize: 36, color: Colors.black54),
                     )),
                     Center(
@@ -197,8 +198,8 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                         onPressed: () {
                           Share.share(
                             shareText(
-                              widget.timebankCodeModel,
-                              widget.user.fullname,
+                              widget.timebankCodeModel!,
+                              widget.user!.fullname!,
                             ),
                           );
                         },
@@ -206,6 +207,12 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                         color: widget.buttonColor ??
                             Theme.of(context).primaryColor,
                         textColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
                         child: Text(S.of(context).share_code),
                       ),
                     ),

@@ -6,60 +6,60 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/widgets/multi_select/selection_model.dart';
 
 class MultiSelect extends FormField<dynamic> {
-  final TimebankModel timebankModel;
-  final UserModel userModel;
-  final Widget titleText;
-  final String hintText;
+  final TimebankModel? timebankModel;
+  final UserModel? userModel;
+  final Widget? titleText;
+  final String? hintText;
   final bool required;
-  final String errorText;
-  final dynamic value;
-  final bool filterable;
-  final List dataSource;
-  final bool admin;
-  final String textField;
-  final String valueField;
-  final Function change;
-  final Function open;
-  final Function close;
-  final Widget leading;
-  final Widget trailing;
-  final int maxLength;
-  final Color inputBoxFillColor;
-  final Color errorBorderColor;
-  final Color enabledBorderColor;
-  final String maxLengthText;
-  final Color maxLengthIndicatorColor;
-  final Color titleTextColor;
-  final IconData selectIcon;
-  final Color selectIconColor;
-  final Color hintTextColor;
+  final String? errorText;
+  final dynamic? value;
+  final bool? filterable;
+  final List? dataSource;
+  final bool? admin;
+  final String? textField;
+  final String? valueField;
+  final Function? change;
+  final Function? open;
+  final Function? close;
+  final Widget? leading;
+  final Widget? trailing;
+  final int? maxLength;
+  final Color? inputBoxFillColor;
+  final Color? errorBorderColor;
+  final Color? enabledBorderColor;
+  final String? maxLengthText;
+  final Color? maxLengthIndicatorColor;
+  final Color? titleTextColor;
+  final IconData? selectIcon;
+  final Color? selectIconColor;
+  final Color? hintTextColor;
   // modal overrides
-  final Color buttonBarColor;
-  final String cancelButtonText;
-  final IconData cancelButtonIcon;
-  final Color cancelButtonColor;
-  final Color cancelButtonTextColor;
-  final String saveButtonText;
-  final IconData saveButtonIcon;
-  final Color saveButtonColor;
-  final Color saveButtonTextColor;
-  final String deleteButtonTooltipText;
-  final IconData deleteIcon;
-  final Color deleteIconColor;
-  final Color selectedOptionsBoxColor;
-  final String selectedOptionsInfoText;
-  final Color selectedOptionsInfoTextColor;
-  final IconData checkedIcon;
-  final IconData uncheckedIcon;
-  final Color checkBoxColor;
-  final Color searchBoxColor;
-  final String searchBoxHintText;
-  final Color searchBoxFillColor;
-  final IconData searchBoxIcon;
-  final String searchBoxToolTipText;
+  final Color? buttonBarColor;
+  final String? cancelButtonText;
+  final IconData? cancelButtonIcon;
+  final Color? cancelButtonColor;
+  final Color? cancelButtonTextColor;
+  final String? saveButtonText;
+  final IconData? saveButtonIcon;
+  final Color? saveButtonColor;
+  final Color? saveButtonTextColor;
+  final String? deleteButtonTooltipText;
+  final IconData? deleteIcon;
+  final Color? deleteIconColor;
+  final Color? selectedOptionsBoxColor;
+  final String? selectedOptionsInfoText;
+  final Color? selectedOptionsInfoTextColor;
+  final IconData? checkedIcon;
+  final IconData? uncheckedIcon;
+  final Color? checkBoxColor;
+  final Color? searchBoxColor;
+  final String? searchBoxHintText;
+  final Color? searchBoxFillColor;
+  final IconData? searchBoxIcon;
+  final String? searchBoxToolTipText;
   MultiSelect(
-      {FormFieldSetter<dynamic> onSaved,
-      FormFieldValidator<dynamic> validator,
+      {FormFieldSetter<dynamic>? onSaved,
+      FormFieldValidator<dynamic>? validator,
       this.timebankModel,
       this.userModel,
       dynamic initialValue,
@@ -121,11 +121,11 @@ class MultiSelect extends FormField<dynamic> {
                 : AutovalidateMode.onUserInteraction,
             builder: (FormFieldState<dynamic> state) {
               Widget _buildSelectedOptions(dynamic values, state) {
-                Widget selectedOptions;
+                Widget selectedOptions = Container();
 
                 if (values != null) {
                   values.forEach((item) {
-                    var existingItem = dataSource.singleWhere((itm) {
+                    var existingItem = dataSource?.singleWhere((itm) {
                       return itm[valueField] == item;
                     }, orElse: () => null);
 
@@ -148,38 +148,48 @@ class MultiSelect extends FormField<dynamic> {
                         state.context,
                         MaterialPageRoute<dynamic>(
                           builder: (BuildContext context) => SelectionModal(
-                              title: titleText,
-                              filterable: filterable,
-                              valueField: valueField,
-                              textField: textField,
-                              dataSource: dataSource,
-                              admin: admin,
+                              title: titleText ?? const SizedBox.shrink(),
+                              filterable: filterable ?? true,
+                              valueField: valueField ?? '',
+                              textField: textField ?? '',
+                              dataSource: dataSource ?? [],
+                              admin: admin ?? false,
                               values: state.value ?? [],
-                              maxLength: maxLength ?? dataSource?.length,
-                              buttonBarColor: buttonBarColor,
-                              cancelButtonText: cancelButtonText,
-                              cancelButtonIcon: cancelButtonIcon,
-                              cancelButtonColor: cancelButtonColor,
-                              cancelButtonTextColor: cancelButtonTextColor,
-                              saveButtonText: saveButtonText,
-                              saveButtonIcon: saveButtonIcon,
-                              saveButtonColor: saveButtonColor,
-                              saveButtonTextColor: saveButtonTextColor,
-                              deleteButtonTooltipText: deleteButtonTooltipText,
-                              deleteIcon: deleteIcon,
-                              deleteIconColor: deleteIconColor,
-                              selectedOptionsBoxColor: selectedOptionsBoxColor,
-                              selectedOptionsInfoText: selectedOptionsInfoText,
+                              maxLength: maxLength ?? dataSource?.length ?? 0,
+                              buttonBarColor: buttonBarColor ?? Colors.white,
+                              cancelButtonText: cancelButtonText ?? 'Cancel',
+                              cancelButtonIcon: cancelButtonIcon ?? Icons.close,
+                              cancelButtonColor:
+                                  cancelButtonColor ?? Colors.red,
+                              cancelButtonTextColor:
+                                  cancelButtonTextColor ?? Colors.white,
+                              saveButtonText: saveButtonText ?? 'Save',
+                              saveButtonIcon: saveButtonIcon ?? Icons.check,
+                              saveButtonColor: saveButtonColor ?? Colors.blue,
+                              saveButtonTextColor:
+                                  saveButtonTextColor ?? Colors.white,
+                              deleteButtonTooltipText:
+                                  deleteButtonTooltipText ?? 'Delete',
+                              deleteIcon: deleteIcon ?? Icons.delete,
+                              deleteIconColor: deleteIconColor ?? Colors.red,
+                              selectedOptionsBoxColor:
+                                  selectedOptionsBoxColor ?? Colors.grey[200]!,
+                              selectedOptionsInfoText:
+                                  selectedOptionsInfoText ?? 'Selected Options',
                               selectedOptionsInfoTextColor:
-                                  selectedOptionsInfoTextColor,
-                              checkedIcon: checkedIcon,
-                              uncheckedIcon: uncheckedIcon,
-                              checkBoxColor: checkBoxColor,
-                              searchBoxColor: searchBoxColor,
-                              searchBoxHintText: searchBoxHintText,
-                              searchBoxFillColor: searchBoxFillColor,
-                              searchBoxIcon: searchBoxIcon,
-                              searchBoxToolTipText: searchBoxToolTipText),
+                                  selectedOptionsInfoTextColor ?? Colors.black,
+                              checkedIcon: checkedIcon ?? Icons.check_box,
+                              uncheckedIcon: uncheckedIcon ??
+                                  Icons.check_box_outline_blank,
+                              checkBoxColor: checkBoxColor ?? Colors.blue,
+                              searchBoxColor:
+                                  searchBoxColor ?? Colors.grey[200]!,
+                              searchBoxHintText: searchBoxHintText ?? 'Search',
+                              searchBoxFillColor:
+                                  searchBoxFillColor ?? Colors.white,
+                              searchBoxIcon: searchBoxIcon ?? Icons.search,
+                              searchBoxToolTipText:
+                                  searchBoxToolTipText ?? 'Search'),
                           fullscreenDialog: true,
                         ));
                     if (results != null) {
@@ -207,7 +217,7 @@ class MultiSelect extends FormField<dynamic> {
                               child:
                                   // RichText(
                                   // text:
-                                  titleText,
+                                  titleText ?? const SizedBox.shrink(),
 //                                 TextSpan(
 //                                     text: titleText,
 //                                     style: TextStyle(
@@ -255,7 +265,7 @@ class MultiSelect extends FormField<dynamic> {
                           ? Container(
                               margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 6.0),
                               child: Text(
-                                hintText,
+                                hintText ?? '',
                                 style: TextStyle(
                                   color: hintTextColor,
                                 ),

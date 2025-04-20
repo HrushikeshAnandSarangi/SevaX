@@ -7,21 +7,21 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 Future exitTimebankOrGroup({
-  BuildContext context,
-  String title,
+  required BuildContext context,
+  required String title,
 }) async {
   final profanityDetector = ProfanityDetector();
-  GlobalKey<FormState> _formKey = GlobalKey();
-  String reason;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? reason;
   return showDialog<String>(
     context: context,
     builder: (BuildContext viewContext) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0))),
         title: Text(
           title,
-          style: TextStyle(fontSize: 15.0),
+          style: const TextStyle(fontSize: 15.0),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -30,18 +30,18 @@ Future exitTimebankOrGroup({
               key: _formKey,
               child: TextFormField(
                 decoration: InputDecoration(
-                    hintText: S.of(context).enter_reason_to_exit),
+                    hintText: S.of(viewContext).enter_reason_to_exit),
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
-                style: TextStyle(fontSize: 17.0),
+                style: const TextStyle(fontSize: 17.0),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(50),
                 ],
                 validator: (value) {
-                  if (value.isEmpty) {
-                    return S.of(context).enter_reason_to_exit_hint;
+                  if (value == null || value.isEmpty) {
+                    return S.of(viewContext).enter_reason_to_exit_hint;
                   } else if (profanityDetector.isProfaneString(value)) {
-                    return S.of(context).profanity_text_alert;
+                    return S.of(viewContext).profanity_text_alert;
                   } else {
                     return null;
                   }
@@ -49,32 +49,33 @@ Future exitTimebankOrGroup({
                 onSaved: (value) => reason = value,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Row(
               children: <Widget>[
-                Spacer(),
+                const Spacer(),
                 CustomTextButton(
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  color: Theme.of(context).accentColor,
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  color: Theme.of(viewContext).colorScheme.secondary,
                   textColor: FlavorConfig.values.buttonTextColor,
                   child: Text(
-                    S.of(context).exit,
+                    S.of(viewContext).exit,
                     style: TextStyle(
                       fontSize: dialogButtonSize,
                     ),
                   ),
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                      Navigator.of(viewContext).pop(reason);
+                    if (_formKey.currentState != null &&
+                        _formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      Navigator.of(viewContext).pop(reason ?? '');
                     }
                   },
                 ),
                 CustomTextButton(
                   child: Text(
-                    S.of(context).cancel,
+                    S.of(viewContext).cancel,
                     style: TextStyle(
                       fontSize: dialogButtonSize,
                       color: Colors.red,

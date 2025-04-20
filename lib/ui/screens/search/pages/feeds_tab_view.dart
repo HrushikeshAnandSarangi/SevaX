@@ -243,7 +243,6 @@ class _FeedsTabViewState extends State<FeedsTabView>
                   setState(() {});
                 },
               ),
-
             ],
           );
         },

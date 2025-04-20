@@ -27,7 +27,7 @@ class UserProfileBloc {
           .then((results) {
         List<CommunityModel> models = [];
         results.docs.forEach((element) {
-          models.add(CommunityModel(element.data()));
+          models.add(CommunityModel(element.data() as Map<String, dynamic>));
         });
         models.sort((a, b) => a.name.toLowerCase().compareTo(
               b.name.toLowerCase(),
@@ -77,12 +77,15 @@ class UserProfileBloc {
     //   });
   }
 
-  void setDefaultCommunity(String email, CommunityModel community, BuildContext context) {
+  void setDefaultCommunity(
+      String email, CommunityModel community, BuildContext context) {
     _communityLoaded.add(false);
 
     if (community != null)
-      SevaCore.of(context).loggedInUser.currentTimebank = community.primary_timebank;
-    SevaCore.of(context).loggedInUser.associatedWithTimebanks = community.timebanks.length;
+      SevaCore.of(context).loggedInUser.currentTimebank =
+          community.primary_timebank;
+    SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+        community.timebanks.length;
     CollectionRef.users.doc(email).update({
       "currentCommunity": community.id,
       "currentTimebank": community.primary_timebank

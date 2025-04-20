@@ -1,37 +1,37 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/services.dart';
 
 enum Flavor { APP, SEVA_DEV }
 
 class FlavorValues {
+  final String? googleMapsKey;
+  final String? bundleId;
+  final String? packageName;
   final String appName;
   final String timebankName;
   String timebankId;
   final String requestTitle;
   final String offertitle;
-  final ThemeData theme;
+  final ThemeData? theme;
   final Color buttonTextColor;
-  final Color textColor;
+  final Color? textColor;
   final String timebankTitle;
   final String cloudFunctionBaseURL;
   final String elasticSearchBaseURL;
   final String stripePublishableKey;
   final String androidPayMode;
   final String dynamicLinkUriPrefix;
-  final String bundleId;
-  final String packageName;
-  final String envMode;
+  final String? envMode;
 
-  final String googleMapsKey;
   FlavorValues({
     this.googleMapsKey,
     this.bundleId,
     this.packageName,
-    @required this.appName,
-    @required this.timebankName,
-    @required this.timebankId,
+    required this.appName,
+    required this.timebankName,
+    required this.timebankId,
     this.requestTitle = 'Request',
     this.envMode,
     this.offertitle = 'Offer',
@@ -39,16 +39,16 @@ class FlavorValues {
     this.buttonTextColor = Colors.white,
     this.textColor,
     this.timebankTitle = 'Seva Community',
-    @required this.cloudFunctionBaseURL,
-    @required this.elasticSearchBaseURL,
-    @required this.stripePublishableKey,
-    @required this.androidPayMode,
-    @required this.dynamicLinkUriPrefix,
+    required this.cloudFunctionBaseURL,
+    required this.elasticSearchBaseURL,
+    required this.stripePublishableKey,
+    required this.androidPayMode,
+    required this.dynamicLinkUriPrefix,
   });
 }
 
 class FlavorConfig {
-  static Flavor appFlavor;
+  static Flavor? appFlavor;
 
   static FlavorValues get values {
     switch (appFlavor) {
@@ -70,34 +70,32 @@ class FlavorConfig {
           timebankName: 'Seva Exchange',
           offertitle: 'Offer',
           requestTitle: 'Request',
-          textColor: Color(0x0FFD8D8D8),
+          textColor: const Color(0xFFD8D8D8),
           buttonTextColor: Colors.black,
           theme: ThemeData(
             appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              // color: Color(0x0FF766FE0),
-              textTheme: TextTheme(
-                headline6: TextStyle(color: Colors.white),
-              ),
-              iconTheme: IconThemeData(
+              systemOverlayStyle: SystemUiOverlayStyle.light,
+              titleTextStyle: const TextStyle(color: Colors.white),
+              iconTheme: const IconThemeData(
                 color: Colors.white,
               ),
               elevation: 0.7,
-              actionsIconTheme: IconThemeData(color: Colors.black54),
+              actionsIconTheme: const IconThemeData(color: Colors.black54),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,
-            primaryColor: Color(0x0FF766FE0),
+            primaryColor: const Color(0xFF766FE0),
             scaffoldBackgroundColor: Colors.white,
-            accentColor: Color.fromARGB(255, 255, 166, 35),
+            colorScheme: ColorScheme.light(
+              secondary: const Color.fromARGB(255, 255, 166, 35),
+              brightness: Brightness.light,
+            ),
             secondaryHeaderColor: Colors.white,
-            indicatorColor: Colors.amberAccent[100],
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
+            indicatorColor: Colors.amberAccent.shade100,
             fontFamily: 'Europa',
             splashColor: Colors.grey,
-            bottomAppBarColor: Colors.white,
-            inputDecorationTheme: InputDecorationTheme(
+            bottomAppBarTheme: const BottomAppBarTheme(color: Colors.white),
+            inputDecorationTheme: const InputDecorationTheme(
               border: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.black,
@@ -117,14 +115,14 @@ class FlavorConfig {
                 ),
               ),
             ),
-            buttonTheme: ButtonThemeData(
-              buttonColor: Color(0x0FF766FE0),
+            buttonTheme: const ButtonThemeData(
+              buttonColor: Color(0xFF766FE0),
               textTheme: ButtonTextTheme.primary,
               height: 39,
               shape: StadiumBorder(),
             ),
-            primaryTextTheme: TextTheme(
-              button: TextStyle(
+            primaryTextTheme: const TextTheme(
+              labelLarge: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -132,7 +130,6 @@ class FlavorConfig {
           ),
           dynamicLinkUriPrefix: "https://sevadev.page.link",
         );
-        break;
 
       case Flavor.APP:
         return FlavorValues(
@@ -142,7 +139,8 @@ class FlavorConfig {
           bundleId: 'com.sevaexchange.app',
           packageName: 'com.sevaexchange.sevax',
           elasticSearchBaseURL: "https://es.sevaexchange.com",
-          cloudFunctionBaseURL: "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
+          cloudFunctionBaseURL:
+              "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
           androidPayMode: "production",
           stripePublishableKey: "pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN",
           appName: 'Seva Exchange',
@@ -152,33 +150,31 @@ class FlavorConfig {
           offertitle: 'Offer',
           requestTitle: 'Request',
           buttonTextColor: Colors.black,
-          textColor: Color(0x0FFD8D8D8),
+          textColor: const Color(0xFFD8D8D8),
           theme: ThemeData(
             appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              // color: Color(0x0FF766FE0),
-              textTheme: TextTheme(
-                headline6: TextStyle(color: Colors.white),
-              ),
-              iconTheme: IconThemeData(
+              systemOverlayStyle: SystemUiOverlayStyle.light,
+              titleTextStyle: const TextStyle(color: Colors.white),
+              iconTheme: const IconThemeData(
                 color: Colors.white,
               ),
               elevation: 0.7,
-              actionsIconTheme: IconThemeData(color: Colors.white),
+              actionsIconTheme: const IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,
-            primaryColor: Color(0x0FF766FE0),
+            primaryColor: const Color(0xFF766FE0),
             scaffoldBackgroundColor: Colors.white,
-            accentColor: Color.fromARGB(255, 255, 166, 35),
+            colorScheme: ColorScheme.light(
+              secondary: const Color.fromARGB(255, 255, 166, 35),
+              brightness: Brightness.light,
+            ),
             secondaryHeaderColor: Colors.white,
-            indicatorColor: Colors.amberAccent[100],
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
+            indicatorColor: Colors.amberAccent.shade100,
             fontFamily: 'Europa',
             splashColor: Colors.grey,
-            bottomAppBarColor: Colors.white,
-            inputDecorationTheme: InputDecorationTheme(
+            bottomAppBarTheme: const BottomAppBarTheme(color: Colors.white),
+            inputDecorationTheme: const InputDecorationTheme(
               border: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.black,
@@ -198,14 +194,14 @@ class FlavorConfig {
                 ),
               ),
             ),
-            buttonTheme: ButtonThemeData(
-              buttonColor: Color(0x0FF766FE0),
+            buttonTheme: const ButtonThemeData(
+              buttonColor: Color(0xFF766FE0),
               textTheme: ButtonTextTheme.primary,
               height: 39,
               shape: StadiumBorder(),
             ),
-            primaryTextTheme: TextTheme(
-              button: TextStyle(
+            primaryTextTheme: const TextTheme(
+              labelLarge: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -213,10 +209,9 @@ class FlavorConfig {
           ),
           dynamicLinkUriPrefix: "https://sevaexchange.page.link",
         );
-        break;
 
       default:
-        return null;
+        throw Exception('Unknown flavor $appFlavor');
     }
   }
 }

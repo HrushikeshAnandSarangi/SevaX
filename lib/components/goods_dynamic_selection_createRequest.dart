@@ -10,7 +10,7 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 typedef StringMapCallback = void Function(Map<String, dynamic> goods);
 
@@ -20,13 +20,15 @@ class GoodsDynamicSelection extends StatefulWidget {
   final ValueChanged<String> onRemoveGoods;
 
   GoodsDynamicSelection(
-      {@required this.onSelectedGoods, this.selectedGoods, this.onRemoveGoods});
+      {required this.onSelectedGoods,
+      required this.selectedGoods,
+      required this.onRemoveGoods});
   @override
   _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
 }
 
 class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  final SuggestionsController controller = SuggestionsController();
   TextEditingController _textEditingController = TextEditingController();
   Map<String, String> goods = {};
   Map<String, String> _selectedGoods = {};
@@ -58,48 +60,51 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       children: <Widget>[
         SizedBox(height: 8),
         TypeAheadField<SuggestedItem>(
-          suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          decorationBuilder: (context, child) {
+            return Material(
+              borderRadius: BorderRadius.circular(8),
+              child: child,
+            );
+          },
           errorBuilder: (context, err) {
             return Text(S.of(context).error_occured);
           },
           hideOnError: true,
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: _textEditingController,
-            decoration: InputDecoration(
-              hintText: S.of(context).search,
-              filled: true,
-              fillColor: Colors.grey[300],
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
-              ),
-              enabledBorder: UnderlineInputBorder(
+          builder: (context, controller, focusNode) {
+            return TextField(
+              controller: _textEditingController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                hintText: S.of(context).search,
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7)),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              suffixIcon: InkWell(
-                splashColor: Colors.transparent,
-                child: Icon(
-                  Icons.clear,
-                  color: Colors.grey,
-                  // color: _textEditingController.text.length > 1
-                  //     ? Colors.black
-                  //     : Colors.grey,
+                  borderRadius: BorderRadius.circular(25.7),
                 ),
-                onTap: () {
-                  _textEditingController.clear();
-                  controller.close();
-                },
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7)),
+                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                suffixIcon: InkWell(
+                  splashColor: Colors.transparent,
+                  child: Icon(
+                    Icons.clear,
+                    color: Colors.grey,
+                  ),
+                  onTap: () {
+                    _textEditingController.clear();
+                    _textEditingController.clear();
+                  },
+                ),
               ),
-            ),
-          ),
-          suggestionsBoxController: controller,
+            );
+          },
+          //suggestionsController: controller,
           suggestionsCallback: (pattern) async {
             List<SuggestedItem> dataCopy = [];
             goods.forEach(
@@ -118,14 +123,14 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                   await SpellCheckManager.evaluateSpellingFor(pattern,
                       language:
                           SevaCore.of(context).loggedInUser.language ?? 'en');
-              if (spellCheckResult.hasErros) {
+              if (spellCheckResult.hasErros!) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
                   ..suggesttionTitle = pattern);
               } else if (spellCheckResult.correctSpelling != pattern) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.SUGGESTED
-                  ..suggesttionTitle = spellCheckResult.correctSpelling);
+                  ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -188,13 +193,13 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                 return Container();
             }
           },
-          noItemsFoundBuilder: (context) {
+          emptyBuilder: (context) {
             return searchUserDefinedEntity(
               keyword: _textEditingController.text,
               language: 'en',
             );
           },
-          onSuggestionSelected: (suggestion) {
+          onSelected: (suggestion) {
             if (ProfanityDetector()
                 .isProfaneString(suggestion.suggesttionTitle)) {
               return;
@@ -202,7 +207,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
             switch (suggestion.suggestionMode) {
               case SuggestionMode.SUGGESTED:
-                var newGoodId = Uuid().generateV4();
+                var newGoodId = const Uuid().v4();
                 addGoodsToDb(
                   goodsId: newGoodId,
                   goodsLanguage: 'en',
@@ -212,7 +217,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                 break;
 
               case SuggestionMode.USER_DEFINED:
-                var goodId = Uuid().generateV4();
+                var goodId = const Uuid().v4();
                 addGoodsToDb(
                   goodsId: goodId,
                   goodsLanguage: 'en',
@@ -266,33 +271,35 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
-        language: language,
+        keyword ?? '',
+        language: language ?? 'en',
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLinearLoading : LinearProgressIndicator();
+          return showLoader ?? false
+              ? getLinearLoading
+              : LinearProgressIndicator();
         }
 
         return getSuggestionLayout(
-          suggestion: keyword,
-          suggestionMode: suggestionMode,
+          suggestion: keyword ?? '',
+          suggestionMode: suggestionMode ?? SuggestionMode.USER_DEFINED,
         );
       },
     );
   }
 
   static Future<void> addGoodsToDb({
-    String goodsId,
-    String goodsTitle,
-    String goodsLanguage,
+    String? goodsId,
+    String? goodsTitle,
+    String? goodsLanguage,
   }) async {
     await CollectionRef.donationCategories.doc(goodsId).set(
       {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
@@ -312,8 +319,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   }
 
   Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
+    String? suggestion,
+    SuggestionMode? suggestionMode,
   }) {
     return Padding(
       padding: const EdgeInsets.all(10.0),

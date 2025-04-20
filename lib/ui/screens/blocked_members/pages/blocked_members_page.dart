@@ -15,7 +15,7 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 class BlockedMembersPage extends StatefulWidget {
   final String timebankId;
 
-  BlockedMembersPage({@required this.timebankId});
+  BlockedMembersPage({required this.timebankId});
 
   @override
   _BlockedMembersPageState createState() => _BlockedMembersPageState();
@@ -23,7 +23,7 @@ class BlockedMembersPage extends StatefulWidget {
 
 class _BlockedMembersPageState extends State<BlockedMembersPage> {
   BlockedMembersBloc _bloc = BlockedMembersBloc();
-  TimebankModel timebankModel;
+  TimebankModel? timebankModel;
 
   @override
   void initState() {
@@ -31,14 +31,15 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
 
     Future.delayed(
       Duration.zero,
-      () => _bloc.init(SevaCore.of(context).loggedInUser.sevaUserID),
+      () => _bloc.init(SevaCore.of(context).loggedInUser.sevaUserID!),
     );
 
     super.initState();
   }
 
   Future<void> getTimebank() async {
-    timebankModel = await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    timebankModel =
+        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
     setState(() {});
   }
 
@@ -52,7 +53,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).blocked_members,
           style: TextStyle(fontSize: 18),
@@ -65,10 +66,11 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
           BuildContext context,
           AsyncSnapshot<List<UserModel>> snapshot,
         ) {
-          if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.data == null) {
             return LoadingIndicator();
           }
-          if (snapshot.data.isEmpty)
+          if (snapshot.data?.isEmpty ?? true)
             return Center(
               child: Text(
                 S.of(context).no_blocked_members,
@@ -77,15 +79,15 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
 
           return ListView.builder(
             padding: EdgeInsets.all(10),
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data?.length ?? 0,
             itemBuilder: (_, int index) {
-              UserModel blockedUser = snapshot.data[index];
+              UserModel? blockedUser = snapshot.data?[index];
               return InkWell(
                 onTap: () {
                   _showUnblocDialog(
-                    unblockUserId: blockedUser.sevaUserID,
-                    unblockUserEmail: blockedUser.email,
-                    name: blockedUser.fullname,
+                    unblockUserId: blockedUser?.sevaUserID ?? '',
+                    unblockUserEmail: blockedUser?.email ?? '',
+                    name: blockedUser?.fullname ?? 'N/A',
                   );
                 },
                 child: Card(
@@ -93,46 +95,47 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        blockedUser.photoURL != null
-                            ? CustomNetworkImage(
-                                blockedUser.photoURL,
-                                onTap: () {
-                                  if (timebankModel != null) {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(builder: (context) {
-                                      return ProfileViewer(
-                                        timebankId: timebankModel.id,
-                                        entityName: timebankModel.name,
-                                        isFromTimebank: isPrimaryTimebank(
-                                            parentTimebankId: timebankModel.parentTimebankId),
-                                        userId: blockedUser.sevaUserID,
-                                        userEmail: blockedUser.email,
-                                      );
-                                    }));
-                                  }
-                                },
-                              )
-                            : CustomAvatar(
-                                name: blockedUser.fullname,
-                                onTap: () {
-                                  if (timebankModel != null) {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(builder: (context) {
-                                      return ProfileViewer(
-                                        timebankId: timebankModel.id,
-                                        entityName: timebankModel.name,
-                                        isFromTimebank: isPrimaryTimebank(
-                                            parentTimebankId: timebankModel.parentTimebankId),
-                                        userId: blockedUser.sevaUserID,
-                                        userEmail: blockedUser.email,
-                                      );
-                                    }));
-                                  }
-                                },
-                              ),
+                        if (blockedUser?.photoURL != null)
+                          CustomNetworkImage(
+                            blockedUser!.photoURL!,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileViewer(
+                                    timebankId: timebankModel?.id ?? '',
+                                    entityName: timebankModel?.name ?? '',
+                                    isFromTimebank: isPrimaryTimebank(
+                                        parentTimebankId:
+                                            timebankModel!.parentTimebankId!),
+                                    userId: blockedUser.sevaUserID!,
+                                    userEmail: blockedUser.email!,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        else
+                          CustomAvatar(
+                            name: blockedUser?.fullname ?? 'N/A',
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileViewer(
+                                    timebankId: timebankModel!.id,
+                                    entityName: timebankModel!.name,
+                                    isFromTimebank: isPrimaryTimebank(
+                                        parentTimebankId:
+                                            timebankModel!.parentTimebankId),
+                                    userId: blockedUser!.sevaUserID!,
+                                    userEmail: blockedUser.email!,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         SizedBox(width: 8),
                         Expanded(
-                          child: Text("${blockedUser.fullname}"),
+                          child: Text("${blockedUser?.fullname}"),
                         ),
                       ],
                     ),
@@ -146,7 +149,10 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
     );
   }
 
-  void _showUnblocDialog({String unblockUserId, String unblockUserEmail, String name}) {
+  void _showUnblocDialog(
+      {required String unblockUserId,
+      required String unblockUserEmail,
+      required String name}) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -161,16 +167,16 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                 child: isLoading
                     ? LoadingIndicator()
                     : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left:8.0),
+                            padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               "${S.of(context).unblock} $name?",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                           ),
@@ -185,7 +191,8 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                                 CustomTextButton(
                                     shape: StadiumBorder(),
                                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    color: Theme.of(context).accentColor,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                     textColor: Colors.white,
                                     child: Text(
                                       S.of(context).yes,
@@ -201,20 +208,30 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                                       _bloc
                                           .unblockMember(
                                             unblockedUserId: unblockUserId,
-                                            unblockedUserEmail: unblockUserEmail,
-                                            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                                            unblockedUserEmail:
+                                                unblockUserEmail,
+                                            userId: SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .sevaUserID ??
+                                                '',
                                             loggedInUserEmail:
-                                                SevaCore.of(context).loggedInUser.email,
+                                                SevaCore.of(context)
+                                                        .loggedInUser
+                                                        .email ??
+                                                    '',
                                           )
                                           .then(
-                                            (_) => Navigator.of(dialogContext).pop(),
+                                            (_) => Navigator.of(dialogContext)
+                                                .pop(),
                                           );
                                     }),
                                 CustomTextButton(
                                   child: Text(
                                     S.of(context).no,
                                     style: TextStyle(
-                                        fontSize: 16, fontFamily: 'Europa', color: Colors.red),
+                                        fontSize: 16,
+                                        fontFamily: 'Europa',
+                                        color: Colors.red),
                                   ),
                                   onPressed: () {
                                     Navigator.of(dialogContext).pop();

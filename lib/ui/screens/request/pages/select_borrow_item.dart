@@ -303,7 +303,7 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: LinearProgressIndicator(
-       backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
         valueColor: AlwaysStoppedAnimation<Color>(
           Theme.of(context).primaryColor,
         ),

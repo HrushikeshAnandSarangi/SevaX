@@ -34,7 +34,8 @@ class Repository {
   Future getRequestsFromTimebankId(timebankId) =>
       requestApiProvider.getRequestListFuture(timebankId);
   Stream getRequestsStreamFromTimebankId(timebankId, String userId) =>
-      requestApiProvider.getRequestListStream(timebankId: timebankId,userId: userId);
+      requestApiProvider.getRequestListStream(
+          timebankId: timebankId, userId: userId);
   Future getUsersFromRequest(requestID) =>
       requestApiProvider.getUserFromRequest(requestID);
   Future updateInvitedUsersForRequest(requestID, sevauserid, email) =>
@@ -43,16 +44,16 @@ class Repository {
 
   // functions for payments
   Future storeCard(
-          {token, timebankid, user, planName, bool isNegotiatedPlan}) =>
+          {token, timebankid, user, planName, bool? isNegotiatedPlan}) =>
       paymentsApiProvider.addCard(
-          token,
-          timebankid,
-          isNegotiatedPlan,
-          user,
-          planName);
+          token, timebankid, isNegotiatedPlan!, user, planName);
   // token, timebankid, user, planName
 
-  Future searchUserByName(name, UserListModel userListModel) {}
+  Future searchUserByName(name, UserListModel userListModel) {
+    // TODO: implement searchUserByName
+    throw UnimplementedError('searchUserByName is not implemented yet');
+  }
+
   Future searchTimebankSiblingsByParentId(id, TimebankListModel timebanks) =>
       communityApiProvider.searchTimebankSiblingsByParentId(id, timebanks);
 //  Future<TrailerModel> fetchTrailers(int movieId) => moviesApiProvider.fetchTrailer(movieId);

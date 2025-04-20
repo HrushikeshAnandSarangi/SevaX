@@ -116,7 +116,7 @@ String getValidationError(BuildContext context, String errorCode) {
       break;
 
     default:
-      return null;
+      return null!;
       break;
   }
 }

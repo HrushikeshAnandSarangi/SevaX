@@ -5,7 +5,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
 //defaulting to en if sn found as sn is not supported
 String getLangTag() {
-  String langTag = AppConfig.prefs.getString('language_code');
+  String langTag = AppConfig.prefs?.getString('language_code') ?? 'en';
   return langTag == 'sn' ? 'en' : langTag;
 }
 
@@ -36,10 +36,11 @@ String getTimeZoneFormattedString(
   int timeInMilliseconds,
   String timezoneAbb,
 ) {
-  DateFormat dateFormat =
-      DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag() ?? 'en');
+  DateFormat dateFormat = DateFormat(
+      'd MMM hh:mm a ', Locale(getLangTag()).toLanguageTag() ?? 'en');
   DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
-  DateTime localtime = getDateTimeAccToUserTimezone(dateTime: datetime, timezoneAbb: timezoneAbb);
+  DateTime localtime = getDateTimeAccToUserTimezone(
+      dateTime: datetime, timezoneAbb: timezoneAbb);
   String from = dateFormat.format(
     localtime,
   );

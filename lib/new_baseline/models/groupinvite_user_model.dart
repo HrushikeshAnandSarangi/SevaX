@@ -1,69 +1,70 @@
 import 'package:sevaexchange/models/data_model.dart';
 
 class GroupInviteUserModel extends DataModel {
-  String adminName;
-  String timebankName;
-  String timebankImage;
-  String aboutTimebank;
-  String timebankId;
-  String groupId;
-  String invitedUserId;
-  String invitationId;
-  String adminId;
-  int timestamp;
-  String communityId;
-  bool declined;
-  int declinedTimestamp;
-  String notificationId;
+  String? adminName;
+  String? timebankName;
+  String? timebankImage;
+  String? aboutTimebank;
+  String? timebankId;
+  String? groupId;
+  String? invitedUserId;
+  String? invitationId;
+  String? adminId;
+  int? timestamp;
+  String? communityId;
+  bool? declined;
+  int? declinedTimestamp;
+  String? notificationId;
 
-  GroupInviteUserModel(
-      {this.adminName,
-      this.timebankName,
-      this.timebankImage,
-      this.timebankId,
-      this.aboutTimebank,
-      this.groupId,
-      this.invitedUserId,
-      this.invitationId,
-      this.timestamp,
-      this.communityId,
-      this.adminId,
-      this.declined,
-      this.declinedTimestamp,
-      this.notificationId}); //  String adminName;
+  GroupInviteUserModel({
+    this.adminName,
+    this.timebankName,
+    this.timebankImage,
+    this.timebankId,
+    this.aboutTimebank,
+    this.groupId,
+    this.invitedUserId,
+    this.invitationId,
+    this.timestamp,
+    this.communityId,
+    this.adminId,
+    this.declined,
+    this.declinedTimestamp,
+    this.notificationId,
+  });
 
   @override
   Map<String, dynamic> toMap() {
     // TODO: implement toMap
 
     Map<String, dynamic> object = {};
-    if (this.adminName != null && this.adminName.isNotEmpty) {
+    if (this.adminName != null && this.adminName?.isNotEmpty == true) {
       object['adminName'] = this.adminName;
     }
 
-    if (this.timebankName != null && this.timebankName.isNotEmpty) {
+    if (this.timebankName != null && this.timebankName?.isNotEmpty == true) {
       object['timebankName'] = this.timebankName;
     }
-    if (this.timebankImage != null && this.timebankImage.isNotEmpty) {
+    if (this.timebankImage != null && this.timebankImage?.isNotEmpty == true) {
       object['timebankImage'] = this.timebankImage;
     }
-    if (this.timebankId != null && this.timebankId.isNotEmpty) {
+    if (this.timebankId != null && this.timebankId?.isNotEmpty == true) {
       object['timebankId'] = this.timebankId;
     }
-    if (this.groupId != null && this.groupId.isNotEmpty) {
+    if (this.groupId != null && this.groupId?.isNotEmpty == true) {
       object['groupId'] = this.groupId;
     }
 
-    if (this.invitationId != null && this.invitationId.isNotEmpty) {
+    if (this.invitationId != null && this.invitationId?.isNotEmpty == true) {
       object['invitationId'] = this.invitationId;
     }
-    if (this.aboutTimebank != null && this.aboutTimebank.isNotEmpty) {
+    if (this.aboutTimebank != null && this.aboutTimebank?.isNotEmpty == true) {
       object['aboutTimebank'] = this.aboutTimebank;
     }
-    if (this.invitedUserId != null && this.invitedUserId.isNotEmpty) {
+    if (this.invitedUserId != null && this.invitedUserId?.isNotEmpty == true) {
       object['invitedUserId'] = this.invitedUserId;
     }
-    if (this.adminId != null && this.adminId.isNotEmpty) {
+    if (this.adminId != null && this.adminId?.isNotEmpty == true) {
       object['adminId'] = this.adminId;
     }
     if (this.communityId != null) {
@@ -92,9 +93,9 @@ class GroupInviteUserModel extends DataModel {
   GroupInviteUserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('adminName')) {
       this.adminName = map['adminName'];
-    }
-    if (map.containsKey("communityId")) {
-      this.communityId = map['senderUserId'];
+      if (map.containsKey("communityId")) {
+        this.communityId = map['communityId'];
+      }
     }
 
     if (map.containsKey('timebankName')) {

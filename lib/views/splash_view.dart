@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flurry/flurry.dart';
+import 'package:flutter_flurry_sdk/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -60,7 +60,7 @@ import 'onboarding/skills_view.dart';
 class SplashView extends StatefulWidget {
   final bool skipToHomePage;
 
-  const SplashView({Key key, this.skipToHomePage = false}) : super(key: key);
+  const SplashView({Key? key, this.skipToHomePage = false}) : super(key: key);
   @override
   _SplashViewState createState() => _SplashViewState();
 }
@@ -73,8 +73,8 @@ class _SplashViewState extends State<SplashView> {
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  ConnectivityResult connectivityResult;
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  late List<ConnectivityResult> connectivityResult;
   @override
   void initState() {
     super.initState();
@@ -129,7 +129,7 @@ class _SplashViewState extends State<SplashView> {
     var androidNotificationChannel = AndroidNotificationChannel(
       '91512', // channel ID
       'General', // channel name
-      'General notifications', //channel description
+      description: 'General notifications', //channel description
       importance: Importance.high,
     );
     await flutterLocalNotificationsPlugin
@@ -181,11 +181,15 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initFlurry() async {
-    await Flurry.initialize(
-      androidKey: "NZN3QTYM42M6ZQXV3GJ8",
-      iosKey: "H9RX59248T458TDZGX3Y",
-      enableLog: true,
-    );
+    Flurry.builder
+        .withCrashReporting(true)
+        .withLogEnabled(true)
+        .withLogLevel(LogLevel.debug)
+        .withReportLocation(true)
+        .build(
+          androidAPIKey: "NZN3QTYM42M6ZQXV3GJ8",
+          iosAPIKey: "H9RX59248T458TDZGX3Y",
+        );
   }
 
   @override
@@ -204,16 +208,16 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    switch (connectivityResult) {
+    if (connectivityResult == null || connectivityResult.isEmpty) {
+      return defaultWidget;
+    }
+    switch (connectivityResult.first) {
       case ConnectivityResult.none:
         return noInternet;
-        break;
       case ConnectivityResult.wifi:
         return hasConnection ? sevaAppSplash : noInternet;
-        break;
       case ConnectivityResult.mobile:
         return hasConnection ? sevaAppSplash : noInternet;
-        break;
       default:
         return defaultWidget;
         break;
@@ -222,7 +226,7 @@ class _SplashViewState extends State<SplashView> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initConnectivity() async {
-    ConnectivityResult result;
+    List<ConnectivityResult> result;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
@@ -400,7 +404,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<String> _getLoggedInUserId() async {
     //  String userId = await PreferenceManager.loggedInUserId;
-    String userId = (await FirebaseAuth.instance.currentUser)?.uid;
+    String userId = (await FirebaseAuth.instance.currentUser)?.uid ?? '';
 
     // UserData.shared.userId = userId;
 
@@ -424,20 +428,21 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     var appLanguage = AppLanguage();
-    appLanguage.changeLanguage(getLocaleFromCode(loggedInUser.language));
+    appLanguage
+        .changeLanguage(getLocaleFromCode(loggedInUser.language ?? 'en'));
 
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
             loggedInUser.currentCommunity == null) &&
-        loggedInUser.communities.length != 0) {
-      loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-      await CollectionRef.users.doc(loggedInUser.email).update({
-        'currentCommunity': loggedInUser.communities[0],
+        (loggedInUser.communities?.length ?? 0) != 0) {
+      loggedInUser.currentCommunity = loggedInUser.communities!.elementAt(0);
+      await CollectionRef.users.doc(loggedInUser.email!).update({
+        'currentCommunity': loggedInUser.communities![0],
       });
     }
 
     await FCMNotificationManager.registerDeviceWithMemberForNotifications(
-        loggedInUser.email);
+        loggedInUser.email!);
 
     if (loggedInUser == null) {
       // loadingMessage =
@@ -446,30 +451,30 @@ class _SplashViewState extends State<SplashView> {
       return;
     }
 
-    Provider.of<UserBloc>(context, listen: false).loadUser(loggedInUser.email);
+    Provider.of<UserBloc>(context, listen: false)
+        .loadUser(loggedInUser.email ?? '');
 
     // UserData.shared.user = loggedInUser;
 
-    await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
-    await AppConfig.remoteConfig.activateFetched();
+    await AppConfig.remoteConfig?.fetchAndActivate();
 
     //get all upgrade screen banner data that is used to show upgrade plan screens
     String upgradePlanBannerData =
-        AppConfig.remoteConfig.getString('upgrade_plan_banner_details');
+        AppConfig.remoteConfig!.getString('upgrade_plan_banner_details');
     AppConfig.upgradePlanBannerModel =
         upgradePlanBannerModelFromJson(upgradePlanBannerData);
     List<dynamic> testingEmails =
-        json.decode(AppConfig.remoteConfig.getString('testing_emails'));
+        json.decode(AppConfig.remoteConfig!.getString('testing_emails'));
     AppConfig.testingEmails = testingEmails ?? [];
 
     log("emai;s ${AppConfig.testingEmails}");
     log("email;s ${AppConfig.loggedInEmail}");
     log("email;s ${AppConfig.loggedInEmail}");
     Map<String, dynamic> versionInfo =
-        json.decode(AppConfig.remoteConfig.getString('app_version'));
+        json.decode(AppConfig.remoteConfig!.getString('app_version'));
 
     if (Platform.isAndroid) {
-      if (AppConfig.buildNumber < versionInfo['android']['build']) {
+      if (AppConfig.buildNumber! < versionInfo['android']['build']) {
         if (versionInfo['android']['forceUpdate']) {
           await _navigateToUpdatePage(loggedInUser, true);
         } else {
@@ -477,7 +482,7 @@ class _SplashViewState extends State<SplashView> {
         }
       } else {}
     } else if (Platform.isIOS) {
-      if (AppConfig.buildNumber < versionInfo['ios']['build']) {
+      if (AppConfig.buildNumber! < versionInfo['ios']['build']) {
         if (versionInfo['ios']['forceUpdate']) {
           await _navigateToUpdatePage(loggedInUser, true);
         } else {
@@ -491,46 +496,47 @@ class _SplashViewState extends State<SplashView> {
     }
 
     if (FirebaseAuth.instance.currentUser != null) {
-      if (!FirebaseAuth.instance.currentUser.emailVerified) {
+      if (!(FirebaseAuth.instance.currentUser?.emailVerified ?? true)) {
+        final currentUser = FirebaseAuth.instance.currentUser!;
         await Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => VerifyEmail(
-                firebaseUser: FirebaseAuth.instance.currentUser,
-                email: loggedInUser.email,
-                emailSent: loggedInUser.emailSent,
+                firebaseUser: currentUser,
+                email: loggedInUser.email ?? '',
+                emailSent: loggedInUser.emailSent ?? false,
               ),
             ),
             (Route<dynamic> route) => false);
       }
     }
 
-    if (!loggedInUser.acceptedEULA) {
+    if (!(loggedInUser.acceptedEULA ?? false)) {
       await _navigateToEULA(loggedInUser);
     }
-    if (!loggedInUser.seenIntro) {
+    if (!(loggedInUser.seenIntro ?? false)) {
       await _navigateToIntro(loggedInUser);
     }
 
-    if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
-        (loggedInUser.skills == null || loggedInUser.skills.length == 0)) {
+    if (!(AppConfig.prefs!.getBool(AppConfig.skip_skill) ?? false) &&
+        (loggedInUser.skills == null || loggedInUser.skills?.length == 0)) {
       await _navigateToSkillsView(loggedInUser);
     }
 
-    if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
+    if (!(AppConfig.prefs!.getBool(AppConfig.skip_interest) ?? false) &&
         (loggedInUser.interests == null ||
-            loggedInUser.interests.length == 0)) {
+            loggedInUser.interests?.length == 0)) {
       await _navigateToInterestsView(loggedInUser);
     }
 
-    if (!(AppConfig.prefs.getBool(AppConfig.skip_bio) ?? false) &&
+    if (!(AppConfig.prefs!.getBool(AppConfig.skip_bio) ?? false) &&
         loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
     loadingMessage = S.of(context).we_met;
 
     if (loggedInUser.communities == null ||
-        loggedInUser.communities.isEmpty ||
-        !loggedInUser.skipCreateCommunityPage) {
+        loggedInUser.communities?.isEmpty == true ||
+        !(loggedInUser.skipCreateCommunityPage ?? false)) {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);
@@ -596,7 +602,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
-    AppConfig.prefs.setBool(AppConfig.skip_skill, null);
+    AppConfig.prefs!.setBool(AppConfig.skip_skill, false);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
@@ -612,7 +618,7 @@ class _SplashViewState extends State<SplashView> {
           },
           onSkipped: () {
             Navigator.pop(context);
-            AppConfig.prefs.setBool(AppConfig.skip_skill, true);
+            AppConfig.prefs!.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
             loadingMessage =
                 S.of(context).skipping + ' ' + S.of(context).skills;
@@ -624,7 +630,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToInterestsView(UserModel loggedInUser) async {
-    AppConfig.prefs.setBool(AppConfig.skip_interest, null);
+    AppConfig.prefs!.setBool(AppConfig.skip_interest, false);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
@@ -641,13 +647,13 @@ class _SplashViewState extends State<SplashView> {
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
-            AppConfig.prefs.setBool(AppConfig.skip_interest, true);
+            AppConfig.prefs!.setBool(AppConfig.skip_interest, true);
             loadingMessage =
                 S.of(context).skipping + ' ' + S.of(context).interests;
             ;
           },
           onBacked: () {
-            AppConfig.prefs.setBool(AppConfig.skip_skill, null);
+            AppConfig.prefs!.setBool(AppConfig.skip_skill, false);
             _navigateToSkillsView(loggedInUser);
           },
           languageCode: loggedInUser.language ?? 'en',
@@ -657,7 +663,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToBioView(UserModel loggedInUser) async {
-    AppConfig.prefs.setBool(AppConfig.skip_bio, null);
+    AppConfig.prefs!.setBool(AppConfig.skip_bio, false);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => BioView(onSave: (bio) {
@@ -668,10 +674,10 @@ class _SplashViewState extends State<SplashView> {
         }, onSkipped: () {
           Navigator.pop(context);
           loggedInUser.bio = '';
-          AppConfig.prefs.setBool(AppConfig.skip_bio, true);
+          AppConfig.prefs!.setBool(AppConfig.skip_bio, true);
           loadingMessage = 'Skipping bio';
         }, onBacked: () {
-          AppConfig.prefs.setBool(AppConfig.skip_interest, null);
+          AppConfig.prefs!.setBool(AppConfig.skip_interest, false);
           _navigateToInterestsView(loggedInUser);
         }),
       ),

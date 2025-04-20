@@ -13,7 +13,7 @@ class ProjectDescriptionBloc extends BlocBase {
     logger.e("chat id is $chatId");
     if (chatId == null) return;
     CollectionRef.chats.doc(chatId).snapshots().listen((event) {
-      var model = ChatModel.fromMap(event.data());
+      var model = ChatModel.fromMap(event.data() as Map<String, dynamic>);
       model.id = event.id;
       _chatModel.add(model);
     });

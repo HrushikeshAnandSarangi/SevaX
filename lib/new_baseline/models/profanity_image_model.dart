@@ -24,42 +24,33 @@ class ProfanityImageModel extends DataModel {
     this.nsfwConfidence,
   });
 
-  String adult;
-  String spoof;
-  String medical;
-  String violence;
-  String racy;
-  int adultConfidence;
-  int spoofConfidence;
-  int medicalConfidence;
-  int violenceConfidence;
-  int racyConfidence;
-  int nsfwConfidence;
+  final bool? adult;
+  final bool? spoof;
+  final bool? medical;
+  final bool? violence;
+  final bool? racy;
+  final double? adultConfidence;
+  final double? spoofConfidence;
+  final double? medicalConfidence;
+  final double? violenceConfidence;
+  final double? racyConfidence;
+  final double? nsfwConfidence;
 
   factory ProfanityImageModel.fromMap(Map<String, dynamic> json) {
-    logger.d(">>>>>   " + json.toString());
-
-    if (json == null) json = Map();
+    logger.d(">>>>> ${json.toString()}");
 
     return ProfanityImageModel(
-      adult: json["adult"] == null ? null : json["adult"],
-      spoof: json["spoof"] == null ? null : json["spoof"],
-      medical: json["medical"] == null ? null : json["medical"],
-      violence: json["violence"] == null ? null : json["violence"],
-      racy: json["racy"] == null ? null : json["racy"],
-      adultConfidence:
-          json["adultConfidence"] == null ? null : json["adultConfidence"],
-      spoofConfidence:
-          json["spoofConfidence"] == null ? null : json["spoofConfidence"],
-      medicalConfidence:
-          json["medicalConfidence"] == null ? null : json["medicalConfidence"],
-      violenceConfidence: json["violenceConfidence"] == null
-          ? null
-          : json["violenceConfidence"],
-      racyConfidence:
-          json["racyConfidence"] == null ? null : json["racyConfidence"],
-      nsfwConfidence:
-          json["nsfwConfidence"] == null ? null : json["nsfwConfidence"],
+      adult: json["adult"] as bool?,
+      spoof: json["spoof"] as bool?,
+      medical: json["medical"] as bool?,
+      violence: json["violence"] as bool?,
+      racy: json["racy"] as bool?,
+      adultConfidence: json["adultConfidence"] as double?,
+      spoofConfidence: json["spoofConfidence"] as double?,
+      medicalConfidence: json["medicalConfidence"] as double?,
+      violenceConfidence: json["violenceConfidence"] as double?,
+      racyConfidence: json["racyConfidence"] as double?,
+      nsfwConfidence: json["nsfwConfidence"] as double?,
     );
   }
 
@@ -105,8 +96,8 @@ class ProfanityStatusModel {
     this.category,
   });
 
-  bool isProfane;
-  String category;
+  bool? isProfane;
+  String? category;
 
   factory ProfanityStatusModel.fromMap(Map<String, dynamic> json) =>
       ProfanityStatusModel(

@@ -7,8 +7,8 @@ OneToManyNotificationDataModel oneToManyNotificationDataModelFromJson(
     OneToManyNotificationDataModel.fromJson(json.decode(str));
 
 class OneToManyNotificationDataModel {
-  ClassDetails classDetails;
-  ParticipantDetails participantDetails;
+  ClassDetails? classDetails;
+  ParticipantDetails? participantDetails;
 
   OneToManyNotificationDataModel({
     this.classDetails,

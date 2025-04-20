@@ -16,10 +16,9 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
-
 class CompletedTasks {
   static Stream<List<RequestModel>> getCompletedAttendeesFromOneToManyRequests({
-    String loggedInMemberEmail,
+    String? loggedInMemberEmail,
   }) async* {
     yield* CollectionRef.requests
         .where('oneToManyRequestAttenders', arrayContains: loggedInMemberEmail)
@@ -31,14 +30,15 @@ class CompletedTasks {
                 handleData: (data, sink) {
       List<RequestModel> requestList = [];
       data.docs.forEach((element) {
-        requestList.add(RequestModel.fromMap(element.data()));
+        requestList
+            .add(RequestModel.fromMap(element.data() as Map<String, dynamic>));
       });
       return sink.add(requestList);
     }));
   }
 
   static Stream<List<RequestModel>> getCompletedOneToManyRequestsForSpeaker({
-    String loggedInMemberEmail,
+    String? loggedInMemberEmail,
   }) async* {
     logger.e('SPEAKER COMPLETED CHECKS 1:  ===> ');
     yield* CollectionRef.requests
@@ -52,9 +52,10 @@ class CompletedTasks {
                 handleData: (data, sink) {
       List<RequestModel> requestListSpeakers = [];
       data.docs.forEach((element) {
-        requestListSpeakers.add(RequestModel.fromMap(element.data()));
+        requestListSpeakers
+            .add(RequestModel.fromMap(element.data() as Map<String, dynamic>));
         logger.e('SPEAKER COMPLETED CHECKS 2:  ===> ' +
-            (element.data()['title']).toString());
+            (element.data() as Map<String, dynamic>)['title'].toString());
       });
       return sink.add(requestListSpeakers);
     }));
@@ -75,7 +76,8 @@ class CompletedTasks {
         List<OfferModel> oneToManyOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -98,7 +100,8 @@ class CompletedTasks {
         List<OfferModel> oneToManyOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           oneToManyOffers.add(offerModel);
         });
 
@@ -108,7 +111,7 @@ class CompletedTasks {
   }
 
   static Stream<List<OfferModel>> getLendingOfferCompletedStream(
-      {String email}) async* {
+      {String? email}) async* {
     yield* CollectionRef.offers
         .where('requestType', isEqualTo: 'LENDING_OFFER')
         .where('lendingOfferDetailsModel.completedUsers', arrayContains: email)
@@ -119,7 +122,8 @@ class CompletedTasks {
         List<OfferModel> lendingOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           lendingOffers.add(offerModel);
           logger.e(
               ' COMPLETED lending 2:  ===> ' + lendingOffers.length.toString());
@@ -162,8 +166,8 @@ class CompletedTasks {
   }
 
   static List<Widget> classifyCompletedTasks({
-    @required List<dynamic> completedSink,
-    @required BuildContext context,
+    required List<dynamic> completedSink,
+    required BuildContext context,
   }) {
     List<TasksCardWrapper> tasksList = [];
     List<RequestModel> requestList = completedSink[0];
@@ -173,13 +177,13 @@ class CompletedTasks {
         tasksList.add(
           TasksCardWrapper(
             taskCard: ToDoCard(
-              title: model.title,
-              subTitle: model.description,
-              timeInMilliseconds: model.requestStart,
+              title: model.title!,
+              subTitle: model.description!,
+              timeInMilliseconds: model.requestStart!,
               onTap: () async {},
               tag: S.of(context).one_to_many_request_speaker,
             ),
-            taskTimestamp: model.requestStart,
+            taskTimestamp: model.requestStart!,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -190,26 +194,26 @@ class CompletedTasks {
         tasksList.add(
           TasksCardWrapper(
             taskCard: ToDoCard(
-              title: model.title,
-              subTitle: S.of(context).lent_to_text + model.fullName,
-              timeInMilliseconds: model.requestStart,
+              title: model.title!,
+              subTitle: S.of(context).lent_to_text + model.fullName!,
+              timeInMilliseconds: model.requestStart!,
               onTap: () async {},
               tag: S.of(context).borrow_request_lender,
             ),
-            taskTimestamp: model.requestStart,
+            taskTimestamp: model.requestStart!,
           ),
         );
       } else {
         tasksList.add(
           TasksCardWrapper(
             taskCard: ToDoCard(
-              timeInMilliseconds: model.requestStart,
+              timeInMilliseconds: model.requestStart!,
               tag: S.of(context).time_request_volunteer,
-              subTitle: model.description,
-              title: model.title,
+              subTitle: model.description!,
+              title: model.title!,
               onTap: () async {},
             ),
-            taskTimestamp: model.requestStart,
+            taskTimestamp: model.requestStart!,
           ),
         );
       }
@@ -222,12 +226,12 @@ class CompletedTasks {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () async {},
-            title: element.groupOfferDataModel.classTitle,
-            subTitle: element.groupOfferDataModel.classDescription,
+            title: element.groupOfferDataModel!.classTitle!,
+            subTitle: element.groupOfferDataModel!.classDescription!,
             tag: S.of(context).one_to_many_offer_attende,
-            timeInMilliseconds: element.groupOfferDataModel.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate,
           ),
-          taskTimestamp: element.groupOfferDataModel.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate,
         ),
       );
     });
@@ -239,12 +243,12 @@ class CompletedTasks {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () async {},
-            title: element.groupOfferDataModel.classTitle,
-            subTitle: element.groupOfferDataModel.classDescription,
+            title: element.groupOfferDataModel!.classTitle,
+            subTitle: element.groupOfferDataModel!.classDescription,
             tag: S.of(context).one_to_many_offer_speaker,
-            timeInMilliseconds: element.groupOfferDataModel.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate,
           ),
-          taskTimestamp: element.groupOfferDataModel.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate,
         ),
       );
     });
@@ -256,12 +260,12 @@ class CompletedTasks {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () async {},
-            title: element.title,
-            subTitle: element.description,
+            title: element.title!,
+            subTitle: element.description!,
             tag: S.of(context).one_to_many_request_attende,
-            timeInMilliseconds: element.requestStart,
+            timeInMilliseconds: element.requestStart!,
           ),
-          taskTimestamp: element.requestStart,
+          taskTimestamp: element.requestStart!,
         ),
       );
     });
@@ -273,12 +277,12 @@ class CompletedTasks {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () async {},
-            title: element.title,
-            subTitle: element.description,
+            title: element.title!,
+            subTitle: element.description!,
             tag: S.of(context).one_to_many_request_attende,
-            timeInMilliseconds: element.requestStart,
+            timeInMilliseconds: element.requestStart!,
           ),
-          taskTimestamp: element.requestStart,
+          taskTimestamp: element.requestStart!,
         ),
       );
     });
@@ -287,12 +291,13 @@ class CompletedTasks {
     completedLendingOffers.forEach((element) {
       tasksList.add(TasksCardWrapper(
         taskCard: ToDoCard(
-          onTap: null,
-          title: element.individualOfferDataModel.title,
-          subTitle: element.individualOfferDataModel.description,
+          onTap: () async {},
+          title: element.individualOfferDataModel!.title!,
+          subTitle: element.individualOfferDataModel!.description,
           tag: S.of(context).completed_lending_offer,
-          timeInMilliseconds: element.lendingOfferDetailsModel.startDate,
+          timeInMilliseconds: element.lendingOfferDetailsModel!.startDate!,
         ),
+        taskTimestamp: element.lendingOfferDetailsModel!.startDate!,
       ));
     });
     // tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
@@ -325,15 +330,15 @@ class CompletedTasks {
     await FirestoreManager
         .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
       requestModel: requestModel,
-      userEmail: SevaCore.of(context).loggedInUser.email,
+      userEmail: SevaCore.of(context).loggedInUser.email!,
       fromNotification: false,
     );
   }
 
   static Future<void> showMyTaskDialog({
-    BuildContext context,
-    @required String title,
-    @required String subTitle,
+    required BuildContext context,
+    required String title,
+    required String subTitle,
   }) async {
     return showDialog<void>(
       context: context,

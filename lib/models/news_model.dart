@@ -1,37 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:flutter/material.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
 class NewsModel extends DataModel {
-  String id;
-  String title;
-  String subheading;
-  String description;
-  String email;
-  String fullName;
-  String sevaUserId;
-  String communityId;
-  String newsImageUrl;
-  String newsDocumentUrl;
-  String newsDocumentName;
-  String photoCredits;
-  int postTimestamp;
-  GeoFirePoint location;
-  EntityModel entity;
-  List<String> likes;
-  List<String> reports;
-  String root_timebank_id;
-  String placeAddress;
-  bool isPinned;
-  bool softDelete;
-  List<Comments> comments = [];
-  List<String> urlsFromPost = [];
-  List<String> hashTags = [];
+  String? id;
+  String? title;
+  String? subheading;
+  String? description;
+  String? email;
+  String? fullName;
+  String? sevaUserId;
+  String? communityId;
+  String? newsImageUrl;
+  String? newsDocumentUrl;
+  String? newsDocumentName;
+  String? photoCredits;
+  int? postTimestamp;
+  GeoFirePoint? location;
+  EntityModel? entity;
+  List<String>? likes;
+  List<String>? reports;
+  String? root_timebank_id;
+  String? placeAddress;
+  bool? isPinned;
+  bool? softDelete;
+  List<Comments>? comments = [];
+  List<String>? urlsFromPost = [];
+  List<String>? hashTags = [];
 
-  String userPhotoURL;
-  String imageScraped = "NoData";
-  List<String> timebanksPosted = [];
-  bool liveMode;
+  String? userPhotoURL;
+  String? imageScraped = "NoData";
+  List<String>? timebanksPosted = [];
+  bool? liveMode;
 
   NewsModel({
     this.id,
@@ -74,7 +75,7 @@ class NewsModel extends DataModel {
       map['description'] = this.description;
     }
 
-    if (this.subheading != null && this.subheading.isNotEmpty) {
+    if (this.subheading != null && this.subheading?.isNotEmpty == true) {
       map['subheading'] = this.subheading;
     }
 
@@ -98,45 +99,46 @@ class NewsModel extends DataModel {
       map['imageScraped'] = this.imageScraped;
     }
 
-    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
+    if (this.root_timebank_id != null &&
+        this.root_timebank_id?.isNotEmpty == true) {
       map['root_timebank_id'] = this.root_timebank_id;
     }
-    if (this.id != null && this.id.isNotEmpty) {
+    if (this.id != null && this.id!.isNotEmpty) {
       map['id'] = this.id;
     }
-    if (this.email != null && this.email.isNotEmpty) {
+    if (this.email != null && this.email?.isNotEmpty == true) {
       map['email'] = this.email;
     }
-    if (this.fullName != null && this.fullName.isNotEmpty) {
+    if (this.fullName != null && this.fullName?.isNotEmpty == true) {
       map['fullname'] = this.fullName;
     }
-    if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
+    if (this.sevaUserId != null && this.sevaUserId?.isNotEmpty == true) {
       map['sevauserid'] = this.sevaUserId;
     }
 
-    if (this.communityId != null && this.communityId.isNotEmpty) {
+    if (this.communityId != null && this.communityId?.isNotEmpty == true) {
       map['communityId'] = this.communityId;
     }
-    if (this.newsImageUrl != null && this.newsImageUrl.isNotEmpty) {
+    if (this.newsImageUrl != null && this.newsImageUrl?.isNotEmpty == true) {
       map['newsimageurl'] = this.newsImageUrl;
     } else {
       map['newsimageurl'] = null;
     }
-    if (this.photoCredits != null && this.photoCredits.isNotEmpty) {
+    if (this.photoCredits != null && this.photoCredits?.isNotEmpty == true) {
       map['photocredits'] = this.photoCredits;
     }
     if (this.postTimestamp != null) {
       map['posttimestamp'] = this.postTimestamp;
     }
     if (this.location != null) {
-      map['location'] = this.location.data;
+      map['location'] = this.location?.data;
     }
 
     if (this.isPinned != null) {
       map['pinned'] = this.isPinned;
     }
     if (this.entity != null) {
-      map['entity'] = this.entity.toMap();
+      map['entity'] = this.entity?.toMap();
     }
     if (this.likes != null) {
       map['likes'] = this.likes;
@@ -153,17 +155,19 @@ class NewsModel extends DataModel {
     } else
       map['timebanksposted'] = [];
 
-    if (this.comments != null && this.comments.isNotEmpty) {
-      map['comments'] = List<dynamic>.from(comments.map((x) => x.toMap()));
+    if (this.comments != null && this.comments?.isNotEmpty == true) {
+      map['comments'] = List<dynamic>.from(comments!.map((x) => x.toMap()));
     } else {
       map['comments'] = [];
     }
-    if (this.newsDocumentName != null && this.newsDocumentName.isNotEmpty) {
+    if (this.newsDocumentName != null &&
+        this.newsDocumentName?.isNotEmpty == true) {
       map['newsDocumentName'] = this.newsDocumentName;
     } else {
       map['newsDocumentName'] = null;
     }
-    if (this.newsDocumentUrl != null && this.newsDocumentUrl.isNotEmpty) {
+    if (this.newsDocumentUrl != null &&
+        this.newsDocumentUrl?.isNotEmpty == true) {
       map['newsDocumentUrl'] = this.newsDocumentUrl;
     } else {
       map['newsDocumentUrl'] = null;
@@ -254,8 +258,8 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('location')) {
       GeoPoint geoPoint = map['location']['geopoint'];
-      this.location = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      this.location =
+          GeoFirePoint(GeoPoint(geoPoint.latitude, geoPoint.longitude));
     }
 
     if (map.containsKey('entity')) {
@@ -377,8 +381,8 @@ class NewsModel extends DataModel {
     if (map.containsKey('location')) {
       GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
           map['location']['geopoint']['_longitude']);
-      this.location = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      this.location =
+          GeoFirePoint(GeoPoint(geoPoint.latitude, geoPoint.longitude));
     }
 
     if (map.containsKey('entity')) {
@@ -429,9 +433,9 @@ class NewsModel extends DataModel {
 }
 
 class EntityModel extends DataModel {
-  String entityId;
-  String entityName;
-  EntityType entityType;
+  String? entityId;
+  String? entityName;
+  EntityType? entityType;
 
   EntityModel({this.entityType, this.entityId, this.entityName});
 
@@ -467,11 +471,11 @@ class EntityModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> obj = {};
 
-    if (this.entityId != null && this.entityId.isNotEmpty) {
+    if (this.entityId != null && this.entityId!.isNotEmpty) {
       obj['entityId'] = this.entityId;
     }
 
-    if (this.entityName != null && this.entityName.isNotEmpty) {
+    if (this.entityName != null && this.entityName!.isNotEmpty) {
       obj['entityName'] = this.entityName;
     }
 
@@ -501,15 +505,15 @@ class EntityModel extends DataModel {
 enum EntityType { timebank, campaign, general }
 
 class Comments extends DataModel {
-  String userPhotoURL; // create photo URL
-  String createdEmail;
-  String fullName;
-  String comment;
-  String feedId;
-  List<String> mentions = []; // user ids for future.
-  List<Comments> comments = [];
-  List<String> likes = [];
-  int createdAt;
+  String? userPhotoURL; // create photo URL
+  String? createdEmail;
+  String? fullName;
+  String? comment;
+  String? feedId;
+  List<String>? mentions = []; // user ids for future.
+  List<Comments>? comments = [];
+  List<String>? likes = [];
+  int? createdAt;
 
   Comments({
     this.userPhotoURL,
@@ -578,19 +582,19 @@ class Comments extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
-    if (this.userPhotoURL != null && this.userPhotoURL.isNotEmpty) {
+    if (this.userPhotoURL != null && this.userPhotoURL?.isNotEmpty == true) {
       object['userPhotoURL'] = this.userPhotoURL;
     }
-    if (this.createdEmail != null && this.createdEmail.isNotEmpty) {
+    if (this.createdEmail != null && this.createdEmail?.isNotEmpty == true) {
       object['createdEmail'] = this.createdEmail;
     }
-    if (this.comment != null && this.comment.isNotEmpty) {
+    if (this.comment != null && this.comment?.isNotEmpty == true) {
       object['comment'] = this.comment;
     }
-    if (this.fullName != null && this.fullName.isNotEmpty) {
+    if (this.fullName != null && this.fullName?.isNotEmpty == true) {
       object['fullName'] = this.fullName;
     }
-    if (this.feedId != null && this.feedId.isNotEmpty) {
+    if (this.feedId != null && this.feedId?.isNotEmpty == true) {
       object['feedId'] = this.feedId;
     }
     if (this.createdAt != null) {
@@ -600,13 +604,14 @@ class Comments extends DataModel {
       object['likes'] = this.likes;
     } else
       object['likes'] = [];
-    if (this.mentions != null && this.mentions.isNotEmpty) {
+    if (this.mentions != null && this.mentions?.isNotEmpty == true) {
       object['mentions'] = this.mentions;
     } else {
       object['mentions'] = [];
     }
-    if (this.comments != null && this.comments.isNotEmpty) {
-      object['comments'] = List<dynamic>.from(comments.map((x) => x.toMap()));
+    if (this.comments != null && this.comments?.isNotEmpty == true) {
+      object['comments'] =
+          List<dynamic>.from(comments?.map((x) => x.toMap()) ?? []);
     } else {
       object['comments'] = [];
     }

@@ -2,25 +2,25 @@ import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class AgreementTemplateModel extends DataModel {
-  String id;
-  String creatorId;
-  String creatorEmail;
-  String timebankId;
-  String communityId;
-  String templateName;
-  int createdAt;
-  bool softDelete;
-  String documentName;
-  String placeOrItem;
-  String otherDetails;
-  String specificConditions;
-  bool isDamageLiability;
-  bool isUseDisclaimer;
-  bool isDeliveryReturn;
-  bool isMaintainRepair;
-  bool isRefundDepositNeeded;
-  bool isMaintainAndclean;
-  bool isOffer;
+  String? id;
+  String? creatorId;
+  String? creatorEmail;
+  String? timebankId;
+  String? communityId;
+  String? templateName;
+  int? createdAt;
+  bool? softDelete;
+  String? documentName;
+  String? placeOrItem;
+  String? otherDetails;
+  String? specificConditions;
+  bool? isDamageLiability;
+  bool? isUseDisclaimer;
+  bool? isDeliveryReturn;
+  bool? isMaintainRepair;
+  bool? isRefundDepositNeeded;
+  bool? isMaintainAndclean;
+  bool? isOffer;
 
   AgreementTemplateModel({
     this.id,

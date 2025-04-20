@@ -100,11 +100,14 @@ class OfferDetails extends StatelessWidget {
                             DateFormat('EEEEEEE, MMMM dd h:mm a', "en").format(
                               getDateTimeAccToUserTimezone(
                                 dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                  offerModel?.groupOfferDataModel?.startDate != null
-                                      ? offerModel?.groupOfferDataModel?.startDate
+                                  offerModel?.groupOfferDataModel?.startDate !=
+                                          null
+                                      ? offerModel
+                                          ?.groupOfferDataModel?.startDate
                                       : offerModel.timestamp,
                                 ),
-                                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                                timezoneAbb:
+                                    SevaCore.of(context).loggedInUser.timezone,
                               ),
                             ),
                             style: subTitleStyle,
@@ -112,9 +115,15 @@ class OfferDetails extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: Offstage(
-                            offstage: offerModel.sevaUserId != SevaCore.of(context).loggedInUser.sevaUserID ||
-                                (getOfferParticipants(offerDataModel: offerModel).isNotEmpty &&
-                                    offerModel.offerType == OfferType.GROUP_OFFER),
+                            offstage: offerModel.sevaUserId !=
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID ||
+                                (getOfferParticipants(
+                                            offerDataModel: offerModel)
+                                        .isNotEmpty &&
+                                    offerModel.offerType ==
+                                        OfferType.GROUP_OFFER),
                             child: Row(
                               children: [
                                 Container(
@@ -135,7 +144,10 @@ class OfferDetails extends StatelessWidget {
                                           builder: (context) => IndividualOffer(
                                             offerModel: offerModel,
                                             timebankId: offerModel.timebankId,
-                                            loggedInMemberUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                                            loggedInMemberUserId:
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .sevaUserID,
                                             timebankModel: timebankModel,
                                           ),
                                         ),
@@ -179,8 +191,10 @@ class OfferDetails extends StatelessWidget {
                         ),
                         offerModel.type == RequestType.GOODS
                             ? Container(
-                                padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                                child: showGoodsDonationDetails(context, offerModel))
+                                padding:
+                                    EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                                child: showGoodsDonationDetails(
+                                    context, offerModel))
                             : offerModel.type == RequestType.CASH
                                 ? showCashDonationDetails(context, offerModel)
                                 : Container(),
@@ -188,7 +202,8 @@ class OfferDetails extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           child: RichTextView(
-                            text: getOfferDescription(offerDataModel: offerModel),
+                            text:
+                                getOfferDescription(offerDataModel: offerModel),
                           ),
                         ),
                         offerModel.type == RequestType.TIME
@@ -200,14 +215,22 @@ class OfferDetails extends StatelessWidget {
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).primaryColor)),
+                                          color:
+                                              Theme.of(context).primaryColor)),
                                   SizedBox(
                                     height: 15,
                                   ),
                                   Offstage(
-                                    offstage: offerModel.offerType != OfferType.INDIVIDUAL_OFFER &&
-                                        offerModel.individualOfferDataModel.schedule == null,
-                                    child: RichTextView(text: offerModel.individualOfferDataModel.schedule ?? ''),
+                                    offstage: offerModel.offerType !=
+                                            OfferType.INDIVIDUAL_OFFER &&
+                                        offerModel.individualOfferDataModel
+                                                .schedule ==
+                                            null,
+                                    child: RichTextView(
+                                        text: offerModel
+                                                .individualOfferDataModel
+                                                .schedule ??
+                                            ''),
                                   ),
                                   Divider(
                                     height: 40,
@@ -220,7 +243,8 @@ class OfferDetails extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: UserCircleAvatarList(
-                            sizeOfClass: offerModel.groupOfferDataModel.sizeOfClass,
+                            sizeOfClass:
+                                offerModel.groupOfferDataModel.sizeOfClass,
                           ),
                         ),
                         //Spacer(),
@@ -260,9 +284,12 @@ class OfferDetails extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text('${offerModel.cashModel.offerCurrencyType} ${offerModel.cashModel.targetAmount}'),
+          subtitle: Text(
+              '${offerModel.cashModel.offerCurrencyType} ${offerModel.cashModel.targetAmount}'),
           leading: Image.asset(
-            offerModel.type == RequestType.CASH ? SevaAssetIcon.donateCash : SevaAssetIcon.donateGood,
+            offerModel.type == RequestType.CASH
+                ? SevaAssetIcon.donateCash
+                : SevaAssetIcon.donateGood,
             height: 30,
             width: 30,
           ),
@@ -279,7 +306,8 @@ class OfferDetails extends StatelessWidget {
   }
 
   Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
-    List<String> keys = List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
+    List<String> keys =
+        List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +329,9 @@ class OfferDetails extends StatelessWidget {
             return Row(
               children: [
                 Checkbox(
-                  value: offerModel.goodsDonationDetails.requiredGoods.containsKey(keys[index]) ?? false,
+                  value: offerModel.goodsDonationDetails.requiredGoods
+                          .containsKey(keys[index]) ??
+                      false,
                   checkColor: Colors.black,
                   onChanged: null,
                   activeColor: Colors.grey[200],
@@ -320,7 +350,8 @@ class OfferDetails extends StatelessWidget {
 
   Widget oneToManyOfferCancellation(BuildContext context) {
     if (offerModel.offerType == OfferType.GROUP_OFFER &&
-        DateTime.now().millisecondsSinceEpoch < offerModel.groupOfferDataModel.endDate) {
+        DateTime.now().millisecondsSinceEpoch <
+            offerModel.groupOfferDataModel.endDate) {
       return Row(
         children: [
           SizedBox(
@@ -355,7 +386,8 @@ class OfferDetails extends StatelessWidget {
             builder: (context) => IndividualOffer(
               offerModel: offerModel,
               timebankId: offerModel.timebankId,
-              loggedInMemberUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+              loggedInMemberUserId:
+                  SevaCore.of(context).loggedInUser.sevaUserID,
               timebankModel: timebankModel,
             ),
           ),
@@ -367,7 +399,8 @@ class OfferDetails extends StatelessWidget {
             builder: (context) => OneToManyOffer(
               offerModel: offerModel,
               timebankId: offerModel.timebankId,
-              loggedInMemberUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+              loggedInMemberUserId:
+                  SevaCore.of(context).loggedInUser.sevaUserID,
               timebankModel: timebankModel,
             ),
           ),
@@ -384,7 +417,8 @@ class OfferDetails extends StatelessWidget {
             builder: (context) => IndividualOffer(
               offerModel: offerModel,
               timebankId: offerModel.timebankId,
-              loggedInMemberUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+              loggedInMemberUserId:
+                  SevaCore.of(context).loggedInUser.sevaUserID,
               timebankModel: timebankModel,
             ),
           ),
@@ -420,7 +454,9 @@ class OfferDetails extends StatelessWidget {
                   ),
                   onPressed: () async {
                     Navigator.of(_context).pop();
-                    await CollectionRef.offers.doc(offerModel.id).update({'groupOfferDataModel.isCanceled': true});
+                    await CollectionRef.offers
+                        .doc(offerModel.id)
+                        .update({'groupOfferDataModel.isCanceled': true});
                     Navigator.of(context).pop();
                   },
                 ),
@@ -445,10 +481,12 @@ class OfferDetails extends StatelessWidget {
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.white54, boxShadow: [BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))]),
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+      ]),
       child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
+        padding:
+            const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -476,7 +514,9 @@ class OfferDetails extends StatelessWidget {
                                       ? S.of(context).you_created_offer
                                       : isAccepted
                                           ? S.of(context).accepted_offer_msg
-                                          : S.of(context).would_like_to_accept_offer,
+                                          : S
+                                              .of(context)
+                                              .would_like_to_accept_offer,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -500,11 +540,14 @@ class OfferDetails extends StatelessWidget {
                         utils.isDeletable(
                           communityCreatorId: timebankModel != null
                               ? isPrimaryTimebank(
-                                  parentTimebankId: timebankModel.parentTimebankId,
+                                  parentTimebankId:
+                                      timebankModel.parentTimebankId,
                                 )
                                   ? timebankModel.creatorId
                                   : (timebankModel.managedCreatorIds != null &&
-                                          timebankModel.managedCreatorIds.length > 0)
+                                          timebankModel
+                                                  .managedCreatorIds.length >
+                                              0)
                                       ? timebankModel.managedCreatorIds[0]
                                       : ''
                               : '',
@@ -516,15 +559,19 @@ class OfferDetails extends StatelessWidget {
                     ? deleteActionButton(isAccepted, context)
                     : Container(),
                 Offstage(
-                  offstage: isCreator || (isAccepted && offerModel.offerType == OfferType.GROUP_OFFER),
+                  offstage: isCreator ||
+                      (isAccepted &&
+                          offerModel.offerType == OfferType.GROUP_OFFER),
                   child: Container(
                     width: isAccepted ? 150 : 120,
                     height: 32,
                     child: ConfigurationCheck(
-                      actionType: ConfigurationCheckExtension.getOfferAcceptanceKey(
+                      actionType:
+                          ConfigurationCheckExtension.getOfferAcceptanceKey(
                         offerModel,
                       ),
-                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
                       child: CustomTextButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -559,24 +606,34 @@ class OfferDetails extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(userId);
+                          bool isAccepted =
+                              getOfferParticipants(offerDataModel: offerModel)
+                                  .contains(userId);
                           if (isAccepted) {
                             return;
                           }
 
                           TimebankModel timebankModel;
-                          if (Provider.of<HomePageBaseBloc>(context, listen: false)
+                          if (Provider.of<HomePageBaseBloc>(context,
+                                      listen: false)
                                   .timebankModel(offerModel.timebankId) ==
                               null) {
-                            timebankModel = await utils.getTimeBankForId(timebankId: offerModel.timebankId);
+                            timebankModel = await utils.getTimeBankForId(
+                                timebankId: offerModel.timebankId);
                           } else {
-                            timebankModel = Provider.of<HomePageBaseBloc>(context, listen: false)
+                            timebankModel = Provider.of<HomePageBaseBloc>(
+                                    context,
+                                    listen: false)
                                 .timebankModel(offerModel.timebankId);
                           }
 
                           //ClubHouse
                           if (offerModel.type != RequestType.TIME &&
-                              !isAccessAvailable(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+                              !isAccessAvailable(
+                                  timebankModel,
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID)) {
                             adminCheckToAcceptOfferDialog(
                               context,
                             );
@@ -584,7 +641,8 @@ class OfferDetails extends StatelessWidget {
                           }
 
                           if (offerModel.type == RequestType.CASH ||
-                              offerModel.type == RequestType.GOODS && !isAccepted) {
+                              offerModel.type == RequestType.GOODS &&
+                                  !isAccepted) {
                             navigateToDonations(context, offerModel);
                           } else {
                             // if (offerModel.offerType == OfferType.GROUP_OFFER &&
@@ -606,14 +664,18 @@ class OfferDetails extends StatelessWidget {
                   ),
                 ),
                 Offstage(
-                  offstage:
-                      isCreator || offerModel.offerType == OfferType.GROUP_OFFER || offerModel.type != RequestType.TIME,
+                  offstage: isCreator ||
+                      offerModel.offerType == OfferType.GROUP_OFFER ||
+                      offerModel.type != RequestType.TIME,
                   child: Container(
                     width: isAccepted ? 150 : 120,
                     height: 32,
                     child: ConfigurationCheck(
-                      actionType: ConfigurationCheckExtension.getOfferAcceptanceKey(offerModel),
-                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      actionType:
+                          ConfigurationCheckExtension.getOfferAcceptanceKey(
+                              offerModel),
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
                       child: Padding(
                         padding: const EdgeInsets.only(
                           left: 2,
@@ -658,7 +720,8 @@ class OfferDetails extends StatelessWidget {
                               model: offerModel,
                               parentContext: context,
                               timebankModel: timebankModel,
-                              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                              sevaUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
                               hideCancelBookMark: true,
                             );
                           },
@@ -780,19 +843,23 @@ class OfferDetails extends StatelessWidget {
                     children: <Widget>[
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Offers,
-                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset("lib/assets/images/googlecal.png"),
+                              child: Image.asset(
+                                  "lib/assets/images/googlecal.png"),
                             ),
                             onTap: () async {
-                              String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -805,29 +872,35 @@ class OfferDetails extends StatelessWidget {
                       ),
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Offers,
-                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset("lib/assets/images/outlookcal.png"),
+                              child: Image.asset(
+                                  "lib/assets/images/outlookcal.png"),
                             ),
                             onTap: () async {
-                              String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel, ComingFrom.Offers)
+                              offerActions(
+                                      context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       ),
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Offers,
-                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -836,14 +909,17 @@ class OfferDetails extends StatelessWidget {
                               child: Image.asset("lib/assets/images/ical.png"),
                             ),
                             onTap: () async {
-                              String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel, ComingFrom.Offers)
+                              offerActions(
+                                      context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       )
@@ -859,11 +935,13 @@ class OfferDetails extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
-                          style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
-                          offerActions(context, offerModel, ComingFrom.Offers).then((_) => Navigator.of(context).pop());
+                          offerActions(context, offerModel, ComingFrom.Offers)
+                              .then((_) => Navigator.of(context).pop());
                         }),
                   ],
                 )

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -18,7 +19,11 @@ class AddNewRequestCategory extends StatefulWidget {
   final VoidCallback onNewCategoryCreated;
   final Color primaryColor;
 
-  const AddNewRequestCategory({Key key, this.categoryId, this.onNewCategoryCreated, this.primaryColor})
+  const AddNewRequestCategory(
+      {Key? key,
+      required this.categoryId,
+      required this.onNewCategoryCreated,
+      required this.primaryColor})
       : super(key: key);
 
   @override
@@ -27,9 +32,9 @@ class AddNewRequestCategory extends StatefulWidget {
 
 class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
   String subcategorytitle = '';
-  String newRequestCategoryLogo;
+  String? newRequestCategoryLogo;
   final formKey = GlobalKey<DoseFormState>();
-  String errTxt = '';
+  String? errTxt = '';
   final _subcategorytitleStream = StreamController<String>();
   TextEditingController searchTextController = TextEditingController();
   FocusNode subcategoryFocusNode = FocusNode();
@@ -39,13 +44,17 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
     super.initState();
 
     //For Checking Duplicate request subcategory When creating new one
-    searchTextController.addListener(() => _subcategorytitleStream.add(searchTextController.text));
-    _subcategorytitleStream.stream.debounceTime(Duration(milliseconds: 400)).forEach((s) {
+    searchTextController.addListener(
+        () => _subcategorytitleStream.add(searchTextController.text));
+    _subcategorytitleStream.stream
+        .debounceTime(Duration(milliseconds: 400))
+        .forEach((s) {
       logger.e("Text updates============ $s");
       if (s.isEmpty) {
         setState(() {});
       } else {
-        SearchManager.searchRequestCategoriesForDuplicate(queryString: s.trim(), context: context)
+        SearchManager.searchRequestCategoriesForDuplicate(
+                queryString: s.trim(), context: context)
             .then((categoryFound) {
           if (categoryFound) {
             setState(() {
@@ -117,7 +126,8 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                           ),
                           // height: 45,
                           child: ListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             onTap: null,
                             // leading: Icon(Icons.add_circle_outline, size: 16),
                             title: DoseForm(
@@ -129,7 +139,8 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                               child: DoseTextField(
                                 isRequired: true,
                                 focusNode: subcategoryFocusNode,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 controller: searchTextController,
                                 onChanged: (val) {
                                   subcategorytitle = val;
@@ -139,9 +150,12 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                 },
                                 maxLines: 1,
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 0.0, right: 8.0, bottom: 10.0),
+                                  contentPadding: EdgeInsets.only(
+                                      left: 0.0, right: 8.0, bottom: 10.0),
                                   border: InputBorder.none,
-                                  hintText: S.of(context).add_new_subcategory_hint + '*',
+                                  hintText:
+                                      S.of(context).add_new_subcategory_hint +
+                                          '*',
                                   hintStyle: TextStyle(color: Colors.grey),
                                   errorStyle: TextStyle(height: 0.85),
                                   // errorText: errTxt,
@@ -154,10 +168,12 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   if (errTxt != null) {
                                     return errTxt;
                                   }
-                                  if (profanityDetector.isProfaneString(value)) {
+                                  if (value != null &&
+                                      profanityDetector
+                                          .isProfaneString(value)) {
                                     return S.of(context).profanity_text_alert;
                                   } else {
-                                    subcategorytitle = value;
+                                    subcategorytitle = value!;
                                     return null;
                                   }
                                 },
@@ -166,7 +182,8 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                             ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.width * 0.02),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.02),
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
@@ -174,7 +191,8 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                           ),
                           // height: 45,
                           child: ListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             onTap: () {
                               showDialog(
                                   context: context,
@@ -182,13 +200,18 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                     return ImagePickerDialogMobile(
                                       imagePickerType: ImagePickerType.PROJECT,
                                       color: widget.primaryColor,
+                                      storeImageFile: (File file) async {
+                                        return await file.path;
+                                      },
+                                      storPdfFile: (File file) async => null,
                                       onLinkCreated: (link) {
                                         newRequestCategoryLogo = link;
                                         if (this.mounted) {
                                           setState(() {});
                                         }
                                         ;
-                                        logger.e('NEW LOGO CHECK: ' + newRequestCategoryLogo.toString());
+                                        logger.e('NEW LOGO CHECK: ' +
+                                            newRequestCategoryLogo.toString());
                                       },
                                     );
                                   });
@@ -208,30 +231,50 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.width * 0.032),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.032),
                         Container(
                           child: Center(
                             child: CustomElevatedButton(
                               color: widget.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              elevation: 2.0,
+                              textColor: Colors.white,
                               onPressed: () async {
-                                if (formKey.currentState.validate() && (errTxt == null || errTxt == "")) {
-                                  formKey.currentState.save();
+                                if (formKey.currentState?.validate() == true &&
+                                    (errTxt == null || errTxt == "")) {
+                                  formKey.currentState?.save();
                                   //Add new request category to db
                                   //validate title is not empty
                                   String newTypeId = utils.Utils.getUuid();
-                                  Map<String, dynamic> newRequestCategoryModel = {
+                                  Map<String, dynamic> newRequestCategoryModel =
+                                      {
                                     'categoryId': widget.categoryId,
-                                    'logo':
-                                        newRequestCategoryLogo == '' ? defaultGroupImageURL : newRequestCategoryLogo,
+                                    'logo': newRequestCategoryLogo == ''
+                                        ? defaultGroupImageURL
+                                        : newRequestCategoryLogo,
                                     'type': 'subCategory',
                                     'typeId': newTypeId,
-                                    'creatorId': SevaCore.of(context).loggedInUser.sevaUserID,
-                                    'creatorEmail': SevaCore.of(context).loggedInUser.email,
-                                    'title_' + SevaCore.of(context).loggedInUser.language ?? S.of(context).localeName:
+                                    'creatorId': SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID,
+                                    'creatorEmail':
+                                        SevaCore.of(context).loggedInUser.email,
+                                    'title_' +
+                                            (SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .language ??
+                                                S.of(context).localeName):
                                         subcategorytitle
                                   };
 
-                                  await addNewRequestCategory(newRequestCategoryModel, newTypeId).then((value) {
+                                  await addNewRequestCategory(
+                                          newRequestCategoryModel, newTypeId)
+                                      .then((value) {
                                     Navigator.of(newCategoryDialog).pop();
                                   });
 

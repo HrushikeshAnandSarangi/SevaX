@@ -17,20 +17,20 @@ class RequestCardWidget extends StatelessWidget {
   final bool isFavorite;
   final String reqStatus;
   final bool isAdmin;
-  final Function refresh;
+  final Function? refresh;
   final String currentCommunity;
   final String loggedUserId;
 
   RequestCardWidget({
-    @required this.userModel,
-    @required this.requestModel,
-    @required this.timebankModel,
-    @required this.isFavorite,
-    @required this.isAdmin,
-    @required this.reqStatus,
+    required this.userModel,
+    required this.requestModel,
+    required this.timebankModel,
+    required this.isFavorite,
+    required this.isAdmin,
+    required this.reqStatus,
     this.refresh,
-    @required this.currentCommunity,
-    @required this.loggedUserId,
+    required this.currentCommunity,
+    required this.loggedUserId,
   });
 
   @override
@@ -52,9 +52,9 @@ class RequestCardWidget extends StatelessWidget {
 
   Widget getUserThumbnail(BuildContext context) {
     return UserProfileImage(
-      photoUrl: userModel.photoURL,
-      email: userModel.email,
-      userId: userModel.sevaUserID,
+      photoUrl: userModel.photoURL!,
+      email: userModel.email!,
+      userId: userModel.sevaUserID!,
       height: 60,
       width: 60,
       timebankModel: timebankModel,
@@ -94,12 +94,16 @@ class RequestCardWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       userModel.fullname ?? S.of(context).name_not_available,
-                      style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
 //              Spacer(),
                   requestModel.recommendedMemberIdsForRequest != null &&
-                          requestModel.recommendedMemberIdsForRequest.contains(userModel.sevaUserID)
+                          requestModel.recommendedMemberIdsForRequest!
+                              .contains(userModel.sevaUserID)
                       ? Image.asset(
                           'images/icons/recommended.png',
                           height: 30,
@@ -125,23 +129,23 @@ class RequestCardWidget extends StatelessWidget {
                     onTap: () async {
                       if (isFavorite) {
                         await removeFromFavoriteList(
-                          email: userModel.email,
-                          timeBankId: requestModel.timebankId,
+                          email: userModel.email!,
+                          timeBankId: requestModel.timebankId!,
                           loggedInUserId: loggedUserId,
                         );
                         Future.delayed(
                           Duration(milliseconds: 1800),
-                          () => refresh(),
+                          refresh != null ? () => refresh!() : () {},
                         );
                       } else {
                         await addToFavoriteList(
-                          email: userModel.email,
-                          timebankId: requestModel.timebankId,
+                          email: userModel.email!,
+                          timebankId: requestModel.timebankId!,
                           loggedInUserId: loggedUserId,
                         );
                         Future.delayed(
                           Duration(milliseconds: 1800),
-                          () => refresh(),
+                          () => refresh?.call(),
                         );
                       }
                     },
@@ -175,21 +179,27 @@ class RequestCardWidget extends StatelessWidget {
                       height: 38,
                       width: 85,
                       child: CustomElevatedButton(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         shape: StadiumBorder(),
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         elevation: 2,
                         onPressed: reqStatus != S.of(context).invite
-                            ? null
+                            ? null!
                             : () async {
                                 await timeBankBloc.updateInvitedUsersForRequest(
                                   requestModel.id,
                                   userModel.sevaUserID,
-                                  userModel.email,
+                                  userModel.email!,
                                 );
 
-                                if (requestModel.requestType == RequestType.BORROW) {
-                                  requestModel.invitedUsers.add(userModel.sevaUserID);
+                                if (requestModel.requestType ==
+                                    RequestType.BORROW) {
+                                  if (requestModel.invitedUsers != null) {
+                                    requestModel.invitedUsers!
+                                        .add(userModel.sevaUserID!);
+                                  }
                                 }
 
                                 sendNotification(
@@ -217,11 +227,11 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> sendNotification({
-    RequestModel requestModel,
-    UserModel userModel,
-    String currentCommunity,
-    String sevaUserID,
-    TimebankModel timebankModel,
+    RequestModel? requestModel,
+    UserModel? userModel,
+    String? currentCommunity,
+    String? sevaUserID,
+    TimebankModel? timebankModel,
   }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
       requestModel: requestModel,
@@ -230,13 +240,13 @@ class RequestCardWidget extends StatelessWidget {
 
     NotificationsModel notification = NotificationsModel(
       id: utils.Utils.getUuid(),
-      timebankId: timebankModel.id,
+      timebankId: timebankModel!.id!,
       data: requestInvitationModel.toMap(),
       isRead: false,
       type: NotificationType.RequestInvite,
       communityId: currentCommunity,
       senderUserId: sevaUserID,
-      targetUserId: userModel.sevaUserID,
+      targetUserId: userModel!.sevaUserID!,
     );
 
     await CollectionRef.users
@@ -247,18 +257,26 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> addToFavoriteList(
-      {String email, String loggedInUserId, String timebankId, RequestMode requestMode}) async {
+      {String? email,
+      String? loggedInUserId,
+      String? timebankId,
+      RequestMode? requestMode}) async {
     await CollectionRef.users.doc(email).update({
-      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember': FieldValue.arrayUnion(
+      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
+          FieldValue.arrayUnion(
         [isAdmin ? timebankId : loggedInUserId],
       )
     });
   }
 
   Future<void> removeFromFavoriteList(
-      {String email, String timeBankId, String loggedInUserId, RequestMode requestMode}) async {
+      {String? email,
+      String? timeBankId,
+      String? loggedInUserId,
+      RequestMode? requestMode}) async {
     await CollectionRef.users.doc(email).update({
-      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember': FieldValue.arrayRemove(
+      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
+          FieldValue.arrayRemove(
         [isAdmin ? timeBankId : loggedInUserId],
       ),
     });

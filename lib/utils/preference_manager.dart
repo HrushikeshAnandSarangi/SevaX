@@ -1,39 +1,35 @@
-import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceManager {
-  static const String _SEVA_USER_ID_KEY = 'sevaUserId';
-  static const String _SEVA_EMAIL_ID_KEY = 'emailId';
+  static const String _sevaUserIdKey = 'sevaUserId';
+  static const String _sevaEmailIdKey = 'emailId';
 
   static Future<SharedPreferences> get _instance async {
-    return await SharedPreferences.getInstance();
+    return SharedPreferences.getInstance();
   }
 
-  static Future<String> get loggedInUserId async {
-    SharedPreferences preferences = await _instance;
-    return preferences.getString(_SEVA_USER_ID_KEY);
+  static Future<String?> get loggedInUserId async {
+    final preferences = await _instance;
+    return preferences.getString(_sevaUserIdKey);
   }
 
-  static Future<String> get loggedInUserEmail async {
-    SharedPreferences preferences = await _instance;
-    return preferences.getString(_SEVA_EMAIL_ID_KEY);
+  static Future<String?> get loggedInUserEmail async {
+    final preferences = await _instance;
+    return preferences.getString(_sevaEmailIdKey);
   }
 
   static Future<bool> setLoggedInUser({
-    @required String userId,
-    @required String emailId,
+    required String userId,
+    required String emailId,
   }) async {
-    assert(userId != null, 'USER ID cannot be null');
-    assert(emailId != null, 'EMAIL ID cannot be null');
-    SharedPreferences preferences = await _instance;
-    bool a = await preferences.setString(_SEVA_USER_ID_KEY, userId);
-    bool b = await preferences.setString(_SEVA_EMAIL_ID_KEY, emailId);
-
+    final preferences = await _instance;
+    final a = await preferences.setString(_sevaUserIdKey, userId);
+    final b = await preferences.setString(_sevaEmailIdKey, emailId);
     return a && b;
   }
 
   static Future<bool> logout() async {
-    SharedPreferences preferences = await _instance;
+    final preferences = await _instance;
     return preferences.clear();
   }
 }

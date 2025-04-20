@@ -46,16 +46,16 @@ class ChatPage extends StatefulWidget {
   final ChatViewContext chatViewContext;
 
   ChatPage({
-    Key key,
-    this.chatModel,
+    required Key key,
+    required this.chatModel,
     this.isFromRejectCompletion = false,
     this.isFromShare = false,
-    this.senderId,
-    this.feedId,
-    this.isAdminMessage,
+    required this.senderId,
+    required this.feedId,
+    required this.isAdminMessage,
     this.showAppBar = true,
     this.chatViewContext = ChatViewContext.UNDEFINED,
-    @required this.timebankId,
+    required this.timebankId,
   }) : super(key: key);
 
   @override
@@ -64,11 +64,11 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   MessageModel messageModel = MessageModel();
-  String loggedInEmail;
+  late String loggedInEmail;
   final TextEditingController textcontroller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  String messageContent;
-  String recieverId;
+  String? messageContent;
+  String? recieverId;
   final ChatBloc _bloc = ChatBloc();
   Map<String, ParticipantInfo> participantsInfoById = {};
   ChatModel chatModel = ChatModel();
@@ -76,8 +76,8 @@ class _ChatPageState extends State<ChatPage> {
   final profanityDetector = ProfanityDetector();
   bool isProfane = false;
   String errorText = '';
-  String timebankId;
-  TimebankModel timebankModel;
+  String? timebankId;
+  TimebankModel? timebankModel;
   @override
   void initState() {
     chatModel = widget.chatModel;
@@ -87,27 +87,36 @@ class _ChatPageState extends State<ChatPage> {
         textcontroller.text = '${S.of(context).reject_task_completion} ';
     });
 
-    if (!chatModel.isGroupMessage) {
-      recieverId = widget.chatModel.participants[0] != widget.senderId
-          ? widget.chatModel.participants[0]
-          : widget.chatModel.participants[1];
+    if (chatModel.isGroupMessage == false &&
+        widget.chatModel.participants != null &&
+        (widget.chatModel.participants?.length ?? 0) > 1) {
+      recieverId = widget.chatModel.participants![0] != widget.senderId
+          ? widget.chatModel.participants![0]
+          : widget.chatModel.participants![1];
     }
 
     //set timebank id if it is timebank message
-    if (widget.chatModel.isTimebankMessage) {
+    if (widget.chatModel.isTimebankMessage == true &&
+        widget.chatModel.participants != null) {
       //checking timebank id based on uuid, expect to contain '-';
-      timebankId = widget.chatModel.participants
+      timebankId = widget.chatModel.participants!
           .firstWhere((element) => element.contains('-'), orElse: () {
         logger.e("timebank id not found");
-        return null;
+        return '';
       });
     }
 
-    widget.chatModel.participantInfo.forEach((ParticipantInfo info) {
-      participantsInfoById[info.id] = info
-        ..color = colorGeneratorFromName(info.name);
-    });
-    _bloc.getAllMessages(widget.chatModel.id, widget.senderId);
+    if (widget.chatModel.participantInfo != null) {
+      widget.chatModel.participantInfo!.forEach((ParticipantInfo info) {
+        if (info.id != null && info.name != null) {
+          participantsInfoById[info.id!] = info
+            ..color = colorGeneratorFromName(info.name!);
+        }
+      });
+    }
+    if (widget.chatModel.id != null && widget.senderId != null) {
+      _bloc.getAllMessages(widget.chatModel.id!, widget.senderId);
+    }
     _scrollController = ScrollController();
 
     if (widget.isFromShare) {
@@ -117,29 +126,34 @@ class _ChatPageState extends State<ChatPage> {
       );
     } else {}
 
-    if (widget.chatModel.isGroupMessage) {
+    if (widget.chatModel.isGroupMessage == true) {
       ChatModelSync().chatModels.listen(
         (List<ChatModel> chats) {
-          ChatModel model = chats.firstWhere(
+          ChatModel? model = chats.firstWhere(
             (element) => element.id == widget.chatModel.id,
-            orElse: () => null,
+            orElse: () => ChatModel(),
           );
 
-          if (model == null) {
+          if (model.id == null) {
             logger.e("chat model is null");
             if (!exitFromChatPage &&
                 widget.chatViewContext != ChatViewContext.PROJECT) {
               Navigator.of(context).pop();
             }
           } else {
-            model.participantInfo.forEach((ParticipantInfo info) {
-              participantsInfoById[info.id] = info
-                ..color = colorGeneratorFromName(info.name);
-            });
+            if (model.participantInfo != null) {
+              model.participantInfo!.forEach((ParticipantInfo info) {
+                if (info.id != null && info.name != null) {
+                  participantsInfoById[info.id!] = info
+                    ..color = colorGeneratorFromName(info.name!);
+                }
+              });
+            }
 
-            if (widget.chatModel.groupDetails.name != model.groupDetails.name ||
-                widget.chatModel.groupDetails.imageUrl !=
-                    model.groupDetails.imageUrl ||
+            if ((widget.chatModel.groupDetails?.name ?? '') !=
+                    (model.groupDetails?.name ?? '') ||
+                (widget.chatModel.groupDetails?.imageUrl ?? '') !=
+                    (model.groupDetails?.imageUrl ?? '') ||
                 !listEquals(
                     model.participants, widget.chatModel.participants)) {
               chatModel = model;
@@ -163,30 +177,36 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    ParticipantInfo recieverInfo = getUserInfo(
+    ParticipantInfo? recieverInfo = getUserInfo(
       recieverId ?? '',
-      chatModel.participantInfo,
+      chatModel.participantInfo ?? [],
     );
+    final ParticipantInfo safeRecieverInfo = recieverInfo ?? ParticipantInfo(id: '', name: '');
 
-    final bool isGroupMessage = chatModel.isGroupMessage;
+    final bool isGroupMessage = chatModel.isGroupMessage ?? false;
 
     return Scaffold(
       backgroundColor: Colors.indigo[50],
       appBar: widget.showAppBar
           ? ChatAppBar(
               isGroupMessage: isGroupMessage,
-              recieverInfo: isGroupMessage ? null : recieverInfo,
-              groupDetails: isGroupMessage ? chatModel.groupDetails : null,
+              recieverInfo: isGroupMessage
+                  ? ParticipantInfo(id: '', name: '')
+                  : recieverInfo ?? ParticipantInfo(id: '', name: ''),
+              groupDetails: isGroupMessage
+                  ? (chatModel.groupDetails ?? MultiUserMessagingModel())
+                  : MultiUserMessagingModel(),
               clearChat: () {
                 exitFromChatPage = true;
-                _bloc.clearChat(chatModel.id, widget.senderId);
+                _bloc.clearChat(chatModel.id ?? '', widget.senderId);
                 Navigator.pop(context);
               },
               blockUser: () {
                 _bloc.blockMember(
-                  loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  blockedUserId: recieverId,
+                  loggedInUserEmail:
+                      SevaCore.of(context).loggedInUser.email ?? '',
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
+                  blockedUserId: recieverId ?? '',
                 );
 
                 Navigator.pop(context);
@@ -194,36 +214,40 @@ class _ChatPageState extends State<ChatPage> {
               exitGroup: isGroupMessage
                   ? () {
                       String userId =
-                          SevaCore.of(context).loggedInUser.sevaUserID;
+                          SevaCore.of(context).loggedInUser.sevaUserID ?? '';
                       _bloc.removeMember(
-                        chatModel.id,
+                        chatModel.id ?? '',
                         userId,
-                        chatModel.groupDetails.admins.contains(userId),
+                        (chatModel.groupDetails?.admins?.contains(userId) ??
+                            false),
                       );
                       exitFromChatPage = true;
                       Navigator.pop(context);
                     }
                   : () {},
-              isBlockEnabled:
-                  chatModel.isTimebankMessage || chatModel.isGroupMessage,
-              openGroupInfo: isGroupMessage ? openGroupInfo : null,
+              isBlockEnabled: (chatModel.isTimebankMessage ?? false) ||
+                  (chatModel.isGroupMessage ?? false),
               onProfileImageTap: !isGroupMessage &&
                       timebankModel != null &&
-                      !recieverInfo.id.contains('-')
+                      !(safeRecieverInfo.id != null &&
+                        safeRecieverInfo.id!.isNotEmpty &&
+                        safeRecieverInfo.id!.contains('-'))
                   ? () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return ProfileViewer(
-                          timebankId: timebankModel.id,
-                          entityName: timebankModel.name,
+                          timebankId: timebankModel?.id ?? '',
+                          entityName: timebankModel?.name ?? '',
                           isFromTimebank: isPrimaryTimebank(
-                              parentTimebankId: timebankModel.parentTimebankId),
-                          userId: recieverInfo.id,
-                          userEmail: null,
+                              parentTimebankId:
+                                  timebankModel?.parentTimebankId ?? ''),
+                          userId: safeRecieverInfo.id ?? '',
+                          userEmail: '',
                         );
                       }));
                     }
-                  : null,
+                  : () {},
+                  : () {},
             )
           : null,
       body: Column(
@@ -245,7 +269,7 @@ class _ChatPageState extends State<ChatPage> {
                   return LoadingIndicator();
                 }
 
-                if (snapshot.data.length == 0) {
+                if ((snapshot.data?.length ?? 0) == 0) {
                   return Center(
                     child: Text(
                       S.of(context).no_message,
@@ -253,12 +277,12 @@ class _ChatPageState extends State<ChatPage> {
                   );
                 }
 
-                if (!chatModel.isTimebankMessage ||
+                if ((chatModel.isTimebankMessage ?? false) == false ||
                     widget.senderId ==
-                        SevaCore.of(context).loggedInUser.sevaUserID) {
+                        (SevaCore.of(context).loggedInUser.sevaUserID ?? '')) {
                   _bloc.markMessageAsRead(
-                    chatId: chatModel.id,
-                    userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                    chatId: chatModel.id ?? '',
+                    userId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
                   );
                 }
 
@@ -269,43 +293,43 @@ class _ChatPageState extends State<ChatPage> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     controller: _scrollController,
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data?.length ?? 0,
                     itemBuilder: (_, int index) {
-                      MessageModel messageModel = snapshot.data[index];
+                      MessageModel messageModel = snapshot.data![index];
 
                       switch (messageModel.type) {
                         case MessageType.FEED:
                           return _getSharedNewDetails(
                               messageModel: messageModel);
-                          break;
                         case MessageType.MESSAGE:
                           return MessageBubble(
-                            message: messageModel.message,
+                            message: messageModel.message ?? '',
                             isSent: messageModel.fromId == widget.senderId,
-                            timestamp: messageModel.timestamp,
-                            isGroupMessage: chatModel.isGroupMessage,
-                            info: chatModel.isGroupMessage
-                                ? participantsInfoById[messageModel.fromId]
+                            timestamp: messageModel.timestamp ?? 0,
+                            isGroupMessage: chatModel.isGroupMessage ?? false,
+                            info: (chatModel.isGroupMessage ?? false) &&
+                                    messageModel.fromId != null &&
+                                    participantsInfoById[messageModel.fromId] !=
+                                        null
+                                ? participantsInfoById[messageModel.fromId]!
                                 : null,
                           );
-                          break;
-
                         case MessageType.IMAGE:
                           return ImageBubble(
                             messageModel: messageModel,
                             isSent: messageModel.fromId == widget.senderId,
-                            isGroupMessage: chatModel.isGroupMessage,
-                            info: chatModel.isGroupMessage
-                                ? participantsInfoById[messageModel.fromId]
+                            isGroupMessage: chatModel.isGroupMessage ?? false,
+                            info: (chatModel.isGroupMessage ?? false) &&
+                                    participantsInfoById[messageModel.fromId] !=
+                                        null
+                                ? participantsInfoById[messageModel.fromId]!
                                 : null,
                           );
-                          break;
                         case MessageType.URL:
                           return Container(child: Text("url"));
-                          break;
+                        // Optionally, handle any other MessageType cases here.
                         default:
                           return Container(child: Text("error"));
-                          break;
                       }
                     },
                   ),
@@ -337,7 +361,7 @@ class _ChatPageState extends State<ChatPage> {
                     builder: (context) => CameraPage(cameras: cameras),
                   ),
                 )
-                    .then((ImageCaptionModel model) {
+                    .then((ImageCaptionModel? model) {
                   if (model != null) {
                     pushNewMessage(
                       messageContent: model.caption.isEmpty
@@ -363,12 +387,13 @@ class _ChatPageState extends State<ChatPage> {
                       errorText = '';
                     });
                     if (widget.isFromRejectCompletion &&
-                        (messageContent == null || messageContent.isEmpty)) {
+                        (messageContent == null ||
+                            (messageContent?.isEmpty ?? true))) {
                       messageContent =
                           '${S.of(context).reject_task_completion} ';
                     }
                     pushNewMessage(
-                      messageContent: messageContent,
+                      messageContent: messageContent ?? '',
                       type: MessageType.MESSAGE,
                     );
                   }
@@ -396,7 +421,7 @@ class _ChatPageState extends State<ChatPage> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
-          _scrollController?.position?.maxScrollExtent,
+          _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -405,26 +430,37 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void pushNewMessage({
-    String messageContent,
-    MessageType type,
-    File file,
+    required String messageContent,
+    required MessageType type,
+    File? file,
   }) {
-    _bloc.pushNewMessage(
-      chatModel: chatModel,
-      messageContent: messageContent,
-      senderId: widget.senderId,
-      recieverId: recieverId,
-      type: type,
-      file: file,
-      timebankId: timebankId,
-    );
+    if (file != null) {
+      _bloc.pushNewMessage(
+        chatModel: chatModel,
+        messageContent: messageContent,
+        senderId: widget.senderId,
+        recieverId: recieverId ?? '',
+        type: type,
+        file: file!,
+        timebankId: timebankId ?? '',
+      );
+    } else {
+      _bloc.pushNewMessage(
+        chatModel: chatModel,
+        messageContent: messageContent,
+        senderId: widget.senderId,
+        recieverId: recieverId ?? '',
+        type: type,
+        timebankId: timebankId ?? '',
+      );
+    }
 
     textcontroller.clear();
     _scrollToBottom();
   }
 
-  Widget _getSharedNewDetails({MessageModel messageModel}) {
-    var newsModel = _bloc.getNewsModel(messageModel.message);
+  Widget _getSharedNewDetails({required MessageModel messageModel}) {
+    var newsModel = _bloc.getNewsModel(messageModel.message ?? '');
     if (newsModel != null) {
       logger.i('picking from cache');
       return FeedBubble(
@@ -434,8 +470,8 @@ class _ChatPageState extends State<ChatPage> {
         isSent: messageModel.fromId == widget.senderId,
       );
     }
-    return FutureBuilder<Object>(
-      future: FeedsRepository.getFeedFromId(messageModel.message),
+    return FutureBuilder<NewsModel?>(
+      future: FeedsRepository.getFeedFromId(messageModel.message ?? ''),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text(S.of(context).failed_to_load_post);
@@ -445,7 +481,7 @@ class _ChatPageState extends State<ChatPage> {
           return Container();
         }
 
-        NewsModel news = snapshot.data;
+        NewsModel news = snapshot.data as NewsModel;
         _bloc.setNewsModel(news);
         return FeedBubble(
           news: news,
@@ -458,7 +494,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void openGroupInfo() {
-    if (chatModel.isParentChildCommunication) {
+    if (chatModel.isParentChildCommunication == true) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CreateCommunityMessage(
@@ -470,7 +506,9 @@ class _ChatPageState extends State<ChatPage> {
     } else {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => GroupInfoPage(chatModel: chatModel, timebankModel: timebankModel),
+          builder: (context) => GroupInfoPage(
+              chatModel: chatModel,
+              timebankModel: timebankModel ?? TimebankModel('')),
         ),
       );
     }

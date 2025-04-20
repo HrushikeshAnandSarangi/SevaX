@@ -18,7 +18,7 @@ class StorageRepository {
   static Future<String> uploadFile(
     String directory,
     File file, {
-    String fileName,
+    String? fileName,
   }) async {
     FirebaseStorage _storage = FirebaseStorage.instance;
     UploadTask _uploadTask = _storage

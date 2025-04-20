@@ -14,7 +14,7 @@ class GroupCard extends StatelessWidget {
     Key key,
     this.image,
     this.title,
-    this.subtitle,
+    A this.subtitle,
     this.onPressed,
     this.status = JoinStatus.JOIN,
   }) : super(key: key);

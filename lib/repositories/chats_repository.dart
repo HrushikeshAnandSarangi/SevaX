@@ -13,7 +13,7 @@ class ChatsRepository {
   static CollectionReference collectionReference = CollectionRef.chats;
 
   static Stream<List<ChatModel>> getPersonalChats(
-      {@required String userId, @required String communityId}) async* {
+      {required String userId, required String communityId}) async* {
     var personalChats = collectionReference
         .where("participants", arrayContains: userId)
         .where("communityId", isEqualTo: communityId)
@@ -40,10 +40,11 @@ class ChatsRepository {
         handleData: (docs, sink) {
           List<ChatModel> chats = [];
           for (var chatDocument in docs) {
-            var chat = ChatModel.fromMap(chatDocument.data());
+            var chat =
+                ChatModel.fromMap(chatDocument.data() as Map<String, dynamic>);
             chat.id = chatDocument.id;
-            if (chat.interCommunity) {
-              if (!chat.showToCommunities.contains(communityId)) {
+            if (chat.interCommunity ?? false) {
+              if (!(chat.showToCommunities?.contains(communityId) ?? false)) {
                 continue;
               }
             }
@@ -56,7 +57,7 @@ class ChatsRepository {
   }
 
   static Future<String> createNewChat(ChatModel chat,
-      {String documentId}) async {
+      {String? documentId}) async {
     DocumentReference ref = collectionReference.doc(documentId);
     await ref.set(
       chat.toMap(),
@@ -79,15 +80,16 @@ class ChatsRepository {
 
   static Future<void> transferOwnership(String chatId) async {
     DocumentSnapshot result = await collectionReference.doc(chatId).get();
-    ChatModel chatModel = ChatModel.fromMap(result.data());
-    if (chatModel.participants.length > 0) {
+    ChatModel chatModel =
+        ChatModel.fromMap(result.data() as Map<String, dynamic>);
+    if ((chatModel.participants?.length ?? 0) > 0) {
       await collectionReference.doc(chatId).set(
         {
           "groupDetails": {
             "admins": FieldValue.arrayUnion(
               [
-                chatModel.participants[
-                    Random().nextInt(chatModel.participants.length)],
+                chatModel.participants![
+                    Random().nextInt(chatModel.participants!.length)],
               ],
             )
           },
@@ -109,7 +111,7 @@ class ChatsRepository {
 
   static Future<ChatModel> getChatModel(String chatId) async {
     DocumentSnapshot result = await collectionReference.doc(chatId).get();
-    return ChatModel.fromMap(result.data());
+    return ChatModel.fromMap(result.data() as Map<String, dynamic>);
   }
 
   static Stream<List<ChatModel>> getParentChildChats(String timebankId) async* {
@@ -123,7 +125,8 @@ class ChatsRepository {
         handleData: (data, sink) {
           List<ChatModel> chats = [];
           data.docs.forEach((element) {
-            var chat = ChatModel.fromMap(element.data());
+            var chat =
+                ChatModel.fromMap(element.data() as Map<String, dynamic>);
             chat.id = element.id;
             chats.add(chat);
           });
@@ -137,9 +140,9 @@ class ChatsRepository {
 
   static Future<void> editGroup(
     String chatId,
-    String groupName,
-    String imageUrl,
-    List<ParticipantInfo> infos,
+    String? groupName,
+    String? imageUrl,
+    List<ParticipantInfo>? infos,
   ) async {
     WriteBatch batch = CollectionRef.batch;
     if (groupName != null) {

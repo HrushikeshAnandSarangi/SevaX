@@ -6,16 +6,16 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;
-  final String transaction_matrix_type;
+  final String? transaction_matrix_type;
   final BannerDetails upgradeDetails;
-  final ComingFrom comingFrom;
-  final Function onNavigationStart;
+  final ComingFrom? comingFrom;
+  final Function? onNavigationStart;
 
   TransactionsMatrixCheck({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.transaction_matrix_type,
-    @required this.upgradeDetails,
+    required this.upgradeDetails,
     this.comingFrom,
     this.onNavigationStart,
   });
@@ -23,12 +23,12 @@ class TransactionsMatrixCheck extends StatelessWidget {
   //this widget checks wether this plan allows a particular transaction to be done or not
   @override
   Widget build(BuildContext context) {
-    return checkAllowedTransaction(transaction_matrix_type)
+    return checkAllowedTransaction(transaction_matrix_type!)
         ? child
         : GestureDetector(
             onTap: () {
               try {
-                onNavigationStart();
+                onNavigationStart!();
               } catch (e) {
                 logger.d("Failed to launch");
               }

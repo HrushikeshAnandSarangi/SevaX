@@ -14,8 +14,8 @@ class NotificationsRepository {
     String userEmail,
   ) async {
     CollectionReference ref;
-    if (model.isTimebankNotification) {
-      ref = CollectionRef.timebankNotification(model.timebankId);
+    if (model.isTimebankNotification ?? false) {
+      ref = CollectionRef.timebankNotification(model.timebankId ?? '');
     } else {
       ref = CollectionRef.userNotification(userEmail);
     }
@@ -56,7 +56,8 @@ class NotificationsRepository {
         handleData: (data, sink) {
           List<NotificationsModel> notifications = [];
           data.docs.forEach((document) {
-            notifications.add(NotificationsModel.fromMap(document.data()));
+            notifications.add(NotificationsModel.fromMap(
+                document.data() as Map<String, dynamic>));
           });
           sink.add(notifications);
         },
@@ -77,29 +78,29 @@ class NotificationsRepository {
   // }
 
   static Future sendUserExitNotificationToAdmin({
-    UserModel user,
-    TimebankModel timebank,
-    String communityId,
-    String reason,
+    UserModel? user,
+    TimebankModel? timebank,
+    String? communityId,
+    String? reason,
   }) async {
     UserExitModel userExitModel = UserExitModel(
-      userPhotoUrl: user.photoURL,
-      timebank: timebank.name,
+      userPhotoUrl: user?.photoURL,
+      timebank: timebank?.name,
       reason: reason,
-      userName: user.fullname,
+      userName: user?.fullname,
     );
 
     NotificationsModel notification = NotificationsModel(
       id: Utils.getUuid(),
-      timebankId: timebank.id,
+      timebankId: timebank?.id,
       data: userExitModel.toMap(),
       isRead: false,
       type: NotificationType.TypeMemberExitTimebank,
       communityId: communityId,
-      senderUserId: user.sevaUserID,
-      targetUserId: timebank.creatorId,
+      senderUserId: user?.sevaUserID,
+      targetUserId: timebank?.creatorId,
     );
-    await CollectionRef.timebankNotification(timebank.id)
+    await CollectionRef.timebankNotification(timebank!.id)
         .doc(notification.id)
         .set(
           (notification..isTimebankNotification = true).toMap(),

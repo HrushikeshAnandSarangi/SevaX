@@ -9,7 +9,8 @@ class LendingItemCardWidget extends StatelessWidget {
   final VoidCallback onDelete;
   bool hidden = false;
 
-  LendingItemCardWidget({this.lendingItemModel, this.onEdit, this.onDelete, this.hidden = false});
+  LendingItemCardWidget(
+      {this.lendingItemModel, this.onEdit, this.onDelete, this.hidden = false});
 
   @override
   Widget build(BuildContext context) {

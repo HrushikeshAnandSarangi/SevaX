@@ -24,16 +24,17 @@ class RequestRepository {
           snapshot.docs.forEach(
             (documentSnapshot) {
               // =========================================++=======
-              RequestModel model =
-                  RequestModel.fromMap(documentSnapshot.data());
+              RequestModel model = RequestModel.fromMap(
+                  documentSnapshot.data() as Map<String, dynamic>);
               model.id = documentSnapshot.id;
 
-              if (model.accepted) {
+              if (model.accepted != null && model.accepted == true) {
                 if (model.sevaUserId == userId) {
                   models.add(model);
                 }
               } else {
-                if (!model.isFromOfferRequest) {
+                if (model.isFromOfferRequest != null &&
+                    model.isFromOfferRequest == false) {
                   models.add(model);
                 }
               }
@@ -49,7 +50,7 @@ class RequestRepository {
     String requestId,
   ) async {
     DocumentSnapshot document = await ref.doc(requestId).get();
-    return RequestModel.fromMap(document.data());
+    return RequestModel.fromMap(document.data() as Map<String, dynamic>);
   }
 
   static Future<List<RequestModel>> getAllRequestsOfCommunity(
@@ -62,7 +63,7 @@ class RequestRepository {
 
     List<RequestModel> models = [];
     result.docs.forEach((element) {
-      models.add(RequestModel.fromMap(element.data()));
+      models.add(RequestModel.fromMap(element.data() as Map<String, dynamic>));
     });
     return models;
   }

@@ -23,7 +23,11 @@ class S {
     });
   }
 
-  static S of(BuildContext context) => Localizations.of<S>(context, S);
+  static S of(BuildContext context) {
+    final s = Localizations.of<S>(context, S);
+    if (s == null) throw FlutterError('No S found in context');
+    return s;
+  }
 
   String get check_met => Intl.message(
         'Checking, if we met before',
@@ -3836,37 +3840,49 @@ class S {
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
+              count
+            ])}',
         name: 'timebank_project',
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
+              count
+            ])}',
         name: 'personal_project',
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
+              count
+            ])}',
         name: 'personal_request',
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
+              count
+            ])}',
         name: 'timebank_request',
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
+              count
+            ])}',
         name: 'members_selected',
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
+              count
+            ])}',
         name: 'volunteers_selected',
         args: [count],
       );
@@ -3883,7 +3899,9 @@ class S {
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
+              count
+            ])}',
         name: 'subscription',
         args: [count],
       );
@@ -7645,7 +7663,8 @@ class S {
         name: 'back',
       );
 
-  String get by_selecting_this_you_will_be_creating_a_Sandbox_Community => Intl.message(
+  String get by_selecting_this_you_will_be_creating_a_Sandbox_Community =>
+      Intl.message(
         'By selecting this you will be creating a Sandbox Community',
         name: 'by_selecting_this_you_will_be_creating_a_Sandbox_Community',
       );
@@ -8305,7 +8324,8 @@ class S {
         name: 'trial_added',
       );
 
-  String get we_have_added_seven_days_free_trial_to_your_subscription => Intl.message(
+  String get we_have_added_seven_days_free_trial_to_your_subscription =>
+      Intl.message(
         'Note: If you do nothing after the 7 day free trial, your paid subscription will continue.',
         name: 'we_have_added_seven_days_free_trial_to_your_subscription',
       );
@@ -8370,25 +8390,35 @@ class S {
         name: 'we_are_sorry_to_see_you_go',
       );
 
-  String get does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply => Intl.message(
-        'Does your cancellation have anything to do with the following? (Select all that apply.)',
-        name: 'does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply',
-      );
+  String
+      get does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply =>
+          Intl.message(
+            'Does your cancellation have anything to do with the following? (Select all that apply.)',
+            name:
+                'does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply',
+          );
 
-  String get the_app_did_not_meet_our_requirements_or_expectations_because => Intl.message(
+  String get the_app_did_not_meet_our_requirements_or_expectations_because =>
+      Intl.message(
         'The app did not meet our requirements or expectations, because:',
         name: 'the_app_did_not_meet_our_requirements_or_expectations_because',
       );
 
-  String get please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply => Intl.message(
-        'Please let us know if we can do anything to change your mind? (Select all that apply.)',
-        name: 'please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply',
-      );
+  String
+      get please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply =>
+          Intl.message(
+            'Please let us know if we can do anything to change your mind? (Select all that apply.)',
+            name:
+                'please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply',
+          );
 
-  String get would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial => Intl.message(
-        'Would you like a bit more time to evaluate our app for a free full 7 day trial?',
-        name: 'would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial',
-      );
+  String
+      get would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial =>
+          Intl.message(
+            'Would you like a bit more time to evaluate our app for a free full 7 day trial?',
+            name:
+                'would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial',
+          );
 
   String get explore_full_feature_for_next_seven_days => Intl.message(
         'Explore full feature for next 7 days',
@@ -9490,7 +9520,8 @@ class S {
         name: 'time_debited_for_one_to_many_offer_tag',
       );
 
-  String get time_offer_creator_credited_for_one_to_many_offer_tag => Intl.message(
+  String get time_offer_creator_credited_for_one_to_many_offer_tag =>
+      Intl.message(
         'creator credited',
         name: 'time_offer_creator_credited_for_one_to_many_offer_tag',
       );
@@ -9830,12 +9861,14 @@ class S {
         name: 'has_invited_you_to_join_their',
       );
 
-  String get seva_community_seva_means_selfless_service_in_Sanskrit => Intl.message(
+  String get seva_community_seva_means_selfless_service_in_Sanskrit =>
+      Intl.message(
         'Seva Community. Seva means \"selfless service\" in Sanskrit',
         name: 'seva_community_seva_means_selfless_service_in_Sanskrit',
       );
 
-  String get seva_ommunities_are_based_on_a_mutual_reciprocity_system => Intl.message(
+  String get seva_ommunities_are_based_on_a_mutual_reciprocity_system =>
+      Intl.message(
         'Seva Communities are based on a mutual-reciprocity system',
         name: 'seva_ommunities_are_based_on_a_mutual_reciprocity_system',
       );
@@ -9848,10 +9881,13 @@ class S {
                 'where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need',
           );
 
-  String get to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video => Intl.message(
-        'To learn more about being a part of a Seva Community, here\"s a short explainer video',
-        name: 'to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video',
-      );
+  String
+      get to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video =>
+          Intl.message(
+            'To learn more about being a part of a Seva Community, here\"s a short explainer video',
+            name:
+                'to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video',
+          );
 
   String get here_is_what_you_ll_need_to_know => Intl.message(
         'Here is what you\'ll need to know',
@@ -9863,10 +9899,13 @@ class S {
         name: 'first_text',
       );
 
-  String get depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone => Intl.message(
-        'depending on where you click the link from, whether it\"s your web browser or mobile phone',
-        name: 'depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone',
-      );
+  String
+      get depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone =>
+          Intl.message(
+            'depending on where you click the link from, whether it\"s your web browser or mobile phone',
+            name:
+                'depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone',
+          );
 
   String get the_link_will_either_take_you_to_our_main => Intl.message(
         'the link will either take you to our main',
@@ -9881,13 +9920,16 @@ class S {
                 'web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores',
           );
 
-  String get where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website =>
-      Intl.message(
-        'where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website',
-        name: 'where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website',
-      );
+  String
+      get where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website =>
+          Intl.message(
+            'where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website',
+            name:
+                'where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website',
+          );
 
-  String get you_can_explore_Seva_Communities_near_you_Type_in_the => Intl.message(
+  String get you_can_explore_Seva_Communities_near_you_Type_in_the =>
+      Intl.message(
         'you can explore Seva Communities near you. Type in the',
         name: 'you_can_explore_Seva_Communities_near_you_Type_in_the',
       );
@@ -9912,13 +9954,16 @@ class S {
         name: 'and_their_Seva_Community_via_this_dynamic_link_at',
       );
 
-  String get thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at =>
-      Intl.message(
-        'Thank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com',
-        name: 'thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at',
-      );
+  String
+      get thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at =>
+          Intl.message(
+            'Thank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com',
+            name:
+                'thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at',
+          );
 
-  String get if_you_have_any_questions_or_issues_joining_with_the_link_given => Intl.message(
+  String get if_you_have_any_questions_or_issues_joining_with_the_link_given =>
+      Intl.message(
         'if you have any questions or issues joining with the link given',
         name: 'if_you_have_any_questions_or_issues_joining_with_the_link_given',
       );
@@ -9938,7 +9983,8 @@ class S {
         name: 'credits_from_you_after_you_say_ok',
       );
 
-  String get you_don_t_have_enough_credit_to_signup_for_this_class => Intl.message(
+  String get you_don_t_have_enough_credit_to_signup_for_this_class =>
+      Intl.message(
         'You don\"t have enough credit to signup for this class',
         name: 'you_don_t_have_enough_credit_to_signup_for_this_class',
       );
@@ -9973,7 +10019,8 @@ class S {
         name: 'edit_this_request_only',
       );
 
-  String get this_action_is_restricted_for_you_by_the_owner_of_this => Intl.message(
+  String get this_action_is_restricted_for_you_by_the_owner_of_this =>
+      Intl.message(
         'This action is restricted for you by the owner of this',
         name: 'this_action_is_restricted_for_you_by_the_owner_of_this',
       );
@@ -10288,7 +10335,8 @@ class S {
         name: 'transfer_ownership_text',
       );
 
-  String get you_have_been_made_the_new_owner_of_group_name_subtitle => Intl.message(
+  String get you_have_been_made_the_new_owner_of_group_name_subtitle =>
+      Intl.message(
         'You have been made the new owner of',
         name: 'you_have_been_made_the_new_owner_of_group_name_subtitle',
       );

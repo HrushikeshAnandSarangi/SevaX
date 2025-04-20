@@ -3,49 +3,49 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 
 class TimebankModel extends DataModel {
-  String id;
-  String name;
-  String missionStatement;
-  String emailId;
-  String phoneNumber;
-  String address;
-  String creatorId;
-  String photoUrl;
-  String cover_url;
-  int createdAt;
-  List<String> admins;
-  List<String> organizers;
-  List<String> coordinators;
-  List<String> members;
-  bool protected;
-  bool private;
-  bool sponsored;
-  String parentTimebankId;
-  String communityId;
-  String rootTimebankId;
-  List<String> children;
-  num balance;
-  num sandboxBalance;
-  GeoFirePoint location;
-  bool softDelete;
-  bool preventAccedentalDelete;
-  bool requestedSoftDelete;
-  bool liveMode;
-  List<String> managedCreatorIds;
-  List<SponsorDataModel> sponsors;
+  late String id;
+  late String name;
+  late String missionStatement;
+  late String emailId;
+  late String phoneNumber;
+  late String address;
+  late String creatorId;
+  late String photoUrl;
+  late String cover_url;
+  late int createdAt;
+  late List<String> admins;
+  late List<String> organizers;
+  late List<String> coordinators;
+  late List<String> members;
+  late bool protected;
+  late bool private;
+  late bool sponsored;
+  late String parentTimebankId;
+  late String communityId;
+  late String rootTimebankId;
+  late List<String> children;
+  late num balance;
+  late num sandboxBalance;
+  late GeoFirePoint location;
+  late bool softDelete;
+  late bool preventAccedentalDelete;
+  late bool requestedSoftDelete;
+  late bool liveMode;
+  late List<String> managedCreatorIds;
+  late List<SponsorDataModel> sponsors;
 
-  int unreadMessageCount;
-  DateTime lastMessageTimestamp;
+  late int unreadMessageCount;
+  late DateTime lastMessageTimestamp;
 
-  Map<String, NotificationSetting> notificationSetting;
-  String associatedParentTimebankId;
-  TimebankConfigurations timebankConfigurations;
+  late Map<String, NotificationSetting> notificationSetting;
+  late String associatedParentTimebankId;
+  late TimebankConfigurations timebankConfigurations;
   // CompareToTimeBank joinStatus;
 
   // List<String> members;
@@ -137,16 +137,13 @@ class TimebankModel extends DataModel {
         map['location']['geopoint'] != null) {
       if (map['location']['geopoint'] is GeoPoint) {
         GeoPoint geoPoint = map['location']['geopoint'];
-        geoFirePoint = Geoflutterfire()
-            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+        geoFirePoint =
+            GeoFirePoint(GeoPoint(geoPoint.latitude, geoPoint.longitude));
       } else {
-        geoFirePoint = GeoFirePoint(
-          map["location"]["geopoint"]["_latitude"],
-          map["location"]["geopoint"]["_longitude"],
-        );
+        geoFirePoint = GeoFirePoint(map["location"]["geopoint"]["_latitude"]);
       }
     } else {
-      geoFirePoint = GeoFirePoint(40.754387, -73.984291);
+      geoFirePoint = GeoFirePoint(GeoPoint(40.754387, -73.984291));
     }
     return geoFirePoint;
   }
@@ -250,12 +247,11 @@ class TimebankModel extends DataModel {
     if (json.containsKey('location')) {
       if (json['location']['geopoint'] is GeoPoint) {
         GeoPoint geoPoint = json['location']['geopoint'];
-        timebankModel.location = Geoflutterfire()
-            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+        timebankModel.location =
+            GeoFirePoint(GeoPoint(geoPoint.latitude, geoPoint.longitude));
       } else {
         timebankModel.location = GeoFirePoint(
           json["location"]["geopoint"]["_latitude"],
-          json["location"]["geopoint"]["_longitude"],
         );
         // GeoPoint geoPoint = json['location']['geopoint'];
         // timebankModel.location = Geoflutterfire()
@@ -371,9 +367,9 @@ class TimebankModel extends DataModel {
 }
 
 class Member extends DataModel {
-  String email;
-  String fullName;
-  String photoUrl;
+  String? email;
+  String? fullName;
+  String? photoUrl;
 
   Member({this.fullName, this.email, this.photoUrl});
 
@@ -394,13 +390,13 @@ class Member extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
-    if (this.email != null && this.email.isNotEmpty) {
+    if (this.email != null && this.email!.isNotEmpty) {
       object['membersemail'] = this.email;
     }
-    if (this.fullName != null && this.fullName.isNotEmpty) {
+    if (this.fullName != null && this.fullName!.isNotEmpty) {
       object['membersfullname'] = this.fullName;
     }
-    if (this.photoUrl != null && this.photoUrl.isNotEmpty) {
+    if (this.photoUrl != null && this.photoUrl!.isNotEmpty) {
       object['membersphotourl'] = this.photoUrl;
     }
 
@@ -416,16 +412,16 @@ class SponsorDataModel {
     this.createdBy,
   });
 
-  String logo;
-  String name;
-  int createdAt;
-  String createdBy;
+  String? logo;
+  String? name;
+  int? createdAt;
+  String? createdBy;
 
   SponsorDataModel copyWith({
-    String logo,
-    String name,
-    int createdAt,
-    String createdBy,
+    String? logo,
+    String? name,
+    int? createdAt,
+    String? createdBy,
   }) =>
       SponsorDataModel(
         logo: logo ?? this.logo,
@@ -463,9 +459,9 @@ class TimebankConfigurations {
     this.member,
   });
 
-  List<String> admin;
-  List<String> superAdmin;
-  List<String> member;
+  List<String>? admin;
+  List<String>? superAdmin;
+  List<String>? member;
 
   factory TimebankConfigurations.fromMap(Map<dynamic, dynamic> json) =>
       TimebankConfigurations(
@@ -481,12 +477,12 @@ class TimebankConfigurations {
       );
 
   Map<String, dynamic> toMap() => {
-        "admin": admin == null ? null : List<String>.from(admin.map((x) => x)),
+        "admin": admin == null ? null : List<String>.from(admin!.map((x) => x)),
         "super_admin": superAdmin == null
             ? null
-            : List<String>.from(superAdmin.map((x) => x)),
+            : List<String>.from(superAdmin!.map((x) => x)),
         "member":
-            member == null ? null : List<String>.from(member.map((x) => x)),
+            member == null ? null : List<String>.from(member!.map((x) => x)),
       };
 
   @override

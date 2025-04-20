@@ -7,9 +7,9 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class SearchBloc extends BlocBase {
-  final TimebankModel timebank;
-  final CommunityModel community;
-  final UserModel user;
+  final TimebankModel? timebank;
+  final CommunityModel? community;
+  final UserModel? user;
   SearchBloc({this.community, this.timebank, this.user})
       : assert(timebank != null),
         assert(user != null);

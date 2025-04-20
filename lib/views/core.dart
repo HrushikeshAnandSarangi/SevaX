@@ -10,9 +10,9 @@ class SevaCore extends InheritedWidget {
   UserModel loggedInUser;
 
   SevaCore({
-    @required this.loggedInUser,
-    @required Widget child,
-    Key key,
+    required this.loggedInUser,
+    required Widget child,
+    Key? key,
   })  : assert(loggedInUser != null),
         assert(child != null),
         super(key: key, child: child);
@@ -23,7 +23,7 @@ class SevaCore extends InheritedWidget {
   }
 
   static SevaCore of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType();
+    return context.dependOnInheritedWidgetOfExactType<SevaCore>()!;
   }
 
   Future<bool> get _checkInternet async {
@@ -41,7 +41,7 @@ class SevaCore extends InheritedWidget {
   Future<Widget> errorDialogueBox(BuildContext context) async {
     var status = await _checkInternet;
     if (status) {
-      return null;
+      return Container(); // Return an empty widget instead of null
     }
     return AlertDialog(
       contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

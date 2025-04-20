@@ -6,14 +6,14 @@ OfferParticipantsModel offerParticipantsModelFromJson(String str) =>
     OfferParticipantsModel.fromJson(json.decode(str));
 
 class OfferParticipantsModel {
-  String id;
-  ClassDetails classDetails;
-  String timebankId;
-  String offerId;
-  ParticipantDetails participantDetails;
-  String communityId;
-  String status;
-  int timestamp;
+  String? id;
+  ClassDetails? classDetails;
+  String? timebankId;
+  String? offerId;
+  ParticipantDetails? participantDetails;
+  String? communityId;
+  String? status;
+  int? timestamp;
 
   OfferParticipantsModel({
     this.classDetails,
@@ -27,11 +27,12 @@ class OfferParticipantsModel {
 
   factory OfferParticipantsModel.fromJson(Map<String, dynamic> json) =>
       OfferParticipantsModel(
-        classDetails: ClassDetails.fromJson(Map<String,dynamic>.from(json["classDetails"])),
+        classDetails: ClassDetails.fromJson(
+            Map<String, dynamic>.from(json["classDetails"])),
         timebankId: json["timebankId"],
         offerId: json["offerId"],
-        participantDetails:
-            ParticipantDetails.fromJson(Map<String,dynamic>.from(json["participantDetails"])),
+        participantDetails: ParticipantDetails.fromJson(
+            Map<String, dynamic>.from(json["participantDetails"])),
         communityId: json["communityId"],
         status: json["status"],
         timestamp: json["timestamp"],
@@ -39,13 +40,13 @@ class OfferParticipantsModel {
 }
 
 class ClassDetails {
-  String classTitle;
-  int numberOfClassHours;
-  String classHost;
-  int numberOfPreperationHours;
-  String sevauserid;
-  String email;
-  String classDescription;
+  String? classTitle;
+  int? numberOfClassHours;
+  String? classHost;
+  int? numberOfPreperationHours;
+  String? sevauserid;
+  String? email;
+  String? classDescription;
 
   ClassDetails({
     this.classTitle,
@@ -69,11 +70,11 @@ class ClassDetails {
 }
 
 class ParticipantDetails {
-  String photourl;
-  String bio;
-  String fullname;
-  String sevauserid;
-  String email;
+  String? photourl;
+  String? bio;
+  String? fullname;
+  String? sevauserid;
+  String? email;
 
   ParticipantDetails({
     this.photourl,
@@ -92,7 +93,13 @@ class ParticipantDetails {
         email: json["email"],
       );
 
-  Map<String, dynamic> fromJson(Map<String, dynamic> map) {}
+  Map<String, dynamic> toJson() => {
+        'photourl': photourl,
+        'bio': bio,
+        'fullname': fullname,
+        'sevauserid': sevauserid,
+        'email': email,
+      };
 }
 
 enum ParticipantStatus {
@@ -153,7 +160,7 @@ Color getStatusColor(ParticipantStatus status) {
   ].contains(status)) {
     return Colors.red;
   } else {
-    return null;
-    //Use Theme color if the value is null
+    return Colors.grey;
+    //Use a default color
   }
 }

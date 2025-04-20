@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:flutter/material.dart' hide Row;
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -30,7 +32,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/create_request/createrequest.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart'
+    hide Row, SizedBox;
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -46,14 +49,17 @@ class RequestsModule extends StatefulWidget {
   final TimebankModel timebankModel;
   final bool isFromSettings;
 
-  RequestsModule.of({this.timebankId, this.timebankModel, this.isFromSettings});
+  RequestsModule.of(
+      {required this.timebankId,
+      required this.timebankModel,
+      required this.isFromSettings});
 
   @override
   RequestsState createState() => RequestsState();
 }
 
 class RequestsState extends State<RequestsModule> {
-  String timebankId;
+  String? timebankId;
 
   void _setORValue() {
     globals.orCreateSelector = 0;
@@ -122,7 +128,7 @@ class RequestsState extends State<RequestsModule> {
                         ? Container()
                         : TransactionLimitCheck(
                             comingFrom: ComingFrom.Requests,
-                            timebankId: timebankId,
+                            timebankId: timebankId!,
                             isSoftDeleteRequested:
                                 widget.timebankModel.requestedSoftDelete,
                             child: GestureDetector(
@@ -139,16 +145,20 @@ class RequestsState extends State<RequestsModule> {
                                       widget.timebankModel,
                                       SevaCore.of(context)
                                           .loggedInUser
-                                          .sevaUserID)) {
+                                          .sevaUserID!)) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => CreateRequest(
-                                          comingFrom: ComingFrom.Requests,
-                                          timebankId: timebankId,
+                                          timebankId: timebankId ?? '',
                                           projectId: '',
                                           userModel:
                                               SevaCore.of(context).loggedInUser,
+                                          projectModel:
+                                              null!, // Pass null or a valid ProjectModel instance
+                                          comingFrom: ComingFrom.Requests,
+                                          requestModel:
+                                              RequestModel(communityId: null),
                                         ),
                                       ),
                                     );
@@ -161,19 +171,22 @@ class RequestsState extends State<RequestsModule> {
                                       !isAccessAvailable(
                                           widget.timebankModel,
                                           SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID)) {
+                                                  .loggedInUser
+                                                  .sevaUserID ??
+                                              '')) {
                                     showAdminAccessMessage(context: context);
                                   } else {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => CreateRequest(
-                                          timebankId: timebankId,
+                                          timebankId: timebankId ?? '',
                                           projectId: '',
                                           userModel:
                                               SevaCore.of(context).loggedInUser,
                                           comingFrom: ComingFrom.Requests,
+                                          projectModel: null!,
+                                          requestModel: null!,
                                         ),
                                       ),
                                     );
@@ -209,11 +222,11 @@ class RequestsState extends State<RequestsModule> {
           ),
           RequestListItems(
               parentContext: context,
-              timebankId: timebankId,
+              timebankId: timebankId!,
               timebankModel: widget.timebankModel,
               isProjectRequest: false,
               isFromSettings: widget.isFromSettings,
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!)
         ],
       ),
     );
@@ -259,7 +272,7 @@ class RequestsState extends State<RequestsModule> {
 
   void showRequestsWebPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_${S.of(context).localeName}",
       ),
     );
@@ -272,29 +285,35 @@ class RequestsState extends State<RequestsModule> {
   }
 }
 
+class Coordinates {
+  final double latitude;
+  final double longitude;
+
+  Coordinates(this.latitude, this.longitude);
+}
+
 class RequestListItems extends StatefulWidget {
-  final Coordinates currentCoords;
+  final Coordinates? currentCoords;
   final String timebankId;
-  final String sevaUserId;
-  String projectId;
+  final String? sevaUserId;
+  String? projectId;
   final BuildContext parentContext;
   final TimebankModel timebankModel;
-  bool isProjectRequest = false;
+  bool isProjectRequest;
   final bool isFromSettings;
-  bool isAdmin;
+  bool? isAdmin;
 
   RequestListItems(
-      {Key key,
-      this.timebankId,
-      this.parentContext,
-      this.timebankModel,
+      {Key? key,
+      required this.timebankId,
+      required this.parentContext,
+      required this.timebankModel,
       this.isAdmin,
-      this.isProjectRequest,
+      this.isProjectRequest = false,
       this.projectId,
-      this.isFromSettings,
+      required this.isFromSettings,
       this.currentCoords,
-      this.sevaUserId});
-
+      required this.sevaUserId});
   @override
   State<StatefulWidget> createState() {
     return RequestListItemsState();
@@ -302,7 +321,7 @@ class RequestListItems extends StatefulWidget {
 }
 
 class RequestListItemsState extends State<RequestListItems> {
-  Future<Coordinates> currentCoords;
+  late Future<Coordinates> currentCoords;
   @override
   void initState() {
     // currentCoords = findcurrentLocation();
@@ -310,21 +329,22 @@ class RequestListItemsState extends State<RequestListItems> {
 
     if (!widget.isFromSettings) {
       timeBankBloc.getRequestsStreamFromTimebankId(
-          widget.timebankId, widget.sevaUserId);
+          widget.timebankId, widget.sevaUserId!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Coordinates>(
-      future: LocationHelper.getCoordinates(),
+      future: LocationHelper.getCoordinates().then(
+          (location) => Coordinates(location!.latitude, location.longitude)),
       builder: (context, currentLocation) {
         if (currentLocation.connectionState == ConnectionState.waiting) {
           log(' set true');
 
           return LoadingIndicator();
         }
-        String loggedintimezone = SevaCore.of(context).loggedInUser.timezone;
+        String loggedintimezone = SevaCore.of(context).loggedInUser.timezone!;
         log('sett ${widget.isFromSettings}');
 
         if (!widget.isFromSettings) {
@@ -338,9 +358,9 @@ class RequestListItemsState extends State<RequestListItems> {
                 return LoadingIndicator();
               }
               if (snapshot.hasData) {
-                log('lenth ${snapshot.data.requests.length}');
+                log('lenth ${snapshot.data!.requests.length}');
 
-                List<RequestModel> requestModelList = snapshot.data.requests;
+                List<RequestModel> requestModelList = snapshot.data!.requests;
                 requestModelList = filterBlockedRequestsContent(
                     context: context, requestModelList: requestModelList);
 
@@ -351,6 +371,7 @@ class RequestListItemsState extends State<RequestListItems> {
                       child: EmptyWidget(
                         title: S.of(context).no_requests_title,
                         sub_title: S.of(context).no_content_common_description,
+                        titleFontSize: 16.0,
                       ),
                     ),
                   );
@@ -358,13 +379,13 @@ class RequestListItemsState extends State<RequestListItems> {
                 var consolidatedList =
                     GroupRequestCommons.groupAndConsolidateRequests(
                         requestModelList,
-                        SevaCore.of(context).loggedInUser.sevaUserID);
+                        SevaCore.of(context).loggedInUser.sevaUserID!);
                 return formatListFrom(
                   consolidatedList: consolidatedList,
                   loggedintimezone: loggedintimezone,
-                  userEmail: SevaCore.of(context).loggedInUser.email,
-                  projectId: widget.projectId,
-                  currentCoords: currentLocation.data,
+                  userEmail: SevaCore.of(context).loggedInUser.email!,
+                  projectId: widget.projectId!,
+                  currentCoords: currentLocation.data!,
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -387,7 +408,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   return LoadingIndicator();
                 default:
                   List<RequestModel> requestModelList =
-                      requestListSnapshot.data;
+                      requestListSnapshot.data!;
                   requestModelList = filterBlockedRequestsContent(
                     context: context,
                     requestModelList: requestModelList,
@@ -405,10 +426,10 @@ class RequestListItemsState extends State<RequestListItems> {
                   var consolidatedList =
                       GroupRequestCommons.groupAndConsolidateRequests(
                           requestModelList,
-                          SevaCore.of(context).loggedInUser.sevaUserID);
+                          SevaCore.of(context).loggedInUser.sevaUserID!);
                   return formatListFrom(
                     consolidatedList: consolidatedList,
-                    currentCoords: currentLocation.data,
+                    currentCoords: currentLocation.data!,
                   );
               }
             },
@@ -419,20 +440,20 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   List<RequestModel> filterBlockedRequestsContent({
-    List<RequestModel> requestModelList,
-    BuildContext context,
+    List<RequestModel>? requestModelList,
+    BuildContext? context,
   }) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach(
+    requestModelList!.forEach(
       (request) {
-        if (!(SevaCore.of(context)
+        if (!(SevaCore.of(context!)
                 .loggedInUser
-                .blockedMembers
+                .blockedMembers!
                 .contains(request.sevaUserId) ||
             SevaCore.of(context)
                 .loggedInUser
-                .blockedBy
+                .blockedBy!
                 .contains(request.sevaUserId))) {
           filteredList.add(request);
         }
@@ -443,17 +464,17 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   Widget formatListFrom({
-    List<RequestModelList> consolidatedList,
-    String loggedintimezone,
-    String userEmail,
-    String projectId,
-    Coordinates currentCoords,
+    List<RequestModelList>? consolidatedList,
+    String? loggedintimezone,
+    String? userEmail,
+    String? projectId,
+    Coordinates? currentCoords,
   }) {
     return Expanded(
       child: Container(
           child: ListView.builder(
         shrinkWrap: true,
-        itemCount: consolidatedList.length + 1,
+        itemCount: consolidatedList!.length + 1,
         itemBuilder: (context, index) {
           if (index >= consolidatedList.length) {
             return Container(
@@ -461,8 +482,8 @@ class RequestListItemsState extends State<RequestListItems> {
               height: 65,
             );
           }
-          return getRequestView(consolidatedList[index], loggedintimezone,
-              userEmail, currentCoords);
+          return getRequestView(consolidatedList[index], loggedintimezone!,
+              userEmail!, currentCoords!);
         },
       )),
     );
@@ -472,7 +493,7 @@ class RequestListItemsState extends State<RequestListItems> {
       String userEmail, Coordinates currentCoords) {
     switch (model.getType()) {
       case RequestModelList.TITLE:
-        var isMyContent = (model as GroupTitle).groupTitle.contains("My");
+        var isMyContent = (model as GroupTitle).groupTitle!.contains("My");
         if (widget.isProjectRequest) {
           return Container();
         }
@@ -535,19 +556,19 @@ class RequestListItemsState extends State<RequestListItems> {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        return null;
+        return null!;
       }
     } else {
-      return null;
+      return null!;
     }
   }
 
   Widget getFromNormalRequest(
-      {RequestModel model,
-      String loggedintimezone,
-      String userEmail,
-      Coordinates currentCoords}) {
-    var requestLocation = getLocation(model.address);
+      {RequestModel? model,
+      String? loggedintimezone,
+      String? userEmail,
+      Coordinates? currentCoords}) {
+    var requestLocation = getLocation(model!.address!);
 
     return Container(
       decoration: containerDecorationR,
@@ -564,7 +585,7 @@ class RequestListItemsState extends State<RequestListItems> {
               children: [
                 SevaCore.of(context)
                         .loggedInUser
-                        .curatedRequestIds
+                        .curatedRequestIds!
                         .contains(model.id)
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -594,9 +615,10 @@ class RequestListItemsState extends State<RequestListItems> {
                             model.sevaUserId !=
                                 SevaCore.of(context).loggedInUser.sevaUserID
                         ? DistanceFromCurrentLocation(
-                            currentLocation: currentCoords,
-                            coordinates: Coordinates(model.location.latitude,
-                                model.location.longitude),
+                            currentLocation: GeoPoint(currentCoords!.latitude,
+                                currentCoords.longitude),
+                            coordinates:
+                                model.location?.geopoint ?? GeoPoint(0, 0),
                             isKm: true,
                           )
                         : Container(),
@@ -605,9 +627,10 @@ class RequestListItemsState extends State<RequestListItems> {
                       timeAgo
                           .format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  model.postTimestamp),
-                              locale: Locale(AppConfig.prefs
-                                      .getString('language_code'))
+                                  model.postTimestamp!),
+                              locale: Locale(AppConfig.prefs!
+                                          .getString('language_code') ??
+                                      'en')
                                   .toLanguageTag())
                           .replaceAll('hours ago', 'hr'),
                       style: TextStyle(
@@ -630,7 +653,7 @@ class RequestListItemsState extends State<RequestListItems> {
                           placeholder: 'lib/assets/images/profile.png',
                           image: model.photoUrl == null
                               ? defaultUserImageURL
-                              : model.photoUrl,
+                              : model.photoUrl!,
                         ),
                       ),
                     ),
@@ -642,7 +665,7 @@ class RequestListItemsState extends State<RequestListItems> {
                         children: <Widget>[
                           Wrap(
                             children: [
-                              getAppropriateTag(model.requestType),
+                              getAppropriateTag(model.requestType!),
                               Visibility(
                                 visible: model.virtualRequest ?? false,
                                 child: Container(
@@ -677,12 +700,12 @@ class RequestListItemsState extends State<RequestListItems> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  model.title,
+                                  model.title!,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: Theme.of(widget.parentContext)
                                       .textTheme
-                                      .subtitle1,
+                                      .titleMedium,
                                 ),
                               ),
                               Container(
@@ -690,7 +713,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                     EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                                 child: Center(
                                   child: Visibility(
-                                    visible: model.isRecurring,
+                                    visible: model.isRecurring!,
                                     child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -718,13 +741,13 @@ class RequestListItemsState extends State<RequestListItems> {
                           ),
                           SizedBox(height: 4),
                           Visibility(
-                            visible: !model.isRecurring,
+                            visible: !model.isRecurring!,
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: <Widget>[
                                 Text(
                                   getTimeFormattedString(
-                                      model.requestEnd, loggedintimezone),
+                                      model.requestEnd!, loggedintimezone!),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 ),
@@ -737,7 +760,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                 SizedBox(width: 2),
                                 Text(
                                   getTimeFormattedString(
-                                      model.requestEnd, loggedintimezone),
+                                      model.requestEnd!, loggedintimezone),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 ),
@@ -748,12 +771,12 @@ class RequestListItemsState extends State<RequestListItems> {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
-                              model.description,
+                              model.description!,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(widget.parentContext)
                                   .textTheme
-                                  .subtitle2,
+                                  .bodyMedium,
                             ),
                           ),
                           // Visibility(
@@ -776,8 +799,8 @@ class RequestListItemsState extends State<RequestListItems> {
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               model.email != userEmail &&
-                                      (model.acceptors.contains(userEmail) ||
-                                          model.approvedUsers
+                                      (model.acceptors!.contains(userEmail) ||
+                                          model.approvedUsers!
                                               .contains(userEmail))
                                   ? Container(
                                       margin:
@@ -817,10 +840,10 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   Widget getRequestListViewHolder(
-      {RequestModel model,
-      String loggedintimezone,
-      String userEmail,
-      Coordinates currentCoords}) {
+      {RequestModel? model,
+      String? loggedintimezone,
+      String? userEmail,
+      Coordinates? currentCoords}) {
     if (!widget.isProjectRequest) {
       return getFromNormalRequest(
           model: model,
@@ -831,21 +854,21 @@ class RequestListItemsState extends State<RequestListItems> {
     return Container();
   }
 
-  void editRequest({RequestModel model}) {
+  void editRequest({RequestModel? model}) {
     timeBankBloc.setSelectedRequest(model);
     timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
-    if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+    if (model!.requestMode! == RequestMode.PERSONAL_REQUEST) {
       widget.isAdmin =
           model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? true
               : false;
     } else {
       widget.isAdmin = isAccessAvailable(
-          widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
+          widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID!);
     }
     timeBankBloc.setIsAdmin(widget.isAdmin);
 
-    if (model.isRecurring) {
+    if (model.isRecurring!) {
       Navigator.push(
           widget.parentContext,
           MaterialPageRoute(
@@ -861,14 +884,15 @@ class RequestListItemsState extends State<RequestListItems> {
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
         isAccessAvailable(widget.timebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+            SevaCore.of(context).loggedInUser.sevaUserID!)) {
       Navigator.push(
         widget.parentContext,
         MaterialPageRoute(
           builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
             child: RequestTabHolder(
-              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+              communityModel: BlocProvider.of<HomeDashBoardBloc>(context)!
+                  .selectedCommunityModel,
               isAdmin: true,
             ),
           ),
@@ -918,7 +942,6 @@ class RequestListItemsState extends State<RequestListItems> {
   //     color: Colors.white,
   //   );
   // }
-
 }
 
 BoxDecoration get containerDecorationR {

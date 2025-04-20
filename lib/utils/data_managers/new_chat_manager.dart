@@ -13,21 +13,21 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 Future<void> createChat({
-  @required ChatModel chat,
+  required ChatModel chat,
 }) async {
   return await CollectionRef.chats
       .doc(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
+          "${chat.participants![0]}*${chat.participants![1]}*${chat.communityId}")
       .set(chat.toMap(), SetOptions(merge: true));
 }
 
-Future<void> updateChat({@required ChatModel chat, String userId}) async {
-  String key = chat.participants[0] != userId
-      ? chat.participants[0]
-      : chat.participants[1];
+Future<void> updateChat({required ChatModel chat, String? userId}) async {
+  String key = chat.participants![0] != userId
+      ? chat.participants![0]
+      : chat.participants![1];
   return await CollectionRef.chats
       .doc(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
+          "${chat.participants![0]}*${chat.participants![1]}*${chat.communityId}")
       .set(
     {
       'softDeletedBy': chat.softDeletedBy,
@@ -42,11 +42,11 @@ Future<void> updateChat({@required ChatModel chat, String userId}) async {
 }
 
 Future<void> createNewChat({
-  @required ChatModel chat,
+  required ChatModel chat,
 }) async {
   return await CollectionRef.chats
       .doc(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
+          "${chat.participants![0]}*${chat.participants![1]}*${chat.communityId}")
       .set(
         chat.toMap(),
         SetOptions(merge: true),
@@ -77,12 +77,12 @@ Future<void> createNewChat({
 // updating chatcommunity Id
 /// Update a [chat]
 Future<void> markMessageAsRead({
-  @required ChatModel chat,
-  @required String userId,
+  required ChatModel chat,
+  required String userId,
 }) async {
   return CollectionRef.chats
       .doc(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
+          "${chat.participants![0]}*${chat.participants![1]}*${chat.communityId}")
       .set(
     {
       'unreadStatus': {userId: 0}
@@ -92,14 +92,14 @@ Future<void> markMessageAsRead({
 }
 
 Future<void> createNewMessage({
-  @required String chatId,
-  @required String senderId,
-  @required MessageModel messageModel,
-  @required bool isAdmin,
-  @required String timebankId,
-  @required List<String> participants,
+  required String chatId,
+  required String senderId,
+  required MessageModel messageModel,
+  required bool isAdmin,
+  required String timebankId,
+  required List<String> participants,
   bool isTimebankMessage = false,
-  File file,
+  File? file,
 }) async {
   WriteBatch batch = CollectionRef.batch;
   DocumentReference messageRef =
@@ -161,7 +161,7 @@ Future<void> createNewMessage({
   batch.commit();
 
   if (messageModel.type == MessageType.IMAGE) {
-    log(file.path);
+    log(file!.path);
     log(messageRef.id);
     var reference = DateTime.now().toString();
     FirebaseStorage _storage = FirebaseStorage.instance;

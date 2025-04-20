@@ -1,42 +1,44 @@
 import 'package:sevaexchange/models/data_model.dart';
 
 class UserInsufficentCreditsModel extends DataModel {
-  String senderName;
-  String senderId;
-  String senderPhotoUrl;
-  String timebankId;
-  String timebankName;
-  double creditsNeeded;
-  UserInsufficentCreditsModel(
-      {this.senderName,
-      this.senderId,
-      this.senderPhotoUrl,
-      this.timebankId,
-      this.timebankName,
-      this.creditsNeeded}); //  String senderName;
+  String? senderName;
+  String? senderId;
+  String? senderPhotoUrl;
+  String? timebankId;
+  String? timebankName;
+  double? creditsNeeded;
+  UserInsufficentCreditsModel({
+    required this.senderName,
+    required this.senderId,
+    required this.senderPhotoUrl,
+    required this.timebankId,
+    required this.timebankName,
+    required this.creditsNeeded,
+  });
 
   @override
   Map<String, dynamic> toMap() {
     // TODO: implement toMap
 
     Map<String, dynamic> object = {};
-    if (this.senderName != null && this.senderName.isNotEmpty) {
+    if (this.senderName != null && this.senderName?.isNotEmpty == true) {
       object['senderName'] = this.senderName;
     }
-    if (this.senderId != null && this.senderId.isNotEmpty) {
+    if (this.senderId != null && this.senderId?.isNotEmpty == true) {
       object['senderId'] = this.senderId;
     }
-    if (this.senderPhotoUrl != null && this.senderPhotoUrl.isNotEmpty) {
+    if (this.senderPhotoUrl != null &&
+        this.senderPhotoUrl?.isNotEmpty == true) {
       object['senderPhotoUrl'] = this.senderPhotoUrl;
     }
-    if (this.timebankId != null && this.timebankId.isNotEmpty) {
+    if (this.timebankId != null && this.timebankId?.isNotEmpty == true) {
       object['timebankId'] = this.timebankId;
     }
-    if (this.timebankName != null && this.timebankName.isNotEmpty) {
+    if (this.timebankName != null && this.timebankName?.isNotEmpty == true) {
       object['timebankName'] = this.timebankName;
     }
     if (this.creditsNeeded != null) {
-      object['creditsNeeded'] = this.creditsNeeded.toDouble();
+      object['creditsNeeded'] = this.creditsNeeded?.toDouble();
     }
     return object;
   }

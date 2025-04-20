@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 class DashPathBorder extends Border {
   DashPathBorder({
-    @required this.dashArray,
+    required this.dashArray,
     BorderSide top = BorderSide.none,
     BorderSide left = BorderSide.none,
     BorderSide right = BorderSide.none,
@@ -17,7 +18,7 @@ class DashPathBorder extends Border {
 
   factory DashPathBorder.all({
     BorderSide borderSide = const BorderSide(),
-    @required CircularIntervalList<double> dashArray,
+    required CircularIntervalList<double> dashArray,
   }) {
     return DashPathBorder(
       dashArray: dashArray,
@@ -33,9 +34,9 @@ class DashPathBorder extends Border {
   void paint(
     Canvas canvas,
     Rect rect, {
-    TextDirection textDirection,
+    TextDirection? textDirection,
     BoxShape shape = BoxShape.rectangle,
-    BorderRadius borderRadius,
+    BorderRadius? borderRadius,
   }) {
     if (isUniform) {
       switch (top.style) {

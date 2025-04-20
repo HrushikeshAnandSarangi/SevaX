@@ -91,9 +91,9 @@ class ExploreCommunityDetailsBloc {
   }
 
   TimebankModel primaryTimebankModel() {
-    return _groups?.value?.firstWhere(
+    return _groups.value.firstWhere(
       (model) => isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
-      orElse: null,
+      orElse: () => TimebankModel('default_timebank_id'),
     );
   }
 

@@ -7,7 +7,11 @@ class EmptyWidget extends StatelessWidget {
   final String sub_title;
   final double titleFontSize;
 
-  const EmptyWidget({Key key, this.title, this.sub_title, this.titleFontSize})
+  const EmptyWidget(
+      {Key? key,
+      required this.title,
+      required this.sub_title,
+      required this.titleFontSize})
       : super(key: key);
 
   @override

@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -28,8 +29,8 @@ import 'package:sevaexchange/widgets/empty_widget.dart';
 import '../requests/project_request.dart';
 
 class TimeBankProjectsView extends StatefulWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
+  final String? timebankId;
+  final TimebankModel? timebankModel;
 
   TimeBankProjectsView({this.timebankId, this.timebankModel});
 
@@ -47,9 +48,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   @override
   Widget build(BuildContext context) {
-    isAdminOrOwner = widget.timebankModel.admins
+    isAdminOrOwner = widget.timebankModel!.admins
             .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-        widget.timebankModel.organizers
+        widget.timebankModel!.organizers
             .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
       body: Column(
@@ -79,13 +80,12 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   visible: isAdminOrOwner,
                   child: TransactionLimitCheck(
                     comingFrom: ComingFrom.Projects,
-                    timebankId: widget.timebankId,
+                    timebankId: widget!.timebankId!,
                     isSoftDeleteRequested:
-                        widget.timebankModel.requestedSoftDelete,
+                        widget.timebankModel!.requestedSoftDelete,
                     child: ConfigurationCheck(
                       actionType: 'create_events',
-                      role: memberType(widget.timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: MemberType.CREATOR,
                       child: GestureDetector(
                         child: Container(
                           margin: EdgeInsets.only(left: 0),
@@ -107,7 +107,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
           Expanded(
             child: StreamBuilder<ProjectModelList>(
               stream: FirestoreManager.getAllProjectListStream(
-                  timebankid: widget.timebankId,
+                  timebankid: widget.timebankId!,
                   isAdminOrOwner: isAdminOrOwner,
                   context: context),
               builder: (BuildContext context,
@@ -121,9 +121,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     return LoadingIndicator();
                   default:
                     List<ProjectModel> projectModelList =
-                        projectListSnapshot.data.events;
+                        projectListSnapshot.data!.events!;
                     List<ProjectModel> completedProjectModelList =
-                        projectListSnapshot.data.completedEvents;
+                        projectListSnapshot.data!.completedEvents!;
 
                     if (projectModelList.length == 0 &&
                         completedProjectModelList.length == 0) {
@@ -135,6 +135,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             sub_title: isAdminOrOwner
                                 ? S.of(context).no_content_common_description
                                 : S.of(context).cannot_create_project,
+                            titleFontSize: 16,
                           ),
                         ),
                       );
@@ -177,24 +178,24 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 
   Widget getEventCard(ProjectModel project) {
-    int totalTask =
-        project.completedRequests != null && project.pendingRequests != null
-            ? project.pendingRequests.length + project.completedRequests.length
-            : 0;
+    int totalTask = project.completedRequests != null &&
+            project.pendingRequests != null
+        ? project.pendingRequests!.length + project.completedRequests!.length
+        : 0;
 
     return ProjectsCard(
-      isRecurring: project.isRecurring,
-      timestamp: project.createdAt,
-      startTime: project.startTime,
-      endTime: project.endTime,
-      title: project.name,
-      description: project.description,
-      photoUrl: project.photoUrl,
-      location: project.address,
+      isRecurring: project.isRecurring!,
+      timestamp: project.createdAt!,
+      startTime: project.startTime!,
+      endTime: project.endTime!,
+      title: project.name!,
+      description: project.description!,
+      photoUrl: project.photoUrl!,
+      location: project.address!,
       tasks: totalTask,
-      pendingTask: project.pendingRequests?.length,
+      pendingTask: project.pendingRequests!.length,
       onTap: () {
-        if (project.isRecurring)
+        if (project.isRecurring!)
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -203,7 +204,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 child: RecurringEventsList(
                   timebankId: widget.timebankId,
                   timebankModel: widget.timebankModel,
-                  parentEventId: project.parentEventId,
+                  parentEventId: project.parentEventId!,
                 ),
               ),
             ),
@@ -216,9 +217,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 bloc: BlocProvider.of<HomeDashBoardBloc>(context),
                 child: ProjectRequests(
                   ComingFrom.Projects,
-                  timebankId: widget.timebankId,
+                  timebankId: widget.timebankId!,
                   projectModel: project,
-                  timebankModel: widget.timebankModel,
+                  timebankModel: widget.timebankModel!,
                 ),
               ),
             ),
@@ -228,9 +229,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 
   void navigateToCreateProject() {
-    if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-        !isAccessAvailable(widget.timebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (widget.timebankModel!.id == FlavorConfig.values.timebankId &&
+        !isAccessAvailable(widget.timebankModel!,
+            SevaCore.of(context).loggedInUser.sevaUserID!)) {
       showAdminAccessMessage(context: context);
     } else {
       Navigator.push(
@@ -248,7 +249,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   void showProjectsWebPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_${S.of(context).localeName}",
       ),
     );
@@ -261,9 +262,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 }
 
-void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
+void showInfoOfConcept({String? dialogTitle, BuildContext? mContext}) {
   showDialog(
-      context: mContext,
+      context: mContext!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
 //            title: Text(
@@ -278,7 +279,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Text(
-                  dialogTitle,
+                  dialogTitle!,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -289,7 +290,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
           actions: <Widget>[
             CustomTextButton(
               child: Text(
-                S.of(mContext).ok,
+                S.of(mContext!).ok,
                 style: TextStyle(
                   fontSize: 16,
                 ),

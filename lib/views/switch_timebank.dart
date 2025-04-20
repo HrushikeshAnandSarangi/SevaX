@@ -6,7 +6,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class SwitchTimebank extends StatelessWidget {
   final String content;
 
-  SwitchTimebank({this.content});
+  SwitchTimebank({required this.content});
 
   @override
   Widget build(BuildContext context) {

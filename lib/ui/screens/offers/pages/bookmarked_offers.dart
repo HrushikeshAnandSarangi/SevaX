@@ -187,8 +187,8 @@ void showDialogForMakingAnOffer({
                   Container(
                     height: 30,
                     width: 30,
-                    child: AspectRatio(
-                        aspectRatio: 1, child: LoadingIndicator()),
+                    child:
+                        AspectRatio(aspectRatio: 1, child: LoadingIndicator()),
                   ),
                 ],
               ),

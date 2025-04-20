@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -22,11 +22,16 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimeBankSevaCoin extends StatefulWidget {
-  final UserModel loggedInUser;
+  final UserModel? loggedInUser;
   final bool isAdmin;
   final TimebankModel timebankData;
 
-  const TimeBankSevaCoin({Key key, this.loggedInUser, this.isAdmin, this.timebankData}) : super(key: key);
+  const TimeBankSevaCoin(
+      {Key? key,
+      this.loggedInUser,
+      required this.isAdmin,
+      required this.timebankData})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -37,7 +42,7 @@ class TimeBankSevaCoin extends StatefulWidget {
 class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   double donateAmount = 0;
 
-  TimebankModel timebankModel;
+  TimebankModel? timebankModel;
 
   @override
   void initState() {
@@ -48,13 +53,15 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: CollectionRef.timebank.doc(widget.timebankData.id).snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
           balance = AppConfig.isTestCommunity
-              ? snapshot.data['sandboxBalance'].toDouble()
-              : snapshot.data['balance'].toDouble();
-          timebankModel = TimebankModel.fromMap(snapshot.data.data());
+              ? snapshot.data!['sandboxBalance'].toDouble()
+              : snapshot.data!['balance'].toDouble();
+          timebankModel = TimebankModel.fromMap(
+              snapshot.data?.data() as Map<String, dynamic>);
           return widget.isAdmin
               ? Container(
                   padding: const EdgeInsets.only(left: 10.0),
@@ -68,11 +75,14 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                             MaterialPageRoute(
                               builder: (context) {
                                 return TransactionDetailsView(
-                                  id: timebankModel.id,
+                                  id: timebankModel!.id,
                                   // SevaCore.of(context)
                                   //     .loggedInUser
                                   //     .currentTimebank,
-                                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                                  userId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID ??
+                                      '',
                                   totalBalance: '${balance ?? 0}',
                                 );
                               },
@@ -86,25 +96,34 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                           children: [
                             donateButton(),
                             isAccessAvailable(
-                              timebankModel,
-                              SevaCore.of(context).loggedInUser.sevaUserID,
+                              timebankModel!,
+                              SevaCore.of(context).loggedInUser.sevaUserID ??
+                                  '',
                             )
                                 ? Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TransactionsMatrixCheck(
-                                      upgradeDetails: AppConfig.upgradePlanBannerModel.add_manual_time,
-                                      transaction_matrix_type: "add_manual_time",
+                                      upgradeDetails: AppConfig
+                                          .upgradePlanBannerModel!
+                                          .add_manual_time!,
+                                      transaction_matrix_type:
+                                          "add_manual_time",
                                       child: AddManualTimeButton(
-                                        typeId: timebankModel.id,
-                                        timebankId: timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                                            ? timebankModel.id
-                                            : timebankModel.parentTimebankId,
+                                        typeId: timebankModel!.id,
+                                        timebankId: timebankModel!
+                                                    .parentTimebankId ==
+                                                FlavorConfig.values.timebankId
+                                            ? timebankModel!.id
+                                            : timebankModel!.parentTimebankId,
                                         timeFor: ManualTimeType.Timebank,
                                         userType: getLoggedInUserRole(
-                                          timebankModel,
-                                          SevaCore.of(context).loggedInUser.sevaUserID,
+                                          timebankModel!,
+                                          SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID ??
+                                              '',
                                         ),
-                                        communityName: timebankModel.name,
+                                        communityName: timebankModel!.name,
                                       ),
                                     ),
                                   )
@@ -126,6 +145,11 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       padding: const EdgeInsets.only(left: 8.0),
       child: CustomElevatedButton(
         onPressed: _showFontSizePickerDialog,
+        color: Theme.of(context).colorScheme.secondary,
+        shape: StadiumBorder(),
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        elevation: 2.0,
+        textColor: Colors.white,
         child: Text(
           S.of(context).donate,
           style: TextStyle(color: Colors.white, fontSize: 14),
@@ -142,7 +166,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -150,14 +175,15 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     }
 
     if (AppConfig.isTestCommunity
-        ? this.widget.loggedInUser.sandboxCurrentBalance <= 0
-        : this.widget.loggedInUser.currentBalance <= 0) {
+        ? (this.widget.loggedInUser?.sandboxCurrentBalance ?? 0) <= 0
+        : (this.widget.loggedInUser?.currentBalance ?? 0) <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -172,8 +198,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
           maxAmount: AppConfig.isTestCommunity
-              ? this.widget.loggedInUser.sandboxCurrentBalance
-              : this.widget.loggedInUser.currentBalance),
+              ? (this.widget.loggedInUser?.sandboxCurrentBalance ?? 0)
+              : (this.widget.loggedInUser?.currentBalance ?? 0)),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -185,13 +211,16 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         donateAmount = donateAmount_Received;
         if (AppConfig.isTestCommunity) {
           SevaCore.of(context).loggedInUser.sandboxCurrentBalance =
-              widget.loggedInUser.sandboxCurrentBalance - donateAmount_Received;
+              (widget.loggedInUser?.sandboxCurrentBalance ?? 0) -
+                  donateAmount_Received;
         } else {
-          SevaCore.of(context).loggedInUser.currentBalance = widget.loggedInUser.currentBalance - donateAmount_Received;
+          SevaCore.of(context).loggedInUser.currentBalance =
+              (widget.loggedInUser!.currentBalance ?? 0) -
+                  donateAmount_Received;
         }
       });
-      await TransactionBloc().createNewTransaction(
-        this.widget.loggedInUser.sevaUserID,
+      TransactionBloc().createNewTransaction(
+        this.widget.loggedInUser?.sevaUserID,
         this.widget.timebankData.id,
         DateTime.now().millisecondsSinceEpoch,
         donateAmount,
@@ -199,8 +228,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         "USER_DONATE_TOTIMEBANK",
         null,
         this.widget.timebankData.id,
-        communityId: widget.loggedInUser.currentCommunity,
-        fromEmailORId: this.widget.loggedInUser.email,
+        communityId: widget.loggedInUser!.currentCommunity!,
+        fromEmailORId: this.widget.loggedInUser?.email ?? '',
         toEmailORId: this.widget.timebankData.id,
       );
 
@@ -210,13 +239,14 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         context: context,
         donateAmount: donateAmount,
         model: widget.timebankData,
-        user: null,
+        user: widget.loggedInUser!,
         toMember: false,
       );
 
       await showDialog<double>(
         context: context,
-        builder: (context) => InputDonateSuccessDialog(onComplete: () => {Navigator.pop(context)}),
+        builder: (context) => InputDonateSuccessDialog(
+            onComplete: () => {Navigator.pop(context)}),
       );
     }
   }
@@ -227,10 +257,12 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
 // this is good practice
 class InputDonateDialog extends StatefulWidget {
   /// initial selection for the slider
-  final double donateAmount;
+  final double? donateAmount;
   final double maxAmount;
 
-  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount}) : super(key: key);
+  const InputDonateDialog(
+      {Key? key, this.donateAmount, required this.maxAmount})
+      : super(key: key);
 
   @override
   _InputDonateDialogState createState() => _InputDonateDialogState();
@@ -238,14 +270,14 @@ class InputDonateDialog extends StatefulWidget {
 
 class _InputDonateDialogState extends State<InputDonateDialog> {
   /// current selection of the slider
-  double _donateAmount;
+  double _donateAmount = 0;
   bool donatezeroerror = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _donateAmount = widget.donateAmount;
+    _donateAmount = widget.donateAmount ?? 0.0;
   }
 
   @override
@@ -257,14 +289,15 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('${S.of(context).current_seva_credit} ' + widget.maxAmount.toStringAsFixed(2).toString()),
+            Text('${S.of(context).current_seva_credit} ' +
+                widget.maxAmount.toStringAsFixed(2).toString()),
             TextFormField(
               decoration: InputDecoration(
                 hintText: S.of(context).number_of_seva_credit,
               ),
               keyboardType: TextInputType.number,
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return S.of(context).empty_credit_donation_error;
                 } else if (int.parse(value) > widget.maxAmount) {
                   return S.of(context).insufficient_credits_to_donate;
@@ -316,8 +349,10 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
         CustomElevatedButton(
           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           textColor: FlavorConfig.values.buttonTextColor,
+          shape: StadiumBorder(),
+          elevation: 2.0,
           child: Text(
             S.of(context).donate,
             style: TextStyle(
@@ -325,7 +360,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             ),
           ),
           onPressed: () {
-            if (_formKey.currentState.validate()) {
+            if (_formKey.currentState?.validate() ?? false) {
 //              if (_donateAmount == 0) {
 //                setState(() {
 //                  donatezeroerror = true;
@@ -348,14 +383,16 @@ class InputDonateSuccessDialog extends StatefulWidget {
   /// initial selection for the slider
   final VoidCallback onComplete;
 
-  const InputDonateSuccessDialog({Key key, this.onComplete}) : super(key: key);
+  const InputDonateSuccessDialog({Key? key, required this.onComplete})
+      : super(key: key);
 
   @override
-  _InputDonateSuccessDialogState createState() => _InputDonateSuccessDialogState();
+  _InputDonateSuccessDialogState createState() =>
+      _InputDonateSuccessDialogState();
 }
 
 class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
-  VoidCallback onComplete;
+  late VoidCallback onComplete;
 
   /// current selection of the slider
   @override

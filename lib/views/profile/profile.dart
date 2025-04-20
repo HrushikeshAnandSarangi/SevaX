@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:developer';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -34,6 +34,7 @@ import 'package:sevaexchange/views/requests/custom_request_categories_view.dart'
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -46,21 +47,21 @@ class ProfileView extends StatelessWidget {
 }
 
 class ProfilePage extends StatefulWidget {
-  final UserModel userModel;
-  const ProfilePage({Key key, this.userModel}) : super(key: key);
+  final UserModel? userModel;
+  const ProfilePage({Key? key, this.userModel}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserModel user;
+  UserModel? user;
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
   double sevaCoinsValue = 0.0;
 
-  UserProfileBloc _profileBloc;
+  UserProfileBloc? _profileBloc;
 
   List<CommunityModel> communities = [];
   double balance = 0;
@@ -69,24 +70,24 @@ class _ProfilePageState extends State<ProfilePage> {
     log("profile page init");
     _profileBloc = UserProfileBloc();
     super.initState();
-    _profileBloc.getAllCommunities(context, widget.userModel);
-    _profileBloc.communityLoaded.listen((value) {
+    _profileBloc!.getAllCommunities(context, widget.userModel!);
+    _profileBloc!.communityLoaded.listen((value) {
       isCommunityLoaded = value;
       setState(() {});
     });
 
     Future.delayed(Duration.zero, () {
       FirestoreManager.getUserForIdStream(
-        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!,
       ).listen((UserModel userModel) {
         if (mounted) isUserLoaded = true;
 
-        _profileBloc.getAllCommunities(context, userModel);
+        _profileBloc!.getAllCommunities(context, userModel);
         this.user = userModel;
         logger.i("_____>> " + AppConfig.isTestCommunity.toString());
         balance = AppConfig.isTestCommunity
-            ? user.sandboxCurrentBalance ?? 0
-            : user.currentBalance;
+            ? user!.sandboxCurrentBalance ?? 0
+            : user!.currentBalance!;
       });
     });
   }
@@ -98,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
-    _profileBloc.dispose();
+    _profileBloc!.dispose();
     super.dispose();
   }
 
@@ -107,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       FadeRoute(
         page: EditProfilePage(
-          userModel: user,
+          userModel: user!,
         ),
       ),
     );
@@ -141,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               child: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                  user.photoURL ?? defaultUserImageURL,
+                                  user!.photoURL ?? defaultUserImageURL,
                                 ),
                                 backgroundColor: Colors.white,
                                 radius: MediaQuery.of(context).size.width / 4.5,
@@ -151,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          user.fullname ?? "",
+                          user!.fullname ?? "",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
@@ -160,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          user.email,
+                          user!.email!,
                           style: TextStyle(fontSize: 14, color: Colors.black),
                         ),
                         SizedBox(height: 20),
@@ -177,8 +178,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   content: Text(S.of(context).check_internet),
                                   action: SnackBarAction(
                                     label: S.of(context).dismiss,
-                                    onPressed: () => Scaffold.of(context)
-                                        .hideCurrentSnackBar(),
+                                    onPressed: () =>
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar(),
                                   ),
                                 ),
                               );
@@ -188,9 +190,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               MaterialPageRoute(
                                 builder: (context) {
                                   return TransactionDetailsView(
-                                    id: user.sevaUserID,
-                                    userId: user.sevaUserID,
-                                    userEmail: user.email,
+                                    id: user!.sevaUserID!,
+                                    userId: user!.sevaUserID!,
+                                    userEmail: user!.email!,
                                     totalBalance: balance != null
                                         ? balance.toStringAsFixed(2)
                                         : '0.0',
@@ -226,47 +228,51 @@ class _ProfilePageState extends State<ProfilePage> {
                           height: 20,
                         ),
                         GoodsAndAmountDonations(
-                            isGoods: false,
-                            isTimeBank: false,
-                            userId: user.sevaUserID,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DonationsDetailsView(
-                                    id: '',
-                                    totalBalance:
-                                        '', //change this to total of cash donated
-                                    timebankModel: null,
-                                    fromTimebank: false,
-                                    isGoods: false,
-                                  ),
+                          isGoods: false,
+                          isTimeBank: false,
+                          userId: user!.sevaUserID!,
+                          timebankId: user!.currentTimebank ?? '',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DonationsDetailsView(
+                                  id: '',
+                                  totalBalance:
+                                      '', //change this to total of cash donated
+                                  timebankModel: TimebankModel(
+                                      ''), // Provide appropriate argument here
+                                  fromTimebank: false,
+                                  isGoods: false,
                                 ),
-                              );
-                            }),
+                              ),
+                            );
+                          },
+                        ),
                         SizedBox(
                           height: 15,
+                          // GoodsAndAmountDonations(
+                          //     isGoods: true,
+                          //     isTimeBank: false,
+                          //     userId: user!.sevaUserID!,
+                          //     timebankId: user!.currentTimebank ?? '',
+                          //     onTap: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => DonationsDetailsView(
+                          //             id: '',
+                          //             totalBalance:
+                          //                 '', //change this to total of goods donated
+                          //             timebankModel: null!,
+                          //             fromTimebank: false,
+                          //             isGoods: true,
+                          //           ),
+                          //         ),
+                          //       );
+                          //       // Na
+                          //     }),
                         ),
-                        GoodsAndAmountDonations(
-                            isGoods: true,
-                            isTimeBank: false,
-                            userId: user.sevaUserID,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DonationsDetailsView(
-                                    id: '',
-                                    totalBalance:
-                                        '', //change this to total of goods donated
-                                    timebankModel: null,
-                                    fromTimebank: false,
-                                    isGoods: true,
-                                  ),
-                                ),
-                              );
-                              // Na
-                            }),
                       ],
                     ),
                   ),
@@ -296,9 +302,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 var timebankAdvisory =
                                     S.of(context).create_timebank_confirmation;
                                 Map<String, bool> onActivityResult =
-                                    await showTimebankAdvisory(
-                                        dialogTitle: timebankAdvisory);
-                                if (onActivityResult['PROCEED']) {
+                                    (await showTimebankAdvisory(
+                                            dialogTitle: timebankAdvisory))
+                                        .cast<String, bool>();
+                                if (onActivityResult['PROCEED'] == true) {
                                   createEditCommunityBloc.updateUserDetails(
                                       SevaCore.of(context).loggedInUser);
                                   Navigator.push(
@@ -327,24 +334,24 @@ class _ProfilePageState extends State<ProfilePage> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: StreamBuilder<List<CommunityModel>>(
-                            stream: _profileBloc.communities,
+                            stream: _profileBloc!.communities,
                             builder: (context, snapshot) {
                               if (snapshot.data != null)
                                 return Column(
-                                  children: snapshot.data
+                                  children: snapshot.data!
                                       .map(
                                         (model) => CommunityCard(
-                                          selected:
-                                              user.currentCommunity == model.id,
+                                          selected: user!.currentCommunity ==
+                                              model.id,
                                           community: model,
                                           onTap: () {
-                                            _profileBloc.setDefaultCommunity(
-                                                user.email, model, context);
+                                            _profileBloc!.setDefaultCommunity(
+                                                user!.email!, model, context);
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    SwitchTimebank(),
+                                                    SwitchTimebank(content: ''),
                                               ),
                                             );
                                           },
@@ -358,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         12.0, 12.0, 12.0, 0),
-                                    child: Text(snapshot.error),
+                                    child: Text(snapshot.error.toString()),
                                   ),
                                 );
                               return Container(
@@ -387,7 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => NotificationAlert(
-                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                                  SevaCore.of(context).loggedInUser.sevaUserID!,
                                 ),
                               ),
                             );
@@ -401,7 +408,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 builder: (context) => BlockedMembersPage(
                                   timebankId: SevaCore.of(context)
                                       .loggedInUser
-                                      .currentTimebank,
+                                      .currentTimebank!,
                                 ),
                               ),
                             );
@@ -464,8 +471,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<Map> showTimebankAdvisory({String dialogTitle}) {
-    return showDialog(
+  Future<Map<dynamic, dynamic>> showTimebankAdvisory(
+      {String? dialogTitle}) async {
+    final result = await showDialog<Map<dynamic, dynamic>>(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
@@ -483,7 +491,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Text(
-                    dialogTitle,
+                    dialogTitle ?? '',
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 16,
@@ -510,7 +518,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               CustomTextButton(
                 shape: StadiumBorder(),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(
@@ -520,12 +528,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 onPressed: () {
-                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                  Navigator.of(viewContext).pop({'PROCEED': true});
                 },
               ),
             ],
           );
         });
+    return result ?? {'PROCEED': false};
   }
 
   AppBar getAppBar() {
@@ -557,11 +566,11 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class ProfileSettingsCard extends StatelessWidget {
-  final String title;
-  final VoidCallback onTap;
+  final String? title;
+  final VoidCallback? onTap;
 
   const ProfileSettingsCard({
-    Key key,
+    Key? key,
     this.title,
     this.onTap,
   }) : super(key: key);
@@ -579,7 +588,7 @@ class ProfileSettingsCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 15),
                 child: Text(
-                  title,
+                  title!,
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -600,25 +609,25 @@ class ProfileSettingsCard extends StatelessWidget {
 
 class CommunityCard extends StatelessWidget {
   const CommunityCard({
-    Key key,
+    Key? key,
     this.selected,
     this.onTap,
-    @required this.community,
+    required this.community,
   }) : super(key: key);
 
   final CommunityModel community;
-  final bool selected;
-  final Function onTap;
+  final bool? selected;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap!,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(width: 15),
-          selected
+          selected!
               ? Icon(Icons.check)
               : SizedBox(
                   width: 24,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -19,19 +19,20 @@ class CreatorApproveAcceptorAgreeement extends StatefulWidget {
   final String userId;
   final RequestModel requestModel;
   final BuildContext parentContext;
-  UserModel acceptorUserModel;
-  String notificationId;
+  final UserModel acceptorUserModel;
+  final String notificationId;
   //final VoidCallback onTap;
 
-  CreatorApproveAcceptorAgreeement({
-    this.timeBankId,
-    this.userId,
-    this.requestModel,
-    this.parentContext,
-    this.acceptorUserModel,
-    this.notificationId,
+  const CreatorApproveAcceptorAgreeement({
+    Key? key,
+    required this.timeBankId,
+    required this.userId,
+    required this.requestModel,
+    required this.parentContext,
+    required this.acceptorUserModel,
+    required this.notificationId,
     //this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   _CreatorApproveAcceptorAgreeementState createState() =>
@@ -40,13 +41,13 @@ class CreatorApproveAcceptorAgreeement extends StatefulWidget {
 
 class _CreatorApproveAcceptorAgreeementState
     extends State<CreatorApproveAcceptorAgreeement> {
-  GeoFirePoint location;
+  GeoFirePoint? location;
   String selectedAddress = '';
   String doAndDonts = '';
 
   String borrowAgreementLinkFinal = '';
   String documentName = '';
-  BorrowAcceptorModel borrowAcceptorModel;
+  BorrowAcceptorModel? borrowAcceptorModel;
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
@@ -73,8 +74,8 @@ class _CreatorApproveAcceptorAgreeementState
       ),
       body: FutureBuilder<BorrowAcceptorModel>(
           future: FirestoreManager.getBorrowRequestAcceptorModel(
-              requestId: widget.requestModel.id,
-              acceptorEmail: widget.acceptorUserModel.email),
+              requestId: widget.requestModel.id!,
+              acceptorEmail: widget.acceptorUserModel.email!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
@@ -103,8 +104,8 @@ class _CreatorApproveAcceptorAgreeementState
           children: <Widget>[
             SizedBox(height: 10),
             requestAgreementFormComponent,
-            borrowAcceptorModel.borrowAgreementLink != null &&
-                    borrowAcceptorModel.borrowAgreementLink != ''
+            borrowAcceptorModel!.borrowAgreementLink != null &&
+                    borrowAcceptorModel!.borrowAgreementLink != ''
                 ? termsAcknowledegmentText
                 : Container(),
             SizedBox(height: 20),
@@ -162,6 +163,11 @@ class _CreatorApproveAcceptorAgreeementState
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Theme.of(context).primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 2.0,
+            textColor: Colors.white,
             child: Text(
               S.of(context).accept,
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
@@ -178,14 +184,15 @@ class _CreatorApproveAcceptorAgreeementState
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(4.0),
-        ),
-        SizedBox(width: 5),
-        Container(
-          height: 32,
+          padding: EdgeInsets.only(left: 8.0),
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 2.0,
+            textColor: Colors.white,
             child: Text(
               S.of(context).reject,
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
@@ -202,14 +209,15 @@ class _CreatorApproveAcceptorAgreeementState
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(4.0),
-        ),
-        SizedBox(width: 5),
-        Container(
-          height: 32,
+          padding: EdgeInsets.only(left: 8.0),
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
-            color: Colors.grey[300],
+            color: Colors.grey[300]!,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 2.0,
+            textColor: Colors.black,
             child: Text(
               S.of(context).message,
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
@@ -236,9 +244,13 @@ class _CreatorApproveAcceptorAgreeementState
 
               createAndOpenChat(
                 context: context,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity!,
                 sender: sender,
                 reciever: reciever,
+                timebankId: widget.timeBankId,
+                feedId: widget.requestModel.id!,
+                showToCommunities: [loggedInUser.currentCommunity!],
+                entityId: widget.requestModel.id!,
                 onChatCreate: () {
                   //Navigator.of(context).pop();
                 },
@@ -269,8 +281,8 @@ class _CreatorApproveAcceptorAgreeementState
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                borrowAcceptorModel.borrowAgreementLink != null &&
-                        borrowAcceptorModel.borrowAgreementLink != ''
+                borrowAcceptorModel!.borrowAgreementLink != null &&
+                        borrowAcceptorModel!.borrowAgreementLink != ''
                     ? S.of(context).review_before_proceding_text
                     : (widget.requestModel.roomOrTool == 'PLACE'
                         ? S.of(context).lender_not_accepted_request_msg_place
@@ -287,23 +299,23 @@ class _CreatorApproveAcceptorAgreeementState
           ],
         ),
         SizedBox(height: 20),
-        borrowAcceptorModel.borrowAgreementLink != null &&
-                borrowAcceptorModel.borrowAgreementLink != ''
+        borrowAcceptorModel!.borrowAgreementLink != null &&
+                borrowAcceptorModel!.borrowAgreementLink != ''
             ? Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey[200])),
+                    BoxDecoration(border: Border.all(color: Colors.grey[200]!)),
                 alignment: Alignment.center,
                 width: 300,
                 height: 360,
                 child: SfPdfViewer.network(
-                  borrowAcceptorModel.borrowAgreementLink,
+                  borrowAcceptorModel!.borrowAgreementLink!,
                   canShowPaginationDialog: false,
                 ),
               )
             : Container(),
         SizedBox(height: 20),
-        borrowAcceptorModel.borrowAgreementLink != null &&
-                borrowAcceptorModel.borrowAgreementLink != ''
+        borrowAcceptorModel!.borrowAgreementLink != null &&
+                borrowAcceptorModel!.borrowAgreementLink != ''
             ? Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(right: 12),
@@ -314,8 +326,8 @@ class _CreatorApproveAcceptorAgreeementState
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: borrowAcceptorModel.borrowAgreementLink != null &&
-                          borrowAcceptorModel.borrowAgreementLink != ''
+                  color: borrowAcceptorModel!.borrowAgreementLink != null &&
+                          borrowAcceptorModel!.borrowAgreementLink != ''
                       ? Theme.of(context).primaryColor
                       : Colors.grey,
                   child: Row(
@@ -323,8 +335,8 @@ class _CreatorApproveAcceptorAgreeementState
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        borrowAcceptorModel.borrowAgreementLink != null &&
-                                borrowAcceptorModel.borrowAgreementLink != ''
+                        borrowAcceptorModel!.borrowAgreementLink != null &&
+                                borrowAcceptorModel!.borrowAgreementLink != ''
                             ? S.of(context).review_agreement
                             : S.of(context).no_agrreement,
                         textAlign: TextAlign.center,
@@ -338,10 +350,10 @@ class _CreatorApproveAcceptorAgreeementState
                     ],
                   ),
                   onPressed: () async {
-                    if (borrowAcceptorModel.borrowAgreementLink != null &&
-                        borrowAcceptorModel.borrowAgreementLink != '') {
+                    if (borrowAcceptorModel!.borrowAgreementLink != null &&
+                        borrowAcceptorModel!.borrowAgreementLink != '') {
                       await openPdfViewer(
-                          borrowAcceptorModel.borrowAgreementLink,
+                          borrowAcceptorModel!.borrowAgreementLink,
                           'Review Agreement',
                           context);
                     } else {
@@ -356,47 +368,63 @@ class _CreatorApproveAcceptorAgreeementState
   }
 
   Future<void> approveMemberForVolunteerRequest({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    @required BuildContext context,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    required BuildContext context,
   }) async {
-    List<String> approvedUsers = model.approvedUsers;
+    List<String> approvedUsers = model!.approvedUsers!;
     Set<String> usersSet = approvedUsers.toSet();
 
-    usersSet.add(user.email);
+    usersSet.add(user!.email!);
     model.approvedUsers = usersSet.toList();
 
-    (model.numberOfApprovals <= model.approvedUsers.length ||
-            model.approvedUsers.length == 0)
+    ((model.numberOfApprovals != null &&
+                model.numberOfApprovals! <= model.approvedUsers!.length) ||
+            model.approvedUsers!.length == 0)
         ? model.accepted == true
         : null;
 
     FirestoreManager.approveAcceptRequestForTimebank(
       requestModel: model,
-      approvedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      approvedUserId: user.sevaUserID!,
+      notificationId: notificationId!,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
     );
   }
 
   void declineRequestedMember({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    BuildContext context,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    BuildContext? context,
   }) {
-    List<String> acceptedUsers = model.acceptors;
+    List<String> acceptedUsers = model!.acceptors!;
     Set<String> usersSet = acceptedUsers.toSet();
 
-    usersSet.remove(user.email);
+    usersSet.remove(user!.email);
     model.acceptors = usersSet.toList();
 
     FirestoreManager.rejectAcceptRequest(
       requestModel: model,
-      rejectedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      rejectedUserId: user.sevaUserID!,
+      notificationId: notificationId!,
+      communityId: SevaCore.of(context!).loggedInUser.currentCommunity!,
+    );
+  }
+
+  Future<void> openPdfViewer(
+      String? pdfUrl, String title, BuildContext context) async {
+    if (pdfUrl == null || pdfUrl.isEmpty) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: SfPdfViewer.network(pdfUrl),
+        ),
+      ),
     );
   }
 }

@@ -10,7 +10,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/add_new_request_category.dart';
 
 class Category extends StatefulWidget {
-  final List<String> selectedSubCategoriesids;
+  final List<String>? selectedSubCategoriesids;
 
   Category({
     this.selectedSubCategoriesids,
@@ -48,8 +48,10 @@ class _CategoryState extends State<Category> {
         mainCategories = filterMainCategories(value);
         dataLoaded = true;
         if (widget.selectedSubCategoriesids != null &&
-            widget.selectedSubCategoriesids.length > 0) {
-          selectedSubCategoriesIds.addAll(widget.selectedSubCategoriesids);
+            widget.selectedSubCategoriesids!.length > 0) {
+          if (widget.selectedSubCategoriesids != null) {
+            selectedSubCategoriesIds.addAll(widget.selectedSubCategoriesids!);
+          }
           selectedSubCategories = List<CategoryModel>.from(categories.where(
               (element) => selectedSubCategoriesIds.contains(element.typeId)));
         }
@@ -155,27 +157,41 @@ class _CategoryState extends State<Category> {
                                         border: Border.all(width: 0.03)),
                                     child: Theme(
                                       data: ThemeData(
-                                        accentColor: color,
+                                        colorScheme: Theme.of(context)
+                                            .colorScheme
+                                            .copyWith(secondary: color),
                                       ),
                                       child: ExpansionTile(
                                         title: Text(
-                                          '${!_isSearching ? mainCategories[ind].getCategoryName(context) : searchcategories[ind].getCategoryName(context)}',
+                                          (!_isSearching
+                                                  ? mainCategories[ind]
+                                                      .getCategoryName(context)
+                                                  : searchcategories[ind]
+                                                      .getCategoryName(
+                                                          context)) ??
+                                              'Unknown',
                                         ),
                                         onExpansionChanged: (bool expanding) {
                                           if (true) {
-                                            selectedCategory = !_isSearching
-                                                ? mainCategories[ind]
-                                                    .getCategoryName(context)
-                                                : searchcategories[ind]
-                                                    .getCategoryName(context);
+                                            selectedCategory = (!_isSearching
+                                                    ? mainCategories[ind]
+                                                        .getCategoryName(
+                                                            context)
+                                                    : searchcategories[ind]
+                                                        .getCategoryName(
+                                                            context)) ??
+                                                'Unknown';
                                             this.isExpanded = expanding;
                                             setState(() {});
                                           }
                                         },
                                         children: subCategoryWidgets(
-                                            !_isSearching
-                                                ? mainCategories[ind].typeId
-                                                : searchcategories[ind].typeId),
+                                            _isSearching
+                                                ? mainCategories[ind].typeId ??
+                                                    ''
+                                                : searchcategories[ind]
+                                                        .typeId ??
+                                                    ''),
                                       ),
                                     ),
                                   );
@@ -202,12 +218,14 @@ class _CategoryState extends State<Category> {
         return Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: CheckboxListTile(
-            title: Text(subs[index].getCategoryName(context) ?? '',
+            title: Text(subs[index].getCategoryName(context) ?? 'Unknown',
                 style: TextStyle(color: Colors.black)),
             value: selectedSubCategories.contains(subs[index]),
             onChanged: (value) {
-              if (value) {
-                selectedSubCategoriesIds.add(subs[index].typeId);
+              if (value!) {
+                if (subs[index].typeId != null) {
+                  selectedSubCategoriesIds.add(subs[index].typeId!);
+                }
                 selectedSubCategories.add(subs[index]);
               } else {
                 selectedSubCategoriesIds.remove(subs[index].typeId);
@@ -244,8 +262,10 @@ class _CategoryState extends State<Category> {
                     style: TextStyle(color: Colors.black)),
                 value: selectedSubCategories.contains(subs[index]),
                 onChanged: (value) {
-                  if (value) {
-                    selectedSubCategoriesIds.add(subs[index].typeId);
+                  if (value!) {
+                    if (subs[index].typeId != null) {
+                      selectedSubCategoriesIds.add(subs[index].typeId!);
+                    }
                     selectedSubCategories.add(subs[index]);
                   } else {
                     selectedSubCategoriesIds.remove(subs[index].typeId);

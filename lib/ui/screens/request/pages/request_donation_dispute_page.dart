@@ -25,6 +25,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../flavor_config.dart';
 
 enum _AckType { CASH, GOODS }
+
 enum OperatingMode { CREATOR, USER }
 
 String enteredReceivedAmount = '';
@@ -46,10 +47,12 @@ class RequestDonationDisputePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RequestDonationDisputePageState createState() => _RequestDonationDisputePageState();
+  _RequestDonationDisputePageState createState() =>
+      _RequestDonationDisputePageState();
 }
 
-class _RequestDonationDisputePageState extends State<RequestDonationDisputePage> {
+class _RequestDonationDisputePageState
+    extends State<RequestDonationDisputePage> {
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
   int AMOUNT_NOT_DEFINED = null;
   _AckType ackType;
@@ -90,9 +93,12 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
 
   @override
   void initState() {
-    ackType = widget.model.donationType == RequestType.CASH ? _AckType.CASH : _AckType.GOODS;
+    ackType = widget.model.donationType == RequestType.CASH
+        ? _AckType.CASH
+        : _AckType.GOODS;
     super.initState();
-    FirestoreManager.getTimeBankForId(timebankId: widget.model.timebankId).then((value) {
+    FirestoreManager.getTimeBankForId(timebankId: widget.model.timebankId)
+        .then((value) {
       setState(() {
         timebankModel = value;
       });
@@ -175,11 +181,12 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
           }
 
           if (widget.model.cashDetails.pledgedAmount != null) {
-            bool validatorRes =
-                await _bloc.validateAmount(minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount);
+            bool validatorRes = await _bloc.validateAmount(
+                minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount);
 
             if (validatorRes) {
-              logger.i("$validatorRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
+              logger.i(
+                  "$validatorRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
 
               FocusScope.of(context).unfocus();
               // if (widget.model.minimumAmount != null &&
@@ -188,7 +195,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
               // }
               // showProgress(S.of(context).please_wait);
               bool disputeRes = await _bloc.disputeCash(
-                pledgedAmount: widget.model.cashDetails.pledgedAmount.toDouble(),
+                pledgedAmount:
+                    widget.model.cashDetails.pledgedAmount.toDouble(),
                 operationMode: operatingMode,
                 donationId: widget.model.id,
                 donationModel: widget.model,
@@ -197,7 +205,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                     ? RequestMode.TIMEBANK_REQUEST
                     : RequestMode.PERSONAL_REQUEST,
               );
-              logger.i("$disputeRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
+              logger.i(
+                  "$disputeRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
               progressDialogNew.hide();
               if (disputeRes) {
                 Navigator.of(context).pop();
@@ -205,13 +214,18 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                 progressDialogNew.hide();
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 if (widget.model.minimumAmount != null &&
-                    int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount) {
+                    int.parse(_bloc.cashAmoutVal) <
+                        widget.model.minimumAmount) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(S.of(context).amount_lessthan_donation_amount)),
+                    SnackBar(
+                        content: Text(
+                            S.of(context).amount_lessthan_donation_amount)),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("${S.of(context).general_stream_error}.")),
+                    SnackBar(
+                        content:
+                            Text("${S.of(context).general_stream_error}.")),
                   );
                 }
               }
@@ -222,7 +236,9 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
 
             _bloc
                 .validateAmount(
-                    minmumAmount: widget.model.cashDetails.cashDetails.amountRaised.toInt())
+                    minmumAmount: widget
+                        .model.cashDetails.cashDetails.amountRaised
+                        .toInt())
                 .then((value) {
               if (value) {
                 FocusScope.of(context).unfocus();
@@ -253,7 +269,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               action: SnackBarAction(
                 label: S.of(context).dismiss,
-                onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                onPressed: () =>
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar(),
               ),
               content: Text("${S.of(context).add_goods_donate_empty}."),
             ));
@@ -293,7 +310,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
 
   @override
   Widget build(BuildContext context) {
-    operatingMode = widget.model.donorSevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+    operatingMode = widget.model.donorSevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID
         ? OperatingMode.USER
         : OperatingMode.CREATOR;
     var name;
@@ -333,7 +351,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                       to: widget.model.cashDetails.pledgedAmount != null
                           ? widget.model.requestIdType == 'offer'
                               ? toWhom
-                              : widget.model.donationAssociatedTimebankDetails.timebankTitle
+                              : widget.model.donationAssociatedTimebankDetails
+                                  .timebankTitle
                           : name,
                       title: widget.model.cashDetails.pledgedAmount != null
                           ? '$name ${S.of(context).pledged_to_donate}'
@@ -342,7 +361,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                       requestMode: widget.model.donatedToTimebank
                           ? RequestMode.TIMEBANK_REQUEST
                           : RequestMode.PERSONAL_REQUEST,
-                      timebankName: widget.model.donationAssociatedTimebankDetails.timebankTitle,
+                      timebankName: widget.model
+                          .donationAssociatedTimebankDetails.timebankTitle,
                       creatorName: SevaCore.of(context).loggedInUser.fullname,
                       operatingMode: operatingMode,
                       bloc: _bloc,
@@ -353,7 +373,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                           : widget.convertedAmountRaised.toString(),
                       minAmount: widget.model.cashDetails.pledgedAmount != null
                           ? widget.model.minimumAmount.toString()
-                          : widget.model.cashDetails.cashDetails.amountRaised.toString(),
+                          : widget.model.cashDetails.cashDetails.amountRaised
+                              .toString(),
                       others: widget.model.cashDetails.cashDetails.others,
                     )
                   : _GoodsFlow(
@@ -391,9 +412,10 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   CustomElevatedButton(
-                    child: Text(widget.model.donationStatus == DonationStatus.REQUESTED
-                        ? S.of(context).donate
-                        : S.of(context).acknowledge),
+                    child: Text(
+                        widget.model.donationStatus == DonationStatus.REQUESTED
+                            ? S.of(context).donate
+                            : S.of(context).acknowledge),
                     onPressed: () => actionExecute(_key),
                   ),
                   SizedBox(width: 12),
@@ -411,22 +433,25 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                       switch (a) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
                           var loggedInUser = SevaCore.of(context).loggedInUser;
-                          String recieverId =
-                              widget.model.donorSevaUserId == loggedInUser.sevaUserID
-                                  ? widget.model.donatedTo
-                                  : widget.model.donorSevaUserId;
+                          String recieverId = widget.model.donorSevaUserId ==
+                                  loggedInUser.sevaUserID
+                              ? widget.model.donatedTo
+                              : widget.model.donorSevaUserId;
 
-                          UserModel fundRaiserDetails = await FirestoreManager.getUserForId(
-                            sevaUserId: recieverId != null && !recieverId.contains('-')
-                                ? recieverId
-                                : widget.model.donatedTo,
+                          UserModel fundRaiserDetails =
+                              await FirestoreManager.getUserForId(
+                            sevaUserId:
+                                recieverId != null && !recieverId.contains('-')
+                                    ? recieverId
+                                    : widget.model.donatedTo,
                           );
                           logger.wtf(
                               widget.model.donorDetails.communityId !=
                                   widget.model.receiverDetails.communityId,
                               'offer1');
 
-                          await HandlerForModificationManager.createChatForDispute(
+                          await HandlerForModificationManager
+                              .createChatForDispute(
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
                               name: loggedInUser.fullname,
@@ -444,7 +469,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                             isTimebankMessage: false,
                             communityId: loggedInUser.currentCommunity,
                             entityId: widget.model.id,
-                            showToCommunities: widget.model.requestIdType == 'offer'
+                            showToCommunities: widget.model.requestIdType ==
+                                    'offer'
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -453,11 +479,12 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity: widget.model.requestIdType == 'offer'
-                                ? widget.model.donorDetails.communityId !=
-                                    widget.model.receiverDetails.communityId
-                                : widget.model.donorDetails.communityId !=
-                                    timebankModel.communityId,
+                            interCommunity:
+                                widget.model.requestIdType == 'offer'
+                                    ? widget.model.donorDetails.communityId !=
+                                        widget.model.receiverDetails.communityId
+                                    : widget.model.donorDetails.communityId !=
+                                        timebankModel.communityId,
                           );
                           break;
 
@@ -467,9 +494,11 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                           );
                           var loggedInUser = SevaCore.of(context).loggedInUser;
 
-                          await HandlerForModificationManager.createChatForDispute(
+                          await HandlerForModificationManager
+                              .createChatForDispute(
                             entityId: widget.model.id,
-                            showToCommunities: widget.model.requestIdType == 'offer'
+                            showToCommunities: widget.model.requestIdType ==
+                                    'offer'
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -478,11 +507,12 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity: widget.model.requestIdType == 'offer'
-                                ? widget.model.donorDetails.communityId !=
-                                    widget.model.receiverDetails.communityId
-                                : widget.model.donorDetails.communityId !=
-                                    timebankModel.communityId,
+                            interCommunity:
+                                widget.model.requestIdType == 'offer'
+                                    ? widget.model.donorDetails.communityId !=
+                                        widget.model.receiverDetails.communityId
+                                    : widget.model.donorDetails.communityId !=
+                                        timebankModel.communityId,
                             communityId: loggedInUser.currentCommunity,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
@@ -493,8 +523,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                             receiver: ParticipantInfo(
                               id: timebankModel.id,
                               type: timebankModel.parentTimebankId ==
-                                      FlavorConfig
-                                          .values.timebankId //check if timebank is primary timebank
+                                      FlavorConfig.values
+                                          .timebankId //check if timebank is primary timebank
                                   ? ChatType.TYPE_TIMEBANK
                                   : ChatType.TYPE_GROUP,
                               name: timebankModel.name,
@@ -513,7 +543,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
 
                           var loggedInUser = SevaCore.of(context).loggedInUser;
 
-                          await HandlerForModificationManager.createChatForDispute(
+                          await HandlerForModificationManager
+                              .createChatForDispute(
                             communityId: loggedInUser.currentCommunity,
                             isTimebankMessage: true,
                             receiver: ParticipantInfo(
@@ -525,8 +556,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                             sender: ParticipantInfo(
                               id: timebankModel.id,
                               type: timebankModel.parentTimebankId ==
-                                      FlavorConfig
-                                          .values.timebankId //check if timebank is primary timebank
+                                      FlavorConfig.values
+                                          .timebankId //check if timebank is primary timebank
                                   ? ChatType.TYPE_TIMEBANK
                                   : ChatType.TYPE_GROUP,
                               name: timebankModel.name,
@@ -535,7 +566,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                             context: context,
                             timeBankId: widget.model.timebankId,
                             entityId: widget.model.id,
-                            showToCommunities: widget.model.requestIdType == 'offer'
+                            showToCommunities: widget.model.requestIdType ==
+                                    'offer'
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -544,11 +576,12 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity: widget.model.requestIdType == 'offer'
-                                ? widget.model.donorDetails.communityId !=
-                                    widget.model.receiverDetails.communityId
-                                : widget.model.donorDetails.communityId !=
-                                    timebankModel.communityId,
+                            interCommunity:
+                                widget.model.requestIdType == 'offer'
+                                    ? widget.model.donorDetails.communityId !=
+                                        widget.model.receiverDetails.communityId
+                                    : widget.model.donorDetails.communityId !=
+                                        timebankModel.communityId,
                           );
                           break;
                       }
@@ -708,7 +741,8 @@ class _CashFlow extends StatelessWidget {
           content: Text(message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -717,17 +751,24 @@ class _CashFlow extends StatelessWidget {
     Widget offerDonatePaymentDetails() {
       return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               '${S.of(context).donation_description_one + ' $name:' + ' $amount' + S.of(context).donation_description_three}',
-              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 10,
             ),
             Text(
               S.of(context).payment_link_description,
-              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.normal),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal),
             ),
             SizedBox(
               height: 10,
@@ -736,7 +777,10 @@ class _CashFlow extends StatelessWidget {
               hide: others == null,
               child: Text(
                 'Other Details',
-                style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
@@ -744,20 +788,29 @@ class _CashFlow extends StatelessWidget {
             ),
             Text(
               others ?? '',
-              style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              S.of(context).request_payment_description + ': ' + modeOfPayment(context),
-              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+              S.of(context).request_payment_description +
+                  ': ' +
+                  modeOfPayment(context),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH
                 ? getDonationLink(context)
                 : InkWell(
                     onLongPress: () {
-                      Clipboard.setData(ClipboardData(text: model.donationInstructionLink));
+                      Clipboard.setData(
+                          ClipboardData(text: model.donationInstructionLink));
                       showScaffold(context, S.of(context).copied_to_clipboard);
                     },
                     onTap: () async {
@@ -791,16 +844,19 @@ class _CashFlow extends StatelessWidget {
         SizedBox(height: 10),
         Text(
           '$title',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         Text(
           '$currency $amount',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         SizedBox(
           height: 20,
         ),
-        model.requestIdType == 'offer' && model.donationStatus == DonationStatus.REQUESTED
+        model.requestIdType == 'offer' &&
+                model.donationStatus == DonationStatus.REQUESTED
             ? offerDonatePaymentDetails()
             : Text(''),
         Divider(
@@ -813,7 +869,10 @@ class _CashFlow extends StatelessWidget {
           operatingMode == OperatingMode.CREATOR
               ? "${S.of(context).amount_received_from} ${name}"
               : S.of(context).amount_pledged,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueGrey),
         ),
         SizedBox(
           height: 10,
@@ -823,7 +882,9 @@ class _CashFlow extends StatelessWidget {
             builder: (context, snapshot) {
               return TextFormField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9.]"))],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                  ],
                   onChanged: (val) {
                     _bloc.onAmountChanged(val);
                     enteredReceivedAmount = val;
@@ -915,12 +976,14 @@ class _GoodsFlow extends StatelessWidget {
         ),
         SizedBox(height: 10),
         Text(
-          status == DonationStatus.REQUESTED && operatingMode == OperatingMode.CREATOR
+          status == DonationStatus.REQUESTED &&
+                  operatingMode == OperatingMode.CREATOR
               ? S.of(context).request_goods_offer.replaceAll("  ", " ")
               : operatingMode == OperatingMode.CREATOR
                   ? S.of(context).acknowledge_received
                   : S.of(context).acknowledge_donated,
-          style: TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
         comments != null

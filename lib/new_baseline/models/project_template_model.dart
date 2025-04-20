@@ -3,20 +3,20 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 
 class ProjectTemplateModel extends DataModel {
-  String id;
-  String name;
-  String templateName;
-  String timebankId;
-  String communityId;
-  String description;
-  String creatorId;
-  String photoUrl;
-  String cover_url;
-  ProjectMode mode;
-  int createdAt;
-  bool softDelete;
-  String registrationLink;
-  String emailId;
+  String? id;
+  String? name;
+  String? templateName;
+  String? timebankId;
+  String? communityId;
+  String? description;
+  String? creatorId;
+  String? photoUrl;
+  String? cover_url;
+  ProjectMode? mode;
+  int? createdAt;
+  bool? softDelete;
+  String? registrationLink;
+  String? emailId;
   // String phoneNumber;
   ProjectTemplateModel(
       {this.id,
@@ -54,8 +54,8 @@ class ProjectTemplateModel extends DataModel {
         mode: json["mode"] == null
             ? null
             : json["mode"] == 'Timebank'
-                ? ProjectMode.TIMEBANK_PROJECT
-                : ProjectMode.MEMBER_PROJECT,
+                ? ProjectMode.timebankProject
+                : ProjectMode.memberProject,
         createdAt: json["created_at"] == null ? null : json["created_at"],
         softDelete: json["softDelete"] == null ? false : json["softDelete"],
       );
@@ -71,7 +71,7 @@ class ProjectTemplateModel extends DataModel {
         "creator_id": creatorId == null ? null : creatorId,
         "photo_url": photoUrl == null ? null : photoUrl,
         "cover_url": cover_url == null ? null : cover_url,
-        "mode": mode == null ? null : mode.readable,
+        "mode": mode == null ? null : mode?.readable,
         "softDelete": softDelete ?? false,
         "email_id": emailId == null ? null : emailId,
         // "phone_number": phoneNumber == null ? null : phoneNumber,

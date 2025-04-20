@@ -9,19 +9,24 @@ class ShortProfileCard extends StatelessWidget {
   final UserRole role;
   final PopupMenuButton actionButton;
 
-  const ShortProfileCard({Key key, this.model, this.role, this.actionButton})
-      : super(key: key);
+  const ShortProfileCard({
+    required Key key,
+    required this.model,
+    required this.role,
+    required this.actionButton,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         model.photoURL != null
             ? CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(model.photoURL),
+                backgroundImage: CachedNetworkImageProvider(model.photoURL!),
                 radius: 22,
               )
             : CustomAvatar(
-                name: model.fullname,
+                name: model.fullname!,
                 radius: 22,
               ),
         SizedBox(width: 4),
@@ -31,7 +36,7 @@ class ShortProfileCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        actionButton ?? Container(),
+        actionButton,
       ],
     );
   }

@@ -46,15 +46,12 @@ class OneToManyOfferBloc extends BlocBase {
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   void onOfferMadeVirtual(bool value) {
-    
     if (value != null) {
       if (!value) {
         onOfferMadePublic(false);
-        
       }
       _isVisible.add(value);
       _makeVirtual.add(value);
-      
     }
   }
 

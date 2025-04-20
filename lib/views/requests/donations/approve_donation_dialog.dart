@@ -20,26 +20,29 @@ class ApproveDonationDialog extends StatelessWidget {
   final String notificationId;
   final String userId;
   final RequestModel requestModel;
-  final OfferModel offermodel;
+  final OfferModel offerModel; // Fixed variable name (was offermodel)
   final BuildContext parentContext;
-  final VoidCallback onTap;
+  final VoidCallback? onTap; // Made nullable with ?
 
-  ApproveDonationDialog({
-    this.donationApproveModel,
-    this.timeBankId,
-    this.notificationId,
-    this.userId,
-    this.requestModel,
-    this.offermodel,
-    this.parentContext,
-    this.onTap,
-  });
+  const ApproveDonationDialog({
+    // Added const constructor
+    Key? key, // Added key parameter
+    required this.donationApproveModel,
+    required this.timeBankId,
+    required this.notificationId,
+    required this.userId,
+    required this.requestModel,
+    required this.offerModel, // Fixed variable name
+    required this.parentContext,
+    required this.onTap,
+  }) : super(key: key); // Added super with key
 
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
+            // Added const
             borderRadius: BorderRadius.all(Radius.circular(25.0))),
         content: Form(
           child: Column(
@@ -55,28 +58,30 @@ class ApproveDonationDialog extends StatelessWidget {
                           defaultUserImageURL),
                 ),
               ),
-              Padding(
+              const Padding(
+                // Added const
                 padding: EdgeInsets.all(4.0),
               ),
               Padding(
-                padding: EdgeInsets.all(4.0),
+                padding: const EdgeInsets.all(4.0), // Added const
                 child: Text(
                   donationApproveModel.donorName ?? S.of(context).anonymous,
-                  style: TextStyle(
+                  style: const TextStyle(
+                    // Added const
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10), // Added const
                 child: Text(
                   donationApproveModel.requestTitle ??
                       S.of(context).request_title,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0), // Added const
                 child: Text(
                   donationApproveModel.donationDetails ??
                       S.of(context).request_description,
@@ -88,12 +93,14 @@ class ApproveDonationDialog extends StatelessWidget {
               Center(
                 child: Text(
                     "${S.of(context).by_accepting} ${donationApproveModel.donorName}  ${S.of(context).will_added_to_donors}",
-                    style: TextStyle(
+                    style: const TextStyle(
+                      // Added const
                       fontStyle: FontStyle.italic,
                     ),
                     textAlign: TextAlign.center),
               ),
-              Padding(
+              const Padding(
+                // Added const
                 padding: EdgeInsets.all(5.0),
               ),
               Column(
@@ -102,55 +109,54 @@ class ApproveDonationDialog extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: CustomElevatedButton(
-                      color:Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0), // Added const
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).acknowledge,
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: 'Europa'),
+                        style: const TextStyle(
+                            // Added const
+                            color: Colors.white,
+                            fontFamily: 'Europa'),
                       ),
                       onPressed: () async {
                         //donation approved
-                        onTap?.call();
+                        onTap
+                            ?.call(); // Use safe call with ?. since onTap is nullable
                       },
                     ),
-                  ),
-//                  Padding(
-//                    padding: EdgeInsets.all(4.0),
-//                  ),
-//                  Container(
-//                    width: double.infinity,
-//                    child: CustomElevatedButton(
-//                      color:Theme.of(context).primaryColor,
-//                      child: Text(
-//                        S.of(context).modify,
-//                        style: TextStyle(
-//                            color: Colors.white, fontFamily: 'Europa'),
-//                      ),
-//                      onPressed: () async {
-//                        //donation approved
-//                        // update donation status
-//                        Navigator.of(context).pop();
-//                      },
-//                    ),
-//                  ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
                   ),
                   Container(
                     width: double.infinity,
                     child: CustomElevatedButton(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary, // Changed accentColor to colorScheme.secondary
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0), // Added const
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).message,
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: 'Europa'),
+                        style: const TextStyle(
+                            // Added const
+                            color: Colors.white,
+                            fontFamily: 'Europa'),
                       ),
                       onPressed: () async {
                         // donation declined
-                        createChat(
+                        await createChat(
                           context: context,
                           requestModel: requestModel,
-                          offerModel: offermodel,
+                          offerModel: offerModel, // Fixed variable name
                           notificationId: notificationId,
                           userId: userId,
                         );
@@ -167,22 +173,23 @@ class ApproveDonationDialog extends StatelessWidget {
   }
 
   void acknowledgeDonation({
-    DonationApproveModel model,
-    String notificationId,
+    required DonationApproveModel model, // Added required
+    required String notificationId, // Added required
   }) {
     FirestoreManager.readUserNotification(
-        notificationId, donationApproveModel.donorEmail);
+        notificationId, donationApproveModel.donorEmail ?? '');
   }
 
   Widget _getCloseButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0), // Added const
       child: Container(
         alignment: FractionalOffset.topRight,
         child: Container(
           width: 20,
           height: 20,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
+            // Added const
             image: DecorationImage(
               image: AssetImage(
                 'lib/assets/images/close.png',
@@ -202,29 +209,31 @@ class ApproveDonationDialog extends StatelessWidget {
     );
   }
 
-  Future createChat({
-    RequestModel requestModel,
-    OfferModel offerModel,
-    String userId,
-    BuildContext context,
-    String notificationId,
+  Future<void> createChat({
+    // Added return type <void>
+    RequestModel? requestModel, // Made nullable with ?
+    OfferModel? offerModel, // Fixed variable name and made nullable with ?
+    required String userId, // Added required
+    required BuildContext context, // Added required
+    required String notificationId, // Added required
   }) async {
     var timeBankId = requestModel != null
         ? requestModel.timebankId
-        : offermodel != null
-            ? offermodel.timebankId
+        : offerModel != null
+            ? offerModel.timebankId
             : '';
     var userid = requestModel != null
         ? requestModel.sevaUserId
-        : offermodel != null
-            ? offermodel.sevaUserId
+        : offerModel != null
+            ? offerModel.sevaUserId
             : '';
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: timeBankId);
+    TimebankModel? timebankModel =
+        await getTimeBankForId(timebankId: timeBankId ?? '');
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
     UserModel loggedInUser =
-        await FirestoreManager.getUserForId(sevaUserId: userid);
-    ParticipantInfo sender, reciever;
+        await FirestoreManager.getUserForId(sevaUserId: userid ?? '');
+    ParticipantInfo? sender, reciever; // Made nullable with ?
+
     if (requestModel != null) {
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
@@ -238,7 +247,7 @@ class ApproveDonationDialog extends StatelessWidget {
 
         case RequestMode.TIMEBANK_REQUEST:
           sender = ParticipantInfo(
-            id: timebankModel.id,
+            id: timebankModel!.id,
             type: timebankModel.parentTimebankId ==
                     FlavorConfig.values
                         .timebankId //check if timebank is primary timebank
@@ -248,8 +257,11 @@ class ApproveDonationDialog extends StatelessWidget {
             photoUrl: timebankModel.photoUrl,
           );
           break;
+        default: // Added default case
+          sender = null;
+          break;
       }
-    } else if (offermodel != null) {
+    } else if (offerModel != null) {
       sender = ParticipantInfo(
         id: loggedInUser.sevaUserID,
         name: loggedInUser.fullname,
@@ -268,19 +280,23 @@ class ApproveDonationDialog extends StatelessWidget {
     List<String> showToCommunities = [];
 
     try {
-      String communityId1 = requestModel != null
+      String? communityId1 = requestModel != null // Made nullable with ?
           ? requestModel.communityId
           : offerModel != null
               ? offerModel.communityId
               : null;
 
-      String communityId2;
+      String? communityId2; // Made nullable with ?
       if (requestModel != null) {
-        communityId2 =
-            requestModel.participantDetails[user.email]['communityId'];
+        communityId2 = requestModel.participantDetails != null &&
+                requestModel.participantDetails?[user.email] != null
+            ? requestModel.participantDetails?[user.email]?['communityId']
+            : null;
       } else if (offerModel != null) {
-        communityId2 =
-            offerModel.participantDetails[user.sevaUserID]['communityId'];
+        communityId2 = offerModel.participantDetails != null &&
+                offerModel.participantDetails?[user.sevaUserID] != null
+            ? offerModel.participantDetails?[user.sevaUserID]?['communityId']
+            : null;
       } else {
         communityId2 = null;
       }
@@ -296,34 +312,30 @@ class ApproveDonationDialog extends StatelessWidget {
       logger.e(e);
     }
 
-    createAndOpenChat(
-      isTimebankMessage: offermodel != null
-          ? false
-          : requestModel != null
-              ? requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
-              : false,
-      context: parentContext,
-      timebankId: timeBankId,
-      showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
-      interCommunity: showToCommunities.isNotEmpty,
-      communityId: loggedInUser.currentCommunity,
-      sender: sender,
-      reciever: reciever,
-      isFromRejectCompletion: false,
-      onChatCreate: () {
-        Navigator.pop(context);
-      },
-    );
+    if (sender != null) {
+      // Added null check
+      await createAndOpenChat(
+        // Added await
+        isTimebankMessage: offerModel != null // Fixed variable name
+            ? false
+            : requestModel != null
+                ? requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+                : false,
+        context: parentContext,
+        timebankId: timeBankId ?? '',
+        showToCommunities:
+            showToCommunities.isNotEmpty ? showToCommunities : [],
+        interCommunity: showToCommunities.isNotEmpty,
+        communityId: loggedInUser.currentCommunity ?? '',
+        sender: sender,
+        reciever: reciever!, // Non-null assertion since it's initialized above
+        isFromRejectCompletion: false,
+        feedId: requestModel?.id ?? offerModel?.id ?? '', // Provide feedId
+        entityId: requestModel?.id ?? offerModel?.id ?? '', // Provide entityId
+        onChatCreate: () {
+          Navigator.pop(context);
+        },
+      );
+    }
   }
-
-//  if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
-//  FirestoreManager.readUserNotification(
-//  notificationId, SevaCore.of(context).loggedInUser.email);
-//  } else {
-//  readTimeBankNotification(
-//  notificationId: notificationId,
-//  timebankId: requestModel.timebankId,
-//  );
-//  }
 }

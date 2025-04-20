@@ -25,7 +25,6 @@ import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 
-
 class OfferList extends StatefulWidget {
   final TimebankModel timebankModel;
 

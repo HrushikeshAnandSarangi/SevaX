@@ -12,14 +12,14 @@ import 'package:sevaexchange/widgets/camera/selected_image_preview.dart';
 class CameraPage extends StatefulWidget {
   final List<CameraDescription> cameras;
 
-  const CameraPage({Key key, this.cameras}) : super(key: key);
+  const CameraPage({Key? key, required this.cameras}) : super(key: key);
 
   @override
   _CameraState createState() => _CameraState();
 }
 
 class _CameraState extends State<CameraPage> {
-  CameraController controller;
+  late CameraController controller;
   int _cameraIndex = 0;
   bool _cameraNotAvailable = false;
 
@@ -83,16 +83,16 @@ class _CameraState extends State<CameraPage> {
       builder: (context) {
         return SelectedImagePreview(file: file);
       },
-    )).then((ImageCaptionModel imageCaptionModel) {
+    )).then((ImageCaptionModel? imageCaptionModel) {
       Navigator.of(context).pop(imageCaptionModel);
     });
   }
 
   Future<void> _onGalleryButtonPress() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile?.path != null) {
-      navigateToImagePreview(File(pickedFile.path));
+      navigateToImagePreview(File(pickedFile!.path));
     }
   }
 
@@ -100,7 +100,7 @@ class _CameraState extends State<CameraPage> {
 
   Future<String> _takePicture() async {
     if (!controller.value.isInitialized || controller.value.isTakingPicture) {
-      return null;
+      return '';
     }
     // final Directory extDir = await getApplicationDocumentsDirectory();
     // final String dirPath = '${extDir.path}/Pictures/sevax';
@@ -112,7 +112,7 @@ class _CameraState extends State<CameraPage> {
       return xFile.path;
     } on CameraException catch (e) {
       _showCameraException(e);
-      return null;
+      return '';
     }
   }
 
@@ -194,8 +194,8 @@ class _CameraState extends State<CameraPage> {
                 S.of(context).tap_for_photo,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
-                    .copyWith(color: Colors.white),
+                    .titleMedium
+                    ?.copyWith(color: Colors.white),
               ),
             )
           ],

@@ -5,9 +5,9 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class HideBlockedContent extends StatelessWidget {
   const HideBlockedContent({
-    Key key,
-    @required this.creatorId,
-    @required this.child,
+    Key? key,
+    required this.creatorId,
+    required this.child,
     this.additionalConditions = true,
   }) : super(key: key);
 
@@ -23,13 +23,14 @@ class HideBlockedContent extends StatelessWidget {
           ) &&
           additionalConditions,
       child: child,
+      secondChild: const SizedBox.shrink(),
     );
   }
 
   static bool checkIfBlocked(final String creatorId, final UserModel user) {
     try {
-      return user.blockedBy.contains(creatorId) ||
-          user.blockedMembers.contains(creatorId);
+      return user.blockedBy?.contains(creatorId) == true ||
+          user.blockedMembers?.contains(creatorId) == true;
     } catch (_) {
       return false;
     }

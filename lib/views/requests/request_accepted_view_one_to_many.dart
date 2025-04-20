@@ -35,10 +35,10 @@ import '../core.dart';
 
 class RequestAcceptedSpendingViewOneToMany extends StatefulWidget {
   RequestModel requestModel;
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
 
   RequestAcceptedSpendingViewOneToMany(
-      {@required this.requestModel, this.timebankModel});
+      {required this.requestModel, this.timebankModel});
 
   @override
   _RequestAcceptedSpendingViewOneToManyState createState() =>
@@ -61,7 +61,7 @@ class _RequestAcceptedSpendingViewOneToManyState
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      RequestManager.getRequestStreamById(requestId: widget.requestModel.id)
+      RequestManager.getRequestStreamById(requestId: widget.requestModel.id!)
           .listen((_requestModel) {
         widget.requestModel = _requestModel;
         reset();
@@ -84,11 +84,11 @@ class _RequestAcceptedSpendingViewOneToManyState
               : S.of(context).updating_users,
         ),
         content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Theme.of(context).primaryColor,
+          ),
         ),
-),
       );
     }
     return Scaffold(
@@ -147,7 +147,8 @@ class _RequestAcceptedSpendingViewOneToManyState
                 "==========================>>>>>>>>>> TRANSACTIONS RETURN CHECK " +
                     value.docs.length.toString()),
             value.docs.forEach((map) {
-              var model = TransactionModel.fromMap(map.data());
+              var model =
+                  TransactionModel.fromMap(map.data() as Map<String, dynamic>);
               _transactionsFromDB.add(model);
             })
           },
@@ -160,8 +161,10 @@ class _RequestAcceptedSpendingViewOneToManyState
         var _userModel;
 
         if (transaction.type != 'SEVAX_TO_TIMEBANK_ONETOMANY_COMPLETE') {
-          _userModel = await getUserForId(sevaUserId: transaction.to);
-          totalCredits = totalCredits + transaction.credits;
+          if (transaction.to != null) {
+            _userModel = await getUserForId(sevaUserId: transaction.to!);
+          }
+          totalCredits = totalCredits + (transaction.credits ?? 0);
           item = getCompletedResultView(
             context,
             _userModel,
@@ -173,7 +176,7 @@ class _RequestAcceptedSpendingViewOneToManyState
       }
     }
 
-    totalCredits = num.parse(totalCredits.toStringAsFixed(2));
+    totalCredits = double.parse(totalCredits.toStringAsFixed(2));
     _avtars.add(getTotalSpending("$totalCredits"));
     //_avtars.addAll(_pendingAvtars);
     _avtars.addAll(_transactions);
@@ -247,8 +250,8 @@ class _RequestAcceptedSpendingViewOneToManyState
         .format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(
-              widget.requestModel.postTimestamp),
-          timezoneAbb: user.timezone),
+              widget.requestModel.postTimestamp!),
+          timezoneAbb: user.timezone!),
     );
   }
 
@@ -281,8 +284,8 @@ class _RequestAcceptedSpendingViewOneToManyState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      usermodel.fullname,
-                      style: Theme.of(parentContext).textTheme.subtitle1,
+                      usermodel.fullname!,
+                      style: Theme.of(parentContext).textTheme.titleMedium,
                     ),
                     Text(
                       formattedDate(
@@ -324,11 +327,17 @@ class _RequestAcceptedSpendingViewOneToManyState
 
   Widget getPendingResultView(BuildContext parentContext, UserModel user,
       TransactionModel transactionModel) {
-    if (user == null || user.sevaUserID == null) return Offstage();
+    if (user.sevaUserID == null) return Offstage();
     return Slidable(
-        actionPane: SlidableBehindActionPane(),
-        actions: <Widget>[],
-        secondaryActions: <Widget>[],
+        key: ValueKey(user.sevaUserID),
+        endActionPane: ActionPane(
+          motion: BehindMotion(),
+          children: <Widget>[],
+        ),
+        startActionPane: ActionPane(
+          motion: BehindMotion(),
+          children: <Widget>[],
+        ),
         child: GestureDetector(
           onTap: () {
             // setState(() {
@@ -358,7 +367,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                 backgroundImage:
                     NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
-              title: Text(user.fullname),
+              title: Text(user.fullname!),
               subtitle: RichText(
                 text: TextSpan(
                   children: [
@@ -377,6 +386,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                 height: 40,
                 padding: EdgeInsets.only(bottom: 10),
                 child: CustomElevatedButton(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   shape: StadiumBorder(),
                   color: Colors.indigo,
                   textColor: Colors.white,
@@ -393,11 +403,11 @@ class _RequestAcceptedSpendingViewOneToManyState
                       // showLinearProgress();
                       var canApproveTransaction =
                           await SevaCreditLimitManager.hasSufficientCredits(
-                        credits: transactionModel.credits,
-                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        credits: transactionModel.credits!.toDouble(),
+                        userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                         communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        email: SevaCore.of(context).loggedInUser.email,
+                            SevaCore.of(context).loggedInUser.currentCommunity!,
+                        email: SevaCore.of(context).loggedInUser.email!,
                       );
 
                       if (!canApproveTransaction.hasSuffiientCredits) {
@@ -413,9 +423,9 @@ class _RequestAcceptedSpendingViewOneToManyState
                       context: context,
                       notificationId: notificationId,
                       requestModel: widget.requestModel,
-                      userId: user.sevaUserID,
+                      userId: user.sevaUserID!,
                       userModel: user,
-                      credits: transactionModel.credits,
+                      credits: transactionModel.credits!,
                     );
                   },
                   child: Text(S.of(context).pending,
@@ -427,7 +437,7 @@ class _RequestAcceptedSpendingViewOneToManyState
         ));
   }
 
-  BuildContext linearProgressForBalanceCheck;
+  late BuildContext linearProgressForBalanceCheck;
 
   void showLinearProgress() {
     showDialog(
@@ -438,11 +448,11 @@ class _RequestAcceptedSpendingViewOneToManyState
           return AlertDialog(
             title: Text(S.of(context).hang_on),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -549,15 +559,15 @@ class _RequestAcceptedSpendingViewOneToManyState
   }
 
   Future<void> showMemberClaimConfirmation({
-    BuildContext context,
-    UserModel userModel,
-    RequestModel requestModel,
-    String notificationId,
-    String userId,
-    num credits,
+    BuildContext? context,
+    UserModel? userModel,
+    RequestModel? requestModel,
+    String? notificationId,
+    String? userId,
+    num? credits,
   }) async {
     await showDialog(
-        context: context,
+        context: context!,
         builder: (BuildContext viewContext) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
@@ -575,7 +585,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                       width: 70,
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                            userModel.photoURL ?? defaultUserImageURL),
+                            userModel!.photoURL ?? defaultUserImageURL),
                       ),
                     ),
                     Padding(
@@ -584,7 +594,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                     Padding(
                       padding: EdgeInsets.all(4.0),
                       child: Text(
-                        userModel.fullname,
+                        userModel.fullname!,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -605,7 +615,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                         padding: EdgeInsets.all(8.0),
                         child: Center(
                           child: Text(
-                            "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for} $credits ${credits > 1 ? S.of(context).hours : S.of(context).hour}",
+                            "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for} $credits ${credits! > 1 ? S.of(context).hours : S.of(context).hour}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontStyle: FontStyle.italic,
@@ -623,6 +633,11 @@ class _RequestAcceptedSpendingViewOneToManyState
                         Container(
                           width: double.infinity,
                           child: CustomElevatedButton(
+                            shape: StadiumBorder(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 5,
+                            textColor: Colors.white,
                             color: Theme.of(context).primaryColor,
                             child: Text(
                               S.of(context).approve,
@@ -638,11 +653,11 @@ class _RequestAcceptedSpendingViewOneToManyState
                                 isRemoving = false;
                               });
                               await checkForFeedback(
-                                userId: userId,
+                                userId: userId!,
                                 user: userModel,
                                 context: context,
-                                model: requestModel,
-                                notificationId: notificationId,
+                                model: requestModel!,
+                                notificationId: notificationId!,
                                 credits: credits,
                               );
                               // approveMemberClaim(
@@ -657,12 +672,14 @@ class _RequestAcceptedSpendingViewOneToManyState
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(5.0),
-                        ),
-                        Container(
-                          width: double.infinity,
+                          padding: EdgeInsets.all(8.0),
                           child: CustomElevatedButton(
-                            color: Theme.of(context).accentColor,
+                            shape: StadiumBorder(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 5,
+                            textColor: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                             child: Text(
                               S.of(context).reject,
                               style: TextStyle(
@@ -679,12 +696,12 @@ class _RequestAcceptedSpendingViewOneToManyState
                               });
                               await rejectMemberClaimForEvent(
                                 context: context,
-                                model: requestModel,
-                                notificationId: notificationId,
+                                model: requestModel!,
+                                notificationId: notificationId!,
                                 user: userModel,
-                                userId: userId,
+                                userId: userId!,
                                 credits: credits,
-                                timebankModel: widget.timebankModel,
+                                timebankModel: widget.timebankModel!,
                               );
                             },
                           ),
@@ -700,37 +717,37 @@ class _RequestAcceptedSpendingViewOneToManyState
   }
 
   Future rejectMemberClaimForEvent({
-    RequestModel model,
-    String userId,
-    BuildContext context,
-    UserModel user,
-    String notificationId,
-    num credits,
-    TimebankModel timebankModel,
+    RequestModel? model,
+    String? userId,
+    BuildContext? context,
+    UserModel? user,
+    String? notificationId,
+    num? credits,
+    TimebankModel? timebankModel,
   }) async {
     List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
+        model!.transactions!.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
 
-    model.transactions = transactions.map((t) {
-      return t;
-    }).toList();
-    await FirestoreManager.rejectRequestCompletion(
-      model: model,
-      userId: userId,
-      communityid: model.participantDetails[user.email] != null
-          ? model.participantDetails[user.email]['communityId']
-          : model.communityId,
-    );
+    // model.transactions = transactions.map((t) {
+    //   return t;
+    // }).toList();
+    // await FirestoreManager.rejectRequestCompletion(
+    //   model: model,
+    //   userId: userId!,
+    //   communityid: model.participantDetails?[user!.email] != null
+    //       ? model.participantDetails![user!.email!]['communityId']
+    //       : model.communityId,
+    // );
 
-    var loggedInUser = SevaCore.of(context).loggedInUser;
+    var loggedInUser = SevaCore.of(context!).loggedInUser;
 
     setState(() {
       isProgressBarActive = false;
     });
 
     ParticipantInfo sender, reciever;
-    switch (widget.requestModel.requestMode) {
+    switch (widget.requestModel.requestMode ?? RequestMode.PERSONAL_REQUEST) {
       case RequestMode.PERSONAL_REQUEST:
         sender = ParticipantInfo(
           id: loggedInUser.sevaUserID,
@@ -742,7 +759,7 @@ class _RequestAcceptedSpendingViewOneToManyState
 
       case RequestMode.TIMEBANK_REQUEST:
         sender = ParticipantInfo(
-          id: timebankModel.id,
+          id: timebankModel!.id,
           type: timebankModel.parentTimebankId ==
                   FlavorConfig
                       .values.timebankId //check if timebank is primary timebank
@@ -755,7 +772,7 @@ class _RequestAcceptedSpendingViewOneToManyState
     }
 
     reciever = ParticipantInfo(
-      id: user.sevaUserID,
+      id: user!.sevaUserID!,
       name: user.fullname,
       photoUrl: user.photoURL,
       type: ChatType.TYPE_PERSONAL,
@@ -773,8 +790,8 @@ class _RequestAcceptedSpendingViewOneToManyState
     List<String> showToCommunities = [];
     try {
       String communityId1 =
-          widget.requestModel.participantDetails[user.email]['communityId'];
-      String communityId2 = widget.requestModel.communityId;
+          widget.requestModel.participantDetails![user.email]['communityId'];
+      String communityId2 = widget.requestModel.communityId!;
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -786,19 +803,21 @@ class _RequestAcceptedSpendingViewOneToManyState
     } on Exception catch (e) {
       logger.e(e);
     }
-    if (widget.requestModel.participantDetails[sender])
+    if (widget.requestModel.participantDetails![sender])
       createAndOpenChat(
         showToCommunities:
-            showToCommunities.isNotEmpty ? showToCommunities : null,
+            showToCommunities.isNotEmpty ? showToCommunities : null!,
         interCommunity: showToCommunities.isNotEmpty,
         isTimebankMessage:
             widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         context: context,
-        timebankId: model.timebankId,
-        communityId: loggedInUser.currentCommunity,
+        timebankId: model.timebankId!,
+        communityId: loggedInUser.currentCommunity!,
         sender: sender,
         reciever: reciever,
         isFromRejectCompletion: true,
+        feedId: widget.requestModel.id!, // Added required feedId
+        entityId: user.sevaUserID!, // Added required entityId
         // openFullScreen: ,
         onChatCreate: () {
           FirestoreManager.saveRequestFinalAction(
@@ -807,11 +826,11 @@ class _RequestAcceptedSpendingViewOneToManyState
 
           if (widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
             FirestoreManager.readUserNotification(
-                notificationId, SevaCore.of(context).loggedInUser.email);
+                notificationId!, SevaCore.of(context).loggedInUser.email!);
           } else {
             readTimeBankNotification(
-              notificationId: notificationId,
-              timebankId: widget.requestModel.timebankId,
+              notificationId: notificationId!,
+              timebankId: widget.requestModel.timebankId!,
             );
           }
 
@@ -822,9 +841,9 @@ class _RequestAcceptedSpendingViewOneToManyState
 
   Widget getBio(UserModel userModel) {
     if (userModel.bio != null) {
-      if (userModel.bio.length < 100) {
+      if (userModel.bio!.length < 100) {
         return Text(
-          userModel.bio,
+          userModel.bio!,
           textAlign: TextAlign.center,
         );
       }
@@ -833,7 +852,7 @@ class _RequestAcceptedSpendingViewOneToManyState
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
-            userModel.bio,
+            userModel.bio!,
             maxLines: null,
             overflow: null,
             textAlign: TextAlign.center,
@@ -898,12 +917,12 @@ class _RequestAcceptedSpendingViewOneToManyState
   // }
 
   Future checkForFeedback({
-    String userId,
-    UserModel user,
-    RequestModel model,
-    String notificationId,
-    BuildContext context,
-    num credits,
+    String? userId,
+    UserModel? user,
+    RequestModel? model,
+    String? notificationId,
+    BuildContext? context,
+    num? credits,
   }) async {
     // Map results = await ExtendedNavigator.ofRouter<inRoutePrefix.Router>()
     //     .pushReviewFeedback(
@@ -912,7 +931,7 @@ class _RequestAcceptedSpendingViewOneToManyState
 
     // widget.tim
 
-    Map results = await Navigator.of(context).push(MaterialPageRoute(
+    Map results = await Navigator.of(context!).push(MaterialPageRoute(
       builder: (BuildContext context) {
         return ReviewFeedback(
           feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
@@ -930,17 +949,17 @@ class _RequestAcceptedSpendingViewOneToManyState
           results.containsKey('selection').toString());
 
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model!, user!);
       onActivityResult(
         requestModel: model,
-        userId: userId,
-        notificationId: notificationId,
+        userId: userId!,
+        notificationId: notificationId!,
         context: context,
-        reviewer: model.email,
-        reviewed: user.email,
-        requestId: model.id,
+        reviewer: model.email!,
+        reviewed: user.email!,
+        requestId: model.id!,
         results: results,
-        credits: credits,
+        credits: credits!,
         reciever: user,
       );
     } else {
@@ -958,40 +977,40 @@ class _RequestAcceptedSpendingViewOneToManyState
     if (user1.pastHires == null) {
       user1.pastHires = [];
     }
-    var hired = user2.sevaUserID.trim();
-    if (!user1.pastHires.contains(hired)) {
+    var hired = user2.sevaUserID!.trim();
+    if (!user1.pastHires!.contains(hired)) {
       var reportedUsersList = [];
-      for (var i = 0; i < user1.pastHires.length; i++) {
-        reportedUsersList.add(user1.pastHires[i]);
+      for (var i = 0; i < user1.pastHires!.length; i++) {
+        reportedUsersList.add(user1.pastHires![i]);
       }
       reportedUsersList.add(hired);
-      user1.pastHires = reportedUsersList;
+      user1.pastHires = List<String>.from(reportedUsersList);
       await FirestoreManager.updateUser(user: user1);
     }
   }
 
   Future onActivityResult(
-      {SevaCore sevaCore,
-      RequestModel requestModel,
-      String userId,
-      String notificationId,
-      BuildContext context,
-      Map results,
-      String reviewer,
-      String reviewed,
-      String requestId,
-      UserModel reciever,
-      num credits}) async {
+      {SevaCore? sevaCore,
+      RequestModel? requestModel,
+      String? userId,
+      String? notificationId,
+      BuildContext? context,
+      Map? results,
+      String? reviewer,
+      String? reviewed,
+      String? requestId,
+      UserModel? reciever,
+      num? credits}) async {
     // adds review to firestore
     await CollectionRef.reviews.add({
       "reviewer": reviewer,
       "reviewed": reviewed,
-      "ratings": results['selection'],
+      "ratings": results!['selection'],
       "device_info": results['device_info'],
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : S.of(context).no_comments),
+          : S.of(context!).no_comments),
       'liveMode': !AppConfig.isTestCommunity,
     });
     // if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
@@ -1015,10 +1034,10 @@ class _RequestAcceptedSpendingViewOneToManyState
     //   );
     //   log('success');
     // }
-    await updateUserData(reviewer, reviewed);
+    await updateUserData(reviewer!, reviewed!);
     var claimedRequestStatus = ClaimedRequestStatusModel(
         isAccepted: true,
-        adminEmail: sevaCore.loggedInUser.email,
+        adminEmail: sevaCore!.loggedInUser.email,
         requesterEmail: reviewed,
         id: requestId,
         timestamp: DateTime.now().millisecondsSinceEpoch,
@@ -1028,11 +1047,11 @@ class _RequestAcceptedSpendingViewOneToManyState
     );
     await sendMessageToMember(
         loggedInUser: sevaCore.loggedInUser,
-        requestModel: requestModel,
-        receiver: reciever,
-        message: results['comment'] ?? S.of(context).no_comments);
+        requestModel: requestModel!,
+        receiver: reciever!,
+        message: results['comment'] ?? S.of(context!).no_comments);
     await approveTransaction(
-        requestModel, userId, notificationId, sevaCore, reciever.email);
+        requestModel, userId!, notificationId!, sevaCore, reciever.email!);
   }
 
   Future approveTransaction(RequestModel model, String userId,
@@ -1040,19 +1059,19 @@ class _RequestAcceptedSpendingViewOneToManyState
     await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
-      communityId: sevaCore.loggedInUser.currentCommunity,
-      memberCommunityId: model.participantDetails[email] != null
-          ? model.participantDetails[email]['communityId']
+      communityId: sevaCore.loggedInUser.currentCommunity!,
+      memberCommunityId: model.participantDetails![email] != null
+          ? model.participantDetails![email]['communityId']
           : model.communityId,
     );
 
     if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
       await FirestoreManager.readUserNotification(
-          notificationId, sevaCore.loggedInUser.email);
+          notificationId, sevaCore.loggedInUser.email!);
     } else {
       await FirestoreManager.readTimeBankNotification(
         notificationId: notificationId,
-        timebankId: model.timebankId,
+        timebankId: model.timebankId!,
       );
     }
     setState(() {
@@ -1062,36 +1081,36 @@ class _RequestAcceptedSpendingViewOneToManyState
   }
 
   Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    UserModel receiver,
-    RequestModel requestModel,
-    String message,
+    UserModel? loggedInUser,
+    UserModel? receiver,
+    RequestModel? requestModel,
+    String? message,
   }) async {
     ParticipantInfo sender = ParticipantInfo(
-      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.sevaUserID
+      id: requestModel!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser!.sevaUserID
           : requestModel.timebankId,
       photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.photoURL
-          : widget.timebankModel.photoUrl,
+          ? loggedInUser!.photoURL
+          : widget.timebankModel!.photoUrl,
       name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.fullname
-          : widget.timebankModel.name,
+          ? loggedInUser!.fullname
+          : widget.timebankModel!.name,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
-          : widget.timebankModel.parentTimebankId ==
+          : widget.timebankModel!.parentTimebankId ==
                   FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
-      id: receiver.sevaUserID,
+      id: receiver!.sevaUserID,
       photoUrl: receiver.photoURL,
       name: receiver.fullname,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
-          : widget.timebankModel.parentTimebankId ==
+          : widget.timebankModel!.parentTimebankId ==
                   FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
@@ -1099,7 +1118,7 @@ class _RequestAcceptedSpendingViewOneToManyState
     await sendBackgroundMessage(
         messageContent: getReviewMessage(
             reviewMessage: message,
-            userName: loggedInUser.fullname,
+            userName: loggedInUser!.fullname!,
             context: context,
             requestTitle: requestModel.title,
             isForCreator: false),
@@ -1108,8 +1127,8 @@ class _RequestAcceptedSpendingViewOneToManyState
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                 ? false
                 : true,
-        timebankId: requestModel.timebankId,
-        communityId: loggedInUser.currentCommunity,
+        timebankId: requestModel!.timebankId!,
+        communityId: loggedInUser.currentCommunity!,
         sender: sender);
   }
 

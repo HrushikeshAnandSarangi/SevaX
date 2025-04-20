@@ -80,35 +80,40 @@ class RequestDonationDisputeBloc {
 
       _cashAmount.addError('amount1');
       return false;
-    } else if (donationModel.minimumAmount != null && int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+    } else if (donationModel.minimumAmount != null &&
+        int.parse(_cashAmount.value) < donationModel.minimumAmount) {
       log("Inside min");
 
       _cashAmount.addError('min');
       return false;
     } else {
-      donationModel.donationStatus = donationModel.donationStatus == DonationStatus.REQUESTED
-          ? DonationStatus.PLEDGED
-          : donationModel.donationStatus;
+      donationModel.donationStatus =
+          donationModel.donationStatus == DonationStatus.REQUESTED
+              ? DonationStatus.PLEDGED
+              : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
             operatoreMode: operationMode,
             requestType: donationModel.donationType,
             donationStatus: donationModel.donationStatus,
-            associatedId: operationMode == OperatingMode.CREATOR && donationModel.donatedToTimebank
+            associatedId: operationMode == OperatingMode.CREATOR &&
+                    donationModel.donatedToTimebank
                 ? donationModel.timebankId
                 : donationModel.donorDetails.email,
             donationId: donationId,
-            isTimebankNotification: operationMode == OperatingMode.CREATOR && donationModel.donatedToTimebank,
+            isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+                donationModel.donatedToTimebank,
             notificationId: notificationId,
             acknowledgementNotification: getAcknowlegementNotification(
               updatedAmount: double.parse(_cashAmount.value),
               model: donationModel,
               operatorMode: operationMode,
               requestMode: requestMode,
-              notificationType: donationModel.donationStatus == DonationStatus.PLEDGED
-                  ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
-                  : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+              notificationType:
+                  donationModel.donationStatus == DonationStatus.PLEDGED
+                      ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
+                      : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
             ),
           )
           .then((value) => true)
@@ -130,16 +135,24 @@ class RequestDonationDisputeBloc {
       rate = operationMode == OperatingMode.USER
           ? pledgedAmount
           : await currencyConversion(
-              fromCurrency: donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "",
-              toCurrency: donationModel?.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? "",
+              fromCurrency:
+                  donationModel?.cashDetails?.cashDetails?.offerCurrencyType ??
+                      "",
+              toCurrency: donationModel
+                      ?.cashDetails?.cashDetails?.offerDonatedCurrencyType ??
+                  "",
               amount: pledgedAmount ?? 0.0);
     }
     if (donationModel.requestIdType == 'request') {
       rate = operationMode != OperatingMode.USER
           ? pledgedAmount
           : await currencyConversion(
-              fromCurrency: donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "",
-              toCurrency: donationModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "",
+              fromCurrency: donationModel
+                      ?.cashDetails?.cashDetails?.requestCurrencyType ??
+                  "",
+              toCurrency: donationModel
+                      ?.cashDetails?.cashDetails?.requestDonatedCurrency ??
+                  "",
               amount: pledgedAmount ?? "");
     }
 
@@ -147,21 +160,31 @@ class RequestDonationDisputeBloc {
     if (operationMode == OperatingMode.USER) {
       convertedRate = await currencyConversion(
           fromCurrency: donationModel.requestIdType == 'offer'
-              ? donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "USD"
-              : donationModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "USD",
+              ? donationModel?.cashDetails?.cashDetails?.offerCurrencyType ??
+                  "USD"
+              : donationModel
+                      ?.cashDetails?.cashDetails?.requestDonatedCurrency ??
+                  "USD",
           toCurrency: donationModel.requestIdType == 'offer'
-              ? donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "USD"
-              : donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "USD",
+              ? donationModel?.cashDetails?.cashDetails?.offerCurrencyType ??
+                  "USD"
+              : donationModel?.cashDetails?.cashDetails?.requestCurrencyType ??
+                  "USD",
           amount: double.parse(_cashAmount.value));
     }
     if (operationMode != OperatingMode.USER) {
       convertedRate = await currencyConversion(
           fromCurrency: donationModel.requestIdType == 'request'
-              ? donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "USD"
-              : donationModel?.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? "USD",
+              ? donationModel?.cashDetails?.cashDetails?.requestCurrencyType ??
+                  "USD"
+              : donationModel
+                      ?.cashDetails?.cashDetails?.offerDonatedCurrencyType ??
+                  "USD",
           toCurrency: donationModel.requestIdType == 'request'
-              ? donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "USD"
-              : donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "USD",
+              ? donationModel?.cashDetails?.cashDetails?.requestCurrencyType ??
+                  "USD"
+              : donationModel?.cashDetails?.cashDetails?.offerCurrencyType ??
+                  "USD",
           amount: double.parse(_cashAmount.value));
     }
 
@@ -179,8 +202,10 @@ class RequestDonationDisputeBloc {
           .acknowledgeDonation(
             operatoreMode: operationMode,
             requestType: donationModel.donationType,
-            donationStatus: status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
-            associatedId: operationMode == OperatingMode.CREATOR && donationModel.donatedToTimebank
+            donationStatus:
+                status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
+            associatedId: operationMode == OperatingMode.CREATOR &&
+                    donationModel.donatedToTimebank
                 ? donationModel.timebankId
                 : donationModel.requestIdType == 'offer'
                     ? operationMode != OperatingMode.CREATOR
@@ -188,10 +213,12 @@ class RequestDonationDisputeBloc {
                         : donationModel.receiverDetails.email
                     : donationModel.donorDetails.email,
             donationId: donationId,
-            isTimebankNotification: operationMode == OperatingMode.CREATOR && donationModel.donatedToTimebank,
+            isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+                donationModel.donatedToTimebank,
             notificationId: notificationId,
             acknowledgementNotification: getAcknowlegementNotification(
-              updatedAmount: operationMode == OperatingMode.USER || operationMode != OperatingMode.USER
+              updatedAmount: operationMode == OperatingMode.USER ||
+                      operationMode != OperatingMode.USER
                   ? convertedRate
                   : double.parse(_cashAmount.value),
               model: donationModel,
@@ -218,10 +245,12 @@ class RequestDonationDisputeBloc {
     Map<String, String> customSelection,
   }) {
     var notificationId = Uuid().generateV4();
-    bool isTimebankNotification = model.donatedToTimebank && operatorMode == OperatingMode.USER;
+    bool isTimebankNotification =
+        model.donatedToTimebank && operatorMode == OperatingMode.USER;
     if (model.donationType == RequestType.CASH)
       model.cashDetails.pledgedAmount = updatedAmount;
-    else if (model.donationType == RequestType.GOODS) model.goodsDetails.donatedGoods = customSelection;
+    else if (model.donationType == RequestType.GOODS)
+      model.goodsDetails.donatedGoods = customSelection;
 
     model.notificationId = notificationId;
 
@@ -238,18 +267,25 @@ class RequestDonationDisputeBloc {
 
     return NotificationsModel(
       type: notificationType,
-      communityId: !isTimebankNotification ? communityId ?? model.communityId : model.communityId,
+      communityId: !isTimebankNotification
+          ? communityId ?? model.communityId
+          : model.communityId,
       data: model.toMap(),
       id: notificationId,
       isRead: false,
       isTimebankNotification: isTimebankNotification,
-      senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST ? model.timebankId : model.donatedTo,
-      targetUserId: operatorMode == OperatingMode.CREATOR ? model.donorSevaUserId : model.timebankId,
+      senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
+          ? model.timebankId
+          : model.donatedTo,
+      targetUserId: operatorMode == OperatingMode.CREATOR
+          ? model.donorSevaUserId
+          : model.timebankId,
       timebankId: model.timebankId,
     );
   }
 
-  String getCommunitySpecificNotificationForOffer({NotificationType type, DonationModel model}) {
+  String getCommunitySpecificNotificationForOffer(
+      {NotificationType type, DonationModel model}) {
     switch (type) {
       case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
       case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
@@ -277,7 +313,8 @@ class RequestDonationDisputeBloc {
     x.sort();
     y.sort();
     var status = listEquals(x, y);
-    donationStatus = status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED;
+    donationStatus =
+        status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED;
     donationModel.donationStatus = donationStatus;
 
     await _donationsRepository.acknowledgeDonation(
@@ -296,7 +333,8 @@ class RequestDonationDisputeBloc {
                 : NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR),
         customSelection: _goodsRecieved.value,
       ),
-      associatedId: operationMode == OperatingMode.CREATOR && donationModel.donatedToTimebank
+      associatedId: operationMode == OperatingMode.CREATOR &&
+              donationModel.donatedToTimebank
           ? donationModel.timebankId
           : donationModel.requestIdType == 'offer'
               ? operationMode != OperatingMode.CREATOR
@@ -308,7 +346,8 @@ class RequestDonationDisputeBloc {
       // if status is true that means the notification will go to user only as the request is acknowledged
       // if true then we check whether it should go to timebank or user
       //TODO: check the condition for all scenario
-      isTimebankNotification: operationMode == OperatingMode.CREATOR && donationModel.donatedToTimebank,
+      isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+          donationModel.donatedToTimebank,
       notificationId: notificationId,
     );
     return true;

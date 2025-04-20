@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
@@ -14,23 +13,23 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class EditRequest extends StatefulWidget {
-  final bool isOfferRequest;
-  final OfferModel offer;
-  final String timebankId;
-  final UserModel userModel;
-  final ProjectModel projectModel;
-  String projectId;
-  RequestModel requestModel;
+  final bool? isOfferRequest;
+  final OfferModel? offer;
+  final String? timebankId;
+  final UserModel? userModel;
+  final ProjectModel? projectModel;
+  String? projectId;
+  RequestModel? requestModel;
 
   EditRequest({
-    Key key,
+    Key? key,
     this.isOfferRequest,
     this.offer,
     this.timebankId,
     this.userModel,
     this.projectId,
     this.projectModel,
-    @required this.requestModel,
+    required this.requestModel,
   }) : super(key: key);
 
   @override
@@ -66,17 +65,18 @@ class _EditRequestState extends State<EditRequest> {
                   return LoadingIndicator();
                 }
                 if (snapshot.data != null) {
-                  logger.e('REQUESTMODEL CHECK:   ' + widget.requestModel.toString());
+                  logger.e('REQUESTMODEL CHECK:   ' +
+                      widget.requestModel.toString());
                   return RequestCreateEditForm(
                     formType: RequestFormType.EDIT,
-                    requestModel: widget.requestModel,
-                    isOfferRequest: widget.isOfferRequest,
+                    requestModel: widget.requestModel!,
+                    isOfferRequest: widget.isOfferRequest!,
                     offer: widget.offer,
-                    timebankId: widget.timebankId,
+                    timebankId: widget.timebankId!,
                     userModel: widget.userModel,
-                    loggedInUser: snapshot.data.loggedinuser,
-                    projectId: widget.projectId,
-                    projectModel: widget.projectModel,
+                    loggedInUser: snapshot.data!.loggedinuser,
+                    projectId: widget.projectId!,
+                    projectModel: widget.projectModel!,
                     comingFrom: ComingFrom.Requests,
                   );
                 }
@@ -86,9 +86,9 @@ class _EditRequestState extends State<EditRequest> {
   }
 
   String get title {
-    if (widget.requestModel.projectId == null ||
-        widget.requestModel.projectId == "" ||
-        widget.requestModel.projectId.isEmpty) {
+    if (widget.requestModel!.projectId == null ||
+        widget.requestModel!.projectId == "" ||
+        widget.requestModel!.projectId!.isEmpty) {
       return S.of(context).edit;
     }
     return S.of(context).edit_request;

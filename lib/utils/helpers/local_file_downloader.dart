@@ -6,30 +6,33 @@ class LocalFileDownloader {
   Future<void> download(
     String fileName,
     String localFilePath, {
-    fileExtension = 'pdf',
+    String fileExtension = 'pdf', // Added explicit type
   }) async {
-    Directory saveDir;
+    late Directory saveDir;
+
     if (Platform.isAndroid) {
-      Directory directory = await getExternalStorageDirectory();
+      final directory = await getExternalStorageDirectory();
       //get download folder on android
-      String downloadPath = directory.parent.parent.parent.parent.path +
-          Platform.pathSeparator +
-          'Download';
+      final downloadPath = '${directory?.parent.parent.parent.parent.path}'
+          '${Platform.pathSeparator}Download';
       saveDir = Directory(downloadPath);
+    } else if (Platform.isIOS) {
+      final directory = await getApplicationDocumentsDirectory();
+      saveDir = Directory('${directory.path}'
+          '${Platform.pathSeparator}Download');
+    } else {
+      //TODO: update method for web
+      throw UnsupportedError('Platform not supported');
     }
 
-    //TODO: update method for web
-
-    if (Platform.isIOS) {
-      Directory directory = await getApplicationDocumentsDirectory();
-      saveDir = Directory(directory.path + Platform.pathSeparator + 'Download');
-    }
     if (!await saveDir.exists()) {
-      await saveDir.create();
+      await saveDir.create(recursive: true);
     }
-    File file = File(localFilePath);
-    file.copy(
-      saveDir.path + Platform.pathSeparator + fileName + '.' + fileExtension,
+
+    final file = File(localFilePath);
+    await file.copy(
+      '${saveDir.path}'
+      '${Platform.pathSeparator}$fileName.$fileExtension',
     );
   }
 }

@@ -11,16 +11,15 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
-
 enum FavoriteUserStatus { LOADING, LOADED, EMPTY }
 
 class FavoriteUsers extends StatefulWidget {
   final String timebankId;
-  final String requestModelId;
-  final String sevaUserId;
+  final String? requestModelId;
+  final String? sevaUserId;
 
   FavoriteUsers({
-    @required this.timebankId,
+    required this.timebankId,
     this.requestModelId,
     this.sevaUserId,
   });
@@ -38,15 +37,15 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
 
   List<UserModel> users = [];
   FavoriteUserStatus userStatus = FavoriteUserStatus.LOADING;
-  BuildContext dialogLoadingContext;
-  RequestModel requestModel;
-  UserModel loggedinUser;
+  BuildContext? dialogLoadingContext;
+  RequestModel? requestModel;
+  UserModel? loggedinUser;
 
   @override
   void initState() {
     super.initState();
 
-    if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
+    if (isAccessAvailable(timebank.model, widget.sevaUserId!)) {
       isAdmin = true;
     }
 
@@ -54,7 +53,8 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
         .doc(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data());
+      requestModel =
+          RequestModel.fromMap(reqModel.data() as Map<String, dynamic>);
       setState(() {});
     });
   }
@@ -70,8 +70,9 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
         if (snapshot.hasData && snapshot.data != null) {
           List<UserModel> userList = [];
 
-          snapshot.data.docs.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data(), 'fav_users');
+          snapshot.data!.docs.forEach((userModel) {
+            UserModel model = UserModel.fromMap(
+                userModel.data() as Map<String, dynamic>, 'fav_users');
             userList.add(model);
           });
 
@@ -88,17 +89,17 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
               UserModel user = userList.elementAt(index);
               return RequestCardWidget(
                 timebankModel: timebank.model,
-                requestModel: requestModel,
+                requestModel: requestModel!,
                 userModel: user,
-                currentCommunity: loggedinUser.currentCommunity,
-                loggedUserId: loggedinUser.sevaUserID,
+                currentCommunity: loggedinUser!.currentCommunity!,
+                loggedUserId: loggedinUser!.sevaUserID!,
                 isFavorite: true,
                 isAdmin: isAdmin,
                 refresh: () {},
                 reqStatus: getRequestUserStatus(
-                    requestModel: requestModel,
-                    userId: user.sevaUserID,
-                    email: user.email,
+                    requestModel: requestModel!,
+                    userId: user.sevaUserID!,
+                    email: user.email!,
                     context: context),
               );
             },

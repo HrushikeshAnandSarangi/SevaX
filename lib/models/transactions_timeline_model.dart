@@ -10,12 +10,12 @@ class TransacationsTimelineModel {
     this.visible,
   });
 
-  String from;
-  int timestamp;
-  String to;
-  String type;
-  String typeId;
-  List<String> visible;
+  String? from;
+  int? timestamp;
+  String? to;
+  String? type;
+  String? typeId;
+  List<String>? visible;
 
   factory TransacationsTimelineModel.fromJson(Map<String, dynamic> json) =>
       TransacationsTimelineModel(
@@ -33,7 +33,8 @@ class TransacationsTimelineModel {
         "to": to != null ? to : null,
         "type": type != null ? type : null,
         "typeId": typeId != null ? typeId : null,
-        "visible":
-            visible.isNotEmpty ? List<String>.from(visible.map((x) => x)) : [],
+        "visible": visible?.isNotEmpty == true
+            ? List<String>.from(visible?.map((x) => x) ?? [])
+            : [],
       };
 }

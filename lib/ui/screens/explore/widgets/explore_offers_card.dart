@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ExploreOffersCard extends StatelessWidget {
   const ExploreOffersCard({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.offerName,
     this.city,
@@ -16,14 +16,14 @@ class ExploreOffersCard extends StatelessWidget {
     //this.padding,
   }) : super(key: key);
 
-  final VoidCallback onTap;
-  final String imageUrl;
-  final String offerName;
-  final String city;
-  final String description;
-  final TextStyle firstTextStyle;
-  final TextStyle secondTextStyle;
-  final String offerStartDate;
+  final VoidCallback? onTap;
+  final String? imageUrl;
+  final String? offerName;
+  final String? city;
+  final String? description;
+  final TextStyle? firstTextStyle;
+  final TextStyle? secondTextStyle;
+  final String? offerStartDate;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -44,7 +44,7 @@ class ExploreOffersCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(3.0),
                     child: Image.network(
-                      imageUrl,
+                      imageUrl ?? 'https://placeholder.com/300x150',
                       height: 150,
                       width: 300,
                       fit: BoxFit.cover,
@@ -62,7 +62,7 @@ class ExploreOffersCard extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            offerName.toUpperCase() ?? '',
+                            offerName?.toUpperCase() ?? '',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: firstTextStyle ??
@@ -73,8 +73,8 @@ class ExploreOffersCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          city != null && city.isNotEmpty
-                              ? ' - ${city.toUpperCase()}'
+                          city != null && city?.isNotEmpty == true
+                              ? ' - ${city?.toUpperCase()}'
                               : '',
                           style: firstTextStyle ??
                               const TextStyle(
@@ -92,7 +92,7 @@ class ExploreOffersCard extends StatelessWidget {
                   child: Container(
                     width: 220,
                     child: Text(
-                      description,
+                      description ?? '',
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: secondTextStyle ??
@@ -106,9 +106,9 @@ class ExploreOffersCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: Text(
-                    offerStartDate.toUpperCase(),
+                    offerStartDate?.toUpperCase() ?? '',
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 13,
                     ),
                   ),

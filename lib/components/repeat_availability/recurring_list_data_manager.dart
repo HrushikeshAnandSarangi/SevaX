@@ -7,7 +7,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class RecurringListDataManager {
   static Stream<List<RequestModel>> getRecurringRequestListStream(
-      {String parentRequestId}) async* {
+      {required String parentRequestId}) async* {
     var query = CollectionRef.requests
         .where('parent_request_id', isEqualTo: parentRequestId)
         .where('accepted', isEqualTo: false)
@@ -20,10 +20,11 @@ class RecurringListDataManager {
           List<RequestModel> requestList = [];
           snapshot.docs.forEach(
             (documentSnapshot) {
-              RequestModel model =
-                  RequestModel.fromMap(documentSnapshot.data());
+              RequestModel model = RequestModel.fromMap(
+                  documentSnapshot.data() as Map<String, dynamic>);
               model.id = documentSnapshot.id;
-              if (model.approvedUsers.length <= model.numberOfApprovals) {
+              if ((model.approvedUsers?.length ?? 0) <=
+                  (model.numberOfApprovals ?? 0)) {
                 requestList.add(model);
               }
             },
@@ -35,7 +36,7 @@ class RecurringListDataManager {
   }
 
   static Stream<List<OfferModel>> getRecurringofferListStream(
-      {String parentOfferId}) async* {
+      {required String parentOfferId}) async* {
     var query = CollectionRef.offers
         .where('softDelete', isEqualTo: false)
         .where('parent_offer_id', isEqualTo: parentOfferId)
@@ -49,10 +50,12 @@ class RecurringListDataManager {
           var currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
           snapshot.docs.forEach(
             (documentSnapshot) {
-              OfferModel model = OfferModel.fromMap(documentSnapshot.data());
+              OfferModel model = OfferModel.fromMap(
+                  documentSnapshot.data() as Map<String, dynamic>);
               model.id = documentSnapshot.id;
               if (model.offerType == OfferType.GROUP_OFFER) {
-                if (model.groupOfferDataModel.endDate >= currentTimeStamp) {
+                if ((model.groupOfferDataModel?.endDate ?? 0) >=
+                    currentTimeStamp) {
                   offersList.add(model);
                 }
               } else {

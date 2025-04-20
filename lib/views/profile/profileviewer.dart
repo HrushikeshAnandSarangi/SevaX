@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -20,16 +20,16 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 //TODO update bio and remove un-necessary stuff
 
 class ProfileViewer extends StatefulWidget {
-  final String userEmail;
-  final String userId;
-  final String timebankId;
-  final String entityName;
-  final bool isFromTimebank;
+  final String? userEmail;
+  final String? userId;
+  final String? timebankId;
+  final String? entityName;
+  final bool? isFromTimebank;
 
   //UserModel userModel;
   //bool isBlocked = false;
@@ -53,11 +53,11 @@ class ProfileViewer extends StatefulWidget {
 }
 
 final BorderSide borderOnepx = BorderSide(
-  color: Colors.grey[300],
+  color: Colors.grey[300]!,
   width: 1,
 );
 final BorderSide borderHalfpx = BorderSide(
-  color: Colors.grey[300],
+  color: Colors.grey[300]!,
   width: 0.5,
 );
 
@@ -72,8 +72,8 @@ final TextStyle subTitle = TextStyle(
 );
 
 class ProfileViewerState extends State<ProfileViewer> {
-  UserModel user;
-  bool isBlocked;
+  UserModel? user;
+  bool? isBlocked;
 
   @override
   void initState() {
@@ -92,18 +92,22 @@ class ProfileViewerState extends State<ProfileViewer> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  SmoothStarRating(
+                  RatingBar.builder(
+                      initialRating: (trustworthinessscore != null
+                              ? trustworthinessscore
+                              : 0)
+                          .toDouble(),
+                      minRating: 0,
+                      direction: Axis.horizontal,
                       allowHalfRating: true,
-                      isReadOnly: true,
-                      onRated: (v) {},
-                      starCount: 5,
-                      rating: trustworthinessscore != null ? trustworthinessscore : 0,
-                      size: 28.0,
-                      filledIconData: Icons.star,
-                      halfFilledIconData: Icons.star_half,
-                      color: Colors.yellow,
-                      borderColor: Colors.yellow,
-                      spacing: 0.0),
+                      itemCount: 5,
+                      itemSize: 28.0,
+                      ignoreGestures: true,
+                      itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                          ),
+                      onRatingUpdate: (rating) {}),
                   Text(
                     S.of(context).trustworthiness,
                     style: subTitle,
@@ -123,18 +127,19 @@ class ProfileViewerState extends State<ProfileViewer> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                SmoothStarRating(
+                RatingBar.builder(
+                    initialRating: (reliabilityscore ?? 0).toDouble(),
+                    minRating: 0,
+                    direction: Axis.horizontal,
                     allowHalfRating: true,
-                    isReadOnly: true,
-                    onRated: (v) {},
-                    starCount: 5,
-                    rating: reliabilityscore != null ? reliabilityscore : 0,
-                    size: 28.0,
-                    filledIconData: Icons.star,
-                    halfFilledIconData: Icons.star_half,
-                    color: Colors.yellow,
-                    borderColor: Colors.yellow,
-                    spacing: 0.0),
+                    itemCount: 5,
+                    itemSize: 28.0,
+                    ignoreGestures: true,
+                    itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                        ),
+                    onRatingUpdate: (rating) {}),
                 Text(
                   S.of(context).reliabilitysocre,
                   style: subTitle,
@@ -149,16 +154,17 @@ class ProfileViewerState extends State<ProfileViewer> {
 
   @override
   Widget build(BuildContext context) {
-    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    String loggedInEmail = SevaCore.of(context).loggedInUser.email!;
     UserModel userData = SevaCore.of(context).loggedInUser;
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<UserModel>(
         stream: widget.userEmail == null
-            ? getUserForIdStream(sevaUserId: widget.userId)
-            : getUserForEmailStream(widget.userEmail),
-        builder: (BuildContext firebasecontext, AsyncSnapshot<UserModel> snapshot) {
+            ? getUserForIdStream(sevaUserId: widget.userId!)
+            : getUserForEmailStream(widget.userEmail!),
+        builder:
+            (BuildContext firebasecontext, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -171,15 +177,15 @@ class ProfileViewerState extends State<ProfileViewer> {
                 return Offstage();
               }
 
-              if (user.fullname == null) {
-                user.fullname = defaultUsername;
+              if (user!.fullname == null) {
+                user!.fullname = defaultUsername;
               }
 
-              if (user.photoURL == null) {
-                user.photoURL = defaultUserImageURL;
+              if (user!.photoURL == null) {
+                user!.photoURL = defaultUserImageURL;
               }
 
-              isBlocked = user.blockedBy.contains(userData.sevaUserID);
+              isBlocked = user!.blockedBy!.contains(userData.sevaUserID);
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,30 +202,35 @@ class ProfileViewerState extends State<ProfileViewer> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           ProfileImage(
-                            image: snapshot.data.photoURL,
-                            tag: widget.userEmail ?? widget.userId,
+                            image: snapshot.data!.photoURL!,
+                            tag: widget.userEmail ?? widget.userId!,
                             radius: 50,
                           ),
                           SizedBox(width: 20),
                           ProfileHeader(
                             rating: '4.5',
-                            name: user.fullname,
-                            email: user.email,
-                            isBlocked: isBlocked,
-                            message: widget.userEmail == loggedInEmail || isBlocked
-                                ? null
-                                : () => onMessageClick(user, SevaCore.of(context).loggedInUser),
-                            block: widget.userEmail == loggedInEmail ? null : onBlockClick,
+                            name: user!.fullname!,
+                            email: user!.email!,
+                            isBlocked: isBlocked!,
+                            message: widget.userEmail == loggedInEmail ||
+                                    isBlocked!
+                                ? null!
+                                : () => onMessageClick(
+                                    user!, SevaCore.of(context).loggedInUser),
+                            block: widget!.userEmail == loggedInEmail
+                                ? null!
+                                : onBlockClick,
                             report: widget.userEmail == loggedInEmail
-                                ? null
+                                ? null!
                                 : () => onReportClick(
                                       reporterUserModel: userData,
-                                      reportedUserModel: user,
+                                      reportedUserModel: user!,
                                     ),
                             reportStatus: getReportedStatus(
-                              timebankId: widget.timebankId,
-                              currentUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                              profileUserId: user.sevaUserID,
+                              timebankId: widget.timebankId!,
+                              currentUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID!,
+                              profileUserId: user!.sevaUserID!,
                             ),
                           ),
                         ],
@@ -231,17 +242,20 @@ class ProfileViewerState extends State<ProfileViewer> {
                         vertical: 20,
                       ),
                       child: UserProfileDetails(
-                        title: S.of(context).about + ' ${snapshot.data.fullname}',
-                        details: snapshot.data.bio ?? '',
+                        title:
+                            S.of(context).about + ' ${snapshot.data!.fullname}',
+                        details: snapshot.data!.bio ?? '',
                       ),
                     ),
                     SkillAndInterestBuilder(
-                      skills: snapshot.data.skills,
-                      interests: snapshot.data.interests,
+                      skills: snapshot.data!.skills!,
+                      interests: snapshot.data!.interests!,
                     ),
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: TRscore(user.trustworthinessscore, user.reliabilityscore)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: TRscore(user!.trustworthinessscore!,
+                            user!.reliabilityscore!)),
                     // '$' donated and 'Items' donated
                     // SizedBox(
                     //   height: 20,
@@ -266,19 +280,22 @@ class ProfileViewerState extends State<ProfileViewer> {
                     //         isTimeBank: false,
                     //         onTap: () {})),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 0),
                       child: StreamBuilder<List<RequestModel>>(
                         stream: FirestoreManager.getCompletedRequestStream(
-                            userEmail: widget.userEmail, userId: user.sevaUserID),
+                            userEmail: widget.userEmail!,
+                            userId: user!.sevaUserID!),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Text(snapshot.error.toString());
                           }
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
 
-                          List<RequestModel> requestList = snapshot.data;
+                          List<RequestModel> requestList = snapshot.data ?? [];
                           double toltalHoursWorked = 0;
 
                           toltalHoursWorked = getTotalWorkedHours(requestList);
@@ -305,10 +322,10 @@ class ProfileViewerState extends State<ProfileViewer> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        if (user.cvUrl != null)
+                        if (user!.cvUrl != null)
                           openPdfViewer(
-                              documentName: user.cvName ?? "cv name",
-                              documentUrl: user.cvUrl ?? "");
+                              documentName: user!.cvName ?? "cv name",
+                              documentUrl: user!.cvUrl ?? "");
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -330,7 +347,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                 width: 8,
                               ),
                               Text(
-                                user.cvName ?? S.of(context).cv_not_available,
+                                user!.cvName ?? S.of(context).cv_not_available,
                                 style: TextStyle(
                                   color: Color(0xFFF0ca5f2),
                                   fontSize: 16,
@@ -354,7 +371,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                           children: <TextSpan>[
                             TextSpan(
                               text: S.of(context).availablity + '\n',
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
                             ),
                             // TextSpan(text: '', style: TextStyle(height: 10)),
                             TextSpan(
@@ -391,24 +409,28 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
     createAndOpenChat(
       context: context,
-      timebankId: widget.timebankId,
-      communityId: loggedInUser.currentCommunity,
+      timebankId: widget.timebankId!,
+      communityId: loggedInUser.currentCommunity!,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: false,
+      feedId: '',
+      onChatCreate: () {},
+      showToCommunities: const [],
+      entityId: '',
     );
   }
 
-  void openPdfViewer({String documentUrl, String documentName}) {
+  void openPdfViewer({String? documentUrl, String? documentName}) {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
-    progressDialog.show();
+    progressDialog!.show();
 
-    createFileOfPdfUrl(documentUrl, documentName).then((f) {
-      progressDialog.hide();
+    createFileOfPdfUrl(documentUrl!, documentName!).then((f) {
+      progressDialog!.hide();
 
       Navigator.push(
         context,
@@ -445,15 +467,16 @@ class ProfileViewerState extends State<ProfileViewer> {
     });
   }
 
-  void onReportClick({UserModel reportedUserModel, UserModel reporterUserModel}) {
+  void onReportClick(
+      {UserModel? reportedUserModel, UserModel? reporterUserModel}) {
     Navigator.of(context)
         .push(
       ReportMemberPage.route(
-          reportedUserModel: reportedUserModel,
-          reportingUserModel: reporterUserModel,
-          timebankId: widget.timebankId,
-          isFromTimebank: widget.isFromTimebank,
-          entityName: widget.entityName),
+          reportedUserModel: reportedUserModel!,
+          reportingUserModel: reporterUserModel!,
+          timebankId: widget.timebankId!,
+          isFromTimebank: widget.isFromTimebank!,
+          entityName: widget.entityName!),
     )
         .then((_) {
       setState(() {});
@@ -463,55 +486,66 @@ class ProfileViewerState extends State<ProfileViewer> {
   void blockMember(ACTION action) {
     switch (action) {
       case ACTION.BLOCK:
-        CollectionRef.users.doc(SevaCore.of(context).loggedInUser.email).update({
-          'blockedMembers': FieldValue.arrayUnion([user.sevaUserID])
+        CollectionRef.users
+            .doc(SevaCore.of(context).loggedInUser.email)
+            .update({
+          'blockedMembers': FieldValue.arrayUnion([user!.sevaUserID])
         });
-        CollectionRef.users.doc(user.email).update({
-          'blockedBy': FieldValue.arrayUnion([SevaCore.of(context).loggedInUser.sevaUserID])
+        CollectionRef.users.doc(user!.email).update({
+          'blockedBy': FieldValue.arrayUnion(
+              [SevaCore.of(context).loggedInUser.sevaUserID])
         });
         setState(() {
-          isBlocked = !isBlocked;
+          isBlocked = !isBlocked!;
           var updateUser = SevaCore.of(context).loggedInUser;
-          var blockedMembers = List<String>.from(updateUser.blockedMembers);
-          blockedMembers.add(user.sevaUserID);
-          SevaCore.of(context).loggedInUser = updateUser.setBlockedMembers(blockedMembers);
+          var blockedMembers = List<String>.from(updateUser.blockedMembers!);
+          blockedMembers.add(user!.sevaUserID!);
+          SevaCore.of(context).loggedInUser =
+              updateUser.setBlockedMembers(blockedMembers);
         });
         break;
 
       case ACTION.UNBLOCK:
-        CollectionRef.users.doc(SevaCore.of(context).loggedInUser.email).update({
-          'blockedMembers': FieldValue.arrayRemove([user.sevaUserID])
+        CollectionRef.users
+            .doc(SevaCore.of(context).loggedInUser.email)
+            .update({
+          'blockedMembers': FieldValue.arrayRemove([user!.sevaUserID])
         });
-        CollectionRef.users.doc(user.email).update({
-          'blockedBy': FieldValue.arrayRemove([SevaCore.of(context).loggedInUser.sevaUserID])
+        CollectionRef.users.doc(user!.email).update({
+          'blockedBy': FieldValue.arrayRemove(
+              [SevaCore.of(context).loggedInUser.sevaUserID])
         });
 
         setState(() {
-          isBlocked = !isBlocked;
+          isBlocked = !isBlocked!;
           var updateUser = SevaCore.of(context).loggedInUser;
-          var blockedMembers = List<String>.from(updateUser.blockedMembers);
-          blockedMembers.remove(user.sevaUserID);
-          SevaCore.of(context).loggedInUser = updateUser.setBlockedMembers(blockedMembers);
+          var blockedMembers = List<String>.from(updateUser!.blockedMembers!);
+          blockedMembers.remove(user!.sevaUserID);
+          SevaCore.of(context).loggedInUser =
+              updateUser.setBlockedMembers(blockedMembers);
         });
         break;
     }
   }
 
-  Future<String> blockMemberDialogView(BuildContext viewContext) async {
-    return showDialog(
+  Future<String?> blockMemberDialogView(BuildContext viewContext) async {
+    return showDialog<String>(
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(isBlocked
+          title: Text(isBlocked == true
               ? S.of(context).unblock
-              : S.of(context).block + " ${user.fullname.split(' ')[0]}."),
+              : S.of(context).block +
+                  " ${user?.fullname?.split(' ')[0] ?? ''}."),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                isBlocked
-                    ? '${user.fullname.split(' ')[0]} ' + S.of(context).would_be_unblocked
-                    : "${user.fullname.split(' ')[0]} " + S.of(context).chat_block_warning,
+                isBlocked == true
+                    ? '${user?.fullname?.split(' ')[0] ?? ''} ' +
+                        S.of(context).would_be_unblocked
+                    : "${user?.fullname?.split(' ')[0] ?? ''} " +
+                        S.of(context).chat_block_warning,
               ),
               SizedBox(
                 height: 15,
@@ -522,10 +556,12 @@ class ProfileViewerState extends State<ProfileViewer> {
                   CustomTextButton(
                     shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      isBlocked ? S.of(context).unblock : S.of(context).block,
+                      isBlocked == true
+                          ? S.of(context).unblock
+                          : S.of(context).block,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: dialogButtonSize,
@@ -533,7 +569,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       ),
                     ),
                     onPressed: () {
-                      isBlocked
+                      isBlocked == true
                           ? Navigator.of(context).pop("UNBLOCK")
                           : Navigator.of(context).pop("BLOCK");
                     },
@@ -542,7 +578,9 @@ class ProfileViewerState extends State<ProfileViewer> {
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
-                          fontSize: dialogButtonSize, fontFamily: 'Europa', color: Colors.red),
+                          fontSize: dialogButtonSize,
+                          fontFamily: 'Europa',
+                          color: Colors.red),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop("CANCEL");
@@ -559,14 +597,19 @@ class ProfileViewerState extends State<ProfileViewer> {
 
   double getTotalWorkedHours(List<RequestModel> requestList) {
     double toltalHoursWorked = 0;
-    TransactionModel transmodel;
+    TransactionModel? transmodel;
     requestList.forEach((requestModel) {
-      if(requestModel.transactions.isNotEmpty)
-      transmodel = requestModel.transactions.firstWhere((transaction) {
-        return transaction.to == user.sevaUserID;
-      }, orElse: null);
-      if (transmodel != null && transmodel.credits != null) {
-        toltalHoursWorked = toltalHoursWorked + transmodel.credits;
+      if (requestModel.transactions!.isNotEmpty)
+        transmodel = requestModel.transactions!.firstWhere((transaction) {
+          return transaction.to == user!.sevaUserID;
+        },
+            orElse: () => TransactionModel(
+                  fromEmail_Id: '',
+                  toEmail_Id: '',
+                  communityId: '',
+                ));
+      if (transmodel != null && transmodel!.credits != null) {
+        toltalHoursWorked = toltalHoursWorked + transmodel!.credits!;
       }
     });
     return toltalHoursWorked;
@@ -575,12 +618,12 @@ class ProfileViewerState extends State<ProfileViewer> {
 
 class JobsCounter extends StatelessWidget {
   JobsCounter({
-    Key key,
+    Key? key,
     this.jobs,
     this.hours,
   }) : super(key: key);
-  final int jobs;
-  final int hours;
+  final int? jobs;
+  final int? hours;
 
   @override
   Widget build(BuildContext context) {
@@ -660,11 +703,11 @@ class JobsCounter extends StatelessWidget {
 }
 
 class UserProfileDetails extends StatefulWidget {
-  final String title;
-  final String details;
+  final String? title;
+  final String? details;
 
   const UserProfileDetails({
-    Key key,
+    Key? key,
     this.title,
     this.details,
   }) : super(key: key);
@@ -679,7 +722,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   @override
   void initState() {
-    viewFullDetails = widget.details != null ? widget.details.length <= maxLength : false;
+    viewFullDetails =
+        widget.details != null ? widget.details!.length <= maxLength : false;
     // if (widget.details.length <= maxLength) viewFullDetails = true;
     super.initState();
   }
@@ -696,7 +740,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          widget.title,
+          widget.title!,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -709,12 +753,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             children: <TextSpan>[
               TextSpan(
                 // text: widget.details,
-                text: viewFullDetails ? widget.details : widget.details.substring(0, maxLength),
+                text: viewFullDetails
+                    ? widget.details
+                    : widget.details!.substring(0, maxLength),
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               // TextSpan(text: ' ...'),
               TextSpan(
-                text: widget.details.length > maxLength
+                text: widget.details!.length > maxLength
                     ? viewFullDetails
                         ? ' ' + S.of(context).less
                         : '  ' + S.of(context).more
@@ -731,17 +777,17 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 }
 
 class ProfileHeader extends StatelessWidget {
-  final String name;
-  final String email;
-  final String rating;
-  final Function message;
-  final Function block;
-  final Function report;
-  final bool isBlocked;
-  final Future<bool> reportStatus;
+  final String? name;
+  final String? email;
+  final String? rating;
+  final Function? message;
+  final Function? block;
+  final Function? report;
+  final bool? isBlocked;
+  final Future<bool>? reportStatus;
 
   const ProfileHeader({
-    Key key,
+    Key? key,
     this.name,
     this.email,
     this.rating,
@@ -759,11 +805,13 @@ class ProfileHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         StreamBuilder<QuerySnapshot>(
-          stream: CollectionRef.reviews.where("reviewed", isEqualTo: email).snapshots(),
+          stream: CollectionRef.reviews
+              .where("reviewed", isEqualTo: email)
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             double r = 0;
             if (snapshot.data != null) {
-              snapshot.data.docs.forEach((data) {
+              snapshot.data!.docs.forEach((data) {
                 r += double.parse((data['ratings']));
               });
             }
@@ -775,7 +823,7 @@ class ProfileHeader extends StatelessWidget {
                   Text(
                     r != null
                         ? r > 0
-                            ? '${(r / snapshot.data.docs.length).toStringAsFixed(1)}'
+                            ? '${(r / snapshot.data!.docs.length).toStringAsFixed(1)}'
                             : S.of(context).no_ratings_yet
                         : S.of(context).loading,
                     style: TextStyle(
@@ -827,17 +875,20 @@ class ProfileHeader extends StatelessWidget {
                 icon: Icon(
                   Icons.message,
                 ),
-                onPressed: message,
+                onPressed: message == null ? null : () => message!(),
                 tooltip: S.of(context).message,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               IconButton(
                 icon: Icon(
                   Icons.block,
                 ),
-                onPressed: block,
-                tooltip: isBlocked ? S.of(context).unblock : S.of(context).block,
-                color: isBlocked ? Colors.red : Theme.of(context).accentColor,
+                onPressed: block == null ? null : () => block!(),
+                tooltip:
+                    isBlocked! ? S.of(context).unblock : S.of(context).block,
+                color: isBlocked!
+                    ? Colors.red
+                    : Theme.of(context).colorScheme.secondary,
               ),
               FutureBuilder<bool>(
                   future: reportStatus,
@@ -845,9 +896,12 @@ class ProfileHeader extends StatelessWidget {
                     log(snapshot.data.toString());
                     return IconButton(
                       icon: Icon(Icons.flag),
-                      onPressed: !(snapshot.data ?? true) ? report : null,
+                      onPressed:
+                          !(snapshot.data ?? true) ? () => report!() : null,
                       tooltip: S.of(context).report_members,
-                      color: !(snapshot.data ?? true) ? Theme.of(context).accentColor : Colors.grey,
+                      color: !(snapshot.data ?? true)
+                          ? Theme.of(context).colorScheme.secondary
+                          : Colors.grey,
                     );
                   }),
             ],
@@ -859,11 +913,11 @@ class ProfileHeader extends StatelessWidget {
 }
 
 class CompletedList extends StatelessWidget {
-  final List<RequestModel> requestList;
+  final List<RequestModel>? requestList;
 
   //List<UserModel> userList = [];
 
-  final UserModel userModel;
+  final UserModel? userModel;
 
   CompletedList({
     this.requestList,
@@ -872,11 +926,14 @@ class CompletedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (requestList.length == 0) {
+    if (requestList!.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Center(
-          child: Text(userModel.fullname + ' ' + S.of(context).not_completed_any_tasks,
+          child: Text(
+              userModel!.fullname! +
+                  ' ' +
+                  S.of(context).not_completed_any_tasks,
               textAlign: TextAlign.center),
         ),
       );
@@ -887,19 +944,21 @@ class CompletedList extends StatelessWidget {
           padding: EdgeInsets.all(0),
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: requestList.length,
+          itemCount: requestList!.length,
           itemBuilder: (context, index) {
-            RequestModel model = requestList.elementAt(index);
+            RequestModel model = requestList!.elementAt(index);
 
             return Card(
               child: ListTile(
-                title: Text(model.title),
+                title: Text(model.title!),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                  backgroundImage:
+                      NetworkImage(userModel!.photoURL ?? defaultUserImageURL),
                 ),
                 trailing: () {
-                  TransactionModel transmodel = model.transactions.firstWhere((transaction) {
-                    return transaction.to == userModel.sevaUserID;
+                  TransactionModel transmodel =
+                      model.transactions!.firstWhere((transaction) {
+                    return transaction.to == userModel!.sevaUserID;
                   });
                   return Column(
                     mainAxisSize: MainAxisSize.min,
@@ -915,7 +974,7 @@ class CompletedList extends StatelessWidget {
                     ],
                   );
                 }(),
-                subtitle: Text('${userModel.fullname}'),
+                subtitle: Text('${userModel!.fullname}'),
               ),
             );
           },
@@ -926,12 +985,12 @@ class CompletedList extends StatelessWidget {
 }
 
 class ProfileImage extends StatelessWidget {
-  final String image;
-  final double radius;
-  final String tag;
+  final String? image;
+  final double? radius;
+  final String? tag;
 
   const ProfileImage({
-    Key key,
+    Key? key,
     this.image,
     this.tag,
     this.radius,
@@ -940,7 +999,7 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: tag,
+      tag: tag!,
       child: CircleAvatar(
         backgroundImage: NetworkImage(
           image ?? defaultUserImageURL,
@@ -957,7 +1016,9 @@ class SkillAndInterestBuilder extends StatelessWidget {
   final List skills;
   final List interests;
 
-  const SkillAndInterestBuilder({Key key, this.skills, this.interests}) : super(key: key);
+  const SkillAndInterestBuilder(
+      {Key? key, required this.skills, required this.interests})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -966,7 +1027,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
         future: FirestoreManager.getUserSkillsInterests(
             skillsIdList: this.skills,
             interestsIdList: this.interests,
-            languageCode: SevaCore.of(context).loggedInUser.language),
+            languageCode: SevaCore.of(context).loggedInUser.language!),
         builder: (context, snapshot) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -983,8 +1044,11 @@ class SkillAndInterestBuilder extends StatelessWidget {
               ),
               Container(
                 height: 40,
-                child: snapshot.data != null && this.skills != null && this.skills.length != 0
-                    ? createLabels(snapshot.data['skills'])
+                child: snapshot.data != null &&
+                        this.skills != null &&
+                        this.skills.length != 0
+                    ? createLabels(
+                        (snapshot.data as Map<String, dynamic>)['skills'])
                     : Padding(
                         padding: EdgeInsets.all(5.0),
                       ),
@@ -1004,8 +1068,11 @@ class SkillAndInterestBuilder extends StatelessWidget {
               ),
               Container(
                 height: 40,
-                child: snapshot.data != null && this.interests != null && this.interests.length != 0
-                    ? createLabels(snapshot.data['interests'])
+                child: snapshot.data != null &&
+                        this.interests != null &&
+                        this.interests.length != 0
+                    ? createLabels(
+                        (snapshot.data as Map<String, dynamic>)['interests'])
                     : Padding(
                         padding: EdgeInsets.all(5.0),
                       ),
@@ -1051,9 +1118,9 @@ class SkillAndInterestBuilder extends StatelessWidget {
 }
 
 Future<bool> getReportedStatus({
-  String timebankId,
-  String currentUserId,
-  String profileUserId,
+  String? timebankId,
+  String? currentUserId,
+  String? profileUserId,
 }) async {
   bool flag = false;
   QuerySnapshot query = await CollectionRef.reportedUsersList
@@ -1062,7 +1129,8 @@ Future<bool> getReportedStatus({
       // .where("timebankIds", arrayContains: timebankId)
       .get();
   query.docs.forEach((data) {
-    if (data.data()['timebankIds'].contains(timebankId)) {
+    if ((data.data() as Map<String, dynamic>)['timebankIds']
+        .contains(timebankId)) {
       flag = true;
     } else {
       flag = false;

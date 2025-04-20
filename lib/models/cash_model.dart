@@ -7,10 +7,10 @@ ACHModel ACHModelFromMap(Map<dynamic, dynamic> map) => ACHModel.fromMap(map);
 String ACHModelToMap(ACHModel data) => json.encode(data.toMap());
 
 class ACHModel {
-  String bank_name;
-  String bank_address;
-  String routing_number;
-  String account_number;
+  String? bank_name;
+  String? bank_address;
+  String? routing_number;
+  String? account_number;
   ACHModel({
     this.bank_name,
     this.bank_address,
@@ -62,24 +62,24 @@ class CashModel {
     this.requestCurrencyFlag,
   });
 
-  double amountRaised = 0;
-  RequestPaymentType paymentType;
-  ACHModel achdetails = new ACHModel();
-  List<String> donors;
-  int minAmount;
-  int targetAmount;
-  String zelleId;
-  String paypalId;
-  String venmoId;
-  String swiftId;
-  String others;
-  String other_details;
-  String requestCurrencyType;
-  String offerCurrencyType;
-  String offerDonatedCurrencyType;
-  String requestDonatedCurrency;
-  String offerCurrencyFlag;
-  String requestCurrencyFlag;
+  double? amountRaised = 0;
+  RequestPaymentType? paymentType;
+  ACHModel? achdetails = new ACHModel();
+  List<String>? donors;
+  int? minAmount;
+  int? targetAmount;
+  String? zelleId;
+  String? paypalId;
+  String? venmoId;
+  String? swiftId;
+  String? others;
+  String? other_details;
+  String? requestCurrencyType;
+  String? offerCurrencyType;
+  String? offerDonatedCurrencyType;
+  String? requestDonatedCurrency;
+  String? offerCurrencyFlag;
+  String? requestCurrencyFlag;
 
   factory CashModel.fromMap(Map<dynamic, dynamic> json) => CashModel(
         paymentType: json["paymentType"] == null
@@ -137,8 +137,10 @@ class CashModel {
   Map<String, dynamic> toMap() => {
         "paymentType": paymentType == null ? null : paymentType.toString(),
         "amountRaised": amountRaised == null ? null : amountRaised,
-        "achdetails": achdetails == null ? null : achdetails.toMap(),
-        "donors": donors == null ? [] : List<String>.from(donors.map((x) => x)),
+        "achdetails": achdetails == null ? null : achdetails?.toMap(),
+        "donors": donors == null
+            ? []
+            : List<String>.from(donors?.map((x) => x) ?? []),
         "minAmount": minAmount == null ? null : minAmount,
         "targetAmount": targetAmount == null ? null : targetAmount,
         'zelleId': zelleId == null ? null : zelleId,

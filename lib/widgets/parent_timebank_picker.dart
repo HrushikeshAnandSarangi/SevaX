@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -19,9 +20,9 @@ class ParentTimebankPickerWidget extends StatelessWidget {
   final Color color;
 
   const ParentTimebankPickerWidget(
-      {Key key,
-      this.onChanged,
-      this.selectedTimebank,
+      {required Key key,
+      required this.onChanged,
+      required this.selectedTimebank,
       this.color = Colors.green})
       : super(key: key);
   @override
@@ -31,7 +32,7 @@ class ParentTimebankPickerWidget extends StatelessWidget {
     return CustomElevatedButton(
       shape: StadiumBorder(),
       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-      color: Colors.grey[200],
+      color: Colors.grey[200] ?? Colors.grey,
       textColor: Colors.black,
       elevation: 0,
       child: Container(
@@ -109,12 +110,12 @@ class SearchParentTimebanks extends StatefulWidget {
   final String selectedTimebank;
   final ValueChanged<CommunityModel> onChanged;
   SearchParentTimebanks({
-    @required this.keepOnBackPress,
-    @required this.loggedInUser,
-    @required this.showBackBtn,
-    @required this.isFromHome,
-    @required this.selectedTimebank,
-    this.onChanged,
+    required this.keepOnBackPress,
+    required this.loggedInUser,
+    required this.showBackBtn,
+    required this.isFromHome,
+    required this.selectedTimebank,
+    required this.onChanged,
   });
 
   @override
@@ -125,16 +126,20 @@ class SearchParentTimebanks extends StatefulWidget {
 
 class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
   final TextEditingController searchTextController = TextEditingController();
-  static String JOIN;
-  static String JOINED;
+  static String JOIN = '';
+  static String JOINED = '';
   final _debouncer = Debouncer(milliseconds: 500);
-  Timer _debounce;
+  late Timer _debounce;
   @override
   void initState() {
     super.initState();
     final _textUpdates = StreamController<String>();
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
+    // Ensure _debouncer is used
+    _debouncer.run(() {
+      log("Debouncer is active");
+    });
     _textUpdates.stream.listen((String event) {
       if (_debounce?.isActive ?? false) _debounce.cancel();
       _debounce = Timer(const Duration(milliseconds: 500), () {
@@ -240,8 +245,8 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
             if (!snapshot.hasData) {
               return Center(child: LoadingIndicator());
             } else {
-              if (snapshot.data.length != 0) {
-                List<CommunityModel> communityList = snapshot.data;
+              if (snapshot.data != null && snapshot.data!.length != 0) {
+                List<CommunityModel> communityList = snapshot.data ?? [];
 //                print("comm list ${communityList}");
 //                communityList
 //                    .removeWhere((community) => community.private == true);
@@ -291,9 +296,9 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
   }
 
   Widget timeBankWidget(
-      {CommunityModel communityModel,
-      BuildContext context,
-      String selectedTimebank}) {
+      {required CommunityModel communityModel,
+      required BuildContext context,
+      required String selectedTimebank}) {
     return ListTile(
       // onTap: goToNext(snapshot.data),
       title: Text(communityModel.name,
@@ -309,7 +314,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              S.of(context).created_by + snapshot.data.fullname,
+              S.of(context).created_by + (snapshot.data?.fullname ?? ''),
             );
           } else {
             return Text(
@@ -325,7 +330,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
                   this.widget.onChanged(communityModel);
                   Navigator.pop(context);
                 }
-              : null,
+              : () {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -337,9 +342,11 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
               ),
             ],
           ),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           textColor: FlavorConfig.values.buttonTextColor,
           shape: StadiumBorder(),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          elevation: 2,
         )
       ]),
     );

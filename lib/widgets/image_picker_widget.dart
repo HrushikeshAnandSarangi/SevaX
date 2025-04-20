@@ -8,18 +8,15 @@ import 'package:sevaexchange/globals.dart' as globals;
 class ImagePickerWidget extends StatefulWidget {
   final Widget child;
   final ValueChanged<File> onChanged;
-  final ValueChanged<String> onStockImageChanged;
+  final ValueChanged<String>? onStockImageChanged;
   final bool isAspectRatioFixed;
 
   const ImagePickerWidget(
-      {Key key,
-      this.onChanged,
-      this.child,
+      {Key? key,
+      required this.onChanged,
+      required this.child,
       this.isAspectRatioFixed = true,
-      this.onStockImageChanged})
-      : assert(child != null),
-        assert(onChanged != null),
-        super(key: key);
+      this.onStockImageChanged});
 
   @override
   _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
@@ -27,11 +24,12 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget>
     with TickerProviderStateMixin, UserImagePickerListener {
-  UserImagePickerHandler imagePicker;
-  AnimationController _controller;
+  late UserImagePickerHandler imagePicker;
+  late AnimationController _controller;
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -42,7 +40,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
       isAspectRatioFixed: widget.isAspectRatioFixed,
     );
     imagePicker.init();
-    super.initState();
   }
 
   @override
@@ -54,29 +51,30 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {
-        FocusScope.of(context).requestFocus(new FocusNode()),
-        imagePicker.showDialog(context)
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        imagePicker.showDialog(context);
       },
       child: widget.child,
     );
   }
 
   @override
-  void userImage(File _image) {
-    widget.onChanged(_image);
+  void userImage(File image) {
+    widget.onChanged(image);
   }
 
   @override
-  addWebImageUrl() {
-    widget.onStockImageChanged(globals.webImageUrl);
-
-    // TODO: implement addWebImageUrl
+  void addWebImageUrl() {
+    if (widget.onStockImageChanged != null && globals.webImageUrl != null) {
+      widget.onStockImageChanged!(globals.webImageUrl!);
+    }
   }
 
   @override
-  void stockImage(_image, String type) {
-    // TODO: implement stockImage
-    widget.onStockImageChanged(_image);
+  void stockImage(dynamic image, String type) {
+    if (widget.onStockImageChanged != null) {
+      widget.onStockImageChanged!(image);
+    }
   }
 }

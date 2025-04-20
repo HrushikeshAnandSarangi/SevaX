@@ -23,6 +23,4 @@ final String defaultGroupImageURL =
     "https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/timebanklogos%2Fgroup_default.jpg?alt=media&token=206f56eb-d575-4ae8-ac55-34aef5f3958a";
 
 List<dynamic> currencyItems =
-jsonDecode(AppConfig.remoteConfig.getString("currency_code_name_flag"));
-
-
+    jsonDecode(AppConfig.remoteConfig!.getString("currency_code_name_flag"));

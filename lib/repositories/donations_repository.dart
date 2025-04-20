@@ -12,7 +12,7 @@ import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_p
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 class DonationsRepository {
   Stream<QuerySnapshot> getDonationsOfRequest(String requestId) {
@@ -28,28 +28,28 @@ class DonationsRepository {
   }
 
   Future<void> donateOfferCreatorPledge({
-    String donationId,
-    bool isTimebankNotification,
-    String associatedId,
-    String notificationId,
-    NotificationsModel acknowledgementNotification,
-    @required DonationStatus donationStatus,
-    @required RequestType requestType,
-    @required OperatingMode operatoreMode,
+    required String donationId,
+    required bool isTimebankNotification,
+    required String associatedId,
+    required String notificationId,
+    required NotificationsModel acknowledgementNotification,
+    required DonationStatus donationStatus,
+    required RequestType requestType,
+    required OperatingMode operatoreMode,
   }) async {
     try {
       var donationModel =
-          DonationModel.fromMap(acknowledgementNotification.data);
+          DonationModel.fromMap(acknowledgementNotification.data!);
       var batch = CollectionRef.batch;
       batch.update(CollectionRef.donations.doc(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
         if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
-              (donationModel).cashDetails.pledgedAmount,
+              (donationModel).cashDetails!.pledgedAmount,
         if (donationStatus == DonationStatus.ACKNOWLEDGED &&
             requestType == RequestType.GOODS)
           'goodsDetails.donatedGoods':
-              (donationModel).goodsDetails.donatedGoods,
+              (donationModel).goodsDetails!.donatedGoods,
         'lastModifiedBy': associatedId,
         'notificationId': notificationId,
       });
@@ -71,18 +71,18 @@ class DonationsRepository {
       // create new notification for reciever to acknowledge
       var notificationReferenceForDonor;
       if (operatoreMode == OperatingMode.CREATOR &&
-          donationModel.donatedToTimebank) {
-        notificationReferenceForDonor =
-            CollectionRef.userNotification(donationModel.receiverDetails.email);
+          donationModel.donatedToTimebank!) {
+        notificationReferenceForDonor = CollectionRef.userNotification(
+            donationModel.receiverDetails!.email!);
         // direct towards timebank
       } else {
         //direct it towards creator
-        if (donationModel.donatedToTimebank) {
+        if (donationModel.donatedToTimebank!) {
           notificationReferenceForDonor =
-              CollectionRef.timebankNotification(donationModel.timebankId);
+              CollectionRef.timebankNotification(donationModel.timebankId!);
         } else {
           notificationReferenceForDonor = CollectionRef.userNotification(
-              donationModel.receiverDetails.email);
+              donationModel.receiverDetails!.email!);
         }
       }
 
@@ -103,28 +103,28 @@ class DonationsRepository {
   }
 
   Future<void> acknowledgeDonation({
-    String donationId,
-    bool isTimebankNotification,
-    String associatedId,
-    String notificationId,
-    NotificationsModel acknowledgementNotification,
-    @required DonationStatus donationStatus,
-    @required RequestType requestType,
-    @required OperatingMode operatoreMode,
+    required String donationId,
+    required bool isTimebankNotification,
+    required String associatedId,
+    required String notificationId,
+    required NotificationsModel acknowledgementNotification,
+    required DonationStatus donationStatus,
+    required RequestType requestType,
+    required OperatingMode operatoreMode,
   }) async {
     try {
       var donationModel =
-          DonationModel.fromMap(acknowledgementNotification.data);
+          DonationModel.fromMap(acknowledgementNotification.data!);
 
       var batch = CollectionRef.batch;
       batch.update(CollectionRef.donations.doc(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
         if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
-              (donationModel).cashDetails.pledgedAmount,
+              (donationModel).cashDetails!.pledgedAmount,
         if (requestType == RequestType.GOODS)
           'goodsDetails.donatedGoods':
-              (donationModel).goodsDetails.donatedGoods,
+              (donationModel).goodsDetails!.donatedGoods,
         'lastModifiedBy': associatedId,
       });
 
@@ -135,8 +135,8 @@ class DonationsRepository {
           batch.update(
             CollectionRef.requests.doc(donationModel.requestId),
             {
-              'cashModeDetails.amountRaised':
-                  FieldValue.increment(donationModel.cashDetails.pledgedAmount),
+              'cashModeDetails.amountRaised': FieldValue.increment(
+                  donationModel.cashDetails!.pledgedAmount!),
             },
           );
         }
@@ -148,8 +148,8 @@ class DonationsRepository {
           batch.update(
             CollectionRef.offers.doc(donationModel.requestId),
             {
-              'cashModeDetails.amountRaised':
-                  FieldValue.increment(donationModel.cashDetails.pledgedAmount),
+              'cashModeDetails.amountRaised': FieldValue.increment(
+                  donationModel.cashDetails!.pledgedAmount!),
             },
           );
         }
@@ -176,40 +176,41 @@ class DonationsRepository {
       var notificationReferenceForDonor;
       if (donationStatus == DonationStatus.ACKNOWLEDGED) {
         notificationReferenceForDonor =
-            CollectionRef.userNotification(donationModel.donorDetails.email);
+            CollectionRef.userNotification(donationModel.donorDetails!.email!);
         acknowledgementNotification.isTimebankNotification = false;
         acknowledgementNotification.isRead = false;
         //donor member reference
       } else {
         if (operatoreMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank) {
-          notificationReferenceForDonor =
-              CollectionRef.userNotification(donationModel.donorDetails.email);
+            donationModel.donatedToTimebank!) {
+          notificationReferenceForDonor = CollectionRef.userNotification(
+              donationModel.donorDetails!.email!);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
 
           // direct towards timebank
         } else if (operatoreMode != OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank &&
+            donationModel.donatedToTimebank != null &&
+            donationModel.donatedToTimebank == true &&
             donationModel.requestIdType == 'request') {
           //direct it towards creator
           notificationReferenceForDonor =
-              CollectionRef.timebankNotification(donationModel.timebankId);
+              CollectionRef.timebankNotification(donationModel.timebankId!);
         } else if (operatoreMode != OperatingMode.CREATOR &&
             donationModel.requestIdType == 'offer') {
           notificationReferenceForDonor = CollectionRef.userNotification(
-              donationModel.receiverDetails.email);
+              donationModel.receiverDetails!.email!);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
         } else if (operatoreMode == OperatingMode.CREATOR &&
             donationModel.requestIdType == 'offer') {
-          notificationReferenceForDonor =
-              CollectionRef.userNotification(donationModel.donorDetails.email);
+          notificationReferenceForDonor = CollectionRef.userNotification(
+              donationModel.donorDetails!.email!);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
         } else {
           notificationReferenceForDonor = CollectionRef.userNotification(
-              donationModel.requestId.split('*')[0]);
+              donationModel.requestId!.split('*')[0]);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
         }
@@ -227,11 +228,11 @@ class DonationsRepository {
   }
 
   Future<void> createDisputeNotification({
-    String donationId,
-    bool isTimebankNotification,
-    String associatedId,
-    String notificationId,
-    NotificationsModel disputedNotification,
+    required String donationId,
+    required bool isTimebankNotification,
+    required String associatedId,
+    required String notificationId,
+    required NotificationsModel disputedNotification,
   }) async {
     // Make notificaiton as read for the moderator
 
@@ -257,15 +258,15 @@ class DonationsRepository {
   }
 
   Future<void> donationCreditedNotificationToMember({
-    @required TimebankModel model,
-    @required UserModel user,
-    @required double donateAmount,
-    @required BuildContext context,
-    @required bool toMember,
+    required TimebankModel model,
+    required UserModel user,
+    required double donateAmount,
+    required BuildContext context,
+    required bool toMember,
   }) async {
     NotificationsModel notification = NotificationsModel(
       communityId: model.communityId,
-      id: Uuid().generateV4(),
+      id: const Uuid().v4(),
       isRead: false,
       isTimebankNotification: toMember ? false : true,
       senderUserId:

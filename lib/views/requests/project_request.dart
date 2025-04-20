@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -29,7 +29,8 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/exchange/create_request/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart'
+    hide Row, SizedBox;
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -48,9 +49,9 @@ class ProjectRequests extends StatefulWidget {
   final TimebankModel timebankModel;
   final ProjectModel projectModel;
   ProjectRequests(@required this.comingFrom,
-      {@required this.timebankId,
-      @required this.projectModel,
-      @required this.timebankModel});
+      {required this.timebankId,
+      required this.projectModel,
+      required this.timebankModel});
 //  State<StatefulWidget> createState() {
   RequestsState createState() => RequestsState();
 }
@@ -59,9 +60,9 @@ class ProjectRequests extends StatefulWidget {
 
 class RequestsState extends State<ProjectRequests>
     with SingleTickerProviderStateMixin {
-  UserModel user = null;
+  UserModel? user = null;
 
-  ProjectModel projectModel;
+  ProjectModel? projectModel;
   bool isProjectMember = false;
   bool isChatVisible = false;
   final ProjectDescriptionBloc bloc = ProjectDescriptionBloc();
@@ -70,7 +71,7 @@ class RequestsState extends State<ProjectRequests>
   void initState() {
     super.initState();
     projectModel = widget.projectModel;
-    bloc.init(projectModel.associatedMessaginfRoomId);
+    bloc.init(projectModel!.associatedMessaginfRoomId!);
   }
 
   @override
@@ -78,12 +79,12 @@ class RequestsState extends State<ProjectRequests>
     super.didChangeDependencies();
     Future.delayed(Duration.zero, () {
       FirestoreManager.getUserForIdStream(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!)
           .listen((onData) {
         user = onData;
         setState(() {});
       });
-      FirestoreManager.getProjectStream(projectId: projectModel.id)
+      FirestoreManager.getProjectStream(projectId: projectModel!.id!)
           .listen((onData) {
         projectModel = onData;
         setState(() {});
@@ -95,10 +96,11 @@ class RequestsState extends State<ProjectRequests>
   Widget build(BuildContext context) {
     final user = SevaCore.of(context).loggedInUser;
     isProjectMember = (ProjectMessagingRoomHelper.getAssociatedMembers(
-              associatedmembers: projectModel.associatedmembers,
+              associatedmembers: projectModel!.associatedmembers!,
             ).contains(user.sevaUserID) ||
-            projectModel.creatorId == user.sevaUserID) &&
-        projectModel.associatedmembers.isNotEmpty;
+            projectModel!.creatorId! == user.sevaUserID) &&
+        (projectModel!.associatedmembers != null &&
+            projectModel!.associatedmembers!.isNotEmpty);
 
     return BlocProvider(
       bloc: bloc,
@@ -110,7 +112,7 @@ class RequestsState extends State<ProjectRequests>
             centerTitle: true,
             elevation: 0.5,
             title: Text(
-              '${projectModel.name}',
+              '${projectModel!.name}',
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -124,7 +126,7 @@ class RequestsState extends State<ProjectRequests>
                 child: Material(
                   color: Theme.of(context).primaryColor,
                   child: TabBar(
-                    indicatorColor: Theme.of(context).accentColor,
+                    indicatorColor: Theme.of(context).colorScheme.secondary,
                     labelColor: Colors.white,
                     isScrollable: false,
                     tabs: <Widget>[
@@ -144,11 +146,11 @@ class RequestsState extends State<ProjectRequests>
                   children: [
                     ProjectRequestList(
                       timebankModel: widget.timebankModel,
-                      projectModel: projectModel,
+                      projectModel: projectModel!,
                       userModel: user,
                     ),
                     AboutProjectView(
-                      project_id: projectModel.id,
+                      project_id: projectModel!.id!,
                       timebankModel: widget.timebankModel,
                     ),
                     ...isProjectMember ? [ProjectChatView()] : [],
@@ -164,9 +166,9 @@ class RequestsState extends State<ProjectRequests>
 }
 
 class ProjectRequestList extends StatefulWidget {
-  final ProjectModel projectModel;
-  final TimebankModel timebankModel;
-  final UserModel userModel;
+  final ProjectModel? projectModel;
+  final TimebankModel? timebankModel;
+  final UserModel? userModel;
 
   ProjectRequestList({this.projectModel, this.timebankModel, this.userModel});
 
@@ -175,7 +177,7 @@ class ProjectRequestList extends StatefulWidget {
 }
 
 class ProjectRequestListState extends State<ProjectRequestList> {
-  ProjectModel projectModel;
+  ProjectModel? projectModel;
   int completedCount = 0;
   int pendingCount = 0;
   int totalCount = 0;
@@ -192,13 +194,13 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 
   void getData() async {
     await requestApiProvider
-        .getProjectCompletedList(projectId: widget.projectModel.id)
+        .getProjectCompletedList(projectId: widget.projectModel!.id!)
         .then((onValue) {
       completedCount = onValue.length;
     });
 
     await requestApiProvider
-        .getProjectPendingList(projectId: widget.projectModel.id)
+        .getProjectPendingList(projectId: widget.projectModel!.id!)
         .then((onValue) {
       pendingCount = onValue.length;
     });
@@ -218,19 +220,19 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     );
   }
 
-  Widget setTitle({String num, String title}) {
+  Widget setTitle({String? num, String? title}) {
     return Expanded(
       child: Column(
         children: <Widget>[
           Text(
-            num,
+            num!,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
           ),
           Text(
-            title,
+            title!,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 15,
@@ -241,8 +243,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     );
   }
 
-  Future<String> _getLocation(GeoFirePoint location) async {
-    String address = await LocationUtility().getFormattedAddress(
+  Future<String?> _getLocation(GeoFirePoint location) async {
+    String? address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,
     );
@@ -252,11 +254,13 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
-    if ((widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT &&
-            isAccessAvailable(widget.timebankModel,
-                SevaCore.of(context).loggedInUser.sevaUserID)) ||
-        (widget.projectModel.mode == ProjectMode.MEMBER_PROJECT &&
-            widget.projectModel.creatorId == sevaUserId)) {
+    if ((widget.projectModel != null &&
+            widget.projectModel!.mode == ProjectMode.timebankProject &&
+            isAccessAvailable(widget.timebankModel!,
+                SevaCore.of(context).loggedInUser.sevaUserID!)) ||
+        (widget.projectModel != null &&
+            widget.projectModel!.mode == ProjectMode.memberProject &&
+            widget.projectModel!.creatorId == sevaUserId)) {
       proceedCreatingRequest();
     } else {
       _showProtectedTimebankMessage();
@@ -293,7 +297,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel!.calendar_sync!,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -318,7 +322,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel!.calendar_sync!,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -343,7 +347,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel!.calendar_sync!,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -373,7 +377,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                     CustomTextButton(
                         shape: StadiumBorder(),
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color:Theme.of(context).primaryColor,
+                        color: Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
@@ -397,10 +401,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       MaterialPageRoute(
         builder: (context) => CreateRequest(
           comingFrom: ComingFrom.Projects,
-          timebankId: widget.timebankModel.id,
-          projectId: widget.projectModel.id,
-          projectModel: widget.projectModel,
+          timebankId: widget.timebankModel!.id!,
+          projectId: widget.projectModel!.id!,
+          projectModel: widget.projectModel!,
           userModel: SevaCore.of(context).loggedInUser,
+          requestModel:
+              null!, // Pass null or an appropriate RequestModel instance
         ),
       ),
     );
@@ -505,12 +511,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                   radius: 10,
                   child: Icon(
                     Icons.add_circle_outline,
-                    color:Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),
               onTap: () {
-                if (widget.projectModel.requestedSoftDelete) {
+                if (widget.projectModel!.requestedSoftDelete!) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       duration: Duration(seconds: 6),
@@ -547,7 +553,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 
   void showRequestsWebPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_${S.of(context).localeName}",
       ),
     );
@@ -585,10 +591,10 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     );
   }
 
-  Widget requestResult({BuildContext buildContext}) {
+  Widget requestResult({BuildContext? buildContext}) {
     return StreamBuilder<List<RequestModel>>(
       stream: FirestoreManager.getProjectRequestsStream(
-          project_id: widget.projectModel.id),
+          project_id: widget.projectModel!.id!),
       builder: (BuildContext context,
           AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
         if (requestListSnapshot.hasError) {
@@ -600,7 +606,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           case ConnectionState.waiting:
             return LoadingIndicator();
           default:
-            List<RequestModel> requestModelList = requestListSnapshot.data;
+            List<RequestModel> requestModelList = requestListSnapshot.data!;
             requestModelList = filterCompletedRequests(
                 requestModelList: requestModelList, mContext: context);
             requestModelList = filterBlockedRequestsContent(
@@ -611,6 +617,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 child: EmptyWidget(
                   title: S.of(context).no_requests_title,
                   sub_title: S.of(context).no_content_common_description,
+                  titleFontSize: 16.0,
                 ),
                 // child: Padding(
                 //   padding: const EdgeInsets.all(16.0),
@@ -648,9 +655,11 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 }
                 // return requestModelList.elementAt(index).address != null
 
-                return FutureBuilder<String>(
-                    future: _getLocation(
-                        requestModelList.elementAt(index).location),
+                return FutureBuilder<String?>(
+                    future: requestModelList.elementAt(index).location != null
+                        ? _getLocation(
+                            requestModelList.elementAt(index).location!)
+                        : Future.value(null),
                     builder: (context, snapshot) {
                       var address = snapshot.data;
                       switch (snapshot.connectionState) {
@@ -658,7 +667,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
                             loggedintimezone:
-                                SevaCore.of(context).loggedInUser.timezone,
+                                SevaCore.of(context).loggedInUser.timezone!,
                             mContext: context,
                             address: S.of(context).fetching_location,
                           );
@@ -666,9 +675,9 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
                             loggedintimezone:
-                                SevaCore.of(context).loggedInUser.timezone,
+                                SevaCore.of(context).loggedInUser.timezone!,
                             mContext: context,
-                            address: address,
+                            address: address!,
                           );
                       }
                     });
@@ -730,15 +739,15 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }
 
   Widget getProjectRequestWidget({
-    RequestModel model,
-    String loggedintimezone,
-    BuildContext mContext,
-    String address,
+    RequestModel? model,
+    String? loggedintimezone,
+    BuildContext? mContext,
+    String? address,
   }) {
     bool isAdmin = false;
-    if (model.sevaUserId == SevaCore.of(mContext).loggedInUser.sevaUserID ||
-        isAccessAvailable(widget.timebankModel,
-            SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+    if (model!.sevaUserId! == SevaCore.of(mContext!).loggedInUser.sevaUserID ||
+        isAccessAvailable(widget!.timebankModel!,
+            SevaCore.of(mContext).loggedInUser!.sevaUserID!)) {
       isAdmin = true;
     }
     return Container(
@@ -751,12 +760,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           onTap: () {
             if (model.sevaUserId ==
                     SevaCore.of(mContext).loggedInUser.sevaUserID ||
-                isAccessAvailable(widget.timebankModel,
-                    SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+                isAccessAvailable(widget.timebankModel!,
+                    SevaCore.of(mContext).loggedInUser.sevaUserID!)) {
               timeBankBloc.setSelectedRequest(model);
               timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
               timeBankBloc.setIsAdmin(isAdmin);
-              if (model.isRecurring) {
+              if (model.isRecurring!) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -776,7 +785,9 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       bloc: BlocProvider.of<HomeDashBoardBloc>(context),
                       child: RequestTabHolder(
                         isAdmin: true,
-                        //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                        communityModel:
+                            BlocProvider.of<HomeDashBoardBloc>(context)!
+                                .selectedCommunityModel,
                       ),
                     ),
                   ),
@@ -821,7 +832,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                     width:
                                         MediaQuery.of(context).size.width - 170,
                                     child: Text(
-                                      model.address ?? address,
+                                      model.address ?? address!,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
@@ -868,7 +879,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                 children: [
                                   Wrap(
                                     children: [
-                                      getAppropriateTag(model.requestType),
+                                      getAppropriateTag(model.requestType!),
                                       Visibility(
                                         visible: model.virtualRequest ?? false,
                                         child: Container(
@@ -911,14 +922,14 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                     ),
                                   ),
                                 ),
-                                model.isRecurring
+                                model.isRecurring!
                                     ? Icon(Icons.navigate_next, size: 20)
                                     : Container(),
                               ),
                               getSpacerItem(
                                 Text(
-                                  !model.isRecurring
-                                      ? '${getTimeFormattedString(model.requestStart, loggedintimezone) + '- ' + getTimeFormattedString(model.requestEnd, loggedintimezone)}'
+                                  !model.isRecurring!
+                                      ? '${getTimeFormattedString(model.requestStart!, loggedintimezone!) + '- ' + getTimeFormattedString(model.requestEnd!, loggedintimezone)}'
                                       : '',
                                   style: TextStyle(
                                     color: Colors.black38,
@@ -943,7 +954,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                               ),
                               getSpacerItem(
                                 Visibility(
-                                  visible: model.isRecurring,
+                                  visible: model.isRecurring!,
                                   child: Wrap(
                                     crossAxisAlignment:
                                         WrapCrossAlignment.start,
@@ -1027,17 +1038,17 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }
 
   List<RequestModel> filterBlockedRequestsContent(
-      {List<RequestModel> requestModelList, BuildContext context}) {
+      {List<RequestModel>? requestModelList, BuildContext? context}) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach((request) {
-      if (!(SevaCore.of(context)
+    requestModelList!.forEach((request) {
+      if (!(SevaCore.of(context!)
               .loggedInUser
-              .blockedMembers
+              .blockedMembers!
               .contains(request.sevaUserId) ||
           SevaCore.of(context)
               .loggedInUser
-              .blockedBy
+              .blockedBy!
               .contains(request.sevaUserId))) {
         filteredList.add(request);
       }
@@ -1047,16 +1058,17 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }
 
   List<RequestModel> filterCompletedRequests(
-      {List<RequestModel> requestModelList, BuildContext mContext}) {
+      {required List<RequestModel> requestModelList,
+      required BuildContext mContext}) {
     // List<RequestModel> filteredList = [];
-    String sevauserid = SevaCore.of(mContext).loggedInUser.sevaUserID;
+    String sevauserid = SevaCore.of(mContext).loggedInUser.sevaUserID!;
 
-    requestModelList.forEach((request) {
+    requestModelList!.forEach((request) {
       if (sevauserid != request.sevaUserId ||
-          !isAccessAvailable(widget.timebankModel,
-              SevaCore.of(context).loggedInUser.sevaUserID)) {
+          !isAccessAvailable(widget.timebankModel!,
+              SevaCore.of(context).loggedInUser.sevaUserID!)) {
         requestModelList.removeWhere((request) =>
-            widget.projectModel.completedRequests.contains(request.id));
+            widget.projectModel!.completedRequests!.contains(request.id));
       }
     });
 

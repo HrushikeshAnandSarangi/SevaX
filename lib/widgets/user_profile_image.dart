@@ -14,12 +14,12 @@ class UserProfileImage extends StatelessWidget {
   final String userId;
 
   UserProfileImage(
-      {@required this.timebankModel,
-      @required this.height,
-      @required this.width,
-      @required this.email,
-      @required this.photoUrl,
-      @required this.userId});
+      {required this.timebankModel,
+      required this.height,
+      required this.width,
+      required this.email,
+      required this.photoUrl,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {

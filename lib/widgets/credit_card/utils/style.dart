@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 const TextStyle whiteCardNumberStyle = TextStyle(
@@ -21,10 +20,10 @@ class CardFrontLayout {
       this.cardNumber = "",
       this.cardExpiry = "",
       this.cardHolderName = "",
-      this.cardTypeIcon,
+      required this.cardTypeIcon,
       this.cardWidth = 0,
       this.cardHeight = 0,
-      this.textColor});
+      required this.textColor});
 
   Widget layout1() {
     return Padding(
@@ -97,7 +96,8 @@ class CardFrontLayout {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text("Exp. Date",
+                            Text(
+                              "Exp. Date",
                               style: TextStyle(
                                   package: 'awesome_card',
                                   color: textColor,

@@ -5,12 +5,12 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 void showDialogForIncompleteTransactions({
-  SoftDeleteRequestDataHolder deletionRequest,
-  BuildContext context,
+  SoftDeleteRequestDataHolder? deletionRequest,
+  BuildContext? context,
 }) {
   var reason = " ";
   // "We couldn\'t process you request for deletion of ${deletionRequest.entityTitle}, as you are still having open transactions which are as : \n";
-  if (deletionRequest.noOfOpenOffers > 0) {
+  if (deletionRequest!.noOfOpenOffers! > 0) {
     reason += '${deletionRequest.noOfOpenOffers} one to many offers\n';
   }
   if (deletionRequest.noOfOpenRequests > 0) {
@@ -18,7 +18,7 @@ void showDialogForIncompleteTransactions({
   }
 
   showDialog(
-    context: context,
+    context: context!,
     builder: (BuildContext viewContext) {
       return AlertDialog(
         // title: Text(deletionRequest.entityTitle.trim()),
@@ -43,8 +43,8 @@ void showDialogForIncompleteTransactions({
 }
 
 Future<void> dismissTimebankNotification({
-  String notificationId,
-  String timebankId,
+  String? notificationId,
+  String? timebankId,
 }) async {
   CollectionRef.timebank
       .doc(timebankId)

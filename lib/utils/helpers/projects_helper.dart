@@ -15,12 +15,12 @@ import 'projects_helper_util.dart';
 
 class ProjectMessagingRoomHelper {
   static Future<void> createAdvisoryForJoiningMessagingRoom({
-    @required BuildContext context,
-    @required String requestId,
-    @required String projectId,
-    @required String timebankId,
-    @required UserModel candidateUserModel,
-    @required RequestMode requestMode,
+    required BuildContext context,
+    required String requestId,
+    required String projectId,
+    required String timebankId,
+    required UserModel candidateUserModel,
+    required RequestMode requestMode,
   }) {
     _addMemberToAssociatedMessagingRoom(
       candidateUserModel: candidateUserModel,
@@ -40,7 +40,7 @@ class ProjectMessagingRoomHelper {
           actions: [
             CustomTextButton(
               shape: StadiumBorder(),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               onPressed: () async {
                 Navigator.pop(_);
               },
@@ -60,10 +60,10 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<bool> removeMemberFromProjectCommuication({
-    @required String projectId,
-    @required String timebankId,
-    @required UserModel candidateUserModel,
-    @required RequestMode requestMode,
+    required String projectId,
+    required String timebankId,
+    required UserModel candidateUserModel,
+    required RequestMode requestMode,
   }) async {
     return await _removeMemberFromProjectCommuicationBatch(
       candidateUserModel: candidateUserModel,
@@ -74,19 +74,19 @@ class ProjectMessagingRoomHelper {
   }
 
   static WriteBatch _removeMemberFromProjectCommuicationBatch({
-    String projectId,
-    String timebankId,
-    UserModel candidateUserModel,
-    RequestMode requestMode,
+    String? projectId,
+    String? timebankId,
+    UserModel? candidateUserModel,
+    RequestMode? requestMode,
   }) {
     var batch = DBHelper.batch;
 
     batch.update(DBHelper.projectsRef.doc(projectId), {
-      DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel.sevaUserID:
+      DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel!.sevaUserID!:
           FieldValue.increment(-1)
     });
 
-    batch.update(DBHelper.chatsRef.doc(projectId + "*" + timebankId), {
+    batch.update(DBHelper.chatsRef.doc(projectId! + "*" + timebankId!), {
       DBHelper.PARTICIPATS: FieldValue.arrayRemove(
         [candidateUserModel.sevaUserID],
       ),
@@ -96,8 +96,8 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<void> _justAddMemberToProjectAssiciatedMembers({
-    String projectId,
-    String newMemberSignup,
+    String? projectId,
+    String? newMemberSignup,
   }) async {
     await CollectionRef.projects.doc(projectId).update({
       DBHelper.ASSOCIATED_MEMBERS: FieldValue.arrayUnion(
@@ -107,10 +107,10 @@ class ProjectMessagingRoomHelper {
   }
 
   static List<String> getAssociatedMembers(
-      {Map<String, dynamic> associatedmembers}) {
+      {Map<String, dynamic>? associatedmembers}) {
     List<String> associatedMembersArray = [];
 
-    associatedmembers.forEach((key, value) {
+    associatedmembers!.forEach((key, value) {
       if (value != null && value > 0) associatedMembersArray.add(key);
     });
 
@@ -118,11 +118,11 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<bool> _addMemberToAssociatedMessagingRoom({
-    @required String requestId,
-    @required String projectId,
-    @required String timebankId,
-    @required UserModel candidateUserModel,
-    @required RequestMode requestMode,
+    required String requestId,
+    required String projectId,
+    required String timebankId,
+    required UserModel candidateUserModel,
+    required RequestMode requestMode,
   }) {
     return _addMemberToAssociatedMessagingRoomBatch(
       associatedMessagingRoomId: projectId + "*" + timebankId,
@@ -137,8 +137,8 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<bool> createProjectWithMessaging({
-    @required ProjectModel projectModel,
-    @required UserModel projectCreator,
+    required ProjectModel projectModel,
+    required UserModel projectCreator,
   }) async {
     return await _createProjectWithMessagingRoomBatch(
       projectCreator: projectCreator,
@@ -147,8 +147,8 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<bool> createProjectWithMessagingOneToManyRequest({
-    @required ProjectModel projectModel,
-    @required UserModel projectCreator,
+    required ProjectModel projectModel,
+    required UserModel projectCreator,
   }) async {
     return await _createProjectWithMessagingRoomBatchOneToManyRequest(
       projectCreator: projectCreator,
@@ -159,27 +159,27 @@ class ProjectMessagingRoomHelper {
   ///==============================PRIVTAE FUNCTIONS===========================================
 
   static WriteBatch _createProjectWithMessagingRoomBatch({
-    ProjectModel projectModel,
-    UserModel projectCreator,
+    ProjectModel? projectModel,
+    UserModel? projectCreator,
   }) {
     var batch = DBHelper.batch;
 
     ChatModel chatModel = ChatModel();
     chatModel
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..communityId = projectModel.communityId
+      ..communityId = projectModel!.communityId
       ..groupDetails = MultiUserMessagingModel(
-        admins: [projectModel.creatorId],
+        admins: [projectModel.creatorId!],
         imageUrl: projectModel.photoUrl,
         name: projectModel.name,
         timestamp: DateTime.now().millisecondsSinceEpoch,
       )
-      ..isTimebankMessage = projectModel.mode == ProjectMode.TIMEBANK_PROJECT
-      ..id = projectModel.id + '*' + projectModel.timebankId
+      ..isTimebankMessage = projectModel.mode == ProjectMode.timebankProject
+      ..id = projectModel.id! + '*' + projectModel.timebankId!
       ..lastMessage = DBHelper.NO_MESSAGE
       ..participantInfo = [
         ParticipantInfo(
-          id: projectCreator.sevaUserID,
+          id: projectCreator!.sevaUserID,
           name: projectCreator.fullname,
           photoUrl: projectCreator.photoURL,
           type: ChatType.TYPE_MULTI_USER_MESSAGING,
@@ -187,13 +187,13 @@ class ProjectMessagingRoomHelper {
       ]
       ..isGroupMessage = true
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..participants = [projectCreator.sevaUserID]
+      ..participants = [projectCreator.sevaUserID!]
       ..unreadStatus = {
-        projectCreator.sevaUserID: 0,
+        projectCreator.sevaUserID!: 0,
       }
       ..chatContext = ChatContext(
         chatContext: 'Project',
-        contextId: projectModel.id,
+        contextId: projectModel.id!,
       );
     projectModel.associatedMessaginfRoomId = chatModel.id;
 
@@ -210,25 +210,25 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<String> createMessagingRoomForEvent({
-    ProjectModel projectModel,
-    UserModel projectCreator,
+    ProjectModel? projectModel,
+    UserModel? projectCreator,
   }) async {
     ChatModel chatModel = ChatModel();
     chatModel
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..communityId = projectModel.communityId
+      ..communityId = projectModel!.communityId
       ..groupDetails = MultiUserMessagingModel(
-        admins: [projectModel.creatorId],
+        admins: [projectModel.creatorId!],
         imageUrl: projectModel.photoUrl,
         name: projectModel.name,
         timestamp: DateTime.now().millisecondsSinceEpoch,
       )
-      ..isTimebankMessage = projectModel.mode == ProjectMode.TIMEBANK_PROJECT
-      ..id = projectModel.id + '*' + projectModel.timebankId
+      ..isTimebankMessage = projectModel.mode == ProjectMode.timebankProject
+      ..id = projectModel.id! + '*' + projectModel.timebankId!
       ..lastMessage = DBHelper.NO_MESSAGE
       ..participantInfo = [
         ParticipantInfo(
-          id: projectCreator.sevaUserID,
+          id: projectCreator!.sevaUserID,
           name: projectCreator.fullname,
           photoUrl: projectCreator.photoURL,
           type: ChatType.TYPE_MULTI_USER_MESSAGING,
@@ -236,24 +236,24 @@ class ProjectMessagingRoomHelper {
       ]
       ..isGroupMessage = true
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..participants = [projectCreator.sevaUserID]
+      ..participants = [projectCreator.sevaUserID!]
       ..unreadStatus = {
-        projectCreator.sevaUserID: 0,
+        projectCreator.sevaUserID!: 0,
       }
       ..chatContext = ChatContext(
         chatContext: 'Project',
-        contextId: projectModel.id,
+        contextId: projectModel.id!,
       );
 
     return await CollectionRef.chats
         .doc(chatModel.id)
         .set(chatModel.toMap())
-        .then((value) => chatModel.id);
+        .then((value) => chatModel.id!);
   }
 
   static WriteBatch _createProjectWithMessagingRoomBatchOneToManyRequest({
-    @required ProjectModel projectModel,
-    @required UserModel projectCreator,
+    required ProjectModel projectModel,
+    required UserModel projectCreator,
   }) {
     var batch = DBHelper.batch;
 
@@ -263,13 +263,13 @@ class ProjectMessagingRoomHelper {
       ..communityId = projectModel.communityId
       ..interCommunity = projectModel.public
       ..groupDetails = MultiUserMessagingModel(
-        admins: [projectModel.creatorId],
+        admins: [projectModel.creatorId!],
         imageUrl: projectModel.photoUrl,
         name: projectModel.name,
         timestamp: DateTime.now().millisecondsSinceEpoch,
       )
-      ..isTimebankMessage = projectModel.mode == ProjectMode.TIMEBANK_PROJECT
-      ..id = projectModel.id + '*' + projectModel.timebankId
+      ..isTimebankMessage = projectModel.mode == ProjectMode.timebankProject
+      ..id = projectModel.id! + '*' + projectModel.timebankId!
       ..lastMessage = DBHelper.NO_MESSAGE
       ..participantInfo = [
         ParticipantInfo(
@@ -281,13 +281,13 @@ class ProjectMessagingRoomHelper {
       ]
       ..isGroupMessage = true
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..participants = [projectCreator.sevaUserID]
+      ..participants = [projectCreator.sevaUserID!]
       ..unreadStatus = {
-        projectCreator.sevaUserID: 0,
+        projectCreator.sevaUserID!: 0,
       }
       ..chatContext = ChatContext(
         chatContext: 'Project',
-        contextId: projectModel.id,
+        contextId: projectModel.id!,
       );
     projectModel.associatedMessaginfRoomId = chatModel.id;
 
@@ -304,21 +304,21 @@ class ProjectMessagingRoomHelper {
   }
 
   static WriteBatch _addMemberToAssociatedMessagingRoomBatch({
-    String associatedMessagingRoomId,
-    String requestId,
-    String projectId,
-    String timebankId,
-    UserModel candidateUserModel,
-    RequestMode requestMode,
+    String? associatedMessagingRoomId,
+    String? requestId,
+    String? projectId,
+    String? timebankId,
+    UserModel? candidateUserModel,
+    RequestMode? requestMode,
   }) {
     var batch = DBHelper.batch;
 
     batch.update(DBHelper.projectsRef.doc(projectId), {
-      DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel.sevaUserID:
+      DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel!.sevaUserID!:
           FieldValue.increment(1)
     });
 
-    batch.update(DBHelper.chatsRef.doc(projectId + "*" + timebankId), {
+    batch.update(DBHelper.chatsRef.doc(projectId! + "*" + timebankId!), {
       DBHelper.PARTICIPATS: FieldValue.arrayUnion(
         [candidateUserModel.sevaUserID],
       ),

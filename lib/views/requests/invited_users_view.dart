@@ -13,11 +13,11 @@ import '../core.dart';
 
 class InvitedUsersView extends StatefulWidget {
   final String timebankId;
-  final RequestModel requestModel;
-  final String sevaUserId;
+  final RequestModel? requestModel;
+  final String? sevaUserId;
 
   InvitedUsersView(
-      {@required this.timebankId, this.requestModel, this.sevaUserId});
+      {required this.timebankId, this.requestModel, this.sevaUserId});
 
   @override
   _InvitedUsersViewState createState() {
@@ -28,28 +28,29 @@ class InvitedUsersView extends StatefulWidget {
 class _InvitedUsersViewState extends State<InvitedUsersView> {
   var validItems;
   bool isAdmin = false;
-  List<UserModel> favoriteUsers;
+  List<UserModel>? favoriteUsers;
   bool shouldInvite = true;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
-  RequestModel requestModel;
-  UserModel loggedinUser;
+  RequestModel? requestModel;
+  UserModel? loggedinUser;
 
   @override
   void initState() {
     super.initState();
 
-    timeBankBloc.setInvitedUsersData(widget.requestModel.id);
+    timeBankBloc.setInvitedUsersData(widget.requestModel!.id!);
     setState(() {});
 
-    if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
+    if (isAccessAvailable(timebank.model, widget!.sevaUserId!)) {
       isAdmin = true;
     }
 
     CollectionRef.requests
-        .doc(widget.requestModel.id)
+        .doc(widget.requestModel!.id!)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data());
+      requestModel =
+          RequestModel.fromMap(reqModel.data() as Map<String, dynamic>);
       setState(() {});
     });
 
@@ -144,7 +145,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
             ),
           );
         }
-        List<UserModel> userList = snapshot.data.invitedUsersForRequest;
+        List<UserModel> userList = snapshot.data!.invitedUsersForRequest!;
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
 
         if (userList.length == 0) {
@@ -163,10 +164,10 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
               return RequestCardWidget(
                 isAdmin: isAdmin,
                 userModel: user,
-                requestModel: requestModel,
+                requestModel: requestModel!,
                 timebankModel: timebank.model,
-                currentCommunity: loggedinUser.currentCommunity,
-                loggedUserId: loggedinUser.sevaUserID,
+                currentCommunity: loggedinUser!.currentCommunity!,
+                loggedUserId: loggedinUser!.sevaUserID!,
                 refresh: refresh,
                 isFavorite: isAdmin
                     ? timeBankIds.contains(widget.timebankId)
@@ -200,7 +201,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   void refresh() {
     setState(() {
-      timeBankBloc.setInvitedUsersData(widget.requestModel.id);
+      timeBankBloc.setInvitedUsersData(widget.requestModel!.id);
     });
   }
 
@@ -397,5 +398,4 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   }
 */
-
 }

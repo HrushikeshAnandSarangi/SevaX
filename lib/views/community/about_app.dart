@@ -14,7 +14,7 @@ import '../../flavor_config.dart';
 import '../core.dart';
 
 class AboutApp extends StatelessWidget {
-  AboutMode aboutMode;
+  late AboutMode aboutMode;
   var dynamicLinks;
   final formkey = GlobalKey<FormState>();
 
@@ -48,11 +48,11 @@ class AboutApp extends StatelessWidget {
             ),
             getHelpButton(
               context,
-              getOnTap(
+              () => getOnTap(
                 context,
                 S.of(context).about + ' ' + AppConfig.appName,
                 'aboutSeva',
-              ),
+              )(),
               S.of(context).about + ' ' + AppConfig.appName,
             ),
             getHelpButton(
@@ -61,7 +61,7 @@ class AboutApp extends StatelessWidget {
                 context,
                 S.of(context).help_about_us,
                 'aboutUsLink',
-              ),
+              )(),
               S.of(context).help_about_us,
             ),
             getHelpButton(
@@ -70,7 +70,7 @@ class AboutApp extends StatelessWidget {
                 navigateToWebView(
                   aboutMode: AboutMode(
                       title: S.of(context).help,
-                      urlToHit: AppConfig.remoteConfig
+                      urlToHit: AppConfig.remoteConfig!
                           .getString('help_videos_admin')),
                   context: context,
                 );
@@ -79,7 +79,7 @@ class AboutApp extends StatelessWidget {
             ),
             getHelpButton(
               context,
-              contactUsOnTap(context),
+              () => contactUsOnTap(context)(),
               S.of(context).help_contact_us,
             ),
             getHelpButton(
@@ -88,19 +88,21 @@ class AboutApp extends StatelessWidget {
                 context,
                 'Glossaries',
                 'glossariesLink',
-              ),
+              )(),
               'Glossaries',
             ),
             getHelpButton(
               context,
-              getOnTap(
+              () => getOnTap(
                 context,
                 'FAQ',
                 'faqLink',
-              ),
+              )(),
               'FAQ',
             ),
-            SizedBox(height: 10,)
+            SizedBox(
+              height: 10,
+            )
           ],
         ),
       ),
@@ -138,7 +140,7 @@ class AboutApp extends StatelessWidget {
   Function getOnTap(BuildContext context, String title, String dynamicKey) {
     return () {
       dynamicLinks = json.decode(
-        AppConfig.remoteConfig.getString(
+        AppConfig.remoteConfig!.getString(
           'links_${S.of(context).localeName}',
         ),
       );
@@ -150,7 +152,7 @@ class AboutApp extends StatelessWidget {
     };
   }
 
-  Widget getHelpButton(BuildContext context, Function onTap, String title) {
+  Widget getHelpButton(BuildContext context, VoidCallback onTap, String title) {
     return InkWell(
       onTap: onTap,
       child: Card(
@@ -182,7 +184,7 @@ class AboutApp extends StatelessWidget {
     );
   }
 
-  String feedbackText;
+  late String feedbackText;
 
   Function contactUsOnTap(BuildContext context) {
     return () {
@@ -212,7 +214,7 @@ class AboutApp extends StatelessWidget {
                 keyboardType: TextInputType.multiline,
                 maxLines: 1,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return S.of(context).enter_feedback;
                   }
                   feedbackText = value;
@@ -223,7 +225,7 @@ class AboutApp extends StatelessWidget {
               // usually buttons at the bottom of the dialog
               CustomTextButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
                   S.of(context).send_feedback,
@@ -232,7 +234,7 @@ class AboutApp extends StatelessWidget {
                 ),
                 onPressed: () async {
                   //For test
-                  if (formkey.currentState.validate()) {
+                  if (formkey.currentState?.validate() ?? false) {
                     Navigator.of(dialogContext).pop();
 
                     showProgressDialog(
@@ -241,7 +243,8 @@ class AboutApp extends StatelessWidget {
                     );
 
                     await http.post(
-                        "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
+                        Uri.parse(
+                            "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank"),
                         body: {
                           "memberEmail":
                               SevaCore.of(context).loggedInUser.email,
@@ -270,7 +273,7 @@ class AboutApp extends StatelessWidget {
     };
   }
 
-  BuildContext progressContext;
+  late BuildContext progressContext;
 
   void showProgressDialog(BuildContext context, String message) {
     showDialog(
@@ -281,11 +284,11 @@ class AboutApp extends StatelessWidget {
         return AlertDialog(
           title: Text(message),
           content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       },
     );
@@ -303,5 +306,4 @@ class AboutApp extends StatelessWidget {
 //     }
 //   }
 // }
-
 }

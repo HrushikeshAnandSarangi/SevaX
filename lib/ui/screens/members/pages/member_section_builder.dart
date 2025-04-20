@@ -1,6 +1,6 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -34,15 +34,15 @@ import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class MemberSectionBuilder extends StatelessWidget {
   const MemberSectionBuilder(
-      {Key key,
-      this.members,
-      this.type,
-      this.section,
-      this.creatorId,
+      {required Key key,
+      required this.members,
+      required this.type,
+      required this.section,
+      required this.creatorId,
       this.isTimebankSection = false,
-      this.timebank,
-      this.progress,
-      this.onMemberExit})
+      required this.timebank,
+      required this.progress,
+      required this.onMemberExit})
       : super(key: key);
 
   final List<UserModel> members;
@@ -68,7 +68,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ProfileViewer(
-                        userEmail: member.email,
+                        userEmail: member.email!,
                         timebankId: timebank.id,
                         isFromTimebank: isPrimaryTimebank(
                             parentTimebankId: timebank.parentTimebankId),
@@ -78,10 +78,12 @@ class MemberSectionBuilder extends StatelessWidget {
                   );
                 },
                 child: ShortProfileCard(
+                  key: ValueKey(member.sevaUserID),
                   model: member,
-                  actionButton: member.sevaUserID == creatorId
-                      ? null // no actions on creator
-                      : actionBuilder(context, member, section, type),
+                  role: type,
+                  actionButton: member.sevaUserID == creatorId!
+                      ? const SizedBox.shrink()!
+                      : actionBuilder(context, member, section, type)!,
                 ),
               )
             : Container();
@@ -98,9 +100,9 @@ class MemberSectionBuilder extends StatelessWidget {
     );
   }
 
-  Widget actionBuilder(BuildContext context, UserModel member,
+  PopupMenuButton<dynamic> actionBuilder(BuildContext context, UserModel member,
       UsersSection section, MemberType type) {
-    logger.i(type, section);
+    logger.i('$type, $section');
     List<PopupMenuItem<ActionType>> items = [];
 
     if (member.sevaUserID != SevaCore.of(context).loggedInUser.sevaUserID &&
@@ -181,140 +183,135 @@ class MemberSectionBuilder extends StatelessWidget {
       }
     }
 
-    return items.isNotEmpty
-        ? PopupMenuButton<ActionType>(
-            itemBuilder: (_) => items,
-            onSelected: (value) async {
-              switch (value) {
-                case ActionType.PROMOTE:
-                  if (section == UsersSection.ADMINS) {
-                    if (TransactionsMatrixCheck.checkAllowedTransaction(
-                        'multiple_super_admins')) {
-                      if (ConfigurationCheck.checkAllowedConfiguartions(
-                          type, 'promote_user')) {
-                        await MembershipManager.updateOrganizerStatus(
-                          associatedName:
-                              SevaCore.of(context).loggedInUser.fullname,
-                          communityId: SevaCore.of(context)
-                              .loggedInUser
-                              .currentCommunity,
-                          timebankId: timebank.id,
-                          notificationType:
-                              NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
-                          parentTimebankId: timebank.parentTimebankId,
-                          targetUserId: member.sevaUserID,
-                          timebankName: timebank.name,
-                          userEmail: member.email,
-                        );
-                      } else {
-                        actionNotAllowedDialog(context);
-                      }
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          fullscreenDialog: true,
-                          builder: (context) => UpgradePlanBanner(
-                            activePlanName:
-                                AppConfig.paymentStatusMap['planId'],
-                            details: AppConfig
-                                .upgradePlanBannerModel.multiple_super_admins,
-                          ),
-                        ),
-                      );
-                    }
-                  } else {
-                    if (ConfigurationCheck.checkAllowedConfiguartions(
-                        type, 'promote_user')) {
-                      await MembershipManager.updateMembershipStatus(
-                        associatedName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebank.id,
-                        notificationType:
-                            NotificationType.MEMBER_PROMOTED_AS_ADMIN,
-                        parentTimebankId: timebank.parentTimebankId,
-                        targetUserId: member.sevaUserID,
-                        timebankName: timebank.name,
-                        userEmail: member.email,
-                      );
-                    } else {
-                      actionNotAllowedDialog(context);
-                    }
-                  }
-                  break;
-                case ActionType.DEMOTE:
-                  if (ConfigurationCheck.checkAllowedConfiguartions(
-                      type, 'demote_user')) {
-                    if (section == UsersSection.OWNERS) {
-                      await MembershipManager.updateOrganizerStatus(
-                        associatedName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebank.id,
-                        notificationType:
-                            NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
-                        parentTimebankId: timebank.parentTimebankId,
-                        targetUserId: member.sevaUserID,
-                        timebankName: timebank.name,
-                        userEmail: member.email,
-                      );
-                    } else {
-                      await MembershipManager.updateMembershipStatus(
-                        associatedName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebank.id,
-                        notificationType:
-                            NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
-                        parentTimebankId: timebank.parentTimebankId,
-                        targetUserId: member.sevaUserID,
-                        timebankName: timebank.name,
-                        userEmail: member.email,
-                      );
-                    }
-                  } else {
-                    actionNotAllowedDialog(context);
-                  }
-                  break;
-                case ActionType.DONATE:
-                  _showFontSizePickerDialog(context, member, timebank);
-                  break;
-                case ActionType.REMOVE:
-                  if (await CustomDialogs.generalConfirmationDialogWithMessage(
-                    context,
-                    "${S.of(context).member_removal_confirmation} ${member.fullname}?",
-                  )) {
-                    progress.show();
-                    await removeMember(
-                      context: context,
-                      isFromExit: false,
-                      model: timebank,
-                      member: member,
-                    );
-                  }
-
-                  break;
-                case ActionType.EXIT:
-                  await exitFromTimebank(
-                    context: context,
-                    model: timebank,
-                    member: member,
+    return PopupMenuButton<ActionType>(
+      itemBuilder: (_) => items,
+      onSelected: (value) async {
+        switch (value) {
+          case ActionType.PROMOTE:
+            if (section == UsersSection.ADMINS) {
+              if (TransactionsMatrixCheck.checkAllowedTransaction(
+                  'multiple_super_admins')) {
+                if (ConfigurationCheck.checkAllowedConfiguartions(
+                    type, 'promote_user')) {
+                  await MembershipManager.updateOrganizerStatus(
+                    associatedName:
+                        SevaCore.of(context).loggedInUser.fullname ?? '',
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity!,
+                    timebankId: timebank.id,
+                    notificationType:
+                        NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
+                    parentTimebankId: timebank.parentTimebankId,
+                    targetUserId: member.sevaUserID ?? '',
+                    timebankName: timebank.name,
+                    userEmail: member.email ?? '',
                   );
-
-                  break;
+                } else {
+                  actionNotAllowedDialog(context);
+                }
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) => UpgradePlanBanner(
+                      activePlanName: AppConfig.paymentStatusMap['planId'],
+                      details: AppConfig
+                          .upgradePlanBannerModel.multiple_super_admins!,
+                    ),
+                  ),
+                );
               }
-            },
-          )
-        : null;
+            } else {
+              if (ConfigurationCheck.checkAllowedConfiguartions(
+                  type, 'promote_user')) {
+                await MembershipManager.updateMembershipStatus(
+                  associatedName:
+                      SevaCore.of(context).loggedInUser.fullname ?? '',
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity ?? '',
+                  timebankId: timebank.id,
+                  notificationType: NotificationType.MEMBER_PROMOTED_AS_ADMIN,
+                  parentTimebankId: timebank.parentTimebankId,
+                  targetUserId: member.sevaUserID ?? '',
+                  timebankName: timebank.name,
+                  userEmail: member.email!,
+                );
+              } else {
+                actionNotAllowedDialog(context);
+              }
+            }
+            break;
+          case ActionType.DEMOTE:
+            if (ConfigurationCheck.checkAllowedConfiguartions(
+                type, 'demote_user')) {
+              if (section == UsersSection.OWNERS) {
+                await MembershipManager.updateOrganizerStatus(
+                  associatedName:
+                      SevaCore.of(context).loggedInUser.fullname ?? '',
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity!,
+                  timebankId: timebank.id,
+                  notificationType:
+                      NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
+                  parentTimebankId: timebank.parentTimebankId,
+                  targetUserId: member.sevaUserID ?? '',
+                  timebankName: timebank.name,
+                  userEmail: member.email!,
+                );
+              } else {
+                await MembershipManager.updateMembershipStatus(
+                  associatedName:
+                      SevaCore.of(context).loggedInUser.fullname ?? '',
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity ?? '',
+                  timebankId: timebank.id,
+                  notificationType: NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
+                  parentTimebankId: timebank.parentTimebankId,
+                  targetUserId: member.sevaUserID ?? '',
+                  timebankName: timebank.name,
+                  userEmail: member.email!,
+                );
+              }
+            } else {
+              actionNotAllowedDialog(context);
+            }
+            break;
+          case ActionType.DONATE:
+            _showFontSizePickerDialog(context, member, timebank);
+            break;
+          case ActionType.REMOVE:
+            if (await CustomDialogs.generalConfirmationDialogWithMessage(
+              context,
+              "${S.of(context).member_removal_confirmation} ${member.fullname}?",
+            )) {
+              progress.show();
+              await removeMember(
+                context: context,
+                isFromExit: false,
+                model: timebank,
+                member: member,
+                reason: '', // Provide an appropriate reason if available
+              );
+            }
+
+            break;
+          case ActionType.EXIT:
+            await exitFromTimebank(
+              context: context,
+              model: timebank,
+              member: member,
+            );
+
+            break;
+        }
+      },
+    );
   }
 
   Future<void> exitFromTimebank({
-    BuildContext context,
-    TimebankModel model,
-    UserModel member,
+    required BuildContext context,
+    required TimebankModel model,
+    required UserModel member,
   }) async {
     bool isTimebank =
         isPrimaryTimebank(parentTimebankId: model.parentTimebankId);
@@ -337,18 +334,18 @@ class MemberSectionBuilder extends StatelessWidget {
     }
   }
 
-  void removeMember({
-    BuildContext context,
-    TimebankModel model,
-    UserModel member,
-    String reason,
-    bool isFromExit,
+  Future<void> removeMember({
+    required BuildContext context,
+    required TimebankModel model,
+    required UserModel member,
+    required String reason,
+    required bool isFromExit,
   }) async {
     bool isTimebank =
         isPrimaryTimebank(parentTimebankId: model.parentTimebankId);
     Map<String, dynamic> responseData =
         await Provider.of<MembersBloc>(context, listen: false).removeMember(
-      member.sevaUserID,
+      member.sevaUserID!,
       model.id,
       isTimebank,
     );
@@ -419,7 +416,7 @@ class MemberSectionBuilder extends StatelessWidget {
     progress.hide();
 
     if (isTimebank) {
-      await removeMemberTimebankFn(
+      removeMemberTimebankFn(
         context: context,
         responseData: responseData,
         userModel: member,
@@ -428,7 +425,7 @@ class MemberSectionBuilder extends StatelessWidget {
         reason: reason,
       );
     } else {
-      await removeMemberGroupFn(
+      removeMemberGroupFn(
         context: context,
         responseData: responseData,
         userModel: member,
@@ -440,12 +437,12 @@ class MemberSectionBuilder extends StatelessWidget {
   }
 
   void removeMemberTimebankFn({
-    BuildContext context,
-    UserModel userModel,
-    TimebankModel timebankModel,
-    bool isFromExit,
-    String reason,
-    Map<String, dynamic> responseData,
+    required BuildContext context,
+    required UserModel userModel,
+    required TimebankModel timebankModel,
+    required bool isFromExit,
+    required String reason,
+    required Map<String, dynamic> responseData,
   }) async {
     if (responseData['deletable'] == true) {
       if (isFromExit) {
@@ -501,10 +498,10 @@ class MemberSectionBuilder extends StatelessWidget {
               timebankId: timebankModel.id,
               responseData: responseData,
               isComingFromExit: isFromExit ? true : false,
-              memberSevaUserId: userModel.sevaUserID,
-              memberName: userModel.fullname,
-              memberPhotUrl: userModel.photoURL,
-              memberEmail: userModel.email,
+              memberSevaUserId: userModel.sevaUserID ?? '',
+              memberName: userModel.fullname ?? '',
+              memberPhotUrl: userModel.photoURL ?? '',
+              memberEmail: userModel.email ?? '',
             ),
           ),
         );
@@ -512,13 +509,14 @@ class MemberSectionBuilder extends StatelessWidget {
     }
   }
 
-  void removeMemberGroupFn(
-      {BuildContext context,
-      UserModel userModel,
-      TimebankModel timebankModel,
-      bool isFromExit,
-      String reason,
-      Map<String, dynamic> responseData}) async {
+  void removeMemberGroupFn({
+    required BuildContext context,
+    required UserModel userModel,
+    required TimebankModel timebankModel,
+    required bool isFromExit,
+    required String reason,
+    required Map<String, dynamic> responseData,
+  }) async {
     if (responseData['deletable'] == true) {
       if (isFromExit) {
         await NotificationsRepository.sendUserExitNotificationToAdmin(
@@ -636,7 +634,7 @@ class MemberSectionBuilder extends StatelessWidget {
       timebank.balance = timebank.balance - donateAmount_Received;
 
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
-      await TransactionBloc().createNewTransaction(
+      TransactionBloc().createNewTransaction(
         model.id,
         user.sevaUserID,
         DateTime.now().millisecondsSinceEpoch,
@@ -647,7 +645,7 @@ class MemberSectionBuilder extends StatelessWidget {
         model.id,
         communityId: model.communityId,
         fromEmailORId: model.id,
-        toEmailORId: user.email,
+        toEmailORId: user.email ?? '',
       );
 
       //SEND DONATION NOTIFICATION TO MEMBER

@@ -11,8 +11,8 @@ class AmenitiesModel {
     this.title_en,
   });
 
-  String id;
-  String title_en;
+  String? id;
+  String? title_en;
 
   factory AmenitiesModel.fromJson(String str) =>
       AmenitiesModel.fromMap(json.decode(str));

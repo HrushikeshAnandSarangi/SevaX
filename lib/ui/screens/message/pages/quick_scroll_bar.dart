@@ -4,7 +4,7 @@ import 'package:sevaexchange/ui/utils/strings.dart';
 class QuickScrollBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
 
-  QuickScrollBar({this.onChanged});
+  QuickScrollBar({required this.onChanged});
 
   @override
   _QuickScrollBarState createState() => _QuickScrollBarState();

@@ -8,68 +8,68 @@ import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import '../flavor_config.dart';
 
 class UserModel extends DataModel {
-  bool seenIntro;
-  String bio;
-  String email;
-  String fullname;
-  List<String> interests;
-  List<String> skills;
-  List<String> communities = [];
-  String currentCommunity;
-  String calendar;
-  List<String> membershipTimebanks;
-  List<String> membershipCampaigns;
-  List<String> favoriteByTimeBank;
-  List<String> favoriteByMember;
-  List<String> recommendedForRequestIds;
-  String photoURL;
-  String sevaUserID;
-  List<String> invitedRequests;
-  double currentBalance;
-  double sandboxCurrentBalance;
-  double trustworthinessscore;
-  double reliabilityscore;
-  int totalReviews;
-  String timezone;
-  String otp;
-  String requestStatus;
-  String locationName;
-  String lat_lng;
-  bool emailSent;
-  String language;
-  String cvUrl;
-  String cvName;
-  bool skipCreateCommunityPage;
+  bool? seenIntro;
+  String? bio;
+  String? email;
+  String? fullname;
+  List<String>? interests;
+  List<String>? skills;
+  List<String>? communities = [];
+  String? currentCommunity;
+  String? calendar;
+  List<String>? membershipTimebanks;
+  List<String>? membershipCampaigns;
+  List<String>? favoriteByTimeBank;
+  List<String>? favoriteByMember;
+  List<String>? recommendedForRequestIds;
+  String? photoURL;
+  String? sevaUserID;
+  List<String>? invitedRequests;
+  double? currentBalance;
+  double? sandboxCurrentBalance;
+  double? trustworthinessscore;
+  double? reliabilityscore;
+  int? totalReviews;
+  String? timezone;
+  String? otp;
+  String? requestStatus;
+  String? locationName;
+  String? lat_lng;
+  bool? emailSent;
+  String? language;
+  String? cvUrl;
+  String? cvName;
+  bool? skipCreateCommunityPage;
 
-  NearBySettings nearBySettings;
+  NearBySettings? nearBySettings;
 
-  int notificationsRead;
-  Map<dynamic, dynamic> notificationsReadCount;
-  Map<dynamic, dynamic> notificationSetting;
+  int? notificationsRead;
+  Map<dynamic, dynamic>? notificationsReadCount;
+  Map<dynamic, dynamic>? notificationSetting;
 
-  String root_timebank_id;
+  String? root_timebank_id;
   //AvailabilityModel availability;
-  String currentTimebank = FlavorConfig.values.timebankId;
-  int associatedWithTimebanks = 1;
-  int adminOfYanagGangs = 0;
-  String timebankIdForYangGangAdmin;
-  String tokens;
-  bool acceptedEULA = false;
-  bool completedIntro = false;
-  List<String> pastHires = [];
-  List<String> reportedUsers = [];
-  List<String> blockedBy = [];
-  List<String> blockedMembers = [];
-  List<String> curatedRequestIds = [];
-  bool notificationAlerts;
+  String? currentTimebank = FlavorConfig.values.timebankId;
+  int? associatedWithTimebanks = 1;
+  int? adminOfYanagGangs = 0;
+  String? timebankIdForYangGangAdmin;
+  String? tokens;
+  bool? acceptedEULA = false;
+  bool? completedIntro = false;
+  List<String>? pastHires = [];
+  List<String>? reportedUsers = [];
+  List<String>? blockedBy = [];
+  List<String>? blockedMembers = [];
+  List<String>? curatedRequestIds = [];
+  bool? notificationAlerts;
 
-  String calendarId;
-  int calendarAccId;
-  String calendarAccessToken;
-  String calendarEmail;
-  String calendarScope;
-  DeviceDetails deviceDetails;
-  DeviceDetails creationSource;
+  String? calendarId;
+  int? calendarAccId;
+  String? calendarAccessToken;
+  String? calendarEmail;
+  String? calendarScope;
+  DeviceDetails? deviceDetails;
+  DeviceDetails? creationSource;
 
   UserModel(
       {this.seenIntro,
@@ -381,14 +381,14 @@ class UserModel extends DataModel {
   }
 
   UserModel.fromDynamic(UserModel user) {
-    this.fullname = user.fullname == null || user.fullname.isEmpty
+    this.fullname = user.fullname == null || user.fullname?.isEmpty == true
         ? "Anonymous"
         : user.fullname;
     this.photoURL = user.photoURL;
     this.sevaUserID = user.sevaUserID;
     this.bio = user.bio;
     this.email = user.email;
-    this.communities = List.castFrom(user.communities);
+    this.communities = List.castFrom(user.communities ?? []);
   }
 
   bool operator ==(o) => o is UserModel && o.sevaUserID == sevaUserID;
@@ -405,7 +405,7 @@ class UserModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
-    if (this.calendarId != null && this.calendarId.isNotEmpty) {
+    if (this.calendarId != null && this.calendarId?.isNotEmpty == true) {
       object['calendarId'] = this.calendarId;
     }
     if (this.calendarScope != null) {
@@ -423,18 +423,18 @@ class UserModel extends DataModel {
     if (this.calendarAccId != null) {
       object['calendarAccId'] = this.calendarAccId;
     }
-    if (this.bio != null && this.bio.isNotEmpty) {
+    if (this.bio != null && this.bio?.isNotEmpty == true) {
       object['bio'] = this.bio;
     }
-    if (this.email != null && this.email.isNotEmpty) {
+    if (this.email != null && this.email?.isNotEmpty == true) {
       object['email'] = this.email;
     }
-    if (this.fullname != null && this.fullname.isNotEmpty) {
+    if (this.fullname != null && this.fullname?.isNotEmpty == true) {
       object['fullname'] = this.fullname;
     } else {
       object['fullname'] = "Anonymous";
     }
-    if (this.photoURL != null && this.photoURL.isNotEmpty) {
+    if (this.photoURL != null && this.photoURL?.isNotEmpty == true) {
       object['photourl'] = this.photoURL;
     }
     if (this.interests != null) {
@@ -446,14 +446,15 @@ class UserModel extends DataModel {
     if (this.calendar != null) {
       object['calendar'] = this.calendar;
     }
-    if (this.reportedUsers != null && this.reportedUsers.isNotEmpty) {
+    if (this.reportedUsers != null && this.reportedUsers?.isNotEmpty == true) {
       object['reportedUsers'] = this.reportedUsers;
     }
     if (this.recommendedForRequestIds != null &&
-        this.recommendedForRequestIds.isNotEmpty) {
+        this.recommendedForRequestIds?.isNotEmpty == true) {
       object['recommendedForRequestIds'] = this.recommendedForRequestIds;
     }
-    if (this.curatedRequestIds != null && this.curatedRequestIds.isNotEmpty) {
+    if (this.curatedRequestIds != null &&
+        this.curatedRequestIds?.isNotEmpty == true) {
       object['curatedRequestIds'] = this.curatedRequestIds;
     }
     if (this.requestStatus != null) {
@@ -463,28 +464,30 @@ class UserModel extends DataModel {
       object['otp'] = this.otp;
     }
     if (this.membershipCampaigns != null &&
-        this.membershipCampaigns.isNotEmpty) {
+        this.membershipCampaigns?.isNotEmpty == true) {
       object['membership_campaigns'] = this.membershipCampaigns;
     }
     if (this.membershipTimebanks != null &&
-        this.membershipTimebanks.isNotEmpty) {
+        this.membershipTimebanks?.isNotEmpty == true) {
       object['membershipTimebanks'] = this.membershipTimebanks;
     }
-    if (this.sevaUserID != null && this.sevaUserID.isNotEmpty) {
+    if (this.sevaUserID != null && this.sevaUserID?.isNotEmpty == true) {
       object['sevauserid'] = this.sevaUserID;
     }
     if (this.skills != null) {
       object['skills'] = this.skills;
     }
-    if (this.communities != null && this.communities.isNotEmpty) {
+    if (this.communities != null && this.communities?.isNotEmpty == true) {
       object['communities'] = this.communities;
     } else {
       object['communities'] = [FlavorConfig.values.timebankId];
     }
-    if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
+    if (this.favoriteByTimeBank != null &&
+        this.favoriteByTimeBank?.isNotEmpty == true) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;
     }
-    if (this.favoriteByMember != null && this.favoriteByMember.isNotEmpty) {
+    if (this.favoriteByMember != null &&
+        this.favoriteByMember?.isNotEmpty == true) {
       object['favoriteByMember'] = this.favoriteByMember;
     }
     if (this.currentCommunity != null) {
@@ -542,7 +545,7 @@ class UserModel extends DataModel {
       this.notificationsRead = 0;
     }
 
-    if (this.pastHires != null && this.pastHires.isNotEmpty) {
+    if (this.pastHires != null && this.pastHires?.isNotEmpty == true) {
       object['recommendedTimebank'] = this.pastHires;
     } else {
       object['recommendedTimebank'] = [];
@@ -559,10 +562,10 @@ class UserModel extends DataModel {
       object['cvName'] = this.cvName;
     }
     if (this.deviceDetails != null) {
-      object['deviceDetails'] = this.deviceDetails.toMap();
+      object['deviceDetails'] = this.deviceDetails?.toMap();
     }
     if (this.creationSource != null) {
-      object['creationSource'] = this.creationSource.toMap();
+      object['creationSource'] = this.creationSource?.toMap();
     }
     return object;
   }

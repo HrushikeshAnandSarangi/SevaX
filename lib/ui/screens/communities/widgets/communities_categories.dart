@@ -5,10 +5,10 @@ import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class CommunitiesCategory extends StatelessWidget {
-  final Stream<List<CommunityCategoryModel>> stream;
+  final Stream<List<CommunityCategoryModel>>? stream;
   final ValueChanged<CommunityCategoryModel> onTap;
 
-  const CommunitiesCategory({Key key, this.stream, @required this.onTap})
+  const CommunitiesCategory({Key? key, this.stream, required this.onTap})
       : super(key: key);
 
   @override
@@ -37,14 +37,15 @@ class CommunitiesCategory extends StatelessWidget {
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 8,
               ),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) => SimpleCommunityCard(
-                image: snapshot.data[index].logo ??
+                image: snapshot.data?[index].logo ??
                     'https://media.istockphoto.com/photos/group-portrait-of-a-creative-business-team-standing-outdoors-three-picture-id1146473249?k=6&m=1146473249&s=612x612&w=0&h=W1xeAt6XW3evkprjdS4mKWWtmCVjYJnmp-LHvQstitU=',
-                onTap: () => onTap(snapshot.data[index]),
-                title: snapshot.data[index].getCategoryName(
-                  context,
-                ),
+                onTap: () => onTap(snapshot.data![index]),
+                title: snapshot.data?[index].getCategoryName(
+                      context,
+                    ) ??
+                    '',
               ),
             ),
           );

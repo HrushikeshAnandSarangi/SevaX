@@ -9,7 +9,7 @@ import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 class LocationConfimationCard extends StatelessWidget {
   final LocationDataModel locationDataModel;
 
-  const LocationConfimationCard({Key key, this.locationDataModel})
+  const LocationConfimationCard({Key? key, required this.locationDataModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -62,6 +62,11 @@ class LocationConfimationCard extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: CustomElevatedButton(
+                  color: Theme.of(context).primaryColor,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  elevation: 2.0,
+                  textColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

@@ -8,14 +8,14 @@ import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
-  final UserInsufficentCreditsModel userInsufficientModel;
-  final String timeBankId;
-  final String notificationId;
-  final UserModel userModel;
-  final String memberId;
-  final TimebankModel timebankModel;
-  final VoidCallback onMessageClick;
-  final VoidCallback onDonateClick;
+  final UserInsufficentCreditsModel? userInsufficientModel;
+  final String? timeBankId;
+  final String? notificationId;
+  final UserModel? userModel;
+  final String? memberId;
+  final TimebankModel? timebankModel;
+  final VoidCallback? onMessageClick;
+  final VoidCallback? onDonateClick;
 
   TimebankUserInsufficientCreditsDialog(
       {this.userInsufficientModel,
@@ -43,7 +43,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    userInsufficientModel.senderPhotoUrl ??
+                    userInsufficientModel?.senderPhotoUrl ??
                         defaultUserImageURL),
               ),
             ),
@@ -53,7 +53,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                userInsufficientModel.senderName,
+                userInsufficientModel?.senderName ?? 'Unknown User',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -63,7 +63,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
               child: Text(
-                userInsufficientModel.timebankName ??
+                userInsufficientModel?.timebankName ??
                     S.of(context).seva_community_name_not_updated,
               ),
             ),
@@ -79,30 +79,44 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: CustomElevatedButton(
-                    color: FlavorConfig.values.theme.accentColor,
-                    child: Text(
-                      S.of(context).message,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: CustomElevatedButton(
+                        color: FlavorConfig.values.theme!.colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        child: Text(
+                          S.of(context).message,
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
+                        ),
+                        onPressed: onMessageClick ?? () {},
+                      ),
                     ),
-                    onPressed: onMessageClick,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  width: double.infinity,
-                  child: CustomElevatedButton(
-                    color: Theme.of(context).primaryColor,
-                    child: Text(
-                      S.of(context).donate,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                    SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      child: CustomElevatedButton(
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        child: Text(
+                          S.of(context).donate,
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
+                        ),
+                        onPressed: onDonateClick ?? () {},
+                      ),
                     ),
-                    onPressed: onDonateClick,
-                  ),
+                  ],
                 ),
               ],
             )

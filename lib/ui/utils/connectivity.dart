@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectionStatusSingleton {
   static final ConnectionStatusSingleton _singleton =
@@ -17,7 +17,7 @@ class ConnectionStatusSingleton {
   final Connectivity _connectivity = Connectivity();
 
   void initialize() {
-    _connectivity.onConnectivityChanged.listen(_connectionChange);
+    _connectivity.onConnectivityChanged.listen(_connectionChangeList);
     checkConnection();
   }
 
@@ -27,7 +27,7 @@ class ConnectionStatusSingleton {
     connectionChangeController.close();
   }
 
-  void _connectionChange(ConnectivityResult result) {
+  void _connectionChangeList(List<ConnectivityResult> results) {
     checkConnection();
   }
 

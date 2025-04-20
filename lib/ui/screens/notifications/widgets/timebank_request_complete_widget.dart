@@ -31,7 +31,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
   final TimebankModel timebankModel;
   final BuildContext parentContext;
 
-  const TimebankRequestCompletedWidget({Key key, this.notification, this.timebankModel, this.parentContext})
+  const TimebankRequestCompletedWidget(
+      {Key key, this.notification, this.timebankModel, this.parentContext})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     return FutureBuilder<RequestModel>(
       future: FirestoreManager.getRequestFutureById(requestId: model.id),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
           return NotificationShimmer();
         }
         RequestModel model = snapshot.data;
@@ -57,8 +59,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     String userId,
     String notificationId,
   ) {
-    TransactionModel transactionModel =
-        model.transactions?.firstWhere((transaction) => transaction.to == userId, orElse: () => null);
+    TransactionModel transactionModel = model.transactions?.firstWhere(
+        (transaction) => transaction.to == userId,
+        orElse: () => null);
     return StreamBuilder<UserModel>(
       stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
       builder: (context, snapshot) {
@@ -85,7 +88,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
               requestModel: model,
               userId: userId,
               userModel: user,
-              credits: model.requestType == RequestType.BORROW ? 0 : transactionModel.credits,
+              credits: model.requestType == RequestType.BORROW
+                  ? 0
+                  : transactionModel.credits,
             );
           },
           timestamp: notification.timestamp,
@@ -106,13 +111,15 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       builder: (BuildContext viewContext) {
         if (requestModel.requestType == RequestType.BORROW) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
             content: Form(
               //key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  CustomCloseButton(onTap: () => Navigator.of(viewContext).pop()),
+                  CustomCloseButton(
+                      onTap: () => Navigator.of(viewContext).pop()),
                   Container(
                     height: 70,
                     width: 70,
@@ -141,7 +148,10 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       padding: EdgeInsets.all(0.0),
                       child: Text(
                         "${S.of(context).about} ${userModel.fullname}",
-                        style: TextStyle(fontFamily: 'Europa', fontSize: 13, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontFamily: 'Europa',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   getBio(context, userModel),
@@ -219,13 +229,15 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           );
         } else {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
             content: Form(
               //key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  CustomCloseButton(onTap: () => Navigator.of(viewContext).pop()),
+                  CustomCloseButton(
+                      onTap: () => Navigator.of(viewContext).pop()),
                   Container(
                     height: 70,
                     width: 70,
@@ -254,7 +266,10 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       padding: EdgeInsets.all(0.0),
                       child: Text(
                         "${S.of(context).about} ${userModel.fullname}",
-                        style: TextStyle(fontFamily: 'Europa', fontSize: 13, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontFamily: 'Europa',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   getBio(context, userModel),
@@ -352,8 +367,13 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
   }
 
   Future<void> rejectMemberClaimForEvent(
-      {RequestModel model, String userId, BuildContext context, UserModel user, String notificationId}) async {
-    List<TransactionModel> transactions = model.transactions.map((t) => t).toList();
+      {RequestModel model,
+      String userId,
+      BuildContext context,
+      UserModel user,
+      String notificationId}) async {
+    List<TransactionModel> transactions =
+        model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
 
     model.transactions = transactions.map((t) {
@@ -404,7 +424,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
 
     await createAndOpenChat(
       context: context,
-      showToCommunities: showToCommunities.isNotEmpty ? showToCommunities : null,
+      showToCommunities:
+          showToCommunities.isNotEmpty ? showToCommunities : null,
       interCommunity: showToCommunities.isNotEmpty,
       communityId: loggedInUser.currentCommunity,
       sender: sender,
@@ -470,10 +491,15 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     BuildContext context,
   }) async {
     ParticipantInfo sender = ParticipantInfo(
-      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? loggedInUser.sevaUserID : requestModel.timebankId,
-      photoUrl:
-          requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? loggedInUser.photoURL : timebankModel.photoUrl,
-      name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? loggedInUser.fullname : timebankModel.name,
+      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.sevaUserID
+          : requestModel.timebankId,
+      photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.photoURL
+          : timebankModel.photoUrl,
+      name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.fullname
+          : timebankModel.name,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
           : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
@@ -500,7 +526,10 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           reviewMessage: message,
         ),
         reciever: reciever,
-        isTimebankMessage: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+        isTimebankMessage:
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? false
+                : true,
         timebankId: requestModel.timebankId,
         communityId: loggedInUser.currentCommunity,
         sender: sender);
@@ -572,7 +601,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       "ratings": results['selection'],
       "ratingsonquestions": results['ratings'],
       "requestId": requestId,
-      "comments": (results['didComment'] ? results['comment'] : S.of(context).no_comments),
+      "comments": (results['didComment']
+          ? results['comment']
+          : S.of(context).no_comments),
       'liveMode': !AppConfig.isTestCommunity,
     });
     // if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
@@ -601,10 +632,12 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         requestModel: requestModel,
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
-    approveTransaction(requestModel, userId, notificationId, sevaCore, reciever.email);
+    approveTransaction(
+        requestModel, userId, notificationId, sevaCore, reciever.email);
 
     if (requestModel.requestType == RequestType.BORROW && results != null) {
-      if (SevaCore.of(context).loggedInUser.sevaUserID == requestModel.sevaUserId) {
+      if (SevaCore.of(context).loggedInUser.sevaUserID ==
+          requestModel.sevaUserId) {
         requestModel.borrowerReviewed = true;
       }
     }

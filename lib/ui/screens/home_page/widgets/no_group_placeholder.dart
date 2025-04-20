@@ -4,7 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 class NoGroupPlaceHolder extends StatelessWidget {
   final Function navigateToCreateGroup;
 
-  const NoGroupPlaceHolder({Key key, this.navigateToCreateGroup})
+  const NoGroupPlaceHolder({Key? key, required this.navigateToCreateGroup})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

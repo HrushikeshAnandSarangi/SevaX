@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frankfurter/frankfurter.dart';
+import 'package:currency_converter_pro/currency_converter_pro.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,7 +16,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
 import '../flavor_config.dart';
@@ -31,7 +31,7 @@ import 'dart:math';
 
 class Utils {
   static String getUuid() {
-    return Uuid().generateV4();
+    return Uuid().v4();
   }
 }
 
@@ -56,12 +56,12 @@ bool isAccessAvailable(TimebankModel timebank, String userId) =>
     timebank.managedCreatorIds.contains(userId);
 
 bool isDeletable({
-  BuildContext context,
-  String communityCreatorId,
-  String timebankCreatorId,
-  String contentCreatorId,
+  BuildContext? context,
+  String? communityCreatorId,
+  String? timebankCreatorId,
+  String? contentCreatorId,
 }) =>
-    contentCreatorId == SevaCore.of(context).loggedInUser.sevaUserID ||
+    contentCreatorId == SevaCore.of(context!).loggedInUser.sevaUserID ||
     communityCreatorId == SevaCore.of(context).loggedInUser.sevaUserID ||
     timebankCreatorId == SevaCore.of(context).loggedInUser.sevaUserID;
 
@@ -69,13 +69,15 @@ bool isOwnerCreator(TimebankModel timebank, String userId) =>
     timebank.creatorId == userId || timebank.organizers.contains(userId);
 
 bool isMemberBlocked(UserModel user, String idToCheck) {
-  return user.blockedBy.contains(idToCheck) || user.blockedMembers.contains(idToCheck);
+  return user.blockedBy!.contains(idToCheck) ||
+      user.blockedMembers!.contains(idToCheck);
 }
 
 UserRole getLoggedInUserRole(TimebankModel model, String userId) {
   if (model.creatorId == userId) {
     if (model.parentTimebankId == FlavorConfig.values.timebankId ||
-        model.managedCreatorIds != null && model.managedCreatorIds.contains(userId)) {
+        model.managedCreatorIds != null &&
+            model.managedCreatorIds.contains(userId)) {
       return UserRole.TimebankCreator;
     } else {
       return UserRole.Creator;
@@ -137,26 +139,26 @@ Future<File> createFileOfPdfUrl(String documentUrl, String documentName) async {
 }
 
 String getReviewMessage(
-    {String userName,
-    String requestTitle,
-    String reviewMessage,
-    bool isForCreator,
-    bool isOfferReview = false,
-    BuildContext context,
-    bool isFromOfferRequest}) {
-  String offerReview = '${S.of(context).offerReview} $requestTitle';
-  String body = isForCreator
+    {String? userName,
+    String? requestTitle,
+    String? reviewMessage,
+    bool? isForCreator,
+    bool? isOfferReview = false,
+    BuildContext? context,
+    bool? isFromOfferRequest}) {
+  String offerReview = '${S.of(context!).offerReview} $requestTitle';
+  String body = (isForCreator ?? false)
       ? S.of(context).request_review_body_creator
       : S.of(context).request_review_body_user;
   String review =
-      '$userName ${S.of(context).has_given_review} \n\n${isOfferReview ? offerReview : body} $requestTitle \n${S.of(context).review}:\n\n$reviewMessage';
+      '$userName ${S.of(context).has_given_review} \n\n${(isOfferReview ?? false) ? offerReview : body} $requestTitle \n${S.of(context).review}:\n\n$reviewMessage';
   return review;
 }
 
-void showAdminAccessMessage({BuildContext context}) {
+void showAdminAccessMessage({BuildContext? context}) {
   // flutter defined function
   showDialog(
-    context: context,
+    context: context!,
     builder: (BuildContext _context) {
       // return object of type Dialog
       return AlertDialog(
@@ -167,7 +169,7 @@ void showAdminAccessMessage({BuildContext context}) {
           CustomTextButton(
             shape: StadiumBorder(),
             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
             textColor: Colors.white,
             child: Text(S.of(context).close),
             onPressed: () {
@@ -190,7 +192,7 @@ Future<File> urlToFile(String imageUrl) async {
 // create a new file in temporary path with random file name.
   File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
 // call http.get method and pass imageUrl into it to get response.
-  http.Response response = await http.get(imageUrl);
+  http.Response response = await http.get(Uri.parse(imageUrl));
 // write bodyBytes received in response to file.
   await file.writeAsBytes(response.bodyBytes);
 // now return the file which is created with random name in
@@ -200,7 +202,7 @@ Future<File> urlToFile(String imageUrl) async {
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor?.toUpperCase()?.replaceAll("#", "");
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
       hexColor = "FF" + hexColor;
     }
@@ -212,12 +214,13 @@ class HexColor extends Color {
 
 class CommonUtils {
   static Widget TotalCredits({
-    BuildContext context,
-    RequestModel requestModel,
-    TotalCreditseMode requestCreditsMode,
+    required BuildContext context,
+    required RequestModel requestModel,
+    TotalCreditseMode? requestCreditsMode,
   }) {
-    var label;
-    var totalCredits = requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
+    String label = "";
+    int totalCredits =
+        (requestModel.numberOfApprovals ?? 0) * (requestModel.maxCredits ?? 1);
     requestModel.numberOfHours = totalCredits;
 
     if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
@@ -225,14 +228,14 @@ class CommonUtils {
         label = totalCredits.toString() +
             ' ' +
             S.of(context).timebank_max_seva_credit_message1 +
-            requestModel.maxCredits.toString() +
+            (requestModel.maxCredits ?? '').toString() +
             ' ' +
             S.of(context).timebank_max_seva_credit_message2;
       } else {
         label = totalCredits.toString() +
             ' ' +
             S.of(context).personal_max_seva_credit_message1 +
-            requestModel.maxCredits.toString() +
+            (requestModel.maxCredits ?? '').toString() +
             ' ' +
             S.of(context).personal_max_seva_credit_message2;
       }
@@ -255,7 +258,7 @@ class CommonUtils {
   }
 }
 
-Future<bool> deleteFireBaseImage({String imageUrl}) async {
+Future<bool> deleteFireBaseImage({required String imageUrl}) async {
   return FirebaseStorage.instance.refFromURL(imageUrl).delete().then((value) {
     return true;
   }).catchError((e) {
@@ -263,46 +266,52 @@ Future<bool> deleteFireBaseImage({String imageUrl}) async {
   });
 }
 
-String getStartDateFormat(DateTime date, {BuildContext context}) {
+String getStartDateFormat(DateTime date,
+    {DateFormat? formatter, DateTime Function(int)? getDateTime}) {
   var suffix = "th";
   var digit = date.day % 10;
   if ((digit > 0 && digit < 4) && (date.day < 11 || date.day > 13)) {
     suffix = ["st", "nd", "rd"][digit - 1];
   }
-  if (context == null)
-    return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
+  if (getDateTime == null)
+    return DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
   else
-    return new DateFormat("EEEE MMM d'$suffix',  h:mm a")
-        .format(context.getDateTime(date.millisecondsSinceEpoch));
+    return DateFormat("EEEE MMM d'$suffix',  h:mm a")
+        .format(getDateTime(date.millisecondsSinceEpoch));
 }
 
-Future<double> currencyConversion({String fromCurrency, String toCurrency, double amount}) async {
-  final frankfurter = Frankfurter();
+Future<double> currencyConversion({
+  required String fromCurrency,
+  required String toCurrency,
+  required double amount,
+}) async {
+  // Please ensure you have the correct import for Frankfurter and Currency
+  final frankfurter = CurrencyConverterPro();
 
-  // final latest = await frankfurter.latest(from: Currency('INR'));
   // logger.i("from: $fromCurrency || to: $toCurrency  || amount: $amount");
-  if (fromCurrency == null || fromCurrency == "") {
+  if (fromCurrency == "") {
     fromCurrency = "USD";
   }
-  if (toCurrency == null || toCurrency == "") {
+  if (toCurrency == "") {
     toCurrency = "USD";
   }
-  if (amount == null || amount == 0.0) {
+  if (amount == 0.0) {
     amount = 0.0;
   }
   if (fromCurrency == toCurrency) {
     return amount;
   }
-  var rate = await frankfurter.getRate(
-    from: Currency(fromCurrency),
-    to: Currency(toCurrency),
+  double convertedCurrency = await frankfurter.convertCurrency(
+    fromCurrency: fromCurrency,
+    toCurrency: toCurrency,
+    amount: amount,
   );
-  double convertedCurrency = rate.rate * amount;
-  double convertedCurrencyTwoDecimalPoint = ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
-  return convertedCurrencyTwoDecimalPoint ?? 0.0;
+  double convertedCurrencyTwoDecimalPoint =
+      ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
+  return convertedCurrencyTwoDecimalPoint;
 }
 
 String createCryptoRandomString([int length = 10]) {
-  String randomCode = Uuid().generateV4().substring(0, 8);
+  String randomCode = Uuid().v4().substring(0, length);
   return randomCode;
 }

@@ -53,7 +53,7 @@ class ReportedMemberInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          S.of(context).report_of +"${model.reportedUserName}",
+          S.of(context).report_of + "${model.reportedUserName}",
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -68,7 +68,8 @@ class ReportedMemberInfo extends StatelessWidget {
           }, itemBuilder: (context) {
             List<PopupMenuItem> items = [
               PopupMenuItem(
-                child: messageIconTextWidget("images/icons/message.png", S.of(context).message, context),
+                child: messageIconTextWidget(
+                    "images/icons/message.png", S.of(context).message, context),
                 value: ACTIONS.MESSAGE,
               )
             ];
@@ -76,7 +77,11 @@ class ReportedMemberInfo extends StatelessWidget {
             if (canRemove) {
               items.add(
                 PopupMenuItem(
-                  child: textAndImageIconWidgetWithSize("images/icons/remove_user.png", 20, S.of(context).remove, context),
+                  child: textAndImageIconWidgetWithSize(
+                      "images/icons/remove_user.png",
+                      20,
+                      S.of(context).remove,
+                      context),
                   value: ACTIONS.REMOVE,
                 ),
               );

@@ -18,13 +18,13 @@ class DocumentUpload extends StatefulWidget {
 
 class _DocumentUploadState extends State<DocumentUpload> {
   bool _isDocumentBeingUploaded = false;
-  File _file;
-  List<File> _files;
-  String _fileName;
-  String _path;
-  Map<String, String> _paths;
-  String _extension;
-  AnimationController _controller;
+  File? _file;
+  List<File>? _files;
+  String? _fileName;
+  String? _path;
+  Map<String, String>? _paths;
+  String? _extension;
+  AnimationController? _controller;
   bool _multiPick = false;
   FileType _pickingType = FileType.custom;
   @override
@@ -35,7 +35,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -43,19 +43,19 @@ class _DocumentUploadState extends State<DocumentUpload> {
     try {
       if (_multiPick) {
         _path = null;
-        FilePickerResult result = await FilePicker.platform.pickFiles(
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
             type: _pickingType,
             allowedExtensions: (_extension?.isNotEmpty ?? false)
-                ? _extension?.replaceAll(' ', '')?.split(',')
+                ? _extension!.replaceAll(' ', '').split(',')
                 : null);
         if (result != null) {
-          _files = result.paths.map((path) => File(path)).toList();
+          _files = result.paths.map((path) => File(path!)).toList();
         } else {
           // User canceled the picker
         }
       } else {
         _paths = null;
-        FilePickerResult result = await FilePicker.platform
+        FilePickerResult? result = await FilePicker.platform
             .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
         if (result != null) {
           _path = result.files.single.path;
@@ -69,9 +69,9 @@ class _DocumentUploadState extends State<DocumentUpload> {
       _isDocumentBeingUploaded = true;
 
       _fileName = _path != null
-          ? _path.split('/').last
+          ? _path!.split('/').last
           : _paths != null
-              ? _paths.keys.toString()
+              ? _paths!.keys.toString()
               : '...';
       uploadDocument().then((_) {
         setState(() => this._isDocumentBeingUploaded = false);
@@ -116,7 +116,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
           TextButton.icon(
             icon: Icon(Icons.attach_file),
             style: TextButton.styleFrom(
-              primary: Colors.grey[200],
+              foregroundColor: Colors.grey[200],
             ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
@@ -141,11 +141,11 @@ class _DocumentUploadState extends State<DocumentUpload> {
     Reference ref = FirebaseStorage.instance
         .ref()
         .child('news_documents')
-        .child(SevaCore.of(context).loggedInUser.email +
+        .child(SevaCore.of(context).loggedInUser.email! +
             timestampString +
-            _fileName);
+            _fileName!);
     UploadTask uploadTask = ref.putFile(
-      File(_path),
+      File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Document'},

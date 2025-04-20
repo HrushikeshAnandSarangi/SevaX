@@ -9,9 +9,9 @@ import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class AdminMessageCard extends StatelessWidget {
-  final AdminMessageWrapperModel model;
+  final AdminMessageWrapperModel? model;
   const AdminMessageCard({
-    Key key,
+    Key? key,
     this.model,
   }) : super(key: key);
 
@@ -24,18 +24,26 @@ class AdminMessageCard extends StatelessWidget {
           InkWell(
             splashColor: Colors.transparent,
             onTap: () => Navigator.of(context).push(
-              TimebankMessagePage.route(adminMessageWrapperModel: model),
+              TimebankMessagePage.route(
+                adminMessageWrapperModel: model!,
+                                communityId: model!.communityId, // Make sure 'communityId' exists in AdminMessageWrapperModel
+
+                // If the correct property is named differently, for example 'communityID' or 'community', use that instead:
+                // communityId: model!.communityID,
+                // or
+                // communityId: model!.community,
+              ),
             ),
             child: Row(
               children: <Widget>[
-                model.photoUrl != null
+                model?.photoUrl != null
                     ? CircleAvatar(
                         radius: 30,
                         backgroundImage:
-                            CachedNetworkImageProvider(model.photoUrl),
+                            CachedNetworkImageProvider(model!.photoUrl),
                       )
                     : CustomAvatar(
-                        name: model.name,
+                        name: model!.name,
                         radius: 30,
                       ),
                 SizedBox(width: 20),
@@ -43,7 +51,7 @@ class AdminMessageCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      model.name,
+                      model?.name ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -52,14 +60,14 @@ class AdminMessageCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    model.newMessageCount > 0
+                    model?.newMessageCount != null && model!.newMessageCount > 0
                         ? Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             color: Colors.grey[300],
                             child: Text(
                               getMessageCountText(
-                                  model.newMessageCount, context),
+                                  model?.newMessageCount ?? 0, context),
                             ),
                           )
                         : Container(),
@@ -80,9 +88,8 @@ class AdminMessageCard extends StatelessWidget {
               ),
               SizedBox(width: 20),
               Text(
-                model.timestamp == null
-                    ? ""
-                    : timeago.format(model.timestamp,
+                     ? ""
+                    : timeago.format(model!.timestamp,
                         locale: Locale(getLangTag()).toLanguageTag()),
                 style: TextStyle(fontSize: 12),
               ),

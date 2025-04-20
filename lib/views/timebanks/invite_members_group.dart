@@ -20,8 +20,8 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import '../../flavor_config.dart';
 
 class InviteMembersGroup extends StatefulWidget {
-  final TimebankModel timebankModel;
-  final String parenttimebankid;
+  final TimebankModel? timebankModel;
+  final String? parenttimebankid;
 
   InviteMembersGroup({
     this.timebankModel,
@@ -34,16 +34,16 @@ class InviteMembersGroup extends StatefulWidget {
 
 class _InviteMembersGroupState extends State<InviteMembersGroup> {
   final TextEditingController searchTextController = TextEditingController();
-  Future<TimebankModel> getTimebankDetails;
-  TimebankModel parenttimebankModel;
+  Future<TimebankModel>? getTimebankDetails;
+  TimebankModel? parenttimebankModel;
   List<String> parentTimebankMembersList = [];
   List<String> groupMembersList = [];
-  List<InvitationModel> listInvitationModel;
+  List<InvitationModel>? listInvitationModel;
   static const String INVITE = "Invite";
   static const String JOINED = "Joined";
   static const String DECLINED = "Declined";
   static const String INVITED = "Invited";
-  InvitationModel invitationModel = InvitationModel();
+  InvitationModel? invitationModel;
   @override
   void initState() {
     super.initState();
@@ -58,28 +58,28 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
   void getMembersList() {
     FirestoreManager.getAllTimebankIdStream(
-      timebankId: widget.timebankModel.id,
+      timebankId: widget.timebankModel!.id,
     ).then((onValue) {
       setState(() {
-        groupMembersList = onValue.listOfElement;
+        groupMembersList = onValue.listOfElement!;
       });
     });
   }
 
   void getParentTimebankMembersList() {
     FirestoreManager.getAllTimebankIdStream(
-      timebankId: widget.parenttimebankid,
+      timebankId: widget.parenttimebankid!,
     ).then((onValue) {
       setState(() {
-        logger.d(onValue.listOfElement, "members");
-        parentTimebankMembersList = onValue.listOfElement;
+        logger.d("${onValue.listOfElement} members");
+        parentTimebankMembersList = onValue.listOfElement!;
       });
     });
   }
 
   void _setTimebankModel() async {
     parenttimebankModel = await getTimebankDetailsbyFuture(
-      timebankId: widget.parenttimebankid,
+      timebankId: widget.parenttimebankid!,
     );
   }
 
@@ -184,10 +184,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          List<UserModel> userlist = snapshot.data;
+          List<UserModel> userlist = snapshot.data ?? [];
           userlist.removeWhere((user) =>
               user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
-          if (userlist.length == 0) {
+          if (userlist.isEmpty) {
             return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
@@ -215,12 +215,12 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   Widget getInvitationStatus({
-    UserModel userModel,
+    UserModel? userModel,
   }) {
-    return FutureBuilder<InvitationModel>(
+    return FutureBuilder<InvitationModel?>(
       future: FirestoreManager.getInvitationModel(
-          timebankId: widget.timebankModel.id,
-          sevauserid: userModel.sevaUserID),
+          timebankId: widget.timebankModel!.id,
+          sevauserid: userModel!.sevaUserID!),
       builder: (context, snapshot) {
         GroupInviteStatus groupInviteStatus;
         if (snapshot.connectionState == ConnectionState.waiting)
@@ -229,7 +229,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         if (snapshot.hasData) {
           invitationModel = snapshot.data;
           GroupInviteUserModel groupInviteUserModel =
-              GroupInviteUserModel.fromMap(invitationModel.data);
+              GroupInviteUserModel.fromMap(invitationModel!.data!);
           if (groupInviteUserModel.declined == true) {
             groupInviteStatus = GroupInviteStatus.DECLINED;
             return userWidget(
@@ -257,7 +257,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   Widget joinedUserWidget({
-    UserModel user,
+    UserModel? user,
   }) {
     return Card(
       child: Row(
@@ -268,7 +268,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ListTile(
-                  leading: user.photoURL != null
+                  leading: user!.photoURL != null
                       ? ClipOval(
                           child: FadeInImage.assetNetwork(
                             fadeInCurve: Curves.easeIn,
@@ -277,12 +277,12 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                             width: 50,
                             height: 50,
                             placeholder: 'lib/assets/images/noimagefound.png',
-                            image: user.photoURL,
+                            image: user.photoURL!,
                           ),
                         )
                       : CircleAvatar(),
                   // onTap: goToNext(snapshot.data),
-                  title: Text(user.fullname,
+                  title: Text(user.fullname!,
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w700,
@@ -295,10 +295,13 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: CustomElevatedButton(
-                        onPressed: null,
+                        onPressed: () {},
+                        padding: EdgeInsets.all(8),
+                        elevation: 2,
                         child: Text(JOINED,
                             style: TextStyle(fontFamily: 'Europa')),
-                        color: FlavorConfig.values.theme.accentColor,
+                        color: FlavorConfig.values.theme?.primaryColor ??
+                            Colors.grey,
                         textColor: FlavorConfig.values.buttonTextColor,
                         shape: StadiumBorder(),
                       ),
@@ -317,10 +320,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   Widget userWidget({
-    GroupInviteStatus groupInviteStatus,
-    UserModel user,
-    String status,
-    GroupInviteUserModel groupInviteUserModel,
+    GroupInviteStatus? groupInviteStatus,
+    UserModel? user,
+    String? status,
+    GroupInviteUserModel? groupInviteUserModel,
   }) {
     return Card(
       child: Row(
@@ -331,7 +334,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ListTile(
-                  leading: user.photoURL != null
+                  leading: user!.photoURL != null
                       ? ClipOval(
                           child: FadeInImage.assetNetwork(
                             fadeInCurve: Curves.easeIn,
@@ -340,18 +343,18 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                             width: 50,
                             height: 50,
                             placeholder: 'lib/assets/images/noimagefound.png',
-                            image: user.photoURL,
+                            image: user.photoURL!,
                           ),
                         )
                       : CircleAvatar(),
                   // onTap: goToNext(snapshot.data),
-                  title: Text(user.fullname,
+                  title: Text(user.fullname!,
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Europa')),
                   subtitle: invitationStatusText(
-                      status, groupInviteUserModel, groupInviteStatus),
+                      status!, groupInviteUserModel!, groupInviteStatus!),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -390,57 +393,61 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     ).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(
-              groupInviteUserModel.declined
-                  ? groupInviteUserModel.declinedTimestamp
-                  : groupInviteUserModel.timestamp),
-          timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+              groupInviteUserModel.declined!
+                  ? groupInviteUserModel.declinedTimestamp!
+                  : groupInviteUserModel.timestamp!),
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone!),
     );
     return Text(
       statusText + ' ' + S.of(context).on + ' ' + date,
       style: TextStyle(
-          color: groupInviteUserModel.declined ? Colors.red : Colors.blue,
+          color: groupInviteUserModel.declined! ? Colors.red : Colors.blue,
           fontFamily: 'Europa'),
     );
   }
 
   Widget buttonWidget(
-      {UserModel user,
-      GroupInviteUserModel groupInviteUserModel,
-      GroupInviteStatus groupInviteStatus}) {
+      {UserModel? user,
+      GroupInviteUserModel? groupInviteUserModel,
+      GroupInviteStatus? groupInviteStatus}) {
     if (groupInviteStatus == GroupInviteStatus.INVITED ||
         groupInviteStatus == GroupInviteStatus.DECLINED) {
       return CustomElevatedButton(
+        padding: EdgeInsets.all(8),
+        elevation: 2,
         onPressed: () {
           if (groupInviteStatus == GroupInviteStatus.INVITED) {
             setState(() {
               resendNotification(
-                  userEmail: user.email,
-                  notificationId: groupInviteUserModel.notificationId);
+                  userEmail: user!.email!,
+                  notificationId: groupInviteUserModel!.notificationId!);
             });
           } else {
             setState(() {
               resendNotificationIfDeclined(
-                  userEmail: user.email,
-                  notificationId: groupInviteUserModel.notificationId);
+                  userEmail: user!.email!,
+                  notificationId: groupInviteUserModel!.notificationId!);
             });
           }
         },
         child: Text(S.of(context).resend_invite,
             style: TextStyle(fontFamily: 'Europa')),
-        color:Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
       );
     } else {
       return CustomElevatedButton(
+        padding: EdgeInsets.all(8),
+        elevation: 2,
         onPressed: () {
           setState(() {
-            sendInvitationNotification(userModel: user);
+            sendInvitationNotification(userModel: user!);
           });
         },
         child:
             Text(S.of(context).invite, style: TextStyle(fontFamily: 'Europa')),
-        color:Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
       );
@@ -465,7 +472,9 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
   Widget gettigStatus() {
     return CustomElevatedButton(
-      onPressed: null,
+      padding: EdgeInsets.all(8),
+      elevation: 2,
+      onPressed: () {},
       child: Text(S.of(context).invite_members_group_dots),
       color: Colors.indigo,
       textColor: Colors.white,
@@ -473,10 +482,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     );
   }
 
-  void resendNotification({String userEmail, String notificationId}) async {
+  void resendNotification({String? userEmail, String? notificationId}) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    await CollectionRef.invitations.doc(invitationModel.id).update({
+    await CollectionRef.invitations.doc(invitationModel!.id).update({
       'data.timestamp': timestamp,
     });
     await CollectionRef.users
@@ -490,10 +499,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   void resendNotificationIfDeclined(
-      {String notificationId, String userEmail}) async {
+      {String? notificationId, String? userEmail}) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    await CollectionRef.invitations.doc(invitationModel.id).update({
+    await CollectionRef.invitations.doc(invitationModel!.id).update({
       'data.timestamp': timestamp,
       'data.declined': false,
     });
@@ -509,19 +518,19 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   void sendInvitationNotification({
-    UserModel userModel,
+    UserModel? userModel,
   }) async {
     String notificationId = utils.Utils.getUuid();
     String invitationId = utils.Utils.getUuid();
     GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         timebankId: widget.parenttimebankid,
-        timebankName: widget.timebankModel.name,
-        timebankImage: widget.timebankModel.photoUrl,
-        aboutTimebank: widget.timebankModel.missionStatement,
+        timebankName: widget.timebankModel!.name,
+        timebankImage: widget.timebankModel!.photoUrl,
+        aboutTimebank: widget.timebankModel!.missionStatement,
         adminName: SevaCore.of(context).loggedInUser.fullname,
-        groupId: widget.timebankModel.id,
-        invitedUserId: userModel.sevaUserID,
+        groupId: widget.timebankModel!.id,
+        invitedUserId: userModel!.sevaUserID,
         declined: false,
         declinedTimestamp: 0,
         invitationId: invitationId,
@@ -529,7 +538,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         notificationId: notificationId);
 
     InvitationModel invitationModel = InvitationModel(
-      timebankId: widget.timebankModel.id,
+      timebankId: widget.timebankModel!.id,
       type: InvitationType.GroupInvite,
       data: groupInviteUserModel.toMap(),
       id: utils.Utils.getUuid(),

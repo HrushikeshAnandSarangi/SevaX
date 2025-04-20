@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -22,12 +22,12 @@ import '../../globals.dart' as globals;
 import 'news_image_picker_handler.dart';
 
 class NewsImage extends StatefulWidget {
-  final String photoCredits;
-  final String selectedAddress;
-  final GeoFirePoint geoFirePointLocation;
+  final String? photoCredits;
+  final String? selectedAddress;
+  final GeoFirePoint? geoFirePointLocation;
 
-  final ValueChanged<String> onCreditsEntered;
-  final Function(LocationDataModel) onLocationDataModelUpdate;
+  final ValueChanged<String>? onCreditsEntered;
+  final Function(LocationDataModel)? onLocationDataModelUpdate;
 
   NewsImage({
     this.photoCredits,
@@ -48,30 +48,32 @@ class NewsImageState extends State<NewsImage>
         WidgetsBindingObserver {
   bool _isImageBeingUploaded = false;
   // Function(LocationDataModel) onLocationDataModelUpdate;
-  String selectedAddress;
+  String? selectedAddress;
 
-  NewsImagePickerHandler imagePicker;
+  NewsImagePickerHandler? imagePicker;
   //document related variables
   bool _isDocumentBeingUploaded = false;
 
-  String _fileName;
-  String _path;
+  String? _fileName;
+  String? _path;
 
   final int tenMegaBytes = 10485760;
   final int hundreKb = 14857;
-  BuildContext parentContext;
+  BuildContext? parentContext;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  File _image;
-  AnimationController _controller;
+  File? _image;
+  AnimationController? _controller;
 
   Future<String> uploadImage() async {
+    if (_image == null) return '';
+
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     Reference ref = FirebaseStorage.instance.ref().child('newsimages').child(
-        SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+        SevaCore.of(context).loggedInUser.email! + timestampString + '.jpg');
     UploadTask uploadTask = ref.putFile(
-      _image,
+      _image!,
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Image'},
@@ -89,7 +91,7 @@ class NewsImageState extends State<NewsImage>
     return imageURL;
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({required String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     setState(() {
@@ -103,9 +105,10 @@ class NewsImageState extends State<NewsImage>
       profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
+      if (profanityStatusModel != null &&
+          profanityStatusModel.isProfane == true) {
         showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
+                context: context, content: profanityStatusModel.category ?? '')
             .then((status) {
           if (status == 'Proceed') {
             deleteFireBaseImage(imageUrl: imageURL).then((value) {
@@ -148,11 +151,14 @@ class NewsImageState extends State<NewsImage>
   }
 
   void checkPdfSize() async {
-    var file = File(_path);
+    if (_path == null) return;
+    var file = File(_path!);
     final bytes = await file.lengthSync();
     if (bytes > tenMegaBytes) {
       this._isDocumentBeingUploaded = false;
-      getAlertDialog(parentContext);
+      if (parentContext != null) {
+        getAlertDialog(parentContext!);
+      }
     } else {
       uploadDocument();
     }
@@ -186,11 +192,11 @@ class NewsImageState extends State<NewsImage>
     Reference ref = FirebaseStorage.instance
         .ref()
         .child('news_documents')
-        .child(SevaCore.of(context).loggedInUser.email +
+        .child(SevaCore.of(context).loggedInUser.email! +
             timestampString +
-            _fileName);
+            (_fileName ?? 'unnamed'));
     UploadTask uploadTask = ref.putFile(
-      File(_path),
+      File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Document'},
@@ -219,21 +225,22 @@ class NewsImageState extends State<NewsImage>
     );
 //    globals.newsDocumentURL = null;
 //    globals.newsDocumentName = null;
-    imagePicker = NewsImagePickerHandler(this, _controller);
-    imagePicker.init();
+    imagePicker = NewsImagePickerHandler(this, _controller!);
+    imagePicker!.init();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      if (globals.webImageUrl != null &&
+          globals.webImageUrl?.isNotEmpty == true) {
         globals.newsImageURL = globals.webImageUrl;
         setState(() {});
       }
@@ -246,7 +253,7 @@ class NewsImageState extends State<NewsImage>
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
-        imagePicker.showDialog(context);
+        imagePicker!.showDialog(context);
       },
       child: Column(
         children: <Widget>[
@@ -283,7 +290,7 @@ class NewsImageState extends State<NewsImage>
                                       width: 200,
                                       child: FadeInImage(
                                         image:
-                                            NetworkImage(globals.newsImageURL),
+                                            NetworkImage(globals.newsImageURL!),
                                         placeholder: AssetImage(
                                           'lib/assets/images/noimagefound.png',
                                         ),
@@ -335,7 +342,7 @@ class NewsImageState extends State<NewsImage>
                                 textAlign: TextAlign.center,
                                 //style: textStyle,
                                 onChanged: (credits) {
-                                  widget.onCreditsEntered(credits);
+                                  widget.onCreditsEntered?.call(credits);
                                 },
                               ),
                             ),
@@ -380,7 +387,7 @@ class NewsImageState extends State<NewsImage>
           TextButton.icon(
             icon: Icon(Icons.attachment),
             style: TextButton.styleFrom(
-              primary: Colors.grey,
+              foregroundColor: Colors.grey,
             ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
@@ -392,15 +399,15 @@ class NewsImageState extends State<NewsImage>
             ),
             onPressed: () {
               FocusScope.of(context).requestFocus(new FocusNode());
-              imagePicker.showDialog(context);
+              imagePicker?.showDialog(context);
             },
           ),
           LocationPickerWidget(
             location: widget.geoFirePointLocation,
-            selectedAddress: selectedAddress,
+            selectedAddress: selectedAddress ?? '',
             onChanged: (LocationDataModel dataModel) {
               selectedAddress = dataModel.location;
-              widget.onLocationDataModelUpdate(dataModel);
+              widget.onLocationDataModelUpdate?.call(dataModel);
               setState(() {});
             },
           ),
@@ -463,7 +470,8 @@ class NewsImageState extends State<NewsImage>
   addWebImageUrl() {
     // TODO: implement addWebImageUrl
     setState(() {
-      if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      if (globals.webImageUrl != null &&
+          globals.webImageUrl?.isNotEmpty == true) {
         globals.newsImageURL = globals.webImageUrl;
         setState(() {});
       }

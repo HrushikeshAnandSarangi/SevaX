@@ -17,7 +17,7 @@ class PersonalMessagePage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        if (snapshot.data.length == 0) {
+        if (snapshot.data == null || snapshot.data!.isEmpty) {
           return Center(
             child: Text(
               S.of(context).no_message,
@@ -27,12 +27,12 @@ class PersonalMessagePage extends StatelessWidget {
         return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 10),
           physics: BouncingScrollPhysics(),
-          itemCount: snapshot.data.length,
+          itemCount: snapshot.data?.length ?? 0,
           itemBuilder: (_, index) {
-            ChatModel model = snapshot.data[index];
+            ChatModel model = snapshot.data![index];
             return MessageCard(
               model: model,
-              timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+              timebankId: SevaCore.of(context).loggedInUser.currentTimebank!,
             );
           },
         );

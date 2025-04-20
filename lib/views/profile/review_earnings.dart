@@ -10,8 +10,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ReviewEarningsPage extends StatelessWidget {
-  final String type;
-  final String timebankid;
+  final String? type;
+  final String? timebankid;
   const ReviewEarningsPage({this.type, this.timebankid});
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,15 @@ class ReviewEarningsPage extends StatelessWidget {
             style: TextStyle(fontSize: 18),
           ),
         ),
-        body: ReviewEarning(type: type, timebankid: this.timebankid));
+        body: ReviewEarning(type: type!, timebankid: this.timebankid!));
   }
 }
 
 // TODO: Fix the hacks
 
 class ReviewEarning extends StatefulWidget {
-  final String type;
-  final String timebankid;
+  final String? type;
+  final String? timebankid;
   const ReviewEarning({this.type, this.timebankid});
   @override
   _ReviewEarningState createState() => _ReviewEarningState();
@@ -45,8 +45,8 @@ class _ReviewEarningState extends State<ReviewEarning> {
     super.didChangeDependencies();
     if (widget.type == 'user') {
       FirestoreManager.getUsersCreditsDebitsStream(
-              userEmail: SevaCore.of(context).loggedInUser.email,
-              userId: SevaCore.of(context).loggedInUser.sevaUserID)
+              userEmail: SevaCore.of(context).loggedInUser.email!,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID!)
           .listen(
         (result) {
           if (!mounted) return;
@@ -56,8 +56,8 @@ class _ReviewEarningState extends State<ReviewEarning> {
       );
     } else if (widget.type == 'timebank') {
       FirestoreManager.getTimebankCreditsDebitsStream(
-              timebankid: widget.timebankid,
-              userId: SevaCore.of(context).loggedInUser.sevaUserID)
+              timebankid: widget.timebankid!,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID!)
           .listen(
         (result) {
           if (!mounted) return;
@@ -82,7 +82,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
     }
     return FutureBuilder<Object>(
       future: FirestoreManager.getUserForId(
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text(
@@ -92,8 +92,8 @@ class _ReviewEarningState extends State<ReviewEarning> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        UserModel userModel = snapshot.data;
-        String usertimezone = userModel.timezone;
+        UserModel userModel = snapshot.data as UserModel;
+        String usertimezone = userModel.timezone!;
         return ListView.builder(
           itemBuilder: (context, index) {
             TransactionModel model = requestList.elementAt(index);
@@ -112,10 +112,11 @@ class _ReviewEarningState extends State<ReviewEarning> {
 }
 
 class EarningListItem extends StatefulWidget {
-  final TransactionModel model;
+  final TransactionModel? model;
   final viewtype;
   final usertimezone;
-  const EarningListItem({Key key, this.model, this.usertimezone, this.viewtype})
+  const EarningListItem(
+      {Key? key, this.model, this.usertimezone, this.viewtype})
       : super(key: key);
   @override
   _EarningListItemState createState() => _EarningListItemState();
@@ -124,33 +125,33 @@ class EarningListItem extends StatefulWidget {
 class _EarningListItemState extends State<EarningListItem> {
   @override
   Widget build(BuildContext context) {
-    if (widget.model.from.contains('-')) {
-      return FutureBuilder(
+    if (widget.model!.from!.contains('-')) {
+      return FutureBuilder<TimebankModel?>(
         future:
-            FirestoreManager.getTimeBankForId(timebankId: widget.model.from),
-        builder: (context, AsyncSnapshot<TimebankModel> snapshot) {
+            FirestoreManager.getTimeBankForId(timebankId: widget.model!.from!),
+        builder: (context, AsyncSnapshot<TimebankModel?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.data == null) {
-            debugPrint(widget.model.from);
+            debugPrint(widget.model!.from!);
             return Container();
           }
           return getListTile(
-            snapshot.data.name,
-            snapshot.data.photoUrl ?? defaultUserImageURL,
+            snapshot.data!.name,
+            snapshot.data!.photoUrl,
           );
         },
       );
     } else {
       return FutureBuilder(
-        future: FirestoreManager.getUserForId(sevaUserId: widget.model.from),
+        future: FirestoreManager.getUserForId(sevaUserId: widget.model!.from!),
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.data == null) {
             return Container();
           }
           return getListTile(
-            snapshot.data.fullname,
-            snapshot.data.photoURL ?? defaultUserImageURL,
+            snapshot.data!.fullname!,
+            snapshot.data!.photoURL ?? defaultUserImageURL,
           );
         },
       );
@@ -164,18 +165,18 @@ class _EarningListItemState extends State<EarningListItem> {
           image: image,
         ),
         trailing: () {
-          String plus = widget.model.from == widget.model.to
+          String plus = widget.model!.from == widget.model!.to
               ? '+'
-              : widget.model.debitCreditSymbol(
+              : widget.model!.debitCreditSymbol(
                   SevaCore.of(context).loggedInUser.sevaUserID,
-                  widget.model.timebankid,
+                  widget.model!.timebankid,
                   widget.viewtype,
                 );
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(plus + '${widget.model.credits}',
+              Text(plus + '${widget.model!.credits}',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
@@ -191,7 +192,7 @@ class _EarningListItemState extends State<EarningListItem> {
         }(),
         subtitle: EarningItem(
           name: name ?? '',
-          timestamp: widget.model.timestamp,
+          timestamp: widget.model!.timestamp,
           usertimezone: widget.usertimezone,
         ),
       ),
@@ -239,7 +240,7 @@ class EarningItem extends StatelessWidget {
 }
 
 class EarningImageItem extends StatelessWidget {
-  final String image;
+  final String? image;
   EarningImageItem({this.image});
   @override
   Widget build(BuildContext context) {

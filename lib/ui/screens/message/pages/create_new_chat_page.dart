@@ -13,21 +13,20 @@ import 'new_chat_page.dart';
 class CreateNewChatPage extends StatefulWidget {
   final bool isSelectionEnabled;
   final List<FrequentContactsModel> frequentContacts;
-  final List<String> selectedMembers;
+  final List<String>? selectedMembers;
 
   const CreateNewChatPage({
-    Key key,
-    this.isSelectionEnabled,
-    this.frequentContacts,
+    Key? key,
+    required this.isSelectionEnabled,
+    required this.frequentContacts,
     this.selectedMembers,
-  })  : assert(isSelectionEnabled != null),
-        super(key: key);
+  });
   @override
   _CreateNewChatPageState createState() => _CreateNewChatPageState();
 }
 
 class _CreateNewChatPageState extends State<CreateNewChatPage> {
-  CreateChatBloc _bloc;
+  late CreateChatBloc _bloc;
   TextEditingController textController = TextEditingController();
 
   @override
@@ -39,14 +38,15 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
       _bloc
           .getMembers(
         SevaCore.of(context).loggedInUser,
-        SevaCore.of(context).loggedInUser.currentCommunity,
+        SevaCore.of(context).loggedInUser.currentCommunity ?? '',
         Provider.of<HomePageBaseBloc>(context, listen: false)
             .primaryTimebankModel()
             .id,
       )
           .then((_) {
         if (widget.selectedMembers != null) {
-          widget.selectedMembers.forEach((String id) => _bloc.selectMember(id));
+          widget.selectedMembers!
+              .forEach((String id) => _bloc.selectMember(id));
         }
       });
     });
@@ -74,10 +74,13 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
           builder: (_, AsyncSnapshot<String> snapshot) {
             if (snapshot.data != null && snapshot.data != '') {
               return MemberListBuilder(
-                infos: _bloc.getFilteredListOfParticipants(snapshot.data),
+                infos: _bloc.getFilteredListOfParticipants(snapshot.data ?? ''),
               );
             }
-            return NewChatPage(frequentContacts: widget.frequentContacts);
+            return NewChatPage(
+              key: UniqueKey(),
+              frequentContacts: widget.frequentContacts,
+            );
           },
         ),
       ),

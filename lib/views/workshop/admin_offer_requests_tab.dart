@@ -12,7 +12,10 @@ class AdminOfferRequestsTab extends StatefulWidget {
   final BuildContext parentContext;
   final UserModel userModel;
 
-  AdminOfferRequestsTab({this.timebankid, this.parentContext, this.userModel});
+  AdminOfferRequestsTab(
+      {required this.timebankid,
+      required this.parentContext,
+      required this.userModel});
 
   @override
   _AdminOfferRequestsTabState createState() => _AdminOfferRequestsTabState();
@@ -28,7 +31,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
 
     FirestoreManager.getTimeBankForId(timebankId: widget.timebankid)
         .then((onValue) {
-      timebankModel = onValue;
+      timebankModel = onValue!;
     });
 
     //   timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankid);

@@ -2,5 +2,5 @@ class NavBarBadgeModel {
   final int notificationCount;
   final int chatCount;
 
-  NavBarBadgeModel({this.notificationCount, this.chatCount});
+  NavBarBadgeModel({required this.notificationCount, required this.chatCount});
 }

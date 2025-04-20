@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class CustomTextButton extends StatelessWidget {
   const CustomTextButton({
-    Key key,
-    this.onPressed,
-    this.child,
+    Key? key,
+    required this.onPressed,
+    required this.child,
     this.color,
     this.shape,
     this.textColor,
@@ -13,20 +13,20 @@ class CustomTextButton extends StatelessWidget {
 
   final VoidCallback onPressed;
   final Widget child;
-  final Color color;
-  final ShapeBorder shape;
-  final Color textColor;
-  final EdgeInsetsGeometry padding;
+  final Color? color;
+  final OutlinedBorder? shape;
+  final Color? textColor;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
         backgroundColor: color,
-        primary: textColor,
+        foregroundColor: textColor,
         // onSurface: Colors.black,
         // textStyle: TextStyle(color: textColor),
-        shape: shape ?? StadiumBorder(),
+        shape: shape,
         padding: padding ?? const EdgeInsets.fromLTRB(20, 0, 20, 0),
       ),
       onPressed: onPressed,
@@ -37,19 +37,19 @@ class CustomTextButton extends StatelessWidget {
 
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
-    Key key,
-    @required this.onPressed,
-    @required this.child,
-    this.color,
-    this.shape,
-    this.padding,
-    this.elevation,
-    this.textColor,
+    Key? key,
+    required this.onPressed,
+    required this.child,
+    required this.color,
+    required this.shape,
+    required this.padding,
+    required this.elevation,
+    required this.textColor,
   }) : super(key: key);
   final Widget child;
   final VoidCallback onPressed;
   final Color color;
-  final ShapeBorder shape;
+  final OutlinedBorder shape;
   final EdgeInsetsGeometry padding;
   final double elevation;
   final Color textColor;
@@ -61,7 +61,7 @@ class CustomElevatedButton extends StatelessWidget {
         padding: padding ?? const EdgeInsets.all(12),
         shape: shape ?? StadiumBorder(),
         textStyle: TextStyle(color: textColor ?? Colors.black),
-        primary: color ?? Theme.of(context).primaryColor,
+        backgroundColor: color ?? Theme.of(context).primaryColor,
         elevation: elevation,
       ),
       onPressed: onPressed,

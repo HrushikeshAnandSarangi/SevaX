@@ -15,9 +15,9 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ProjectTemplateView extends StatefulWidget {
-  final bool isCreateProject;
-  final String timebankId;
-  final String projectId;
+  final bool? isCreateProject;
+  final String? timebankId;
+  final String? projectId;
 
   ProjectTemplateView({this.isCreateProject, this.timebankId, this.projectId});
 
@@ -29,9 +29,9 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
   int _groupValue = 0;
   TextEditingController searchTextController = TextEditingController();
   final _textUpdates = StreamController<String>();
-  Color primaryColor = FlavorConfig.values.theme.primaryColor;
-  int value;
-  ProjectTemplateModel selectedProjectTemplate;
+  Color primaryColor = FlavorConfig.values.theme!.primaryColor!;
+  int? value;
+  ProjectTemplateModel? selectedProjectTemplate;
   bool isProjectTemplateSelected = false;
   final _debouncer = Debouncer(milliseconds: 400);
 
@@ -120,7 +120,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             title: S.of(context).create_new_project,
             value: 0,
             onChanged: (newValue) => setState(() {
-              _groupValue = newValue;
+              _groupValue = newValue!;
               isProjectTemplateSelected = false;
             }),
           ),
@@ -128,13 +128,14 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             title: S.of(context).create_project_from_template,
             value: 1,
             onChanged: (newValue) => setState(() {
-              _groupValue = newValue;
+              _groupValue = newValue!;
               isProjectTemplateSelected = true;
             }),
           ),
           TransactionsMatrixCheck(
             comingFrom: ComingFrom.Projects,
-            upgradeDetails: AppConfig.upgradePlanBannerModel.project_templates,
+            upgradeDetails:
+                AppConfig.upgradePlanBannerModel!.project_templates!,
             transaction_matrix_type: "project_templates",
             child: searchFieldWidget(),
           ),
@@ -171,7 +172,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             );
           }
 
-          List<ProjectTemplateModel> projectTemplateList = snapshot.data;
+          List<ProjectTemplateModel> projectTemplateList = snapshot!.data!;
 
           if (projectTemplateList.length == 0) {
             return getEmptyWidget(S.of(context).no_templates_found);
@@ -188,10 +189,10 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
                   groupValue: value,
                   activeColor: Theme.of(context).primaryColor,
                   onChanged: (ind) => setState(() {
-                    value = ind;
-                    selectedProjectTemplate = projectTemplateList[ind];
+                    value = ind as int;
+                    selectedProjectTemplate = projectTemplateList[ind as int];
                   }),
-                  title: Text(projectTemplateModel.templateName),
+                  title: Text(projectTemplateModel.templateName!),
                 );
               },
             ),
@@ -285,14 +286,15 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
     );
   }
 
-  Widget _optionRadioButton({String title, int value, Function onChanged}) {
-    return RadioListTile(
-      value: value,
+  Widget _optionRadioButton(
+      {String? title, int? value, void Function(int?)? onChanged}) {
+    return RadioListTile<int>(
+      value: value!,
       groupValue: _groupValue,
       activeColor: Theme.of(context).primaryColor,
       onChanged: onChanged,
       title: Text(
-        title,
+        title!,
         style: TextStyle(color: Theme.of(context).primaryColor),
       ),
     );
@@ -311,7 +313,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             // usually buttons at the bottom of the dialog
             CustomTextButton(
               shape: StadiumBorder(),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               textColor: Colors.white,
               child: Text(S.of(context).close),
               onPressed: () {

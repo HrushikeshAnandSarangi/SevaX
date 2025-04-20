@@ -1,11 +1,11 @@
 import 'package:sevaexchange/models/data_model.dart';
 
 class CardModel extends DataModel {
-  String currentPlan;
-  String custId;
-  String email;
-  String timebankid;
-  List<Map> subscriptionModel;
+  late String currentPlan;
+  late String custId;
+  late String email;
+  late String timebankid;
+  late List<Map> subscriptionModel;
 
   CardModel(Map<String, dynamic> map) {
     this.currentPlan = map.containsKey("currentplan") ? map["currentplan"] : '';
@@ -19,12 +19,13 @@ class CardModel extends DataModel {
 
   @override
   Map<String, dynamic> toMap() {
-    return null;
-  }
-
-  @override
-  String toString() {
-    return 'CardModel{currentPlan: $currentPlan, custId: $custId, email: $email, timebankid: $timebankid, subscriptionModel: $subscriptionModel}';
+    return {
+      'currentplan': currentPlan,
+      'custId': custId,
+      'email': email,
+      'timebankid': timebankid,
+      'subscription': subscriptionModel,
+    };
   }
 }
 
@@ -32,6 +33,6 @@ class PaymentStateModel extends DataModel {
   @override
   Map<String, dynamic> toMap() {
     // TODO: implement toMap
-    return null;
+    return {};
   }
 }

@@ -7,6 +7,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/explore_distance_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/models/community_category_model.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/events_search_view.dart';
@@ -26,16 +28,16 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreSearchPage extends StatefulWidget {
-  final String searchText;
-  final int tabIndex;
-  final bool isUserSignedIn;
+  final String? searchText;
+  final int? tabIndex;
+  final bool? isUserSignedIn;
 
   const ExploreSearchPage(
-      {Key key,
+      {Key? key,
       this.searchText,
       this.tabIndex = 0,
-      @required this.isUserSignedIn})
-      : assert(tabIndex <= 4),
+      required this.isUserSignedIn})
+      : assert(tabIndex == null || tabIndex <= 4),
         super(key: key);
 
   @override
@@ -44,10 +46,10 @@ class ExploreSearchPage extends StatefulWidget {
 
 class _ExploreSearchPageState extends State<ExploreSearchPage>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
+  TabController? _controller;
   TextEditingController _searchController = TextEditingController();
   ExploreSearchPageBloc _bloc = ExploreSearchPageBloc();
-  StreamController _tabIndex = StreamController<int>.broadcast();
+  final BehaviorSubject<int> _tabIndex = BehaviorSubject<int>.seeded(0);
   ScrollController _scrollController = ScrollController();
   final searchBorder = OutlineInputBorder(
     borderSide: BorderSide(color: Colors.grey),
@@ -61,17 +63,17 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         Duration(milliseconds: 300),
         () => {
               _bloc.load(
-                  widget.isUserSignedIn
-                      ? SevaCore.of(context).loggedInUser.sevaUserID
+                  widget.isUserSignedIn!
+                      ? SevaCore.of(context).loggedInUser.sevaUserID!
                       : '',
                   context,
-                  widget.isUserSignedIn),
+                  widget.isUserSignedIn!),
             });
-    _tabIndex.add(widget.tabIndex);
-    _searchController.text = widget.searchText;
-    _bloc.onSearchChange(widget.searchText);
+    _tabIndex.add(widget.tabIndex!);
+    _searchController.text = widget.searchText!;
+    _bloc.onSearchChange(widget.searchText!);
     _controller = TabController(
-      initialIndex: widget.tabIndex,
+      initialIndex: widget.tabIndex!,
       length: 4,
       vsync: this,
     );
@@ -102,8 +104,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         scrollController: _scrollController,
         appBarTitle: S.of(context).search,
         hideSearchBar: true,
-        hideHeader: widget.isUserSignedIn,
-        hideFooter: widget.isUserSignedIn,
+        hideHeader: widget.isUserSignedIn!,
+        hideFooter: widget.isUserSignedIn!,
         controller: _searchController,
         onSearchChanged: (value) {
           logger.i(value);
@@ -112,7 +114,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!widget.isUserSignedIn)
+            if (!widget.isUserSignedIn!)
               CustomBackButton(
                 onBackPressed: () {
                   if (Navigator.canPop(context)) {
@@ -172,8 +174,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
               tabBar: _tabBar,
               bloc: _bloc,
               tabIndex: _tabIndex,
-              initialTabIndex: widget.tabIndex,
-              isUserSignedIn: widget.isUserSignedIn,
+              initialTabIndex: widget.tabIndex!,
+              isUserSignedIn: widget.isUserSignedIn!,
             ),
           ],
         ),
@@ -231,7 +233,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
           fontWeight: FontWeight.bold,
         ),
         tabs: _tabs,
-        indicatorColor: Theme.of(context).accentColor,
+        indicatorColor: Theme.of(context).colorScheme.secondary,
         indicatorWeight: 3,
         onTap: (index) {
           _tabIndex.add(index);
@@ -248,7 +250,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
-          onChanged: (int value) {},
+          onChanged: (int? value) {},
           value: 0,
           icon: Icon(Icons.keyboard_arrow_down),
           iconEnabledColor: Theme.of(context).primaryColor,
@@ -270,9 +272,9 @@ class ExploreCommunityCard extends StatelessWidget {
   final bool isSignedUser;
 
   const ExploreCommunityCard({
-    Key key,
-    @required this.model,
-    @required this.isSignedUser,
+    Key? key,
+    required this.model,
+    required this.isSignedUser,
   }) : super(key: key);
 
   @override
@@ -328,9 +330,10 @@ class ExploreCommunityCard extends StatelessWidget {
                           ' | ' +
                           model.billing_address.country,
                       style: TextStyle(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
+                    secondChild: Container(), // Empty container when hidden
                   ),
                   SizedBox(height: 12),
                   Flexible(
@@ -356,11 +359,11 @@ class ExploreCommunityCard extends StatelessWidget {
 }
 
 class SimpleCommunityCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final VoidCallback onTap;
+  final String? image;
+  final String? title;
+  final VoidCallback? onTap;
 
-  const SimpleCommunityCard({Key key, this.image, this.title, this.onTap})
+  const SimpleCommunityCard({Key? key, this.image, this.title, this.onTap})
       : super(key: key);
 
   @override
@@ -378,7 +381,7 @@ class SimpleCommunityCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  image,
+                  image!,
                   height: 40,
                   width: 100,
                   fit: BoxFit.cover,
@@ -396,12 +399,12 @@ class SimpleCommunityCard extends StatelessWidget {
 
 class ExploreSearchTabBar extends StatelessWidget {
   const ExploreSearchTabBar({
-    Key key,
-    @required TabBar tabBar,
-    @required ExploreSearchPageBloc bloc,
-    @required StreamController<int> tabIndex,
-    @required int initialTabIndex,
-    @required bool isUserSignedIn,
+    Key? key,
+    required TabBar tabBar,
+    required ExploreSearchPageBloc bloc,
+    required StreamController<int> tabIndex,
+    required int initialTabIndex,
+    required bool isUserSignedIn,
   })  : _tabBar = tabBar,
         _bloc = bloc,
         _tabIndex = tabIndex,
@@ -424,7 +427,7 @@ class ExploreSearchTabBar extends StatelessWidget {
         SizedBox(height: 12),
         StreamBuilder<int>(
           initialData: _initialTabIndex,
-          stream: _tabIndex.stream,
+          stream: _tabIndex.stream.cast<int>(),
           builder: (context, snapshot) {
             return Wrap(
               spacing: 4,
@@ -437,10 +440,10 @@ class ExploreSearchTabBar extends StatelessWidget {
                     initialData: ExploreDistanceModel(0, DistancType.mi),
                     stream: _bloc.distance,
                     builder: (context, snapshot) {
-                      DistancType _type = snapshot.data.type;
+                      DistancType _type = snapshot.data!.type!;
                       int _distance = _type == "km"
-                          ? snapshot.data.distance / 1.609
-                          : snapshot.data.distance;
+                          ? (snapshot.data?.distance ?? 0 / 1.609).round()
+                          : (snapshot.data?.distance ?? 0).round();
                       return Container(
                         decoration: BoxDecoration(
                           color: _distance != 0
@@ -463,7 +466,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                                 .then(
                               (value) {
                                 logger.i(
-                                    'km value => ${value.distance} || ${value.type}');
+                                    'km value => ${value!.distance} || ${value.type}');
                                 if (value != null) {
                                   _bloc.distanceChanged(value);
                                 } else {
@@ -502,6 +505,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                                     },
                                   ),
                                 ),
+                                secondChild: SizedBox.shrink(),
                               ),
                             ],
                           ),
@@ -520,7 +524,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                       if (snapshot.data == 1)
                         return Container(
                           decoration: BoxDecoration(
-                            color: eventFilter.data
+                            color: eventFilter.data!
                                 ? Theme.of(context).primaryColor
                                 : Colors.white,
                             border: Border.all(
@@ -531,13 +535,13 @@ class ExploreSearchTabBar extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 8),
                           child: InkWell(
                             onTap: () async {
-                              _bloc.onCompletedEventChanged(!eventFilter.data);
+                              _bloc.onCompletedEventChanged(!eventFilter.data!);
                             },
                             child: Center(
                               child: Container(
                                 child: Row(
                                   children: [
-                                    eventFilter.data
+                                    eventFilter.data!
                                         ? Padding(
                                             padding:
                                                 EdgeInsets.only(right: 4.0),
@@ -561,7 +565,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                                     Text(
                                       S.of(context).completed_events,
                                       style: TextStyle(
-                                          color: eventFilter.data
+                                          color: eventFilter.data!
                                               ? Colors.white
                                               : Theme.of(context).primaryColor),
                                     ),
@@ -580,7 +584,11 @@ class ExploreSearchTabBar extends StatelessWidget {
                   stream: CombineLatestStream.combine2(
                     _bloc.communityCategory,
                     _bloc.selectedCommunityCategoryId,
-                    (a, b) => SelectedCommunityCategoryWithData(a, b),
+                    (a, b) => SelectedCommunityCategoryWithData(
+                      (a as List<CommunityCategoryModel>)
+                          .cast<CommunityCategoryModel>(),
+                      b as String? ?? '',
+                    ),
                   ),
                   builder: (context, selectedCommunityCategoryWithData) {
                     if (selectedCommunityCategoryWithData.data == null ||
@@ -597,11 +605,13 @@ class ExploreSearchTabBar extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          onChanged: (String value) {
-                            _bloc.onCommunityCategoryChanged(value);
+                          onChanged: (String? value) {
+                            if (value != null) {
+                              _bloc.onCommunityCategoryChanged(value);
+                            }
                           },
                           value: selectedCommunityCategoryWithData
-                                  .data.selectedId ??
+                                  .data!.selectedId ??
                               '_',
                           icon: Icon(Icons.keyboard_arrow_down),
                           iconEnabledColor: Theme.of(context).primaryColor,
@@ -614,7 +624,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                                 S.of(context).any_category.firstWordUpperCase(),
                               ),
                             ),
-                            ...selectedCommunityCategoryWithData.data.data.map(
+                            ...selectedCommunityCategoryWithData.data!.data.map(
                               (e) => DropdownMenuItem(
                                 value: e.id,
                                 child: Text(
@@ -632,7 +642,10 @@ class ExploreSearchTabBar extends StatelessWidget {
                   stream: CombineLatestStream.combine2(
                     _bloc.requestCategory,
                     _bloc.selectedRequestCategoryId,
-                    (a, b) => SelectedRequestCategoryWithData(a, b),
+                    (a, b) => SelectedRequestCategoryWithData(
+                      (a as List<CategoryModel>),
+                      b as String? ?? '',
+                    ),
                   ),
                   builder: (context, selectedRequestCategoryWithData) {
                     if (selectedRequestCategoryWithData.data == null ||
@@ -649,12 +662,14 @@ class ExploreSearchTabBar extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          onChanged: (String value) {
-                            _bloc.onRequestCategoryChanged(value);
+                          onChanged: (String? value) {
+                            if (value != null) {
+                              _bloc.onRequestCategoryChanged(value);
+                            }
                           },
-                          value:
-                              selectedRequestCategoryWithData.data.selectedId ??
-                                  '_',
+                          value: selectedRequestCategoryWithData
+                                  .data!.selectedId ??
+                              '_',
                           icon: Icon(Icons.keyboard_arrow_down),
                           iconEnabledColor: Theme.of(context).primaryColor,
                           style:
@@ -667,7 +682,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                                   .any_category
                                   .firstWordUpperCase()),
                             ),
-                            ...selectedRequestCategoryWithData.data.data.map(
+                            ...selectedRequestCategoryWithData.data!.data.map(
                               (e) => DropdownMenuItem(
                                 value: e.typeId,
                                 child: Text(
@@ -696,6 +711,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                       true
                     ],
                   ),
+                  secondChild: SizedBox.shrink(),
                 ),
                 HideWidget(
                   hide: snapshot.data != 3,
@@ -712,6 +728,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                       false
                     ],
                   ),
+                  secondChild: SizedBox.shrink(),
                 ),
               ],
             );
@@ -720,9 +737,9 @@ class ExploreSearchTabBar extends StatelessWidget {
         SizedBox(height: 12),
         StreamBuilder<int>(
           initialData: _initialTabIndex,
-          stream: _tabIndex.stream,
+          stream: _tabIndex.stream!.cast<int>(),
           builder: (context, snapshot) {
-            logger.wtf("tabIndex", snapshot.data);
+            logger.wtf("tabIndex: ${snapshot.data!}");
             switch (snapshot.data) {
               case 0:
                 return CommunitiesSearchView(

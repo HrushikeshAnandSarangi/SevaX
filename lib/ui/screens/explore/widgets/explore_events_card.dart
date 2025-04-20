@@ -5,16 +5,16 @@ import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with
 
 class ExploreEventsCard extends StatelessWidget {
   const ExploreEventsCard({
-    Key key,
-    this.imageUrl,
-    this.communityName,
-    this.city,
-    this.description,
-    this.userIds,
+    Key? key,
+    required this.imageUrl,
+    required this.communityName,
+    required this.city,
+    required this.description,
+    required this.userIds,
+    required this.onTap,
+    required this.eventStartDate,
     this.firstTextStyle,
     this.secondTextStyle,
-    this.onTap,
-    this.eventStartDate,
     //this.padding,
   }) : super(key: key);
 
@@ -24,8 +24,8 @@ class ExploreEventsCard extends StatelessWidget {
   final String city;
   final String description;
   final List<String> userIds;
-  final TextStyle firstTextStyle;
-  final TextStyle secondTextStyle;
+  final TextStyle? firstTextStyle;
+  final TextStyle? secondTextStyle;
   final String eventStartDate;
   //final EdgeInsetsGeometry padding;
 
@@ -59,18 +59,17 @@ class ExploreEventsCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          communityName?.toUpperCase()??'',
+                          communityName?.toUpperCase() ?? '',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w400,
                               ),
                         ),
-                        
                         Text(
                           city != null && city.isNotEmpty
                               ? ' - ${city.toUpperCase()}'
-                              :'',
+                              : '',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
@@ -99,7 +98,6 @@ class ExploreEventsCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                
                 MemberAvatarListWithCount(
                   userIds: userIds,
                   radius: 10,
@@ -109,7 +107,7 @@ class ExploreEventsCard extends StatelessWidget {
                   child: Text(
                     eventStartDate.toUpperCase(),
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 13,
                     ),
                   ),

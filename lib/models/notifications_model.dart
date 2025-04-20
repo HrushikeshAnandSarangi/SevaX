@@ -4,17 +4,17 @@ import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class NotificationsModel extends DataModel {
-  String id;
-  NotificationType type;
-  Map<String, dynamic> data;
-  String targetUserId;
-  String senderUserId;
-  String senderPhotoUrl;
-  bool isRead;
-  String timebankId;
-  String communityId;
-  int timestamp;
-  bool isTimebankNotification;
+  String? id;
+  NotificationType? type;
+  Map<String, dynamic>? data;
+  String? targetUserId;
+  String? senderUserId;
+  String? senderPhotoUrl;
+  bool? isRead;
+  String? timebankId;
+  String? communityId;
+  int? timestamp;
+  bool? isTimebankNotification;
 
   NotificationsModel({
     this.id,
@@ -398,8 +398,8 @@ class ClearNotificationModel {
   List<NotificationType> notificationType;
 
   ClearNotificationModel({
-    this.isClearNotificationEnabled,
-    this.notificationType,
+    required this.isClearNotificationEnabled,
+    required this.notificationType,
   });
 
   factory ClearNotificationModel.fromJson(Map<String, dynamic> json) =>
@@ -411,10 +411,10 @@ class ClearNotificationModel {
 }
 
 class ReccuringRequestUpdated {
-  String eventName;
-  int eventDate;
-  String photoUrl;
-  String requestId;
+  String? eventName;
+  int? eventDate;
+  String? photoUrl;
+  String? requestId;
 
   ReccuringRequestUpdated.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('eventName')) {
@@ -436,10 +436,10 @@ class ReccuringRequestUpdated {
 }
 
 class ReccuringOfferUpdated {
-  String eventName;
-  int eventDate;
-  String photoUrl;
-  String offerId;
+  String? eventName;
+  int? eventDate;
+  String? photoUrl;
+  String? offerId;
 
   ReccuringOfferUpdated.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('eventName')) {

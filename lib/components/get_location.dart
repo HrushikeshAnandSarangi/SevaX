@@ -1,85 +1,160 @@
+import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_api_headers/google_api_headers.dart';
-import 'package:google_maps_webservice/places.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/location_model.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-final searchScaffoldKey = GlobalKey<ScaffoldState>();
-
-class CustomSearchScaffold extends PlacesAutocompleteWidget {
+class CustomSearchScaffold extends StatelessWidget {
   final String hint;
+  final GlobalKey<ScaffoldState> searchScaffoldKey = GlobalKey<ScaffoldState>();
 
-  CustomSearchScaffold(this.hint)
-      : super(
-          hint: hint,
-          apiKey: FlavorConfig.values.googleMapsKey,
-          sessionToken: Uuid().generateV4(),
-          language: "en",
-          components: [],
-        );
+  CustomSearchScaffold(this.hint, {Key? key}) : super(key: key);
 
-  @override
-  _CustomSearchScaffoldState createState() => _CustomSearchScaffoldState();
-}
-
-class _CustomSearchScaffoldState extends PlacesAutocompleteState {
-  String locationText;
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      iconTheme: IconThemeData(color: Colors.black),
-      title: AppBarPlacesAutoCompleteTextField(),
+    return Scaffold(
+      key: searchScaffoldKey,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: Text(hint),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            final result = await showPlacesSearch(context);
+            if (result != null) {
+              Navigator.pop(context, _createLocationData(result));
+            }
+          },
+          child: const Text('Search Location'),
+        ),
+      ),
     );
-    final body = PlacesAutocompleteResult(
-      onTap: (p) async {
-        await displayPrediction(p);
-      },
-    );
-    return Scaffold(key: searchScaffoldKey, appBar: appBar, body: body);
   }
 
-  Future<Null> displayPrediction(Prediction p) async {
-    if (p != null) {
-      // get detail (lat/lng)
-      PlacesDetailsResponse detail = await GoogleMapsPlaces(
-              apiKey: FlavorConfig.values.googleMapsKey,
-              apiHeaders: await GoogleApiHeaders().getHeaders())
-          .getDetailsByPlaceId(
-        p.placeId,
-        fields: ["geometry"],
-      );
+  Future<PlaceDetails?> showPlacesSearch(BuildContext context) async {
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlacesSearchScreen(
+          apiKey: FlavorConfig.values.googleMapsKey!,
+        ),
+      ),
+    );
+  }
 
-      final lat = detail.result.geometry.location.lat;
-      final lng = detail.result.geometry.location.lng;
-      LocationDataModel data = LocationDataModel(
-        p.description,
-        lat,
-        lng,
-      );
-      Navigator.pop(context, data);
-    }
+  LocationDataModel _createLocationData(PlaceDetails place) {
+    return LocationDataModel(
+      place.name ?? '',
+      place.geometry?.location.lat ?? 0.0,
+      place.geometry?.location.lng ?? 0.0,
+    );
+  }
+}
+
+class PlacesSearchScreen extends StatefulWidget {
+  final String apiKey;
+
+  const PlacesSearchScreen({Key? key, required this.apiKey}) : super(key: key);
+
+  @override
+  State<PlacesSearchScreen> createState() => _PlacesSearchScreenState();
+}
+
+class _PlacesSearchScreenState extends State<PlacesSearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  late final GoogleMapsPlaces _placesClient;
+  final _uuid = Uuid();
+  late String _sessionToken;
+  Timer? _debounceTimer;
+  List<Prediction> _predictions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _sessionToken = _uuid.generateV4();
+    _placesClient = GoogleMapsPlaces(apiKey: widget.apiKey);
   }
 
   @override
-  void onResponseError(PlacesAutocompleteResponse response) {
-    super.onResponseError(response);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(response.errorMessage)),
-    );
+  void dispose() {
+    _searchController.dispose();
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (query.isEmpty) {
+        setState(() => _predictions = []);
+        return;
+      }
+
+      try {
+        final response = await _placesClient.autocomplete(
+          query,
+          sessionToken: _sessionToken,
+          language: 'en',
+        );
+        setState(() => _predictions = response.predictions);
+      } catch (_) {
+        setState(() => _predictions = []);
+      }
+    });
   }
 
   @override
-  void onResponse(PlacesAutocompleteResponse response) {
-    super.onResponse(response);
-    if (response != null && response.predictions.isNotEmpty) {
-      //ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("Got answer")),
-      // );
-    }
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Search Location'),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _onSearchChanged,
+              decoration: InputDecoration(
+                hintText: 'Search for a location',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              autofocus: true,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _predictions.length,
+              itemBuilder: (context, index) {
+                final prediction = _predictions[index];
+                return ListTile(
+                  leading: const Icon(Icons.location_on),
+                  title: Text(prediction.description ?? ''),
+                  onTap: () async {
+                    if (prediction.placeId == null) return;
+
+                    final details = await _placesClient.getDetailsByPlaceId(
+                      prediction.placeId!,
+                      sessionToken: _sessionToken,
+                      fields: ['geometry', 'name'],
+                    );
+
+                    if (mounted) Navigator.pop(context, details.result);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -87,20 +162,15 @@ class Uuid {
   final Random _random = Random();
 
   String generateV4() {
-    // Generate xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx / 8-4-4-4-12.
-    final int special = 8 + _random.nextInt(4);
-
-    return '${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}-'
-        '${_bitsDigits(16, 4)}-'
-        '4${_bitsDigits(12, 3)}-'
-        '${_printDigits(special, 1)}${_bitsDigits(12, 3)}-'
-        '${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}';
+    return '${_bits(16)}${_bits(16)}-'
+        '${_bits(16)}-'
+        '4${_bits(12)}-'
+        '${_printVariant()}${_bits(12)}-'
+        '${_bits(16)}${_bits(16)}${_bits(16)}';
   }
 
-  String _bitsDigits(int bitCount, int digitCount) =>
-      _printDigits(_generateBits(bitCount), digitCount);
+  String _bits(int count) =>
+      _random.nextInt(1 << count).toRadixString(16).padLeft(count ~/ 4, '0');
 
-  int _generateBits(int bitCount) => _random.nextInt(1 << bitCount);
-
-  String _printDigits(int value, int count) => value.toRadixString(16).padLeft(count, '0');
+  String _printVariant() => ['8', '9', 'a', 'b'][_random.nextInt(4)];
 }

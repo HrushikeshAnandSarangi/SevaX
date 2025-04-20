@@ -17,7 +17,8 @@ class TimebankMessageBloc {
         .listen((QuerySnapshot query) {
       List<ChatModel> chats = [];
       query.docs.forEach((DocumentSnapshot snapshot) {
-        ChatModel chat = ChatModel.fromMap(snapshot.data());
+        ChatModel chat =
+            ChatModel.fromMap(snapshot.data() as Map<String, dynamic>);
         chat.id = snapshot.id;
         chats.add(chat);
       });

@@ -6,6 +6,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/join_request_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/members/widgets/short_profile_card.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -13,9 +14,9 @@ import 'package:shimmer/shimmer.dart';
 
 class JoinRequestSectionBuilder extends StatelessWidget {
   const JoinRequestSectionBuilder({
-    Key key,
-    @required this.joinRequestBloc,
-    this.timebankModel,
+    Key? key,
+    required this.joinRequestBloc,
+    required this.timebankModel,
   }) : super(key: key);
 
   final JoinRequestBloc joinRequestBloc;
@@ -30,7 +31,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
       child: StreamBuilder<List<JoinRequestModel>>(
         stream: joinRequestBloc.joinRequests,
         builder: (_, snapshot) {
-          if (snapshot.data == null || snapshot.data.isEmpty) {
+          if (snapshot.data == null || snapshot.data?.isEmpty == true) {
             return Container();
           }
           return Column(
@@ -46,24 +47,29 @@ class JoinRequestSectionBuilder extends StatelessWidget {
               SizedBox(height: 8),
               ListBody(
                 children: List.generate(
-                  snapshot.data.length,
+                  snapshot.data!.length,
                   (index) => FutureBuilder<UserModel>(
                     future: Provider.of<MembersBloc>(
                       context,
                       listen: false,
-                    ).getUserModel(userId: snapshot.data[index].userId),
+                    ).getUserModel(userId: snapshot.data![index].userId!),
                     builder: (_, userSnapshot) {
                       if (userSnapshot.data == null ||
                           userSnapshot.connectionState ==
                               ConnectionState.waiting) {
                         return Container(height: 40);
                       }
-                      var user = userSnapshot.data;
+                      var user = userSnapshot.data!;
                       return Row(
                         children: [
                           Expanded(
                             child: ShortProfileCard(
-                              model: userSnapshot.data,
+                              key: ValueKey(user.sevaUserID),
+                              model: user,
+                              role: null!, // Added required 'role' parameter
+                              actionButton: PopupMenuButton<dynamic>(
+                                itemBuilder: (context) => [],
+                              ),
                             ),
                           ),
                           CustomElevatedButton(
@@ -73,33 +79,37 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             ),
                             color: Colors.green,
                             textColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 2,
                             onPressed: () {
                               //Todo : add loading indicator
-                              var joinRequestModel = snapshot.data[index];
+                              var joinRequestModel = snapshot.data![index];
                               joinRequestBloc.addMemberToTimebank(
                                 timebankModel: timebankModel,
-                                timebankId: joinRequestModel.entityId,
-                                joinRequestId: joinRequestModel.id,
+                                timebankId: joinRequestModel.entityId!,
+                                joinRequestId: joinRequestModel.id!,
                                 memberJoiningSevaUserId:
-                                    joinRequestModel.userId,
-                                notificaitonId: joinRequestModel.notificationId,
+                                    joinRequestModel.userId!,
+                                notificaitonId:
+                                    joinRequestModel.notificationId!,
                                 communityId: SevaCore.of(context)
                                     .loggedInUser
-                                    .currentCommunity,
-                                newMemberJoinedEmail: user.email,
+                                    .currentCommunity!,
+                                newMemberJoinedEmail: user.email!,
                                 isFromGroup: joinRequestModel.isFromGroup,
-                                memberFullName: user.fullname,
-                                memberPhotoUrl: user.photoURL,
+                                memberFullName: user.fullname!,
+                                memberPhotoUrl: user.photoURL!,
                                 adminEmail:
-                                    SevaCore.of(context).loggedInUser.email,
+                                    SevaCore.of(context).loggedInUser.email!,
                                 adminId: SevaCore.of(context)
                                     .loggedInUser
-                                    .sevaUserID,
+                                    .sevaUserID!,
                                 adminFullName:
-                                    SevaCore.of(context).loggedInUser.fullname,
+                                    SevaCore.of(context).loggedInUser.fullname!,
                                 adminPhotoUrl:
-                                    SevaCore.of(context).loggedInUser.photoURL,
-                                timebankTitle: joinRequestModel.timebankTitle,
+                                    SevaCore.of(context).loggedInUser.photoURL!,
+                                timebankTitle: joinRequestModel.timebankTitle!,
                               );
                             },
                           ),
@@ -111,32 +121,35 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             ),
                             color: Colors.red,
                             textColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 2,
                             onPressed: () {
                               //Todo : add loading indicator
+                              var joinRequestModel = snapshot.data![index];
                               joinRequestBloc.rejectMemberJoinRequest(
                                 timebankModel: timebankModel,
-                                timebankId: snapshot.data[index].entityId,
-                                joinRequestId: snapshot.data[index].id,
+                                timebankId: joinRequestModel.entityId!,
+                                joinRequestId: joinRequestModel.id!,
                                 notificaitonId:
-                                    snapshot.data[index].notificationId,
+                                    joinRequestModel.notificationId!,
                                 communityId: SevaCore.of(context)
                                     .loggedInUser
-                                    .currentCommunity,
-                                memberFullName: user.fullname,
-                                memberPhotoUrl: user.photoURL,
+                                    .currentCommunity!,
+                                memberFullName: user.fullname!,
+                                memberPhotoUrl: user.photoURL!,
                                 adminEmail:
-                                    SevaCore.of(context).loggedInUser.email,
+                                    SevaCore.of(context).loggedInUser.email!,
                                 adminId: SevaCore.of(context)
                                     .loggedInUser
-                                    .sevaUserID,
+                                    .sevaUserID!,
                                 adminFullName:
-                                    SevaCore.of(context).loggedInUser.fullname,
+                                    SevaCore.of(context).loggedInUser.fullname!,
                                 adminPhotoUrl:
-                                    SevaCore.of(context).loggedInUser.photoURL,
-                                timebankTitle:
-                                    snapshot.data[index].timebankTitle,
-                                memberEmail: user.email,
-                                memberId: user.sevaUserID,
+                                    SevaCore.of(context).loggedInUser.photoURL!,
+                                timebankTitle: joinRequestModel.timebankTitle!,
+                                memberEmail: user.email!,
+                                memberId: user.sevaUserID!,
                               );
                             },
                           ),

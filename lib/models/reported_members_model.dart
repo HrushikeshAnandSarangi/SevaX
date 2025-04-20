@@ -1,12 +1,12 @@
 class ReportedMembersModel {
-  List<String> reporterIds;
-  List<String> timebankIds;
-  String reportedId;
-  List<Report> reports;
-  String reportedUserName;
-  String reportedUserImage;
-  String communityId;
-  String reportedUserEmail;
+  List<String>? reporterIds;
+  List<String>? timebankIds;
+  String? reportedId;
+  List<Report>? reports;
+  String? reportedUserName;
+  String? reportedUserImage;
+  String? communityId;
+  String? reportedUserEmail;
 
   ReportedMembersModel({
     this.reporterIds,
@@ -38,10 +38,10 @@ class ReportedMembersModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "reporterId": List<dynamic>.from(reporterIds.map((x) => x)),
+        "reporterId": List<dynamic>.from(reporterIds!.map((x) => x)),
         "reportedId": reportedId,
         "timebankIds": timebankIds,
-        "reports": List<dynamic>.from(reports.map((x) => x.toMap())),
+        "reports": List<dynamic>.from(reports!.map((x) => x.toMap())),
         "reportedUserName": reportedUserName,
         "reportedUserImage": reportedUserImage,
         "communityId": communityId,
@@ -50,15 +50,15 @@ class ReportedMembersModel {
 }
 
 class Report {
-  String attachment;
-  String message;
-  String reporterId;
-  String reporterName;
-  String reporterImage;
-  String entityName;
-  String entityId;
-  bool isTimebankReport;
-  int timestamp;
+  String? attachment;
+  String? message;
+  String? reporterId;
+  String? reporterName;
+  String? reporterImage;
+  String? entityName;
+  String? entityId;
+  bool? isTimebankReport;
+  int? timestamp;
 
   Report({
     this.attachment,

@@ -18,14 +18,14 @@ import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class SevaExploreFooter extends StatefulWidget {
-  final bool footerColor;
+  final bool? footerColor;
   SevaExploreFooter({this.footerColor});
   @override
   _SevaExploreFooterState createState() => _SevaExploreFooterState();
 }
 
 class _SevaExploreFooterState extends State<SevaExploreFooter> {
-  String timezoneName;
+  String? timezoneName;
   final List<List<FooterData>> footerData = [
     [FooterData.SevaX, FooterData.Discover, FooterData.Hosting],
     [FooterData.About_Us, FooterData.Trust_Safety, FooterData.Host_community],
@@ -42,8 +42,9 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     timezoneName = DateTime.now().timeZoneName.toLowerCase();
     var exists = TimezoneListData().timezonelist.firstWhere(
           (element) =>
-              element.timezoneName.toLowerCase() == timezoneName.toLowerCase(),
-          orElse: () => null,
+              element.timezoneName!.toLowerCase() ==
+              timezoneName?.toLowerCase(),
+          orElse: () => TimezoneListData().timezonelist.first,
         );
     if (exists == null) {
       timezoneName = 'PACIFIC TIME'.toLowerCase();
@@ -89,7 +90,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                           );
                           Provider.of<AppLanguage>(context, listen: false)
                               .changeLanguage(
-                            getLocaleFromCode(value),
+                            getLocaleFromCode(value!),
                           );
 
                           // Phoenix.rebirth(context);
@@ -102,7 +103,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  languageNames[key],
+                                  languageNames[key]!,
                                 ),
                               ),
                               value: key,
@@ -124,10 +125,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     child: DropdownButton(
                       onChanged: (value) {
                         setState(() {
-                          timezoneName = value;
+                          timezoneName = value as String;
                         });
                         Provider.of<AppTimeZone>(context, listen: false)
-                            .changeTimeZone(value);
+                            .changeTimeZone(value as String);
                       },
                       value: timezoneName,
                       isExpanded: true,
@@ -138,11 +139,11 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  model.timezoneName,
+                                  model!.timezoneName!,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              value: model.timezoneName.toLowerCase(),
+                              value: model.timezoneName!.toLowerCase(),
                             ),
                           )
                           .toList(),
@@ -182,10 +183,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                                     ),
                                   ),
                                 ),
-                                onTap: openUrl(
+                                onTap: () => openUrl(
                                   context: context,
                                   data: data,
-                                ),
+                                )(),
                               ),
                             )
                             .toList(),
@@ -202,11 +203,11 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
               children: [
                 button(
                   'Terms',
-                  getOnTap(
+                  () => getOnTap(
                     context,
                     S.of(context).login_agreement_terms_link,
                     'termsAndConditionsLink',
-                  ),
+                  )(),
                 ),
                 button(
                   'Privacy',
@@ -214,11 +215,11 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     context,
                     S.of(context).login_agreement_privacy_link,
                     'privacyPolicyLink',
-                  ),
+                  )(),
                 ),
                 button(
                   'Site Map',
-                  getOnTap(context, 'Site Map', 'aboutSeva'),
+                  getOnTap(context, 'Site Map', 'aboutSeva')(),
                 ),
               ],
             ),
@@ -303,7 +304,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     return () async {
       var dynamicLinks;
       dynamicLinks = json.decode(
-        AppConfig.remoteConfig.getString(
+        AppConfig.remoteConfig!.getString(
           'links_${S.of(context).localeName ?? 'en'}',
         ),
       );
@@ -316,7 +317,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
   }
 
   String getFooterDataTitle(
-      {@required FooterData data, @required BuildContext context}) {
+      {required FooterData data, required BuildContext context}) {
     switch (data) {
       case FooterData.About_Us:
         return S.of(context).help_about_us;
@@ -363,8 +364,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     }
   }
 
-  Function openUrl(
-      {@required FooterData data, @required BuildContext context}) {
+  Function openUrl({required FooterData data, required BuildContext context}) {
     switch (data) {
       case FooterData.About_Us:
         return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');

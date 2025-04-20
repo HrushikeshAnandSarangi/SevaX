@@ -10,21 +10,21 @@ import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 
 class LendingModel {
   LendingModel({
-    this.id,
-    this.creatorId,
-    this.email,
-    this.timestamp,
-    this.lendingType,
+    required this.id,
+    required this.creatorId,
+    required this.email,
+    required this.timestamp,
+    required this.lendingType,
     this.lendingItemModel,
     this.lendingPlaceModel,
   });
-  String id;
-  String creatorId;
-  String email;
-  int timestamp;
-  LendingType lendingType;
-  LendingItemModel lendingItemModel;
-  LendingPlaceModel lendingPlaceModel;
+  final String id;
+  final String creatorId;
+  final String email;
+  final int timestamp;
+  final LendingType lendingType;
+  final LendingItemModel? lendingItemModel;
+  final LendingPlaceModel? lendingPlaceModel;
 
   factory LendingModel.fromJson(String str) =>
       LendingModel.fromMap(json.decode(str));
@@ -37,7 +37,7 @@ class LendingModel {
         email: json["email"] == null ? null : json["email"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
         lendingType: json["lendingType"] == null
-            ? null
+            ? LendingType.ITEM
             : getLendingType(json["lendingType"]),
         lendingItemModel: json["lendingItemModel"] == null
             ? null
@@ -54,9 +54,9 @@ class LendingModel {
         "timestamp": timestamp == null ? null : timestamp,
         "lendingType": setLendingType(lendingType),
         "lendingItemModel":
-            lendingItemModel == null ? null : lendingItemModel.toMap(),
+            lendingItemModel == null ? null : lendingItemModel?.toMap(),
         "lendingPlaceModel":
-            lendingPlaceModel == null ? null : lendingPlaceModel.toMap(),
+            lendingPlaceModel == null ? null : lendingPlaceModel?.toMap(),
       };
 }
 
@@ -66,6 +66,8 @@ LendingType getLendingType(String lendingType) {
       return LendingType.PLACE;
     case 'ITEM':
       return LendingType.ITEM;
+    default:
+      return LendingType.ITEM; // Default case returns ITEM type
   }
 }
 
@@ -82,6 +84,7 @@ Map<String, LendingType> lendingTypeMapper = {
   "PLACE": LendingType.PLACE,
   "ITEM": LendingType.ITEM,
 };
+
 enum LendingOfferStatus {
   APPROVED,
   ACCEPTED,

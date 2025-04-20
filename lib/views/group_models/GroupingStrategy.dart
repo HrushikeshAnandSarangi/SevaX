@@ -13,7 +13,7 @@ abstract class RequestModelList {
 }
 
 class GroupTitle extends RequestModelList {
-  final String groupTitle;
+  final String? groupTitle;
 
   GroupTitle.create({this.groupTitle});
 
@@ -24,7 +24,7 @@ class GroupTitle extends RequestModelList {
 }
 
 class RequestItem extends RequestModelList {
-  RequestModel requestModel;
+  RequestModel? requestModel;
 
   RequestItem.create({this.requestModel});
 
@@ -52,27 +52,27 @@ class GroupRequestCommons {
   }
 
   static HashMap<String, List<RequestModel>> getListHashed(
-      {List<RequestModel> requestModelList, String sevaUserId}) {
+      {List<RequestModel>? requestModelList, String? sevaUserId}) {
     HashMap<String, List<RequestModel>> hashMap = HashMap();
 
-    for (var req in requestModelList) {
+    for (var req in requestModelList!) {
       if (req.sevaUserId == sevaUserId) {
         if (hashMap["MyPost"] == null) {
           //create list
           hashMap["MyPost"] = [];
-          hashMap["MyPost"].add(req);
+          hashMap["MyPost"]!.add(req);
         } else {
           //add to existing
-          hashMap["MyPost"].add(req);
+          hashMap["MyPost"]!.add(req);
         }
       } else {
         if (hashMap["Others"] == null) {
           //create list
           hashMap["Others"] = [];
-          hashMap["Others"].add(req);
+          hashMap["Others"]!.add(req);
         } else {
           //add to existing
-          hashMap["Others"].add(req);
+          hashMap["Others"]!.add(req);
         }
       }
     }
@@ -81,9 +81,9 @@ class GroupRequestCommons {
   }
 
   static String getGroupTitle(
-      {String groupKey,
-      @required BuildContext context,
-      @required bool isGroup}) {
+      {String? groupKey,
+      required BuildContext context,
+      required bool isGroup}) {
     switch (groupKey) {
       case "MyPost":
         return S.of(context).my_requests;
@@ -111,7 +111,7 @@ abstract class OfferModelList {
 }
 
 class OfferTitle extends OfferModelList {
-  final String groupTitle;
+  final String? groupTitle;
 
   OfferTitle.create({this.groupTitle});
 
@@ -122,7 +122,7 @@ class OfferTitle extends OfferModelList {
 }
 
 class OfferItem extends OfferModelList {
-  OfferModel offerModel;
+  OfferModel? offerModel;
 
   OfferItem.create({this.offerModel});
 
@@ -152,29 +152,29 @@ class GroupOfferCommons {
   }
 
   static SplayTreeMap<String, List<OfferModel>> getListHashed(
-      {List<OfferModel> offerModelList, String sevaUserId}) {
+      {List<OfferModel>? offerModelList, String? sevaUserId}) {
     SplayTreeMap<String, List<OfferModel>> hashMap = SplayTreeMap();
 
     // offerModelList.sort();
 
-    for (var offer in offerModelList) {
+    for (var offer in offerModelList!) {
       if (offer.sevaUserId == sevaUserId) {
         if (hashMap["MyOffers"] == null) {
           //create list
           hashMap["MyOffers"] = [];
-          hashMap["MyOffers"].add(offer);
+          hashMap["MyOffers"]!.add(offer);
         } else {
           //add to existing
-          hashMap["MyOffers"].add(offer);
+          hashMap["MyOffers"]!.add(offer);
         }
       } else {
         if (hashMap["Others"] == null) {
           //create list
           hashMap["Others"] = [];
-          hashMap["Others"].add(offer);
+          hashMap["Others"]!.add(offer);
         } else {
           //add to existing
-          hashMap["Others"].add(offer);
+          hashMap["Others"]!.add(offer);
         }
       }
     }
@@ -185,9 +185,9 @@ class GroupOfferCommons {
   }
 
   static String getGroupTitleForOffer({
-    String groupKey,
+    String? groupKey,
     bool isGroup = false,
-    BuildContext context,
+    BuildContext? context,
   }) {
     switch (groupKey) {
       case "MyOffers":
@@ -196,10 +196,10 @@ class GroupOfferCommons {
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
         return isGroup
-            ? S.of(context).group + ' ' + S.of(context).offers
-            : S.of(context).timebank_offers;
+            ? S.of(context!).group + ' ' + S.of(context).offers
+            : S.of(context!).timebank_offers;
       default:
-        return S.of(context).other_text;
+        return S.of(context!).other_text;
     }
   }
 }

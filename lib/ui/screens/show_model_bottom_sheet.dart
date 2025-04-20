@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 enum CustomeBottomShetCalendar {
   GOOGLE,
@@ -10,28 +9,25 @@ enum CustomeBottomShetCalendar {
 }
 
 class CustomeShowModalBottomSheet {
-  @required
   final ComingFrom comingFrom;
-  @required
   final BannerDetails bannerDetails;
-  final EdgeInsetsGeometry titlePadding;
-  final EdgeInsetsGeometry transactionsMatrixCheckPadding;
+  final EdgeInsetsGeometry? titlePadding;
+  final EdgeInsetsGeometry? transactionsMatrixCheckPadding;
 
   CustomeShowModalBottomSheet({
-    this.comingFrom,
-    this.bannerDetails,
+    required this.comingFrom,
+    required this.bannerDetails,
     this.titlePadding,
     this.transactionsMatrixCheckPadding,
   });
 
   Future<void> customeShowModalBottomSheet({
-    @required BuildContext context,
-    @required String title,
-    @required String skipButtonTitle,
-    @required Function onSkippedPressed,
-    @required
-        final Function(CustomeBottomShetCalendar caendarType)
-            onTapTransactionsMatrixCheck,
+    required BuildContext context,
+    required String title,
+    required String skipButtonTitle,
+    required VoidCallback onSkippedPressed,
+    required Function(CustomeBottomShetCalendar calendarType)
+        onTapTransactionsMatrixCheck,
   }) {
     List<CustomeBottomShetCalendar> customeCalendar = [
       CustomeBottomShetCalendar.GOOGLE,
@@ -43,17 +39,16 @@ class CustomeShowModalBottomSheet {
       "lib/assets/images/outlookcal.png",
       "lib/assets/images/ical.png",
     ];
-    // assert(customeShowModalBottomSheetModel.length != 3);
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
         return Container(
-          child: new Wrap(
+          child: Wrap(
             children: <Widget>[
               Padding(
                 padding: titlePadding ?? EdgeInsets.fromLTRB(8, 8, 0, 8),
                 child: Text(
-                  title ?? '',
+                  title,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -61,8 +56,7 @@ class CustomeShowModalBottomSheet {
                 padding: transactionsMatrixCheckPadding ??
                     EdgeInsets.fromLTRB(6, 6, 6, 6),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(
                     3,
                     (index) => TransactionsMatrixCheck(
@@ -85,7 +79,7 @@ class CustomeShowModalBottomSheet {
               Row(
                 children: <Widget>[
                   Spacer(),
-                  CustomTextButton(
+                  TextButton(
                     child: Text(
                       skipButtonTitle,
                       style: TextStyle(color: Colors.purple),

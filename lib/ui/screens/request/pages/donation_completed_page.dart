@@ -15,7 +15,8 @@ class DonationCompletedPage extends StatelessWidget {
   final RequestModel requestModel;
   final OfferModel offermodel;
 
-  const DonationCompletedPage({Key key, this.requestModel, this.offermodel}) : super(key: key);
+  const DonationCompletedPage({Key key, this.requestModel, this.offermodel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,8 @@ class DonationCompletedPage extends StatelessWidget {
             : offermodel != null
                 ? offermodel.type
                 : '';
-        if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.data == null ||
+            snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
         if (snapshot.hasError) {
@@ -68,7 +70,8 @@ class DonationCompletedPage extends StatelessWidget {
                 currency: currency,
                 type: requestModel != null ? 'request' : 'offer',
                 isCashDonation: type == RequestType.CASH,
-                quantity: totalQuantity.toStringAsFixed(2), //update to support goods quantity
+                quantity: totalQuantity
+                    .toStringAsFixed(2), //update to support goods quantity
               ),
               // AmountRaisedProgressIndicator(
               //   totalQuantity: totalQuantity,
@@ -82,7 +85,8 @@ class DonationCompletedPage extends StatelessWidget {
                 itemCount: donations.length,
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
-                  log('goods --->' + model.goodsDetails.donatedGoods.toString());
+                  log('goods --->' +
+                      model.goodsDetails.donatedGoods.toString());
                   return DonationParticipantCard(
                     amount: model.cashDetails.pledgedAmount.toString(),
                     currency: model.requestIdType == 'offer'
@@ -142,7 +146,9 @@ class _DonationProgressWidget extends StatelessWidget {
         Row(
           children: [
             Image.asset(
-              isCashDonation ? SevaAssetIcon.donateCash : SevaAssetIcon.donateGood,
+              isCashDonation
+                  ? SevaAssetIcon.donateCash
+                  : SevaAssetIcon.donateGood,
               width: 35,
               height: 35,
             ),

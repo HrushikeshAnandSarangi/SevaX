@@ -8,7 +8,7 @@ import 'favorite_users_view.dart';
 import 'invited_users_view.dart';
 
 class RequestUsersTabsViewHolder extends StatefulWidget {
-  final RequestModel requestItem;
+  final RequestModel? requestItem;
 
   RequestUsersTabsViewHolder.of({
     this.requestItem,
@@ -30,20 +30,19 @@ class _RequestUsersTabsViewHolderState
   Widget build(BuildContext context) {
     return TabarView(
       // loggedInUser: loggedInUser,
-      requestItem: widget.requestItem,
+      requestItem: widget.requestItem!,
     );
   }
 }
 
 class TabarView extends StatelessWidget {
-  final Function set;
-  String sevaUserId;
+  late String sevaUserId;
   final RequestModel requestItem;
-  TabarView({this.requestItem, this.set});
+  TabarView({required this.requestItem});
 
   @override
   Widget build(BuildContext context) {
-    sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+    sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID!;
     return Scaffold(
       body: DefaultTabController(
         length: 4,
@@ -88,17 +87,17 @@ class TabarView extends StatelessWidget {
                 sevaUserId: sevaUserId,
               ),
               InvitedUsersView(
-                timebankId: requestItem.timebankId,
+                timebankId: requestItem.timebankId!,
                 requestModel: requestItem,
                 sevaUserId: sevaUserId,
               ),
               FavoriteUsers(
-                timebankId: requestItem.timebankId,
+                timebankId: requestItem.timebankId!,
                 requestModelId: requestItem.id,
                 sevaUserId: sevaUserId,
               ),
               PastHiredUsersView(
-                timebankId: requestItem.timebankId,
+                timebankId: requestItem.timebankId!,
                 requestModel: requestItem,
                 sevaUserId: sevaUserId,
               ),

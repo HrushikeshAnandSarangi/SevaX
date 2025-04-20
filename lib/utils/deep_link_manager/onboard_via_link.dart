@@ -13,53 +13,64 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 //BuildContext buildContext;
 Future<void> fetchLinkData() async {
   // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
-  var link = await FirebaseDynamicLinks.instance
+  // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+  final PendingDynamicLinkData? link = await FirebaseDynamicLinks.instance
       .getInitialLink()
-      .then((link) {
-        return link;
-      })
-      .whenComplete(() {})
-      .onError((error, stackTrace) {});
+      .catchError((error, stackTrace) {
+    return null;
+  });
 
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-  await handleLinkData(data: link);
-  FirebaseDynamicLinks.instance.onLink(
-      onError: (_) async {},
-      onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        return handleLinkData(
-          data: dynamicLink,
-        );
-      });
+  if (link != null) {
+    await handleLinkData(data: link);
+  }
 
+  // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+  FirebaseDynamicLinks.instance.onLink.listen(
+      (PendingDynamicLinkData dynamicLink) async {
+    await handleLinkData(data: dynamicLink);
+  }, onError: (error) {});
   // This will handle incoming links if the application is already opened
 }
 
 Future<void> fetchBulkInviteLinkData(BuildContext context) async {
   // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
-  var link = await FirebaseDynamicLinks.instance.getInitialLink();
+  // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+  final PendingDynamicLinkData? link =
+      await FirebaseDynamicLinks.instance.getInitialLink();
   //buildContext = context;
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-  await handleLinkData(data: link);
-  FirebaseDynamicLinks.instance.onLink(
-      onError: (_) async {},
-      onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        return handleBulkInviteLinkData(data: dynamicLink, context: context);
-      });
-
+  if (link != null) {
+    await handleLinkData(data: link);
+  }
+  // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+  FirebaseDynamicLinks.instance.onLink.listen(
+      (PendingDynamicLinkData dynamicLink) async {
+    await handleBulkInviteLinkData(data: dynamicLink, context: context);
+  }, onError: (error) {});
   // This will handle incoming links if the application is already opened
 }
 
-Future<bool> handleLinkData(
-    {PendingDynamicLinkData data, BuildContext context}) async {
-  final Uri uri = data?.link;
+Future<bool> handleLinkData({
+  required PendingDynamicLinkData data,
+  BuildContext? context,
+}) async {
+  final Uri? uri = data.link;
   if (uri != null) {
     final queryParams = uri.queryParameters;
-    if (queryParams.length > 0) {
-      String invitedMemberEmail = queryParams["invitedMemberEmail"];
-      String communityId = queryParams["communityId"];
-      String primaryTimebankId = queryParams["primaryTimebankId"];
+    if (queryParams.isNotEmpty) {
+      final String? invitedMemberEmail = queryParams["invitedMemberEmail"];
+      final String? communityId = queryParams["communityId"];
+      final String? primaryTimebankId = queryParams["primaryTimebankId"];
 
-      var firebaseUserCred = await FirebaseAuth.instance.currentUser;
+      final firebaseUserCred = FirebaseAuth.instance.currentUser;
+
+      if (firebaseUserCred == null ||
+          invitedMemberEmail == null ||
+          communityId == null ||
+          primaryTimebankId == null) {
+        return false;
+      }
 
       UserModel localUser = await _getSignedInUserDocs(
         userId: firebaseUserCred.uid,
@@ -77,29 +88,30 @@ Future<bool> handleLinkData(
         return false;
       });
     }
-  } else {}
+  }
   return false;
 }
 
-Future<bool> handleBulkInviteLinkData(
-    {PendingDynamicLinkData data, BuildContext context}) async {
-  final Uri uri = data?.link;
+Future<bool> handleBulkInviteLinkData({
+  required PendingDynamicLinkData data,
+  required BuildContext context,
+}) async {
+  final Uri? uri = data.link;
   if (uri != null) {
     final queryParams = uri.queryParameters;
-    if (queryParams.length > 0) {
-      String invitedMemberEmail = queryParams["invitedMemberEmail"];
-      String communityId = queryParams["communityId"];
-      String primaryTimebankId = queryParams["primaryTimebankId"];
+    if (queryParams.isNotEmpty) {
+      final String? invitedMemberEmail = queryParams["invitedMemberEmail"];
       if (queryParams.containsKey("isFromBulkInvite") &&
-          queryParams["isFromBulkInvite"] == 'true') {
-        resetPassword(invitedMemberEmail, context);
+          queryParams["isFromBulkInvite"] == 'true' &&
+          invitedMemberEmail != null) {
+        await resetPassword(invitedMemberEmail, context);
       }
     }
   }
   return false;
 }
 
-Future<UserModel> _getSignedInUserDocs({String userId}) async {
+Future<UserModel> _getSignedInUserDocs({required String userId}) async {
   UserModel userModel = await fireStoreManager.getUserForId(
     sevaUserId: userId,
   );
@@ -107,11 +119,11 @@ Future<UserModel> _getSignedInUserDocs({String userId}) async {
 }
 
 Future<bool> registerloggedInUserToCommunity({
-  UserModel loggedInUser,
-  String communityId,
-  String invitedMemberEmail,
-  String primaryTimebankId,
-  User adminCredentials,
+  required UserModel loggedInUser,
+  required String communityId,
+  required String invitedMemberEmail,
+  required String primaryTimebankId,
+  required User adminCredentials,
 }) async {
   log("=====Inside fetchLinkData registerloggedInUserToCommunity");
   if (loggedInUser.email != invitedMemberEmail) {
@@ -120,29 +132,29 @@ Future<bool> registerloggedInUserToCommunity({
   }
 
   if (loggedInUser.communities != null &&
-      loggedInUser.communities.contains(communityId)) {
+      (loggedInUser.communities?.contains(communityId) ?? false)) {
     log("loggedInUser.communities != null && loggedInUser.communities.contains(communityId)");
     return false;
   } else {
     log("Inside fetchLinkData cid -> " +
         communityId +
         " " +
-        loggedInUser.sevaUserID +
+        (loggedInUser.sevaUserID ?? '') +
         " " +
-        loggedInUser.email +
+        (loggedInUser.email ?? '') +
         " " +
-        loggedInUser.fullname +
+        (loggedInUser.fullname ?? '') +
         " " +
-        loggedInUser.photoURL +
+        (loggedInUser.photoURL ?? '') +
         " " +
         primaryTimebankId);
 
     return await initRegisterationMemberToCommunity(
       communityId: communityId,
-      memberJoiningSevaUserId: loggedInUser.sevaUserID,
-      newMemberJoinedEmail: loggedInUser.email,
-      newMemberFullName: loggedInUser.fullname,
-      newMemberPhotoUrl: loggedInUser.photoURL,
+      memberJoiningSevaUserId: loggedInUser.sevaUserID ?? '',
+      newMemberJoinedEmail: loggedInUser.email ?? '',
+      newMemberFullName: loggedInUser.fullname ?? '',
+      newMemberPhotoUrl: loggedInUser.photoURL ?? '',
       primaryTimebankId: primaryTimebankId,
       adminCredentials: adminCredentials,
     ).then((onValue) => true).catchError((onError) => false);
@@ -150,13 +162,13 @@ Future<bool> registerloggedInUserToCommunity({
 }
 
 Future<bool> initRegisterationMemberToCommunity({
-  @required String communityId,
-  @required String primaryTimebankId,
-  @required String memberJoiningSevaUserId,
-  @required String newMemberJoinedEmail,
-  @required User adminCredentials,
-  @required String newMemberFullName,
-  @required String newMemberPhotoUrl,
+  required String communityId,
+  required String primaryTimebankId,
+  required String memberJoiningSevaUserId,
+  required String newMemberJoinedEmail,
+  required User adminCredentials,
+  required String newMemberFullName,
+  required String newMemberPhotoUrl,
 }) async {
   return await InvitationManager.registerMemberToCommunity(
     communityId: communityId,

@@ -4,13 +4,13 @@ import 'package:sevaexchange/ui/utils/date_formatter.dart';
 // import 'package:business/main.dart';
 
 class DateTimeSelector extends StatelessWidget {
-  final DateTime dateTime;
-  final String title;
-  final bool isSelected;
-  final VoidCallback onPressed;
+  final DateTime? dateTime;
+  final String? title;
+  final bool? isSelected;
+  final VoidCallback? onPressed;
 
   DateTimeSelector({
-    @required this.title,
+    required this.title,
     this.dateTime,
     this.onPressed,
     this.isSelected,
@@ -21,7 +21,7 @@ class DateTimeSelector extends StatelessWidget {
     return _buildContainer('$title', dateTime, context);
   }
 
-  Widget _buildContainer(String _title, DateTime _date, BuildContext context) {
+  Widget _buildContainer(String _title, DateTime? _date, BuildContext context) {
     return Material(
       child: InkWell(
         onTap: onPressed,
@@ -39,7 +39,9 @@ class DateTimeSelector extends StatelessWidget {
                     Text(
                       _title,
                       style: TextStyle(
-                          fontSize: 12.0, fontWeight: FontWeight.w600, fontFamily: 'Europa'
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Europa'
                           //color: title == 'End' ? Colors.red : Colors.green,
                           ),
                     ),
@@ -55,7 +57,9 @@ class DateTimeSelector extends StatelessWidget {
               ),
               Container(
                 height: 2.0,
-                color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+                color: (isSelected ?? false)
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
               )
             ],
           ),
@@ -64,7 +68,7 @@ class DateTimeSelector extends StatelessWidget {
     );
   }
 
-  Widget _buildTime(DateTime _date) {
+  Widget _buildTime(DateTime? _date) {
     if (_date == null) {
       return Text(
         'date & time',

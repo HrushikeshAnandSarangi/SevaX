@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -22,7 +22,7 @@ class CreateGroupPage extends StatelessWidget {
   final CreateChatBloc bloc;
   final TextEditingController _controller = TextEditingController();
 
-  CreateGroupPage({Key key, this.bloc}) : super(key: key);
+  CreateGroupPage({Key? key, required this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Map validationString = {
@@ -62,12 +62,10 @@ class CreateGroupPage extends StatelessWidget {
                   .createMultiUserMessaging(
                       SevaCore.of(context).loggedInUser, context)
                   .then((
-                ChatModel model,
+                ChatModel? model,
               ) {
                 Navigator.of(context, rootNavigator: true).pop();
-                if (model != null) {
-                  Navigator.of(context).pop(model);
-                }
+                Navigator.of(context).pop(model);
               });
             },
           ),
@@ -102,27 +100,25 @@ class CreateGroupPage extends StatelessWidget {
                                   border: Border.all(),
                                 ),
                                 child: ClipOval(
-                                  child: snapshot.data.selectedImage == null
-                                      ? Image.network(
-                                          snapshot.data.stockImageUrl ??
-                                              defaultGroupImageURL)
-                                      : Image.file(
-                                          snapshot.data.selectedImage,
+                                  child: snapshot.data?.selectedImage != null
+                                      ? Image.file(
+                                          snapshot.data!.selectedImage,
                                           fit: BoxFit.cover,
+                                        )
+                                      : Image.network(
+                                          snapshot.data?.stockImageUrl ??
+                                              defaultGroupImageURL,
                                         ),
                                 ),
                               ),
                         onStockImageChanged: (String stockImageUrl) {
-                          if (stockImageUrl != null) {
-                            bloc.onImageChanged(MessageRoomImageModel(
-                                stockImageUrl: stockImageUrl));
-                          }
+                          bloc.onImageChanged(MessageRoomImageModel(
+                              selectedImage: File(''),
+                              stockImageUrl: stockImageUrl));
                         },
                         onChanged: (file) {
-                          if (file != null) {
-                            profanityCheck(
-                                bloc: bloc, file: file, context: context);
-                          }
+                          profanityCheck(
+                              bloc: bloc, file: file, context: context);
                         },
                       );
                     },
@@ -142,7 +138,7 @@ class CreateGroupPage extends StatelessWidget {
                           // );
 
                           return CustomTextField(
-                            value: snapshot.data != null ? snapshot.data : null,
+                            value: snapshot.data ?? '',
                             controller: _controller,
                             onChanged: bloc.onGroupNameChanged,
                             decoration: InputDecoration(
@@ -211,13 +207,13 @@ class CreateGroupPage extends StatelessWidget {
   }
 
   Future<void> profanityCheck({
-    File file,
-    CreateChatBloc bloc,
-    BuildContext context,
+    required File file,
+    required CreateChatBloc bloc,
+    required BuildContext context,
   }) async {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
     progressDialog.show();
@@ -225,35 +221,40 @@ class CreateGroupPage extends StatelessWidget {
     if (file == null) {
       progressDialog.hide();
     }
-    String imageUrl = file != null
+    String? imageUrl = file != null
         ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
         : null;
-    var profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+    var profanityImageModel = imageUrl != null
+        ? await checkProfanityForImage(imageUrl: imageUrl)
+        : null;
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {});
     } else {
       var profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
-        progressDialog.hide();
+      if (profanityStatusModel != null) {
+        if (profanityStatusModel.isProfane == true) {
+          progressDialog.hide();
 
-        showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
-            .then((status) {
-          if (status == 'Proceed') {
-            deleteFireBaseImage(imageUrl: imageUrl).then((value) {
-              if (value) {}
-            }).catchError((e) => log(e));
-            ;
-          }
-        });
-      } else {
-        deleteFireBaseImage(imageUrl: imageUrl).then((value) {
-          if (value) {}
-        }).catchError((e) => log(e));
-        bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
-        progressDialog.hide();
+          showProfanityImageAlert(
+                  context: context,
+                  content: profanityStatusModel.category ?? '')
+              .then((status) {
+            if (status == 'Proceed') {
+              deleteFireBaseImage(imageUrl: imageUrl!).then((value) {
+                if (value) {}
+              }).catchError((e) => log(e));
+            }
+          });
+        } else {
+          deleteFireBaseImage(imageUrl: imageUrl!).then((value) {
+            if (value) {}
+          }).catchError((e) => log(e));
+          bloc.onImageChanged(
+              MessageRoomImageModel(selectedImage: file, stockImageUrl: ''));
+          progressDialog.hide();
+        }
       }
     }
   }

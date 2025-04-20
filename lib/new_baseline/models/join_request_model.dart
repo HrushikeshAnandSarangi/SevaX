@@ -2,14 +2,14 @@ import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class JoinRequestModel extends DataModel {
-  String userId;
-  bool accepted;
-  String reason;
-  int timestamp;
-  String entityId;
-  EntityType entityType;
+  String? userId;
+  bool? accepted;
+  String? reason;
+  int? timestamp;
+  String? entityId;
+  EntityType? entityType;
   bool operationTaken;
-  String id;
+  late String id;
   String timebankTitle;
   bool isFromGroup;
   String notificationId;
@@ -21,10 +21,10 @@ class JoinRequestModel extends DataModel {
     this.timestamp,
     this.entityId,
     this.entityType,
-    this.operationTaken,
-    this.timebankTitle,
-    this.isFromGroup,
-    this.notificationId,
+    this.operationTaken = false,
+    this.timebankTitle = "your timebank",
+    this.isFromGroup = false,
+    this.notificationId = "NO_SET",
   }) {
     id = utils.Utils.getUuid();
   }

@@ -156,7 +156,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                               var validate = _bloc.validateName(val);
                               return validate == null
                                   ? null
-                                  : getAddItemValidationError(context, validate);
+                                  : getAddItemValidationError(
+                                      context, validate);
                             },
                             heading: "${S.of(context).name_of_item}*",
                             onChanged: (String value) {
@@ -189,7 +190,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                               var validate = _bloc.validateEstimatedVal(val);
                               return validate == null
                                   ? null
-                                  : getAddItemValidationError(context, validate);
+                                  : getAddItemValidationError(
+                                      context, validate);
                             },
                             value: snapshot.data.toString(),
                             heading: "${S.of(context).estimated_value}",
@@ -323,35 +325,36 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
                                 var connResult =
-                                  await Connectivity().checkConnectivity();
+                                    await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(S.of(context).check_internet),
+                                      content:
+                                          Text(S.of(context).check_internet),
                                       action: SnackBarAction(
                                         label: S.of(context).dismiss,
                                         onPressed: () =>
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar(),
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
                                   return;
                                 }
 
-                              if (imagesList == null ||
-                                  imagesList.length == 0) {
-                                showAlertMessage(
-                                    context: context,
-                                    message: 'Add images to item');
+                                if (imagesList == null ||
+                                    imagesList.length == 0) {
+                                  showAlertMessage(
+                                      context: context,
+                                      message: 'Add images to item');
                                 } else {
                                   if (widget.lendingModel == null) {
                                     _bloc.createLendingOfferPlace(
-                                      creator:
-                                          SevaCore.of(context).loggedInUser);
+                                        creator:
+                                            SevaCore.of(context).loggedInUser);
                                   } else {
-                                  _bloc.updateLendingOfferPlace(
-                                      model: widget.lendingModel);
+                                    _bloc.updateLendingOfferPlace(
+                                        model: widget.lendingModel);
                                   }
                                 }
                               }

@@ -10,11 +10,11 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 enum CapturePaymentFrom { CREATE_REQUEST, EDIT_REQUEST, DONATION }
 
 class CapturePaymentDetailWidget extends StatefulWidget {
-  final CapturePaymentFrom capturePaymentFrom;
-  final PaymentDetailModel paymentDetailModel;
-  final Function(PaymentMode paymentMode) onDropDownChanged;
-  final Function(PaymentEventType paymentDetailModel) onPaymentEventChanged;
-  final Function onTap;
+  final CapturePaymentFrom? capturePaymentFrom;
+  final PaymentDetailModel? paymentDetailModel;
+  final Function(PaymentMode paymentMode)? onDropDownChanged;
+  final Function(PaymentEventType paymentDetailModel)? onPaymentEventChanged;
+  final Function? onTap;
   final RequestUtils requestUtils = RequestUtils();
 
   CapturePaymentDetailWidget(
@@ -25,21 +25,25 @@ class CapturePaymentDetailWidget extends StatefulWidget {
       this.onTap});
 
   @override
-  _CapturePaymentDetailWidgetState createState() => _CapturePaymentDetailWidgetState();
+  _CapturePaymentDetailWidgetState createState() =>
+      _CapturePaymentDetailWidgetState();
 }
 
-class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget> {
-  PaymentDetailModel paymentDetailModel;
+class _CapturePaymentDetailWidgetState
+    extends State<CapturePaymentDetailWidget> {
+  PaymentDetailModel? paymentDetailModel;
   final profanityDetector = ProfanityDetector();
-  PaymentMode selectedMode;
-  ACHPayment achPayment;
-  ZellePayment zellePayment;
-  PayPalPayment payPalPayment;
-  VenmoPayment venmoPayment;
-  SwiftPayment swiftPayment;
-  OtherPayment otherPayment;
+  PaymentMode? selectedMode;
+  ACHPayment? achPayment;
+  ZellePayment? zellePayment;
+  PayPalPayment? payPalPayment;
+  VenmoPayment? venmoPayment;
+  SwiftPayment? swiftPayment;
+  OtherPayment? otherPayment;
   bool isEdit = false;
-  final List<TextInputFormatter> _formatters = [FilteringTextInputFormatter.allow(RegExp(r'\S'))];
+  final List<TextInputFormatter> _formatters = [
+    FilteringTextInputFormatter.allow(RegExp(r'\S'))
+  ];
   TextEditingController zelleController = TextEditingController(),
       venmoController = TextEditingController(),
       paypalController = TextEditingController(),
@@ -56,14 +60,14 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   void initState() {
     super.initState();
     paymentDetailModel = widget.paymentDetailModel;
-    selectedMode = paymentDetailModel.paymentMode;
+    selectedMode = paymentDetailModel!.paymentMode;
     _initialize();
     zelleController.text = zellePayment?.zelleId ?? '';
     venmoController.text = venmoPayment?.venmoId ?? '';
     paypalController.text = payPalPayment?.paypalId ?? '';
     swiftController.text = swiftPayment?.swiftId ?? '';
     bankNameController.text = achPayment?.bank_name ?? '';
-    bankAddressController.text = achPayment?.bank_address;
+    bankAddressController.text = achPayment!.bank_address!;
     routingController.text = achPayment?.routing_number ?? '';
     accountController.text = achPayment?.account_number ?? '';
     othersController.text = otherPayment?.others ?? '';
@@ -73,27 +77,46 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   _initialize() {
     switch (selectedMode) {
       case PaymentMode.ZELLEPAY:
-        zellePayment =
-            isEdit ? ZellePayment() : paymentDetailModel?.paymentEventType ?? ZellePayment();
+        zellePayment = isEdit
+            ? ZellePayment(zelleId: '')
+            : (paymentDetailModel!.paymentEventType is ZellePayment
+                ? paymentDetailModel!.paymentEventType as ZellePayment
+                : ZellePayment(zelleId: ''));
         break;
       case PaymentMode.ACH:
-        achPayment = isEdit ? ACHPayment() : paymentDetailModel?.paymentEventType ?? ACHPayment();
+        achPayment = isEdit
+            ? ACHPayment()
+            : (paymentDetailModel?.paymentEventType is ACHPayment
+                ? paymentDetailModel?.paymentEventType as ACHPayment
+                : ACHPayment());
         break;
       case PaymentMode.PAYPAL:
-        payPalPayment =
-            isEdit ? PayPalPayment() : paymentDetailModel?.paymentEventType ?? PayPalPayment();
+        payPalPayment = isEdit
+            ? PayPalPayment()
+            : (paymentDetailModel?.paymentEventType is PayPalPayment
+                ? paymentDetailModel?.paymentEventType as PayPalPayment
+                : PayPalPayment());
         break;
       case PaymentMode.VENMO:
-        venmoPayment =
-            isEdit ? VenmoPayment() : paymentDetailModel?.paymentEventType ?? VenmoPayment();
+        venmoPayment = isEdit
+            ? VenmoPayment()
+            : (paymentDetailModel?.paymentEventType is VenmoPayment
+                ? paymentDetailModel?.paymentEventType as VenmoPayment
+                : VenmoPayment());
         break;
       case PaymentMode.SWIFT:
-        swiftPayment =
-            isEdit ? SwiftPayment() : paymentDetailModel?.paymentEventType ?? SwiftPayment();
+        swiftPayment = isEdit
+            ? SwiftPayment()
+            : (paymentDetailModel?.paymentEventType is SwiftPayment
+                ? paymentDetailModel?.paymentEventType as SwiftPayment
+                : SwiftPayment());
         break;
       case PaymentMode.OTHER:
-        otherPayment =
-            isEdit ? OtherPayment() : paymentDetailModel?.paymentEventType ?? OtherPayment();
+        otherPayment = isEdit
+            ? OtherPayment()
+            : (paymentDetailModel?.paymentEventType is OtherPayment
+                ? paymentDetailModel?.paymentEventType as OtherPayment
+                : OtherPayment());
         break;
     }
   }
@@ -130,18 +153,22 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
                 isExpanded: true,
-                onTap: widget.onTap,
-                style:
-                    TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                onTap: widget.onTap as VoidCallback?,
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500),
                 isDense: true,
                 icon: Icon(Icons.keyboard_arrow_down),
                 iconEnabledColor: Theme.of(context).primaryColor,
                 value: selectedMode,
                 onChanged: (val) {
                   setState(() {
-                    selectedMode = val;
-                    widget.onDropDownChanged(selectedMode);
-                    if (selectedMode == widget.paymentDetailModel.paymentMode) {
+                    selectedMode = val! as PaymentMode;
+                    if (widget.onDropDownChanged != null) {
+                      widget.onDropDownChanged!(selectedMode!);
+                    }
+                    if (selectedMode ==
+                        widget.paymentDetailModel!.paymentMode) {
                       isEdit = false;
                     } else {
                       isEdit = true;
@@ -192,437 +219,492 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
     );
   }
 
-  void updateExitWithConfirmationValue(BuildContext context, int index, String value) {
+  void updateExitWithConfirmationValue(
+      BuildContext context, int index, String value) {
     if (ExitWithConfirmation.of(context) != null)
       ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
   Widget RequestPaymentACH() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      SizedBox(height: 20),
-      Text(
-        S.of(context).request_payment_ach_bank_name,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      DoseTextField(
-        // key: UniqueKey(),
-        isRequired: selectedMode == PaymentMode.ACH,
-        controller: bankNameController,
-        focusNode: focusNodeList[0],
-        formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 1, value);
-        },
-        // initialValue: ,
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        validator: selectedMode == PaymentMode.ACH ?(value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else if (!value.isEmpty) {
-            achPayment.bank_name = value;
-            widget.onPaymentEventChanged(achPayment);
-          } else {
-            return S.of(context).enter_valid_bank_name;
-          }
-          return null;
-        }: null,
-      ),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).request_payment_ach_bank_address,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.ACH,
-        controller: bankAddressController,
-        // key: UniqueKey(),
-        focusNode: focusNodeList[1],
-        formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 2, value);
-        },
-        // initialValue: achPayment?.bank_address,
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        validator: selectedMode == PaymentMode.ACH ?(value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else if (!value.isEmpty) {
-            achPayment.bank_address = value;
-            widget.onPaymentEventChanged(achPayment);
-          } else {
-            return S.of(context).enter_valid_bank_address;
-          }
-          return null;
-        }: null,
-      ),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).request_payment_ach_routing_number,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.ACH,
-        controller: routingController,
-        // key: UniqueKey(),
-        focusNode: focusNodeList[2],
-        maxLength: 30,
-        formatters:  [FilteringTextInputFormatter.digitsOnly],
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 3, value);
-        },
-        // initialValue: achPayment?.routing_number ?? '',
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.number,
-        maxLines: 1,
-        validator:selectedMode == PaymentMode.ACH ? (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else if (!value.isEmpty) {
-            achPayment.routing_number = value;
-            widget.onPaymentEventChanged(achPayment);
-          } else {
-            return S.of(context).enter_valid_routing_number;
-          }
-          return null;
-        }: null,
-      ),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).request_payment_ach_account_no,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.ACH,
-        controller: accountController,
-        focusNode: focusNodeList[3],
-        // key: UniqueKey(),
-        maxLength: 30,
-        formatters:  [FilteringTextInputFormatter.digitsOnly],
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 4, value);
-        },
-        textInputAction: TextInputAction.next,
-        // initialValue: achPayment?.account_number ?? '',
-        keyboardType: TextInputType.number,
-        maxLines: 1,
-        validator: selectedMode == PaymentMode.ACH ? (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else if (!value.isEmpty) {
-            achPayment.account_number = value;
-            widget.onPaymentEventChanged(achPayment);
-          } else {
-            return S.of(context).enter_valid_account_number;
-          }
-          return null;
-        }: null,
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_bank_name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          DoseTextField(
+            // key: UniqueKey(),
+            isRequired: selectedMode == PaymentMode.ACH,
+            controller: bankNameController,
+            focusNode: focusNodeList[0],
+            formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 1, value);
+            },
+            // initialValue: ,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: selectedMode == PaymentMode.ACH
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).validation_error_general_text;
+                    } else if (!value.isEmpty) {
+                      achPayment!.bank_name = value;
+                      if (widget.onPaymentEventChanged != null) {
+                        widget.onPaymentEventChanged!(achPayment!);
+                      }
+                    } else {
+                      return S.of(context).enter_valid_bank_name;
+                    }
+                    return null;
+                  }
+                : null,
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_bank_address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.ACH,
+            controller: bankAddressController,
+            // key: UniqueKey(),
+            focusNode: focusNodeList[1],
+            formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 2, value);
+            },
+            // initialValue: achPayment?.bank_address,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: selectedMode == PaymentMode.ACH
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).validation_error_general_text;
+                    } else if (!value.isEmpty) {
+                      achPayment!.bank_address = value;
+                      if (widget.onPaymentEventChanged != null) {
+                        widget.onPaymentEventChanged!(achPayment!);
+                      }
+                    } else {
+                      return S.of(context).enter_valid_bank_address;
+                    }
+                    return null;
+                  }
+                : null,
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_routing_number,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.ACH,
+            controller: routingController,
+            // key: UniqueKey(),
+            focusNode: focusNodeList[2],
+            maxLength: 30,
+            formatters: [FilteringTextInputFormatter.digitsOnly],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 3, value);
+            },
+            // initialValue: achPayment?.routing_number ?? '',
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            maxLines: 1,
+            validator: selectedMode == PaymentMode.ACH
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).validation_error_general_text;
+                    } else if (!value.isEmpty) {
+                      achPayment!.routing_number = value;
+                      if (widget.onPaymentEventChanged != null) {
+                        widget.onPaymentEventChanged!(achPayment!);
+                      }
+                    } else {
+                      return S.of(context).enter_valid_routing_number;
+                    }
+                    return null;
+                  }
+                : null,
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_account_no,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.ACH,
+            controller: accountController,
+            focusNode: focusNodeList[3],
+            // key: UniqueKey(),
+            maxLength: 30,
+            formatters: [FilteringTextInputFormatter.digitsOnly],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 4, value);
+            },
+            textInputAction: TextInputAction.next,
+            // initialValue: achPayment?.account_number ?? '',
+            keyboardType: TextInputType.number,
+            maxLines: 1,
+            validator: selectedMode == PaymentMode.ACH
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).validation_error_general_text;
+                    } else if (!value.isEmpty) {
+                      achPayment!.account_number = value;
+                      if (widget.onPaymentEventChanged != null) {
+                        widget.onPaymentEventChanged!(achPayment!);
+                      }
+                    } else {
+                      return S.of(context).enter_valid_account_number;
+                    }
+                    return null;
+                  }
+                : null,
+          )
+        ]);
   }
 
   Widget RequestPaymentZellePay() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.ZELLEPAY,
-        controller: zelleController,
-        focusNode: focusNodeList[4],
-        // key: UniqueKey(),
-        formatters: _formatters,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 5, value);
-        },
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).request_payment_descriptionZelle_inputhint,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            fontFamily: 'Europa',
-          ),
-        ),
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        onSaved: (value) {
-          zellePayment.zelleId = value;
-          widget.onPaymentEventChanged(zellePayment);
-        },
-        validator:selectedMode == PaymentMode.ZELLEPAY? (value) {
-          zellePayment.zelleId = value;
-          widget.onPaymentEventChanged(zellePayment);
-          return selectedMode == PaymentMode.ZELLEPAY ? widget.requestUtils.validateEmailAndPhone(value, context): null;
-        }: null,
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.ZELLEPAY,
+            controller: zelleController,
+            focusNode: focusNodeList[4],
+            // key: UniqueKey(),
+            formatters: _formatters,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 5, value);
+            },
+            textInputAction: TextInputAction.done,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText:
+                  S.of(context).request_payment_descriptionZelle_inputhint,
+              hintStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontFamily: 'Europa',
+              ),
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              zellePayment!.zelleId = value!;
+              if (widget.onPaymentEventChanged != null) {
+                if (widget.onPaymentEventChanged != null) {
+                  if (widget.onPaymentEventChanged != null) {
+                    widget.onPaymentEventChanged!(zellePayment!);
+                  }
+                }
+              }
+            },
+            validator: selectedMode == PaymentMode.ZELLEPAY
+                ? (value) {
+                    zellePayment!.zelleId = value!;
+                    widget.onPaymentEventChanged!(zellePayment!);
+                    return selectedMode == PaymentMode.ZELLEPAY
+                        ? widget.requestUtils
+                            .validateEmailAndPhone(value, context)
+                        : null;
+                  }
+                : null,
+          )
+        ]);
   }
 
   Widget RequestPaymentPaypal() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.PAYPAL,
-        controller: paypalController,
-        focusNode: focusNodeList[5],
-        // key: UniqueKey(),
-        formatters: _formatters,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 6, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: 'Ex: Paypal ID (phone or email)',
-          hintStyle: TextStyle(
-            fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            fontFamily: 'Europa',
-          ),
-        ),
-        keyboardType: TextInputType.emailAddress,
-        maxLines: 1,
-        onSaved: (value) {
-          payPalPayment.paypalId = value;
-          widget.onPaymentEventChanged(payPalPayment);
-        },
-        validator:selectedMode == PaymentMode.PAYPAL? (value) {
-          RegExp regExp = RegExp(widget.requestUtils.mobilePattern);
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else if (widget.requestUtils.emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
-            payPalPayment.paypalId = value;
-            widget.onPaymentEventChanged(payPalPayment);
-            return null;
-          } else {
-            return S.of(context).enter_valid_link;
-          }
-        }: null,
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.PAYPAL,
+            controller: paypalController,
+            focusNode: focusNodeList[5],
+            // key: UniqueKey(),
+            formatters: _formatters,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 6, value);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: 'Ex: Paypal ID (phone or email)',
+              hintStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontFamily: 'Europa',
+              ),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            onSaved: (value) {
+              payPalPayment!.paypalId = value!;
+              widget.onPaymentEventChanged!(payPalPayment!);
+            },
+            validator: selectedMode == PaymentMode.PAYPAL
+                ? (value) {
+                    RegExp regExp = RegExp(widget.requestUtils.mobilePattern);
+                    if (value!.isEmpty) {
+                      return S.of(context).validation_error_general_text;
+                    } else if (widget.requestUtils.emailPattern
+                            .hasMatch(value!) ||
+                        regExp.hasMatch(value)) {
+                      payPalPayment!.paypalId = value;
+                      widget.onPaymentEventChanged!(payPalPayment!);
+                      return null;
+                    } else {
+                      return S.of(context).enter_valid_link;
+                    }
+                  }
+                : null,
+          )
+        ]);
   }
 
   Widget RequestPaymentVenmo() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.VENMO,
-        controller: venmoController,
-        focusNode: focusNodeList[6],
-        // key: UniqueKey(),
-        formatters: _formatters,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 7, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).venmo_hint,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            fontFamily: 'Europa',
-          ),
-        ),
-        keyboardType: TextInputType.emailAddress,
-        maxLines: 1,
-        onSaved: (value) {
-          venmoPayment.venmoId = value;
-          widget.onPaymentEventChanged(venmoPayment);
-        },
-        validator:selectedMode == PaymentMode.VENMO? (value) {
-          if (value == null || value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else {
-            venmoPayment.venmoId = value;
-            widget.onPaymentEventChanged(venmoPayment);
-            return null;
-          }
-        }: null,
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.VENMO,
+            controller: venmoController,
+            focusNode: focusNodeList[6],
+            // key: UniqueKey(),
+            formatters: _formatters,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 7, value);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).venmo_hint,
+              hintStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontFamily: 'Europa',
+              ),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            onSaved: (value) {
+              venmoPayment!.venmoId = value!;
+              widget.onPaymentEventChanged!(venmoPayment!);
+            },
+            validator: selectedMode == PaymentMode.VENMO
+                ? (value) {
+                    if (value == null || value.isEmpty) {
+                      return S.of(context).validation_error_general_text;
+                    } else {
+                      venmoPayment!.venmoId = value;
+                      widget.onPaymentEventChanged!(venmoPayment!);
+                      return null;
+                    }
+                  }
+                : null,
+          )
+        ]);
   }
 
   Widget RequestPaymentSwift() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.SWIFT,
-        controller: swiftController,
-        focusNode: focusNodeList[7],
-        // key: UniqueKey(),
-        formatters: _formatters,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 8, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: 'Ex: Swift ID',
-          hintStyle: TextStyle(
-            fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            fontFamily: 'Europa',
-          ),
-        ),
-        // initialValue: ,
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        maxLength: 11,
-        onSaved: (value) {
-          swiftPayment.swiftId = value;
-          widget.onPaymentEventChanged(swiftPayment);
-        },
-        validator:selectedMode == PaymentMode.SWIFT? (value) {
-          if (value.isEmpty) {
-            return 'ID cannot be empty';
-          } else if (value.length < 8) {
-            return 'Enter valid Swift ID';
-          } else {
-            swiftPayment.swiftId = value;
-            widget.onPaymentEventChanged(swiftPayment);
-            return null;
-          }
-        }: null,
-      )
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.SWIFT,
+            controller: swiftController,
+            focusNode: focusNodeList[7],
+            // key: UniqueKey(),
+            formatters: _formatters,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 8, value);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: 'Ex: Swift ID',
+              hintStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontFamily: 'Europa',
+              ),
+            ),
+            // initialValue: ,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            maxLength: 11,
+            onSaved: (value) {
+              swiftPayment!.swiftId = value!;
+              widget.onPaymentEventChanged!(swiftPayment!);
+            },
+            validator: selectedMode == PaymentMode.SWIFT
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return 'ID cannot be empty';
+                    } else if (value.length < 8) {
+                      return 'Enter valid Swift ID';
+                    } else {
+                      swiftPayment!.swiftId = value;
+                      widget.onPaymentEventChanged!(swiftPayment!);
+                      return null;
+                    }
+                  }
+                : null,
+          )
+        ]);
   }
 
   Widget OtherDetailsWidget() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      SizedBox(height: 20),
-      Text(
-        S.of(context).other_payment_name,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.OTHER,
-        controller: othersController,
-        focusNode: focusNodeList[8],
-        // key: UniqueKey(),
-        formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 9, value);
-        },
-        // initialValue: otherPayment?.others ?? '',
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).other_payment_title_hint,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            fontFamily: 'Europa',
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text(
+            S.of(context).other_payment_name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
-        ),
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        onSaved: (value) {
-          otherPayment.others = value;
-          widget.onPaymentEventChanged(otherPayment);
-        },
-        validator:selectedMode == PaymentMode.OTHER? (value) {
-          if (value.isEmpty || value == null) {
-            return S.of(context).validation_error_general_text;
-          }
-          if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          } else {
-            otherPayment.others = value;
-            widget.onPaymentEventChanged(otherPayment);
-            return null;
-          }
-        }: null,
-      ),
-      SizedBox(
-        height: 10,
-      ),
-      Text(
-        S.of(context).other_payment_details,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-      DoseTextField(
-        isRequired: selectedMode == PaymentMode.OTHER,
-        controller: otherDetailController,
-        focusNode: focusNodeList[9],
-        // key: UniqueKey(),
-        formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          updateExitWithConfirmationValue(context, 10, value);
-        },
-        // initialValue: otherPayment?.other_details ?? '',
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.multiline,
-        minLines: 5,
-        maxLines: null,
-        onSaved: (value) {
-          otherPayment.other_details = value;
-        },
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).other_payment_details_hint,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            fontFamily: 'Europa',
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.OTHER,
+            controller: othersController,
+            focusNode: focusNodeList[8],
+            // key: UniqueKey(),
+            formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 9, value);
+            },
+            // initialValue: otherPayment?.others ?? '',
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_payment_title_hint,
+              hintStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontFamily: 'Europa',
+              ),
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              otherPayment!.others = value!;
+              widget.onPaymentEventChanged!(otherPayment!);
+            },
+            validator: selectedMode == PaymentMode.OTHER
+                ? (value) {
+                    if (value!.isEmpty || value == null) {
+                      return S.of(context).validation_error_general_text;
+                    }
+                    if (!value.isEmpty &&
+                        profanityDetector.isProfaneString(value)) {
+                      return S.of(context).profanity_text_alert;
+                    } else {
+                      otherPayment!.others = value;
+                      widget.onPaymentEventChanged!(otherPayment!);
+                      return null;
+                    }
+                  }
+                : null,
           ),
-        ),
-        validator: selectedMode == PaymentMode.OTHER?(value) {
-          if (value.isEmpty || value == null) {
-            return S.of(context).validation_error_general_text;
-          }
-          if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          } else {
-            otherPayment.other_details = value;
-            widget.onPaymentEventChanged(otherPayment);
-            return null;
-          }
-        }: null,
-      ),
-    ]);
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            S.of(context).other_payment_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          DoseTextField(
+            isRequired: selectedMode == PaymentMode.OTHER,
+            controller: otherDetailController,
+            focusNode: focusNodeList[9],
+            // key: UniqueKey(),
+            formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 10, value);
+            },
+            // initialValue: otherPayment?.other_details ?? '',
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            minLines: 5,
+            maxLines: null,
+            onSaved: (value) {
+              otherPayment!.other_details = value!;
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_payment_details_hint,
+              hintStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontFamily: 'Europa',
+              ),
+            ),
+            validator: selectedMode == PaymentMode.OTHER
+                ? (value) {
+                    if (value!.isEmpty || value == null) {
+                      return S.of(context).validation_error_general_text;
+                    }
+                    if (!value.isEmpty &&
+                        profanityDetector.isProfaneString(value)) {
+                      return S.of(context).profanity_text_alert;
+                    } else {
+                      otherPayment!.other_details = value;
+                      widget.onPaymentEventChanged!(otherPayment!);
+                      return null;
+                    }
+                  }
+                : null,
+          ),
+        ]);
   }
 }

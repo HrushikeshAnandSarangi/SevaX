@@ -4,23 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper_util.dart';
 
 class ChatModel {
-  String id;
-  List<String> participants;
-  List<ParticipantInfo> participantInfo;
-  String lastMessage;
-  Map<String, int> unreadStatus;
-  List<String> softDeletedBy;
-  Map<dynamic, dynamic> deletedBy;
-  bool isTimebankMessage;
+  String? id;
+  List<String>? participants;
+  List<ParticipantInfo>? participantInfo;
+  String? lastMessage;
+  Map<String, int>? unreadStatus;
+  List<String>? softDeletedBy;
+  Map<dynamic, dynamic>? deletedBy;
+  bool? isTimebankMessage;
   // String timebankId;
-  bool interCommunity;
-  bool isParentChildCommunication;
-  String communityId;
-  List<String> showToCommunities;
-  bool isGroupMessage;
-  MultiUserMessagingModel groupDetails;
-  ChatContext chatContext;
-  int timestamp;
+  bool? interCommunity;
+  bool? isParentChildCommunication;
+  String? communityId;
+  List<String>? showToCommunities;
+  bool? isGroupMessage;
+  MultiUserMessagingModel? groupDetails;
+  ChatContext? chatContext;
+  int? timestamp;
 
   ChatModel({
     this.participants,
@@ -87,44 +87,44 @@ class ChatModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "participants": List<dynamic>.from(participants.map((x) => x)),
+        "participants": List<dynamic>.from(participants?.map((x) => x) ?? []),
         "participantInfo":
-            List<dynamic>.from(participantInfo.map((x) => x.toMap())),
+            List<dynamic>.from(participantInfo?.map((x) => x.toMap()) ?? []),
         "unreadStatus": unreadStatus,
         "isTimebankMessage": isTimebankMessage,
         "communityId": communityId,
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap(),
-        "chatContext": chatContext != null ? chatContext.toMap() ?? {} : {},
+        "chatContext": chatContext != null ? chatContext?.toMap() ?? {} : {},
         "showToCommunities":
             List<dynamic>.from((showToCommunities ?? []).map((x) => x)),
         "interCommunity": interCommunity ?? false,
         "isParentChildCommunication": isParentChildCommunication ?? false,
       };
 
-  Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {
+  Map<String, dynamic> shareMessage({Map<String, dynamic>? unreadStatus}) => {
         "lastMessage": lastMessage,
-        "participants": List<dynamic>.from(participants.map((x) => x)),
+        "participants": List<dynamic>.from(participants?.map((x) => x) ?? []),
         "participantInfo":
-            List<dynamic>.from(participantInfo.map((x) => x.toMap())),
+            List<dynamic>.from(participantInfo?.map((x) => x.toMap()) ?? []),
         "unreadStatus": unreadStatus,
         "isTimebankMessage": isTimebankMessage,
         "communityId": communityId,
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap(),
-        "chatContext": chatContext.toMap(),
+        "chatContext": chatContext?.toMap(),
         "interCommunity": interCommunity ?? false,
         "isParentChildCommunication": isParentChildCommunication ?? false,
       };
 }
 
 class ParticipantInfo {
-  String id;
-  String communityId;
-  String name;
-  String photoUrl;
-  ChatType type;
-  Color color;
+  String? id;
+  String? communityId;
+  String? name;
+  String? photoUrl;
+  ChatType? type;
+  Color? color;
 
   ParticipantInfo({
     this.id,
@@ -173,10 +173,10 @@ class MultiUserMessagingModel {
     this.timestamp,
   });
 
-  String name;
-  String imageUrl;
-  List<String> admins;
-  int timestamp;
+  String? name;
+  String? imageUrl;
+  List<String>? admins;
+  int? timestamp;
 
   factory MultiUserMessagingModel.fromMap(Map<String, dynamic> map) =>
       MultiUserMessagingModel(
@@ -189,7 +189,7 @@ class MultiUserMessagingModel {
   Map<String, dynamic> toMap() => {
         "name": name,
         "imageUrl": imageUrl,
-        "admins": FieldValue.arrayUnion(admins),
+        "admins": FieldValue.arrayUnion(admins?.toList() ?? []),
         "timestamp": timestamp ?? DateTime.now().millisecondsSinceEpoch,
       };
 }

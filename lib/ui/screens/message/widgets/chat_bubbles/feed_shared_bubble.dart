@@ -17,9 +17,13 @@ class FeedBubble extends StatelessWidget {
   final String senderId;
   final MessageModel messageModel;
 
-  const FeedBubble(
-      {Key key, this.news, this.isSent, this.senderId, this.messageModel})
-      : super(key: key);
+  const FeedBubble({
+    required this.news,
+    required this.isSent,
+    required this.senderId,
+    required this.messageModel,
+    Key? key,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,8 +54,8 @@ class FeedBubble extends StatelessWidget {
                   ),
                   child: Text(
                     formatChatDate(
-                      messageModel.timestamp,
-                      SevaCore.of(context).loggedInUser.timezone,
+                      messageModel.timestamp ?? 0,
+                      SevaCore.of(context).loggedInUser.timezone ?? 'UTC',
                       S.of(context).localeName,
                     ),
                     style: TextStyle(fontSize: 10, color: Colors.grey[700]),
@@ -133,9 +137,7 @@ class FeedBubble extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.only(top: 5),
                               child: Text(
-                                news.title == null
-                                    ? news.subheading
-                                    : news.title,
+                                (news.title ?? news.subheading) ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -161,7 +163,7 @@ class FeedBubble extends StatelessWidget {
                       Text(
                           timeAgo.format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                news.postTimestamp,
+                                news.postTimestamp ?? 0,
                               ),
                               locale: Locale(
                                 getLangTag(),

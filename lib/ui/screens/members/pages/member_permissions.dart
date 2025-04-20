@@ -16,7 +16,7 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class MemberPermissions extends StatefulWidget {
   final TimebankModel timebankModel;
-  MemberPermissions({this.timebankModel});
+  MemberPermissions({required this.timebankModel});
 
   @override
   _MemberPermissionsState createState() => _MemberPermissionsState();
@@ -159,10 +159,13 @@ class _MemberPermissionsState extends State<MemberPermissions> {
                 child: titleText(
                   title: 'Events Permissions',
                 ),
+                secondChild: SizedBox.shrink(),
               ),
               HideWidget(
-                  hide: selectedRole == Role.MEMBER,
-                  child: eventPermissionsWidget()),
+                hide: selectedRole == Role.MEMBER,
+                child: eventPermissionsWidget(),
+                secondChild: SizedBox.shrink(),
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -185,6 +188,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
                 child: titleText(
                   title: 'Group Permissions',
                 ),
+                secondChild: SizedBox.shrink(),
               ),
               groupPermissionsWidget(),
               SizedBox(
@@ -194,6 +198,13 @@ class _MemberPermissionsState extends State<MemberPermissions> {
                 child: SizedBox(
                   width: 95,
                   child: CustomElevatedButton(
+                    color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    elevation: 3,
+                    textColor: Colors.white,
                     onPressed: () {
                       updateConfigurations().then(
                         (value) => Navigator.of(context).pop(),
@@ -224,37 +235,32 @@ class _MemberPermissionsState extends State<MemberPermissions> {
           .map(
             (role) => _optionRadioButton<Role>(
               groupvalue: selectedRole,
-              onChanged: (Role value) async {
-                await updateConfigurations();
-                selectedRole = value;
-                switch (value) {
-                  case Role.SUPER_ADMIN:
-                    configurationsList = ConfigurationsList().getData();
-
-                    filterPermissions(configurationsList);
-
-                    all_permissions = widget
-                            .timebankModel.timebankConfigurations.superAdmin ??
-                        [];
-                    break;
-                  case Role.ADMIN:
-                    configurationsList = ConfigurationsList().getData();
-
-                    filterPermissions(configurationsList);
-                    all_permissions =
-                        widget.timebankModel.timebankConfigurations.admin ?? [];
-                    break;
-                  case Role.MEMBER:
-                    configurationsList = ConfigurationsList().getMemberData();
-
-                    filterPermissions(configurationsList);
-                    all_permissions =
-                        widget.timebankModel.timebankConfigurations.member ??
-                            [];
-                    break;
-                }
-
-                setState(() {});
+              onChanged: (Role? value) {
+                if (value == null) return;
+                updateConfigurations().then((_) {
+                  selectedRole = value;
+                  switch (value) {
+                    case Role.SUPER_ADMIN:
+                      configurationsList = ConfigurationsList().getData();
+                      filterPermissions(configurationsList);
+                      all_permissions = widget
+                          .timebankModel.timebankConfigurations.superAdmin!;
+                      break;
+                    case Role.ADMIN:
+                      configurationsList = ConfigurationsList().getData();
+                      filterPermissions(configurationsList);
+                      all_permissions =
+                          widget.timebankModel.timebankConfigurations.admin!;
+                      break;
+                    case Role.MEMBER:
+                      configurationsList = ConfigurationsList().getMemberData();
+                      filterPermissions(configurationsList);
+                      all_permissions =
+                          widget.timebankModel.timebankConfigurations.member!;
+                      break;
+                  }
+                  setState(() {});
+                });
               },
               title: role.getLabel(context),
               value: role,
@@ -273,10 +279,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
           (index) => CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: Text(generalList[index].title_en),
+            title: Text(generalList[index].titleEn),
             value: all_permissions.contains(generalList[index].id),
             onChanged: (value) {
-              if (value) {
+              if (value!) {
                 all_permissions.add(generalList[index].id);
               } else {
                 all_permissions.remove(generalList[index].id);
@@ -296,10 +302,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
           (index) => CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: Text(requestsList[index].title_en),
+            title: Text(requestsList[index].titleEn),
             value: all_permissions.contains(requestsList[index].id),
             onChanged: (value) {
-              if (value) {
+              if (value!) {
                 all_permissions.add(requestsList[index].id);
               } else {
                 all_permissions.remove(requestsList[index].id);
@@ -319,10 +325,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
           (index) => CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: Text(eventsList[index].title_en),
+            title: Text(eventsList[index].titleEn),
             value: all_permissions.contains(eventsList[index].id),
             onChanged: (value) {
-              if (value) {
+              if (value!) {
                 all_permissions.add(eventsList[index].id);
               } else {
                 all_permissions.remove(eventsList[index].id);
@@ -342,10 +348,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
           (index) => CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: Text(offerList[index].title_en),
+            title: Text(offerList[index].titleEn),
             value: all_permissions.contains(offerList[index].id),
             onChanged: (value) {
-              if (value) {
+              if (value!) {
                 all_permissions.add(offerList[index].id);
               } else {
                 all_permissions.remove(offerList[index].id);
@@ -365,10 +371,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
           (index) => CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: Text(groupsList[index].title_en),
+            title: Text(groupsList[index].titleEn),
             value: all_permissions.contains(groupsList[index].id),
             onChanged: (value) {
-              if (value) {
+              if (value!) {
                 all_permissions.add(groupsList[index].id);
               } else {
                 all_permissions.remove(groupsList[index].id);
@@ -380,10 +386,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   }
 
   Widget _optionRadioButton<T>({
-    String title,
-    T value,
-    T groupvalue,
-    Function onChanged,
+    required String title,
+    required T value,
+    required T groupvalue,
+    required ValueChanged<T?>? onChanged,
     bool isEnabled = true,
   }) {
     return ListTile(
@@ -392,16 +398,15 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       leading: Radio<T>(
         value: value,
         groupValue: groupvalue,
-        onChanged: (isEnabled ?? true) ? onChanged : null,
+        onChanged: isEnabled ? onChanged : null,
       ),
     );
   }
 
-  Widget titleText({String title}) {
+  Widget titleText({String? title}) {
     return Text(
-      title,
-      style: TextStyle(
-          fontSize: 18, color:  Theme.of(context).primaryColor),
+      title!,
+      style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor),
     );
   }
 
@@ -428,16 +433,16 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       case Role.SUPER_ADMIN:
         widget.timebankModel.timebankConfigurations.superAdmin =
             all_permissions;
-        AppConfig.timebankConfigurations.superAdmin = all_permissions;
+        AppConfig.timebankConfigurations!.superAdmin = all_permissions;
         break;
       case Role.ADMIN:
         widget.timebankModel.timebankConfigurations.admin = all_permissions;
-        AppConfig.timebankConfigurations.admin = all_permissions;
+        AppConfig.timebankConfigurations!.admin = all_permissions;
         break;
 
         break;
       case Role.MEMBER:
-        AppConfig.timebankConfigurations.member = all_permissions;
+        AppConfig.timebankConfigurations!.member = all_permissions;
 
         widget.timebankModel.timebankConfigurations.member = all_permissions;
     }

@@ -12,12 +12,12 @@ class AddManualTimeButton extends StatelessWidget {
   final UserRole userType;
 
   const AddManualTimeButton({
-    Key key,
-    @required this.timeFor,
-    @required this.typeId,
-    @required this.userType,
-    @required this.timebankId,
-    @required this.communityName,
+    Key? key,
+    required this.timeFor,
+    required this.typeId,
+    required this.userType,
+    required this.timebankId,
+    required this.communityName,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -25,6 +25,11 @@ class AddManualTimeButton extends StatelessWidget {
       // width: double.infinity,
       height: 45,
       child: CustomElevatedButton(
+        color: Colors.blue,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        padding: const EdgeInsets.all(10),
+        elevation: 3,
+        textColor: Colors.white,
         child: Text(S.of(context).manual_time_add),
         onPressed: () => onPressed(
           context: context,
@@ -39,12 +44,12 @@ class AddManualTimeButton extends StatelessWidget {
   }
 
   static void onPressed({
-    @required BuildContext context,
-    @required ManualTimeType timeFor,
-    @required String typeId,
-    @required String timebankId,
-    @required String communityName,
-    @required UserRole userType,
+    required BuildContext context,
+    required ManualTimeType timeFor,
+    required String typeId,
+    required String timebankId,
+    required String communityName,
+    required UserRole userType,
   }) {
     Navigator.of(context).push(
       MaterialPageRoute(

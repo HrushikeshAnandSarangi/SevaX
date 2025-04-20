@@ -30,7 +30,6 @@ class EulaAgreementState extends State<EulaAgreement> {
               onPressed: () async {
                 // Navigator.of(context).pop();
                 await _signOut(context);
-                return true;
               },
             ),
             title: Text(
@@ -67,9 +66,9 @@ class EulaAgreementState extends State<EulaAgreement> {
                           Checkbox(
                             checkColor: Colors.white,
                             activeColor: Colors.green,
-                            onChanged: (bool value) {
+                            onChanged: (bool? value) {
                               setState(() {
-                                userAcceptanceStatus = value;
+                                userAcceptanceStatus = value ?? false;
                               });
                             },
                             value: userAcceptanceStatus,
@@ -96,14 +95,18 @@ class EulaAgreementState extends State<EulaAgreement> {
                                     Navigator.pop(
                                         context, {'response': 'ACCEPTED'});
                                   }
-                                : null,
+                                : () {},
                             child: Text(
                               S.of(context).proceed,
-                              style: Theme.of(context).primaryTextTheme.button,
+                              style:
+                                  Theme.of(context).primaryTextTheme.labelLarge,
                             ),
-                            // color: Theme.of(context).accentColor,
-                            // textColor: FlavorConfig.values.buttonTextColor,
-                            // shape: StadiumBorder(),
+                            color: Theme.of(context).colorScheme.primary,
+                            textColor: Colors.white,
+                            shape: const StadiumBorder(),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 2.0,
                           )),
                       SizedBox(height: 20),
                     ],

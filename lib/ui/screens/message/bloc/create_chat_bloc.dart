@@ -61,15 +61,17 @@ class CreateChatBloc extends BlocBase {
     List<ParticipantInfo> users =
         await UserRepository.getShortDetailsOfAllMembersOfCommunity(
       communityId,
-      user.sevaUserID,
+      user.sevaUserID!,
     );
     users.removeWhere((ParticipantInfo info) => info.id == user.sevaUserID);
     users.forEach((ParticipantInfo info) {
-      if (!isMemberBlocked(user, info.id)) {
-        allMembers[info.id] = info;
-        String key = info.name[0].toUpperCase();
+      if (!isMemberBlocked(user, info.id!)) {
+        allMembers[info.id!] = info;
+        String key = (info.name != null && info.name!.isNotEmpty)
+            ? info.name![0].toUpperCase()
+            : '';
         if (sortedMembers.containsKey(key)) {
-          sortedMembers[key].add(info);
+          sortedMembers[key]!.add(info);
           // scrollOffset[key] += 1;
         } else {
           sortedMembers[key] = [info];
@@ -86,7 +88,7 @@ class CreateChatBloc extends BlocBase {
 
     List<TimebankModel> timebanks =
         await TimebankRepository.getTimebanksWhichUserIsPartOf(
-      user.sevaUserID,
+      user.sevaUserID!,
       communityId,
     );
     timebanks.removeWhere(
@@ -116,31 +118,31 @@ class CreateChatBloc extends BlocBase {
       _parentChildCommunities.add(childParticipants);
   }
 
-  Future<ChatModel> createMultiUserMessaging(
+  Future<ChatModel?> createMultiUserMessaging(
       UserModel creator, BuildContext context) async {
-    if (_groupName.value == null || _groupName.value.isEmpty) {
+    final groupNameValue = _groupName.valueOrNull;
+    if (groupNameValue == null || groupNameValue.isEmpty) {
       _groupName.addError("validation_error_room_name");
       logger.e('error');
       return null;
-    } else if (profanityDetector.isProfaneString(_groupName.value)) {
+    } else if (profanityDetector.isProfaneString(groupNameValue)) {
       _groupName.addError("profanity");
       return null;
     } else {
-      String imageUrl;
-      if (_file.value != null && _file.value.selectedImage != null) {
-        imageUrl = _file.value != null
-            ? await StorageRepository.uploadFile(
-                "multiUserMessagingLogo", _file.value.selectedImage)
-            : null;
-      } else if (_file.value != null && _file.value.stockImageUrl != null) {
-        imageUrl = _file.value.stockImageUrl;
+      String? imageUrl;
+      final fileValue = _file.valueOrNull;
+      if (fileValue != null && fileValue.selectedImage != null) {
+        imageUrl = await StorageRepository.uploadFile(
+            "multiUserMessagingLogo", fileValue.selectedImage);
+      } else if (fileValue != null && fileValue.stockImageUrl != null) {
+        imageUrl = fileValue.stockImageUrl;
       } else {
         imageUrl = null;
       }
       MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
-        name: _groupName.value,
+        name: groupNameValue,
         imageUrl: imageUrl,
-        admins: [creator.sevaUserID],
+        admins: [if (creator.sevaUserID != null) creator.sevaUserID!],
       );
 
       ParticipantInfo creatorDetails = ParticipantInfo(
@@ -151,25 +153,33 @@ class CreateChatBloc extends BlocBase {
       );
 
       List<ParticipantInfo> participantInfos = [creatorDetails];
-      _selectedMembers.value.forEach((String id) async {
-        participantInfos.add(
-          allMembers[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
-        );
+      for (String id in _selectedMembers.value) {
+        final member = allMembers[id];
+        if (member != null) {
+          member.type = ChatType.TYPE_MULTI_USER_MESSAGING;
+          participantInfos.add(member);
 
-        await MessageRoomManager.addRemoveParticipant(
-            communityId: creator.currentCommunity,
-            timebankId: creator.currentTimebank,
+          await MessageRoomManager.addRemoveParticipant(
+            communityId: creator.currentCommunity ?? '',
+            timebankId: creator.currentTimebank ?? '',
             creatorDetails: creatorDetails,
-            messageRoomImageUrl: groupDetails.imageUrl,
-            messageRoomName: groupDetails.name,
+            messageRoomImageUrl: groupDetails.imageUrl ?? '',
+            messageRoomName: groupDetails.name ?? '',
             notificationType: NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM,
-            participantId: allMembers[id].id,
-            context: context);
-      });
+            participantId: member.id ?? '',
+            context: context,
+          );
+        }
+      }
+
+      final participantsList = List<String>.from(_selectedMembers.value);
+      if (creator.sevaUserID != null) {
+        participantsList.add(creator.sevaUserID!);
+      }
 
       ChatModel model = ChatModel(
-        participants: _selectedMembers.value..add(creator.sevaUserID),
-        communityId: creator.currentCommunity,
+        participants: participantsList,
+        communityId: creator.currentCommunity ?? '',
         participantInfo: participantInfos,
         isTimebankMessage: false,
         isGroupMessage: true,
@@ -182,9 +192,11 @@ class CreateChatBloc extends BlocBase {
 
   List<ParticipantInfo> getFilteredListOfParticipants(String searchText) {
     List<ParticipantInfo> participants = [];
-    if (searchText != null && _members.value != null) {
+    if (_members.value != null) {
       _members.value.forEach((ParticipantInfo info) {
-        if (info.name.toLowerCase().contains(searchText.toLowerCase())) {
+        if ((info.name ?? '')
+            .toLowerCase()
+            .contains(searchText.toLowerCase())) {
           participants.add(info);
         }
       });
@@ -206,5 +218,6 @@ class MessageRoomImageModel {
   final String stockImageUrl;
   final File selectedImage;
 
-  MessageRoomImageModel({this.stockImageUrl, this.selectedImage});
+  MessageRoomImageModel(
+      {required this.stockImageUrl, required this.selectedImage});
 }

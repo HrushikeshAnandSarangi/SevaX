@@ -17,12 +17,12 @@ enum PastHiredUserStatus { LOADING, LOADED, EMPTY }
 
 class PastHiredUsersView extends StatefulWidget {
   final String timebankId;
-  final RequestModel requestModel;
-  final String sevaUserId;
-  final List<UserModel> favouriteMembers;
+  final RequestModel? requestModel;
+  final String? sevaUserId;
+  final List<UserModel>? favouriteMembers;
 
   PastHiredUsersView(
-      {@required this.timebankId,
+      {required this.timebankId,
       this.requestModel,
       this.sevaUserId,
       this.favouriteMembers});
@@ -41,21 +41,22 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
   List<UserModel> favoriteUsers = [];
   bool isAdmin = false;
   PastHiredUserStatus userStatus = PastHiredUserStatus.LOADING;
-  RequestModel requestModel;
-  UserModel loggedinUser;
+  RequestModel? requestModel;
+  UserModel? loggedinUser;
 
   @override
   void initState() {
     super.initState();
 
-    if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
+    if (isAccessAvailable(timebank.model, widget.sevaUserId!)) {
       isAdmin = true;
     }
     CollectionRef.requests
-        .doc(widget.requestModel.id)
+        .doc(widget.requestModel!.id!)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data());
+      requestModel =
+          RequestModel.fromMap(reqModel.data() as Map<String, dynamic>);
       setState(() {});
     });
 
@@ -69,7 +70,8 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
       (QuerySnapshot querysnapshot) {
         querysnapshot.docs.forEach(
           (DocumentSnapshot user) => users.add(
-            UserModel.fromMap(user.data(), 'past_hired'),
+            UserModel.fromMap(
+                user.data() as Map<String, dynamic>, 'past_hired'),
           ),
         );
         if (users.isEmpty) {
@@ -98,8 +100,9 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
         if (snapshot.hasData && snapshot.data != null) {
           List<UserModel> userList = [];
 
-          snapshot.data.docs.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data(), 'past_hired');
+          snapshot.data!.docs.forEach((userModel) {
+            UserModel model = UserModel.fromMap(
+                userModel.data() as Map<String, dynamic>, 'past_hired');
             userList.add(model);
           });
 
@@ -118,19 +121,19 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
 
               return RequestCardWidget(
                 timebankModel: timebank.model,
-                requestModel: requestModel,
+                requestModel: requestModel!,
                 userModel: user,
                 isAdmin: isAdmin,
-                currentCommunity: loggedinUser.currentCommunity,
-                loggedUserId: loggedinUser.sevaUserID,
+                currentCommunity: loggedinUser!.currentCommunity!,
+                loggedUserId: loggedinUser!.sevaUserID!,
                 refresh: () {},
                 isFavorite: isAdmin ?? false
                     ? timeBankIds.contains(widget.timebankId)
                     : memberId.contains(widget.sevaUserId),
                 reqStatus: getRequestUserStatus(
-                    requestModel: requestModel,
-                    userId: user.sevaUserID,
-                    email: user.email,
+                    requestModel: requestModel!,
+                    userId: user.sevaUserID!,
+                    email: user.email!,
                     context: context),
               );
             },
@@ -168,5 +171,4 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
 
   }
 */
-
 }

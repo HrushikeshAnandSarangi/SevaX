@@ -16,14 +16,14 @@ class OneToManyInstructorCard extends StatelessWidget {
   final VoidCallback onAddClick;
 
   OneToManyInstructorCard({
-    @required this.userModel,
-    @required this.timebankModel,
-    @required this.isFavorite,
-    @required this.isAdmin,
-    @required this.addStatus,
-    @required this.currentCommunity,
-    @required this.loggedUserId,
-    @required this.onAddClick,
+    required this.userModel,
+    required this.timebankModel,
+    required this.isFavorite,
+    required this.isAdmin,
+    required this.addStatus,
+    required this.currentCommunity,
+    required this.loggedUserId,
+    required this.onAddClick,
   });
 
   @override
@@ -56,11 +56,11 @@ class OneToManyInstructorCard extends StatelessWidget {
 
   Widget getUserThumbnail(BuildContext context) {
     return UserProfileImage(
-      photoUrl: (userModel.photoURL != null || userModel.photoURL != '')
-          ? userModel.photoURL
+      photoUrl: (userModel.photoURL != null && userModel.photoURL != '')
+          ? userModel.photoURL!
           : defaultUserImageURL,
-      email: userModel.email,
-      userId: userModel.sevaUserID,
+      email: userModel.email!,
+      userId: userModel.sevaUserID!,
       height: 35,
       width: 35,
       timebankModel: timebankModel,
@@ -111,5 +111,4 @@ class OneToManyInstructorCard extends StatelessWidget {
   //       .doc(notification.id)
   //       .set(notification.toMap());
   // }
-
 }

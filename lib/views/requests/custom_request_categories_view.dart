@@ -54,7 +54,7 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
             Expanded(
               child: StreamBuilder<Object>(
                 stream: getUserCreatedRequestCategories(
-                    SevaCore.of(context).loggedInUser.sevaUserID, context),
+                    SevaCore.of(context).loggedInUser.sevaUserID!, context),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -62,7 +62,8 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return LoadingIndicator();
                   }
-                  List<CategoryModel> categoryModelList = snapshot.data;
+                  List<CategoryModel> categoryModelList =
+                      snapshot.data! as List<CategoryModel>;
 
                   return categoryModelList.length == 0
                       ? Center(

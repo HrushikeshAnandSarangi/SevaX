@@ -15,8 +15,8 @@ String spellCheckResponseToMap(SpellCheckResponse data) =>
 
 class SpellCheckResponse {
   SpellCheckResponse({
-    this.text,
-    this.sentenceList,
+    required this.text,
+    required this.sentenceList,
   });
 
   String text;
@@ -39,11 +39,11 @@ class SpellCheckResponse {
 
 class SentenceList {
   SentenceList({
-    this.offset,
-    this.text,
-    this.correctedText,
-    this.parseTree,
-    this.nbestParses,
+    required this.offset,
+    required this.text,
+    required this.correctedText,
+    required this.parseTree,
+    required this.nbestParses,
   });
 
   int offset;
@@ -78,8 +78,8 @@ class ParseTree {
     this.phrases,
   });
 
-  int id;
-  List<Phrase> phrases;
+  int? id;
+  List<Phrase>? phrases;
 
   factory ParseTree.fromMap(Map<String, dynamic> json) => ParseTree(
         id: json["id"],
@@ -90,18 +90,20 @@ class ParseTree {
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "phrases": List<dynamic>.from(phrases.map((x) => x.toMap())),
+        "phrases": phrases == null
+            ? []
+            : List<dynamic>.from(phrases!.map((x) => x.toMap())),
       };
 }
 
 class Phrase {
   Phrase({
-    this.type,
-    this.family,
-    this.offset,
-    this.length,
-    this.text,
-    this.children,
+    required this.type,
+    required this.family,
+    required this.offset,
+    required this.length,
+    required this.text,
+    required this.children,
   });
 
   String type;
@@ -132,10 +134,10 @@ class Phrase {
 
 class SentimentExpression {
   SentimentExpression({
-    this.sentenceIndex,
-    this.offset,
-    this.length,
-    this.polarity,
+    required this.sentenceIndex,
+    required this.offset,
+    required this.length,
+    required this.polarity,
   });
 
   int sentenceIndex;
@@ -166,7 +168,7 @@ class SpellCheckManager {
     try {
       listOfKeys = List.from(
         json.decode(
-          AppConfig.remoteConfig.getString(RemoteConfigKeys.tisaneKeys),
+          AppConfig.remoteConfig!.getString(RemoteConfigKeys.tisaneKeys),
         ),
       );
     } on Exception {
@@ -185,7 +187,7 @@ class SpellCheckManager {
 
   static Future<SpellCheckResult> evaluateSpellingFor(
     String keyword, {
-    String language,
+    String? language,
   }) async {
     String url = "https://api.tisane.ai/parse";
     Map<String, String> headers = {
@@ -199,7 +201,8 @@ class SpellCheckManager {
     });
 
     // log("Hitting api for $keyword");
-    var spellChekRespons = await http.post(url, headers: headers, body: body);
+    var spellChekRespons =
+        await http.post(Uri.parse(url), headers: headers, body: body);
 
     switch (spellChekRespons.statusCode) {
       case HTTPResponseCodes.TOO_MANY_REQUESTS:
@@ -219,10 +222,10 @@ class SpellCheckManager {
 }
 
 class SpellCheckResult {
-  bool hasErros;
-  bool foundCorrectSpelling;
-  String correctSpelling;
-  SpellErrorType errorType;
+  bool? hasErros;
+  bool? foundCorrectSpelling;
+  String? correctSpelling;
+  SpellErrorType? errorType;
 
   static SpellCheckResult evaluateKeywordResult(String responseBody) {
     var spellCheckRespone;

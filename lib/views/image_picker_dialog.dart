@@ -9,12 +9,12 @@ import 'image_url_view.dart';
 class ImagePickerDialog extends StatelessWidget {
   ImagePickerHandler _listener;
   AnimationController _controller;
-  BuildContext context;
+  late BuildContext context;
 
   ImagePickerDialog(this._listener, this._controller);
 
-  Animation<double> _drawerContentsOpacity;
-  Animation<Offset> _drawerDetailsPosition;
+  late Animation<double> _drawerContentsOpacity;
+  late Animation<Offset> _drawerDetailsPosition;
 
   void initState() {
     _drawerContentsOpacity = CurvedAnimation(
@@ -107,6 +107,10 @@ class ImagePickerDialog extends StatelessWidget {
                         builder: (context) {
                           return ImageUrlView(
                             themeColor: Theme.of(context).primaryColor,
+                            onLinkCreated: (String url) {
+                              // Handle the created link here
+                            },
+                            isCover: false,
                           );
                         },
                       ),

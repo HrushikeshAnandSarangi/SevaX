@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class BillingAddress {
@@ -12,7 +12,15 @@ class BillingAddress {
   String pincode;
   String additionalnotes;
 
-  BillingAddress(Map<String, dynamic> map) {
+  BillingAddress(Map<String, dynamic> map)
+      : companyname = map['companyname'] ?? '',
+        street_address1 = map['street_address1'] ?? '',
+        street_address2 = map['street_address2'] ?? '',
+        city = map['city'] ?? '',
+        state = map['state'] ?? '',
+        country = map['country'] ?? '',
+        pincode = map['pincode']?.toString() ?? '',
+        additionalnotes = map['additionalnotes'] ?? '' {
     this.companyname = map.containsKey('companyname') ? map['companyname'] : '';
     this.street_address1 =
         map.containsKey('street_address1') ? map['street_address1'] : '';
@@ -21,8 +29,7 @@ class BillingAddress {
     this.city = map.containsKey('city') ? map['city'] : '';
     this.state = map.containsKey('state') ? map['state'] : '';
     this.country = map.containsKey('country') ? map['country'] : '';
-    this.pincode =
-        map.containsKey('pincode') ? map['pincode'].toString() : null;
+    this.pincode = map.containsKey('pincode') ? map['pincode'].toString() : '';
     this.pincode = map.containsKey('pincode') ? map['pincode'].toString() : '';
     this.additionalnotes =
         map.containsKey('additionalnotes') ? map['additionalnotes'] : '';
@@ -92,13 +99,13 @@ class BillingAddress {
 class PaymentRecord extends DataModel {
   String payment_created_on;
   String type;
-  PaymentRecord({this.payment_created_on, this.type});
+  PaymentRecord({required this.payment_created_on, required this.type});
 
-  PaymentRecord.fromMap(Map<String, dynamic> map) {
-    this.payment_created_on =
-        map.containsKey('payment_created_on') ? map['payment_created_on'] : '';
-    this.type = map.containsKey('type') ? map['type'] : '';
-  }
+  PaymentRecord.fromMap(Map<String, dynamic> map)
+      : payment_created_on = map.containsKey('payment_created_on')
+            ? map['payment_created_on']
+            : '',
+        type = map.containsKey('type') ? map['type'] : '';
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
@@ -150,7 +157,48 @@ class CommunityModel extends DataModel {
   String parentTimebankId;
   bool subscriptionCancelled;
   bool testCommunity;
-  CommunityModel(Map<String, dynamic> map) {
+  CommunityModel(Map<String, dynamic> map)
+      : id = map['id'] ?? '',
+        name = map['name'] ?? '',
+        primary_email = map['primary_email'] ?? '',
+        about = map['about'] ?? '',
+        billing_address = BillingAddress(
+            map['billing_address']?.cast<String, dynamic>() ?? {}),
+        payment_records = map['payment_records'] != null
+            ? [PaymentRecord.fromMap(map['payment_records'])]
+            : [],
+        logo_url = map['logo_url'] ?? '',
+        cover_url = map['cover_url'] ?? '',
+        theme_avatar_url = map['theme_avatar_url'] ?? '',
+        theme_color = map['theme_color'] ?? '',
+        creator_email = map['creator_email'] ?? '',
+        created_by = map['created_by'] ?? '',
+        created_at = map['created_at'] ?? '',
+        primary_timebank = map['primary_timebank'] ?? '',
+        private = map['private'] ?? false,
+        communityCategories =
+            List<String>.from(map['communityCategories'] ?? []),
+        taxPercentage = (map['taxPercentage'] ?? 0.0).toDouble(),
+        negativeCreditsThreshold =
+            (map['negativeCreditsThreshold'] ?? -50.0).toDouble(),
+        timebanks = List<String>.from(map['timebanks'] ?? []),
+        admins = List<String>.from(map['admins'] ?? []),
+        organizers = List<String>.from(map['organizers'] ?? []),
+        coordinators = List<String>.from(map['coordinators'] ?? []),
+        members = List<String>.from(map['members'] ?? []),
+        transactionCount = map['transactionCount'] ?? 0,
+        ranking = map['ranking'] ?? 0,
+        location = getLocation(map),
+        softDelete = map['softDelete'] ?? false,
+        billMe = map['billMe'] ?? false,
+        isCreatedFromWeb = map['isCreatedFromWeb'] ?? false,
+        billingStmtNo = map['billingStmtNo'] ?? '',
+        sevaxAccountNo = map['sevaxAccountNo'] ?? '',
+        billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {}),
+        payment = Map<String, dynamic>.from(map['payment'] ?? {}),
+        parentTimebankId = map['parent_timebank_id'] ?? '',
+        subscriptionCancelled = map['subscriptionCancelled'] ?? false,
+        testCommunity = map['testCommunity'] ?? false {
     this.subscriptionCancelled = map.containsKey('subscriptionCancelled') &&
             map['subscriptionCancelled'] != null
         ? map['subscriptionCancelled']
@@ -231,23 +279,23 @@ class CommunityModel extends DataModel {
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
   }
 
-  GeoFirePoint getLocation(map) {
+  static GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
     if (map.containsKey("location") &&
         map["location"] != null &&
         map['location']['geopoint'] != null) {
       if (map['location']['geopoint'] is GeoPoint) {
         GeoPoint geoPoint = map['location']['geopoint'];
-        geoFirePoint = Geoflutterfire()
-            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+        geoFirePoint = GeoFirePoint(geoPoint);
       } else {
-        geoFirePoint = GeoFirePoint(
-          map["location"]["geopoint"]["_latitude"],
-          map["location"]["geopoint"]["_longitude"],
-        );
+        // If geopoint is a Map (as returned from Firestore in some cases)
+        final geo = map['location']['geopoint'];
+        double latitude = (geo['_latitude'] ?? 0.0).toDouble();
+        double longitude = (geo['_longitude'] ?? 0.0).toDouble();
+        geoFirePoint = GeoFirePoint(GeoPoint(latitude, longitude));
       }
     } else {
-      geoFirePoint = GeoFirePoint(40.754387, -73.984291);
+      geoFirePoint = GeoFirePoint(const GeoPoint(40.754387, -73.984291));
     }
     return geoFirePoint;
   }

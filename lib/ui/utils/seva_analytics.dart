@@ -4,12 +4,12 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class Catalyst {
   static recordAccessTime({
-    String communityId,
+    String? communityId,
   }) {
     CollectionRef.communities
         .doc(communityId)
         .collection("activity")
-        .doc(communityId + "*activity")
+        .doc(communityId! + "*activity")
         .get()
         .then((value) {
       if (value.exists) {

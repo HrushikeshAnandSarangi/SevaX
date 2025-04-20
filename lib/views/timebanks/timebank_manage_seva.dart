@@ -19,7 +19,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
 
   ManageTimebankSeva.of({this.timebankModel});
   @override
@@ -40,12 +40,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
     Future.delayed(Duration.zero, () {
       FirestoreManager.getCommunityDetailsByCommunityId(
-              communityId: widget.timebankModel.communityId)
+              communityId: widget.timebankModel!.communityId)
           .then((onValue) {
         communityModel = onValue;
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
                 communityModel.created_by ||
-            widget.timebankModel.organizers
+            widget.timebankModel!.organizers
                 .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
         }
@@ -54,7 +54,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     });
     Future.delayed(Duration.zero, () {
       FirestoreManager.getplanForCurrentCommunity(
-              widget.timebankModel.communityId)
+              widget.timebankModel!.communityId)
           .then((onvalue) {
         planId = onvalue;
       });
@@ -92,14 +92,14 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 CreateEditCommunityView(
                   isCreateTimebank: false,
                   isFromFind: false,
-                  timebankId: widget.timebankModel.id,
+                  timebankId: widget.timebankModel!.id,
                 ),
                 // TimeBankBillingAdminView(),
                 Settings,
                 NotificationManagerForAmins(
-                  widget.timebankModel.id,
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-                  widget.timebankModel.parentTimebankId ==
+                  widget.timebankModel!.id,
+                  SevaCore.of(context).loggedInUser.sevaUserID!,
+                  widget.timebankModel!.parentTimebankId ==
                       FlavorConfig.values.timebankId,
                 )
               ],
@@ -204,12 +204,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
       onTap: () {
         showAdvisoryBeforeDeletion(
           context: context,
-          associatedId: widget.timebankModel.id,
+          associatedId: widget.timebankModel!.id,
           softDeleteType: SoftDelete.REQUEST_DELETE_TIMEBANK,
-          associatedContentTitle: widget.timebankModel.name,
-          email: SevaCore.of(context).loggedInUser.email,
+          associatedContentTitle: widget.timebankModel!.name,
+          email: SevaCore.of(context).loggedInUser.email!,
           isAccedentalDeleteEnabled:
-              widget.timebankModel.preventAccedentalDelete,
+              widget.timebankModel!.preventAccedentalDelete,
         );
       },
       child: Text(
@@ -246,22 +246,22 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   //   );
   // }
 
-  Widget viewRequests({BuildContext context}) {
+  Widget viewRequests({BuildContext? context}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context,
+          context!,
           MaterialPageRoute(
             builder: (context) => RequestListingPage(
               // timebankId: widget.timebankModel.id,
-              timebankModel: widget.timebankModel,
+              timebankModel: widget.timebankModel!,
               isFromSettings: true,
             ),
           ),
         );
       },
       child: Text(
-        S.of(context).view_requests,
+        S.of(context!).view_requests,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -271,19 +271,19 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-  Widget viewReportedMembers({BuildContext context}) {
+  Widget viewReportedMembers({BuildContext? context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.of(context!).push(
           ReportedMembersPage.route(
-            timebankModel: widget.timebankModel,
-            communityId: widget.timebankModel.communityId,
+            timebankModel: widget.timebankModel!,
+            communityId: widget.timebankModel!.communityId,
             isFromTimebank: true,
           ),
         );
       },
       child: Text(
-        S.of(context).reported_members,
+        S.of(context!).reported_members,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -293,17 +293,17 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-  Widget viewMemberConfigurations({BuildContext context}) {
+  Widget viewMemberConfigurations({BuildContext? context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context!).push(MaterialPageRoute(
           builder: (context) => MemberPermissions(
-            timebankModel: widget.timebankModel,
+            timebankModel: widget.timebankModel!,
           ),
         ));
       },
       child: Text(
-       S.of(context).manage_permissions,
+        S.of(context!).manage_permissions,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -313,14 +313,14 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-  Widget viewInvoice({BuildContext context}) {
-    if (Theme.of(context).platform == TargetPlatform.android ||
+  Widget viewInvoice({BuildContext? context}) {
+    if (Theme.of(context!).platform == TargetPlatform.android ||
         Theme.of(context).platform == TargetPlatform.iOS) {
       return Container();
     }
     return TransactionsMatrixCheck(
       comingFrom: ComingFrom.Home,
-      upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
+      upgradeDetails: AppConfig.upgradePlanBannerModel!.invoice_generation!,
       transaction_matrix_type: "invoice_generation",
       child: GestureDetector(
         onTap: () {
@@ -328,7 +328,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             MaterialPageRoute(
               builder: (context) => MonthsListing.of(
                   communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity,
+                      SevaCore.of(context).loggedInUser.currentCommunity!,
                   planId: planId,
                   communityModel: communityModel),
             ),
@@ -353,7 +353,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   Widget get getTitle {
     return Text(
-      "${S.of(context).manage} ${widget.timebankModel.name}",
+      "${S.of(context).manage} ${widget.timebankModel!.name}",
       style: TextStyle(
         fontSize: 20,
         color: Colors.black,
@@ -384,18 +384,18 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           viewReportedMembers(context: context),
           SizedBox(height: 20),
 
-          widget.timebankModel.creatorId ==
+          widget.timebankModel!.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? TransactionsMatrixCheck(
                   comingFrom: ComingFrom.Settings,
-                  upgradeDetails:
-                      AppConfig.upgradePlanBannerModel.admin_role_customization,
+                  upgradeDetails: AppConfig
+                      .upgradePlanBannerModel!.admin_role_customization!,
                   transaction_matrix_type: 'admin_role_customization',
                   child: viewMemberConfigurations(context: context))
               : Container(),
 
           SizedBox(height: 20),
-          widget.timebankModel.creatorId ==
+          widget.timebankModel!.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? deleteTimebank
               : Container(),
@@ -481,13 +481,13 @@ class NotificationManagerForAmins extends StatefulWidget {
 
 class _NotificationManagerForAminsState
     extends State<NotificationManagerForAmins> {
-  Stream settingsStreamer;
+  Stream<TimebankModel>? settingsStreamer;
   @override
   void initState() {
     super.initState();
     settingsStreamer = FirestoreManager.getTimebankModelStream(
       timebankId: widget.timebankId,
-    );
+    ) as Stream<TimebankModel>;
   }
 
   @override
@@ -499,16 +499,19 @@ class _NotificationManagerForAminsState
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<TimebankModel>(
-            stream: settingsStreamer,
+            stream: settingsStreamer!,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container();
               }
 
               NotificationSetting notificationSetting = snapshot
-                      .data.notificationSetting
-                      .containsKey(widget.adminSevaUserId)
-                  ? snapshot.data.notificationSetting[widget.adminSevaUserId]
+                          .data?.notificationSetting
+                          ?.containsKey(widget.adminSevaUserId) ==
+                      true
+                  ? (snapshot
+                          .data!.notificationSetting[widget.adminSevaUserId] ??
+                      NotificationSetting())
                   : NotificationSetting();
 
               return SingleChildScrollView(

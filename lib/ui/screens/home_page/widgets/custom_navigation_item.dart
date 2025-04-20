@@ -1,17 +1,17 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 
 class CustomNavigationItem extends StatelessWidget {
   final IconData primaryIcon;
-  final IconData secondaryIcon;
+  final IconData? secondaryIcon;
   final bool isSelected;
   final String title;
   final bool showBadge;
   final String count;
 
   const CustomNavigationItem({
-    Key key,
-    this.primaryIcon,
+    Key? key,
+    required this.primaryIcon,
     this.secondaryIcon,
     this.isSelected = false,
     this.title = '',
@@ -25,10 +25,11 @@ class CustomNavigationItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Badge(
+        badges.Badge(
           showBadge: showBadge,
-          animationDuration: Duration.zero,
-          badgeColor: isSelected ? Colors.white : Colors.red,
+          badgeStyle: badges.BadgeStyle(
+            badgeColor: isSelected ? Colors.white : Colors.red,
+          ),
           badgeContent: Text(
             count,
             style: TextStyle(

@@ -26,7 +26,7 @@ class SearchField extends StatelessWidget {
         return Container(
           height: 45,
           child: TextField(
-              autofocus: true,
+            autofocus: true,
             controller: _controller,
             onChanged: _bloc.onSearchChange,
             decoration: InputDecoration(

@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:http/http.dart' as http;
 // import 'package:location/location.dart';
 import 'package:meta/meta.dart';
@@ -23,7 +23,7 @@ import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-Future<void> createTimebank({@required TimebankModel timebankModel}) async {
+Future<void> createTimebank({required TimebankModel timebankModel}) async {
   return await CollectionRef.timebank
       .doc(timebankModel.id)
       .set(timebankModel.toMap());
@@ -34,37 +34,38 @@ Future<void> createCommunityByName(CommunityModel community) async {
 }
 
 Future<void> createJoinInvite(
-    {@required InvitationModel invitationModel}) async {
+    {required InvitationModel invitationModel}) async {
   return await CollectionRef.invitations
       .doc(invitationModel.id)
       .set(invitationModel.toMap());
 }
 
 ////to get the user invites --
-Future<InvitationModel> getInvitationModel({
-  @required String timebankId,
-  @required String sevauserid,
+Future<InvitationModel?> getInvitationModel({
+  required String timebankId,
+  required String sevauserid,
 }) async {
   var query = CollectionRef.invitations
       .where('invitationType', isEqualTo: 'GroupInvite')
       .where('data.invitedUserId', isEqualTo: sevauserid)
       .where('timebankId', isEqualTo: timebankId);
   QuerySnapshot snapshot = await query.get();
-  if (snapshot.docs.length == 0) {
+  if (snapshot.docs.isEmpty) {
     return null;
   }
-  InvitationModel invitationModel;
+  InvitationModel? invitationModel;
 
-  snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-    invitationModel = InvitationModel.fromMap(documentSnapshot.data());
-  });
+  for (DocumentSnapshot documentSnapshot in snapshot.docs) {
+    invitationModel = InvitationModel.fromMap(
+        documentSnapshot.data() as Map<String, dynamic>);
+  }
 
   return invitationModel;
 }
 
 /// Get all timebanknew associated with a User
 Future<List<TimebankModel>> getTimeBanksForUser(
-    {@required String userEmail}) async {
+    {required String userEmail}) async {
   assert(userEmail != null && userEmail.isNotEmpty,
       'Email address cannot be null or empty');
 
@@ -75,16 +76,19 @@ Future<List<TimebankModel>> getTimeBanksForUser(
       .doc(userEmail)
       .get()
       .then((DocumentSnapshot documentSnapshot) {
-    Map<String, dynamic> dataMap = documentSnapshot.data();
+    Map<String, dynamic> dataMap =
+        documentSnapshot.data() as Map<String, dynamic>;
     List timeBankList = dataMap['membershipTimebanks'];
     timeBankIdList = List.castFrom(timeBankList);
   });
 
   for (int i = 0; i < timeBankIdList.length; i += 1) {
-    TimebankModel timeBankModel = await getTimeBankForId(
+    TimebankModel? timeBankModel = await getTimeBankForId(
       timebankId: timeBankIdList[i],
     );
-    timeBankModelList.add(timeBankModel);
+    if (timeBankModel != null) {
+      timeBankModelList.add(timeBankModel);
+    }
   }
 
   return timeBankModelList;
@@ -92,7 +96,7 @@ Future<List<TimebankModel>> getTimeBanksForUser(
 
 /// Get all timebanknew associated with a User as a Stream
 Stream<List<TimebankModel>> getTimebanksForUserStream(
-    {@required String userId, @required String communityId}) async* {
+    {required String userId, required String communityId}) async* {
   var data = CollectionRef.timebank
       .where('members', arrayContains: userId)
       .where('community_id', isEqualTo: communityId)
@@ -104,8 +108,8 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
         List<TimebankModel> modelList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            TimebankModel model =
-                TimebankModel.fromMap(documentSnapshot.data());
+            TimebankModel model = TimebankModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             if (model.rootTimebankId == FlavorConfig.values.timebankId) {
               if (!model.softDelete) {
                 modelList.add(model);
@@ -143,14 +147,15 @@ Future<List<TimebankModel>> getAllTheGroups(
 
 /// Get all timebanknew associated with a User as a Stream_
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
-    {@required String communityId}) async {
+    {required String communityId}) async {
   List<dynamic> timeBankIdList = [];
   List<TimebankModel> timeBankModelList = [];
   await CollectionRef.communities
       .doc(communityId)
       .get()
       .then((DocumentSnapshot documentSnaphot) {
-    Map<String, dynamic> dataMap = documentSnaphot.data();
+    Map<String, dynamic> dataMap =
+        documentSnaphot.data() as Map<String, dynamic>;
     timeBankIdList = dataMap["timebanks"];
   });
 
@@ -158,10 +163,12 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
 
   for (int i = 0; i < timeBankIdList.length; i += 1) {
     if (timeBankIdList[i] != comm.primary_timebank) {
-      TimebankModel timeBankModel = await getTimeBankForId(
+      TimebankModel? timeBankModel = await getTimeBankForId(
         timebankId: timeBankIdList[i],
       );
-      timeBankModelList.add(timeBankModel);
+      if (timeBankModel != null) {
+        timeBankModelList.add(timeBankModel);
+      }
     }
     /*if(timeBankModel.members.contains(sevaUserId)){
       timeBankModel.joinStatus=CompareToTimeBank.JOIN;
@@ -170,26 +177,26 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     }else{
       timeBankModel.joinStatus=CompareToTimeBank.JOIN;
     }*/
-
   }
   return timeBankModelList;
 }
 
 /// Get all timebanknew associated with a User as a Stream_
-Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
+Future<int> getMembersCountOfAllMembers({required String communityId}) async {
   int totalCount = 0;
   DocumentSnapshot documentSnaphot =
       await CollectionRef.communities.doc(communityId).get();
-  var primaryTimebankId = documentSnaphot.data()['primary_timebank'];
+  var primaryTimebankId =
+      (documentSnaphot.data() as Map<String, dynamic>)['primary_timebank'];
   DocumentSnapshot timebankDoc =
       await CollectionRef.timebank.doc(primaryTimebankId).get();
-  totalCount = timebankDoc.data()['members'].length;
+  totalCount = (timebankDoc.data() as Map<String, dynamic>)['members'].length;
   return totalCount;
 }
 
 /// Get all timebanknew associated with a User as a Stream
 Stream<List<TimebankModel>> getTimebanksForAdmins(
-    {@required String userId}) async* {
+    {required String userId}) async* {
   var data =
       CollectionRef.timebank.where('admins', arrayContains: userId).snapshots();
 
@@ -199,8 +206,8 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
         List<TimebankModel> modelList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            TimebankModel model =
-                TimebankModel.fromMap(documentSnapshot.data());
+            TimebankModel model = TimebankModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             if (model.rootTimebankId == FlavorConfig.values.timebankId)
               modelList.add(model);
           },
@@ -213,23 +220,23 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
 }
 
 /// Get all timebanknew associated with a User as a Stream
-Stream<UserModel> getUserDetails({@required String userId}) async* {
+Stream<UserModel> getUserDetails({required String userId}) async* {
   var data =
       CollectionRef.users.where('sevauserid', isEqualTo: userId).snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, timebankSink) {
-        timebankSink
-            .add(UserModel.fromMap(snapshot.docs.first.data(), 'timebank'));
+        timebankSink.add(UserModel.fromMap(
+            snapshot.docs.first.data() as Map<String, dynamic>, 'timebank'));
       },
     ),
   );
 }
 
 class NearBySettings {
-  int radius;
-  bool isMiles;
+  int? radius;
+  bool? isMiles;
 
   @override
   String toString() {
@@ -238,10 +245,11 @@ class NearBySettings {
 }
 
 Stream<List<CommunityModel>> getNearCommunitiesListStream({
-  @required NearBySettings nearbySettings,
+  required NearBySettings nearbySettings,
 }) async* {
-  Geoflutterfire geo = Geoflutterfire();
-  Location locationData;
+  GeoFirePoint geo =
+      GeoFirePoint(GeoPoint(0, 0)); //dummy point to get the stream working
+  Location? locationData;
   try {
     var lastLocation = await LocationHelper.getLocation();
     if (lastLocation.isLeft())
@@ -251,48 +259,51 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
         locationData = r;
       });
 
-      double lat = locationData?.latitude;
-      double lng = locationData?.longitude;
+      if (locationData == null) {
+        yield* Stream.error("Location data not available");
+        return;
+      }
+
+      double lat = locationData!.latitude;
+      double lng = locationData!.longitude;
 
       //Here get radius from dataabse
       var radius =
           NearbySettingsWidget.evaluatemaxRadiusForMember(nearbySettings);
       log("Getting within the raidus ==> " + radius.toString());
 
-      GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+      GeoFirePoint center = GeoFirePoint(GeoPoint(lat, lng));
       var query = CollectionRef.communities;
-      var data = geo.collection(collectionRef: query).within(
-            center: center,
-            radius: radius.toDouble(),
-            field: 'location',
-            strictMode: true,
-          );
-      yield* data.transform(
-        StreamTransformer<List<DocumentSnapshot>,
-            List<CommunityModel>>.fromHandlers(
-          handleData: (snapshot, requestSink) {
-            List<CommunityModel> communityList = [];
-            snapshot.forEach(
-              (documentSnapshot) {
-                CommunityModel model = CommunityModel(documentSnapshot.data());
-                model.id = documentSnapshot.id;
-                if (AppConfig.isTestCommunity) {
-                  if (model.testCommunity) {
-                    communityList.add(model);
-                  }
-                } else {
-                  model.softDelete == true ||
-                          model.private == true ||
-                          AppConfig.isTestCommunity
-                      ? null
-                      : communityList.add(model);
-                }
-              },
-            );
-            requestSink.add(communityList);
-          },
-        ),
+      var data = GeoCollectionReference(query).fetchWithinWithDistance(
+        center: center,
+        radiusInKm: radius.toDouble(),
+        field: 'location',
+        strictMode: true,
+        geopointFrom: (doc) =>
+            ((doc as Map<String, dynamic>)['location'] as GeoPoint),
       );
+      final snapshot = await data;
+      List<CommunityModel> communityList = [];
+      snapshot.forEach(
+        (documentSnapshot) {
+          CommunityModel model = CommunityModel(
+              (documentSnapshot as DocumentSnapshot).data()
+                  as Map<String, dynamic>);
+          model.id = (documentSnapshot as DocumentSnapshot).reference.id;
+          if (AppConfig.isTestCommunity) {
+            if (model.testCommunity) {
+              communityList.add(model);
+            }
+          } else {
+            model.softDelete == true ||
+                    model.private == true ||
+                    AppConfig.isTestCommunity
+                ? null
+                : communityList.add(model);
+          }
+        },
+      );
+      yield communityList;
     }
   } catch (e) {
     yield* Stream.error(e);
@@ -301,7 +312,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
 }
 
 Stream<List<ReportModel>> getReportedUsersStream(
-    {@required String timebankId}) async* {
+    {required String timebankId}) async* {
   var data = CollectionRef.reportedUsersList
       .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
@@ -312,7 +323,8 @@ Stream<List<ReportModel>> getReportedUsersStream(
         List<ReportModel> modelList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            ReportModel model = ReportModel.fromMap(documentSnapshot.data());
+            ReportModel model = ReportModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             if (model.timebankId == FlavorConfig.values.timebankId)
               modelList.add(model);
           },
@@ -324,7 +336,7 @@ Stream<List<ReportModel>> getReportedUsersStream(
 }
 
 /// Update Timebanks
-Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
+Future<void> updateTimebank({required TimebankModel timebankModel}) async {
   if (timebankModel == null) {
     return;
   }
@@ -335,7 +347,8 @@ Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
 }
 
 Future<void> updateTimebankDetails(
-    {@required TimebankModel timebankModel, List members}) async {
+    {required TimebankModel timebankModel,
+    required List<String> members}) async {
   if (timebankModel == null) {
     return;
   }
@@ -355,11 +368,11 @@ Future<void> updateTimebankDetails(
 Future<String> getplanForCurrentCommunity(String communityId) async {
   DocumentSnapshot cardDoc = await CollectionRef.cards.doc(communityId).get();
   if (cardDoc.exists) {
-    return cardDoc.data()['currentplan'];
+    return (cardDoc.data() as Map<String, dynamic>)['currentplan'];
   } else {
     DocumentSnapshot communityDoc =
         await CollectionRef.communities.doc(communityId).get();
-    return communityDoc.data()['payment']['planId'];
+    return (communityDoc.data() as Map<String, dynamic>)['payment']['planId'];
   }
 }
 
@@ -374,7 +387,7 @@ Future<List<Map<String, dynamic>>> getTransactionsCountsList(
   Map<String, dynamic> tempObj = {};
   String dStr = "${d.month}_${d.year}";
   transactionsSnap.docs.forEach((doc) {
-    tempObj = doc.data();
+    tempObj = doc.data() as Map<String, dynamic>;
     tempObj['id'] = doc.id;
     if (tempObj['id'] != dStr) {
       transactionsDocs.add(tempObj);
@@ -385,65 +398,75 @@ Future<List<Map<String, dynamic>>> getTransactionsCountsList(
 }
 
 /// Get a particular Timebank by it's ID
-Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
-  TimebankModel timeBankModel;
+Future<TimebankModel?> getTimeBankForId({required String timebankId}) async {
+  TimebankModel? timeBankModel;
   await CollectionRef.timebank
       .doc(timebankId)
       .get()
       .then((DocumentSnapshot documentSnapshot) {
-    Map<String, dynamic> dataMap = documentSnapshot.data();
-    timeBankModel = TimebankModel.fromMap(dataMap);
-    timeBankModel.id = documentSnapshot.id;
+    if (documentSnapshot.exists && documentSnapshot.data() != null) {
+      Map<String, dynamic> dataMap =
+          documentSnapshot.data() as Map<String, dynamic>;
+      timeBankModel = TimebankModel.fromMap(dataMap);
+      timeBankModel!.id = documentSnapshot.id;
+    }
   });
 
   return timeBankModel;
 }
 
-Future<OfferModel> getOfferFromId({@required String offerId}) async {
-  OfferModel offerModel;
+Future<OfferModel?> getOfferFromId({required String offerId}) async {
+  OfferModel? offerModel;
   await CollectionRef.offers.doc(offerId).get().then(
       (DocumentSnapshot documentSnapshot) {
-    Map<String, dynamic> dataMap = documentSnapshot.data();
+    Map<String, dynamic> dataMap =
+        documentSnapshot.data() as Map<String, dynamic>;
     offerModel = OfferModel.fromMap(dataMap);
-    offerModel.id = offerModel.id;
+    offerModel!.id = offerModel!.id;
   }).catchError(
       (value) => logger.e('ERROR CATCH Timebank Details: ' + value.toString()));
 
   return offerModel;
 }
 
-Future updateCommunity({@required CommunityModel communityModel}) async {
+Future updateCommunity({required CommunityModel communityModel}) async {
   await CollectionRef.communities
       .doc(communityModel.id)
       .update({'members': communityModel.members});
 }
 
-Future updateCommunityDetails({@required CommunityModel communityModel}) async {
+Future updateCommunityDetails({required CommunityModel communityModel}) async {
   await CollectionRef.communities
       .doc(communityModel.id)
       .update(communityModel.toMap());
 }
 
 Future<CommunityModel> getCommunityDetailsByCommunityId(
-    {@required String communityId}) async {
+    {required String communityId}) async {
   assert(communityId != null && communityId.isNotEmpty,
       'Time bank ID cannot be null or empty');
 
-  CommunityModel communityModel;
+  CommunityModel? communityModel;
   await CollectionRef.communities
       .doc(communityId)
       .get()
       .then((DocumentSnapshot documentSnapshot) {
-    Map<String, dynamic> dataMap = documentSnapshot.data();
-    communityModel = CommunityModel(dataMap);
-    logger.d(
-        "==================|||||||||========================================");
+    if (documentSnapshot.exists && documentSnapshot.data() != null) {
+      Map<String, dynamic> dataMap =
+          documentSnapshot.data() as Map<String, dynamic>;
+      communityModel = CommunityModel(dataMap);
+      logger.d(
+          "==================|||||||||========================================");
+    }
   });
-  return communityModel;
+  if (communityModel == null) {
+    throw Exception('Community not found for id: $communityId');
+  }
+  return communityModel!;
 }
 
 //check test community status by calling this api
-Future<bool> checkTestCommunityStatus({@required String creatorId}) async {
+Future<bool> checkTestCommunityStatus({required String creatorId}) async {
   return await CollectionRef.communities
       .where('created_by', isEqualTo: creatorId)
       .where('testCommunity', isEqualTo: true)
@@ -455,14 +478,15 @@ Future<bool> checkTestCommunityStatus({@required String creatorId}) async {
 
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
-    {@required String timebankId}) async* {
+    {required String timebankId}) async* {
   var data = CollectionRef.timebank.doc(timebankId).snapshots();
 
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, TimebankModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
         if (snapshot.data != null) {
-          TimebankModel model = TimebankModel.fromMap(snapshot.data());
+          TimebankModel model =
+              TimebankModel.fromMap(snapshot.data() as Map<String, dynamic>);
           model.id = snapshot.id;
           modelSink.add(model);
         }
@@ -473,13 +497,14 @@ Stream<TimebankModel> getTimebankModelStream(
 
 /// Get a community data as a Stream
 Stream<CommunityModel> getCommunityModelStream(
-    {@required String communityId}) async* {
+    {required String communityId}) async* {
   var data = CollectionRef.communities.doc(communityId).snapshots();
 
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
-        CommunityModel model = CommunityModel(snapshot.data());
+        CommunityModel model =
+            CommunityModel(snapshot.data() as Map<String, dynamic>);
 
         model.id = snapshot.id;
         modelSink.add(model);
@@ -488,19 +513,19 @@ Stream<CommunityModel> getCommunityModelStream(
   );
 }
 
-Stream<CardModel> getCardModelStream({@required String communityId}) async* {
+Stream<CardModel> getCardModelStream({required String communityId}) async* {
   var data = CollectionRef.cards.doc(communityId).snapshots();
 
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CardModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
         if (snapshot.exists) {
-          CardModel model = CardModel(snapshot.data());
+          CardModel model = CardModel(snapshot.data() as Map<String, dynamic>);
           model.timebankid = snapshot.id;
           modelSink.add(model);
         } else {
           //no card exists
-          modelSink.add(null);
+          modelSink.add(null!);
         }
       },
     ),
@@ -508,9 +533,10 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
 }
 
 Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
-    {@required String timebankId}) async {
+    {required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
-  TimebankModel model = TimebankModel.fromMap(onValue.data());
+  TimebankModel model =
+      TimebankModel.fromMap(onValue.data() as Map<String, dynamic>);
 
   List<String> admins = model.admins;
   List<String> coordinators = model.coordinators;
@@ -527,11 +553,11 @@ Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
 }
 
 class TimebankParticipantsDataHolder {
-  List<String> listOfElement;
-  TimebankModel timebankModel;
+  List<String>? listOfElement;
+  TimebankModel? timebankModel;
 }
 
-Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
+Future<TimebankModel> getTimebankIdStream({required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
 
   prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data());
@@ -544,7 +570,8 @@ Future<int> changePlan(
   // failure is 0, success is 1, error is 2
   try {
     http.Response result = await http.post(
-      FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
+      Uri.parse(
+          FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler'),
       body: json.encode({
         'communityId': communityId,
         "newPlanId": planId,
@@ -567,7 +594,8 @@ Future<int> cancelTimebankSubscription(
   // failure is 0, success is 1, error is 2
   try {
     http.Response result = await http.post(
-      FlavorConfig.values.cloudFunctionBaseURL + '/cancelRenewSubscription',
+      Uri.parse(FlavorConfig.values.cloudFunctionBaseURL +
+          '/cancelRenewSubscription'),
       body: json.encode({
         'communityId': communityId,
         'cancelSubscription': cancelSubscription
@@ -585,7 +613,7 @@ Future<int> cancelTimebankSubscription(
 }
 
 Stream<List<TimebankModel>> getAllMyTimebanks(
-    {@required String timebankId}) async* {
+    {required String timebankId}) async* {
   var data = CollectionRef.timebank
       .where('parent_timebank_id', isEqualTo: timebankId)
       .orderBy('name', descending: false)
@@ -597,8 +625,8 @@ Stream<List<TimebankModel>> getAllMyTimebanks(
         List<TimebankModel> modelList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            TimebankModel model =
-                TimebankModel.fromMap(documentSnapshot.data());
+            TimebankModel model = TimebankModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             modelList.add(model);
           },
         );
@@ -609,7 +637,7 @@ Stream<List<TimebankModel>> getAllMyTimebanks(
 }
 
 Stream<List<TimebankModel>> getChildTimebanks(
-    {@required String timebankId}) async* {
+    {required String timebankId}) async* {
   var data = CollectionRef.timebank
       .where('parent_timebank_id', isEqualTo: timebankId)
       .orderBy('name', descending: false)
@@ -622,8 +650,8 @@ Stream<List<TimebankModel>> getChildTimebanks(
 
         snapshot.docs.forEach(
           (documentSnapshot) {
-            TimebankModel model =
-                TimebankModel.fromMap(documentSnapshot.data());
+            TimebankModel model = TimebankModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             // if (model.timebankId == FlavorConfig.values.timebankId)
             modelList.add(model);
           },
@@ -635,7 +663,7 @@ Stream<List<TimebankModel>> getChildTimebanks(
 }
 
 Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
-    {@required String sevaUserId}) async* {
+    {required String sevaUserId}) async* {
   var data = CollectionRef.offers
       .where('individualOfferDataModeferAcceptors', arrayContains: sevaUserId)
       .snapshots();
@@ -646,8 +674,8 @@ Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
         List<prefix0.OfferModel> modelList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            prefix0.OfferModel model =
-                prefix0.OfferModel.fromMap(documentSnapshot.data());
+            prefix0.OfferModel model = prefix0.OfferModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             modelList.add(model);
           },
         );
@@ -664,7 +692,8 @@ Stream<CommunityModel> getCurrentCommunityStream(String communityId) async* {
   yield* ds.transform(
     StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
-        CommunityModel communityModel = CommunityModel(snapshot.data());
+        CommunityModel communityModel =
+            CommunityModel(snapshot.data() as Map<String, dynamic>);
         modelSink.add(communityModel);
       },
     ),

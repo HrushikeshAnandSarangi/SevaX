@@ -22,9 +22,9 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 class TimeBankAboutView extends StatefulWidget {
-  final TimebankModel timebankModel;
-  final String email;
-  final String userId;
+  final TimebankModel? timebankModel;
+  final String? email;
+  final String? userId;
   TimeBankAboutView.of({this.timebankModel, this.email, this.userId});
 
   @override
@@ -35,9 +35,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
     with AutomaticKeepAliveClientMixin {
   bool descTextShowFlag = false;
   bool isUserJoined = false;
-  String loggedInUser;
-  UserModelListMoreStatus userModels;
-  UserModel user;
+  String? loggedInUser;
+  UserModelListMoreStatus? userModels;
+  UserModel? user;
   bool isDataLoaded = false;
   bool isAdminLoaded = false;
   bool get wantKeepAlive => true;
@@ -54,7 +54,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
 
   void getData() async {
     await FirestoreManager.getUserForId(
-            sevaUserId: widget.timebankModel.creatorId)
+            sevaUserId: widget.timebankModel!.creatorId)
         .then((onValue) {
       user = onValue;
       setState(() {
@@ -62,10 +62,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
       });
     });
     var templist = [
-      ...widget.timebankModel.members,
-      ...widget.timebankModel.organizers,
-      ...widget.timebankModel.admins,
-      ...widget.timebankModel.coordinators
+      ...widget.timebankModel!.members,
+      ...widget.timebankModel!.organizers,
+      ...widget.timebankModel!.admins,
+      ...widget.timebankModel!.coordinators
     ];
     isUserJoined = templist.contains(widget.userId) ? true : false;
     isDataLoaded = true;
@@ -76,7 +76,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
     super.build(context);
     var futures = <Future>[];
 
-    widget.timebankModel.members.forEach((member) {
+    widget.timebankModel!.members.forEach((member) {
       futures.add(getUserForId(sevaUserId: member));
     });
 
@@ -94,7 +94,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                   width: MediaQuery.of(context).size.width,
                   child: CachedNetworkImage(
                     imageUrl:
-                        widget.timebankModel.cover_url ?? defaultGroupImageURL,
+                        widget.timebankModel!.cover_url ?? defaultGroupImageURL,
                     fit: BoxFit.cover,
                     height: 200,
                     errorWidget: (context, url, error) => Image(
@@ -111,10 +111,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 Positioned(
                   child: Container(
                     child: CachedNetworkImage(
-                      imageUrl: (widget.timebankModel.photoUrl == null ||
-                              widget.timebankModel.photoUrl == '')
+                      imageUrl: (widget.timebankModel!.photoUrl == null ||
+                              widget.timebankModel!.photoUrl == '')
                           ? defaultUserImageURL
-                          : widget.timebankModel.photoUrl,
+                          : widget.timebankModel!.photoUrl,
                       fit: BoxFit.cover,
                       width: 100,
                       height: 70,
@@ -134,7 +134,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Padding(
               padding: const EdgeInsets.only(left: 20.0, top: 5),
               child: Text(
-                widget.timebankModel.name ?? " ",
+                widget.timebankModel!.name ?? " ",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -147,10 +147,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             ),
             isUserJoined
                 ? TimeBankSevaCoin(
-                    isAdmin: isAccessAvailable(widget.timebankModel,
-                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    isAdmin: isAccessAvailable(widget.timebankModel!,
+                        SevaCore.of(context).loggedInUser.sevaUserID!),
                     loggedInUser: SevaCore.of(context).loggedInUser,
-                    timebankData: widget.timebankModel)
+                    timebankData: widget.timebankModel!)
                 : Offstage(),
             SizedBox(
               height: 15,
@@ -180,25 +180,25 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             //         ),
             //       )
             //     : Container(),
-            isAccessAvailable(widget.timebankModel,
-                    SevaCore.of(context).loggedInUser.sevaUserID)
+            isAccessAvailable(widget.timebankModel!,
+                    SevaCore.of(context).loggedInUser.sevaUserID!)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GoodsAndAmountDonations(
-                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                           isGoods: false,
-                          timebankId: widget.timebankModel.id,
+                          timebankId: widget.timebankModel!.id,
                           isTimeBank: true,
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DonationsDetailsView(
-                                  id: widget.timebankModel.id,
+                                  id: widget.timebankModel!.id,
                                   totalBalance:
                                       '', //change this to total of goods donated
-                                  timebankModel: widget.timebankModel,
+                                  timebankModel: widget.timebankModel!,
                                   fromTimebank: true,
                                   isGoods: false,
                                 ),
@@ -209,19 +209,19 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         height: 15,
                       ),
                       GoodsAndAmountDonations(
-                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                           isGoods: true,
-                          timebankId: widget.timebankModel.id,
+                          timebankId: widget.timebankModel!.id,
                           isTimeBank: true,
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DonationsDetailsView(
-                                  id: widget.timebankModel.id,
+                                  id: widget.timebankModel!.id,
                                   totalBalance:
                                       '', //change this to total of goods donated
-                                  timebankModel: widget.timebankModel,
+                                  timebankModel: widget.timebankModel!,
                                   fromTimebank: true,
                                   isGoods: true,
                                 ),
@@ -234,7 +234,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     ],
                   )
                 : Offstage(),
-            widget.timebankModel.members.contains(
+            widget.timebankModel!.members.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
             )
                 ? Container(
@@ -251,7 +251,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                               );
                             }
 
-                            if (widget.timebankModel.members.length == 0) {
+                            if (widget.timebankModel!.members.length == 0) {
                               return Container(
                                 margin: EdgeInsets.only(left: 15),
                                 child: Text(S.of(context).no_volunteers_yet),
@@ -260,9 +260,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
 
                             List<UserModel> memberPhotoUrlList = [];
                             for (var i = 0;
-                                i < widget.timebankModel.members.length;
+                                i < widget.timebankModel!.members.length;
                                 i++) {
-                              UserModel userModel = snapshot.data[i];
+                              UserModel userModel = (snapshot.data as List)[i];
                               if (userModel != null) {
                                 // userModel.photoURL != null
                                 memberPhotoUrlList.add(userModel);
@@ -278,12 +278,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 2.5),
                                       child: UserProfileImage(
-                                        photoUrl: user.photoURL,
-                                        email: user.email,
-                                        userId: user.sevaUserID,
+                                        photoUrl: user.photoURL!,
+                                        email: user.email!,
+                                        userId: user.sevaUserID!,
                                         height: 40,
                                         width: 40,
-                                        timebankModel: widget.timebankModel,
+                                        timebankModel: widget.timebankModel!,
                                       ));
                                 }).toList()
                               ],
@@ -295,7 +295,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
-                widget.timebankModel.members.length.toString() +
+                widget.timebankModel!.members.length.toString() +
                     ' ${S.of(context).members}',
                 style: TextStyle(
                   fontFamily: 'Europa',
@@ -307,7 +307,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                widget.timebankModel.address ?? '',
+                widget.timebankModel!.address ?? '',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 14,
@@ -338,7 +338,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(widget.timebankModel.missionStatement,
+                  Text(widget.timebankModel!.missionStatement,
                       style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 16,
@@ -352,7 +352,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         descTextShowFlag = !descTextShowFlag;
                       });
                     },
-                    child: widget.timebankModel.missionStatement.length > 100
+                    child: widget.timebankModel!.missionStatement.length > 100
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
@@ -383,8 +383,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             Offstage(
-              offstage: widget.timebankModel.sponsors.isEmpty ||
-                      widget.timebankModel.sponsors == null
+              offstage: widget.timebankModel!.sponsors.isEmpty ||
+                      widget.timebankModel!.sponsors == null
                   ? true
                   : false,
               child: Padding(
@@ -395,8 +395,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             Offstage(
-              offstage: widget.timebankModel.sponsors.isEmpty ||
-                      widget.timebankModel.sponsors == null
+              offstage: widget.timebankModel!.sponsors.isEmpty ||
+                      widget.timebankModel!.sponsors == null
                   ? true
                   : false,
               child: Padding(
@@ -404,12 +404,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 child: SponsorsWidget(
                   textColor: Theme.of(context).primaryColor,
                   sponsorsMode: SponsorsMode.ABOUT,
-                  sponsors: widget.timebankModel.sponsors,
+                  sponsors: widget.timebankModel!.sponsors,
                   isAdminVerified: GetUserVerified.verify(
-                    userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                    creatorId: widget.timebankModel.creatorId,
-                    admins: widget.timebankModel.admins,
-                    organizers: widget.timebankModel.organizers,
+                    userId: SevaCore.of(context).loggedInUser.sevaUserID!,
+                    creatorId: widget.timebankModel!.creatorId,
+                    admins: widget.timebankModel!.admins,
+                    organizers: widget.timebankModel!.organizers,
                   ),
                 ),
               ),
@@ -442,7 +442,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     children: <Widget>[
                       isAdminLoaded
                           ? Text(
-                              user.fullname ?? ' ',
+                              user!.fullname ?? ' ',
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -455,15 +455,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            if (isAccessAvailable(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                            if (isAccessAvailable(
+                                widget.timebankModel!,
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID!)) {
                               _showAdminMessage();
                             } else {
                               startChat(
-                                widget.timebankModel.id,
-                                widget.email,
+                                widget.timebankModel!.id,
+                                widget.email!,
                                 context,
-                                widget.timebankModel,
+                                widget.timebankModel!,
                               );
                             }
                           },
@@ -484,12 +487,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                   Spacer(),
                   isAdminLoaded
                       ? UserProfileImage(
-                          photoUrl: user.photoURL ?? defaultUserImageURL,
-                          email: user.email,
-                          userId: user.sevaUserID,
+                          photoUrl: user!.photoURL ?? defaultUserImageURL,
+                          email: user!.email!,
+                          userId: user!.sevaUserID!,
                           height: 60,
                           width: 60,
-                          timebankModel: widget.timebankModel,
+                          timebankModel: widget.timebankModel!,
                         )
                       : CircleAvatar()
                 ],
@@ -567,8 +570,12 @@ void startChat(
       timebankId: timebankModel.id,
       sender: sender,
       reciever: reciever,
-      communityId: loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity!,
       isTimebankMessage: true,
+      feedId: '', // Provide appropriate value if needed
+      onChatCreate: () {}, // Provide appropriate callback if needed
+      showToCommunities: [], // Provide appropriate value if needed
+      entityId: timebankModel.id, // Provide appropriate value if needed
     );
   }
 }

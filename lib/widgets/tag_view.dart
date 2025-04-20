@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 class TagView extends StatelessWidget {
   const TagView({
-    this.tagTitle,
+    required this.tagTitle,
   });
 
   final String tagTitle;

@@ -139,7 +139,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
               //     dataCopy.add(SuggestedItem()
               //       ..suggestionMode = SuggestionMode.SUGGESTED
               //       ..suggesttionTitle = spellCheckResult.correctSpelling);
-// 
+//
               //     dataCopy.add(SuggestedItem()
               //       ..suggestionMode = SuggestionMode.USER_DEFINED
               //       ..suggesttionTitle = pattern);
@@ -180,7 +180,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
                 //     suggestionMode: suggestedItem.suggestionMode,
                 //     showLoader: true,
                 //   );
-// 
+//
                 // case SuggestionMode.USER_DEFINED:
                 //   if (ProfanityDetector()
                 //       .isProfaneString(suggestedItem.suggesttionTitle)) {
@@ -203,7 +203,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
               }
             },
             noItemsFoundBuilder: (context) {
-               return Padding(
+              return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   S.of(context).no_result_found,
@@ -302,16 +302,19 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLoading : LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-);
+          return showLoader
+              ? getLoading
+              : LinearProgressIndicator(
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.5),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
+                  ),
+                );
         }
 
         return getSuggestionLayout(
-          context:context,
+          context: context,
           suggestion: keyword,
           suggestionMode: suggestionMode,
           add: S.of(context).add + ' ',

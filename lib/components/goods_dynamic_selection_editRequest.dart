@@ -9,25 +9,25 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 typedef StringMapCallback = void Function(Map<String, dynamic> goods);
 
 class GoodsDynamicSelection extends StatefulWidget {
   final bool automaticallyImplyLeading;
-  Map<String, String> goodsbefore;
+  Map<String, String>? goodsbefore;
   final StringMapCallback onSelectedGoods;
 
   GoodsDynamicSelection(
       {this.goodsbefore,
-      @required this.onSelectedGoods,
+      required this.onSelectedGoods,
       this.automaticallyImplyLeading = true});
   @override
   _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
 }
 
 class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
   TextEditingController _textEditingController = TextEditingController();
 
   bool autovalidate = false;
@@ -37,7 +37,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
   @override
   void initState() {
-    this._selectedGoods = widget.goodsbefore != null ? widget.goodsbefore : {};
+    this._selectedGoods = widget.goodsbefore ?? {};
     CollectionRef.donationCategories.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
@@ -65,46 +65,55 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
             SizedBox(height: 8),
             //TODOSUGGESTION
             TypeAheadField<SuggestedItem>(
-                suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                suggestionsController: SuggestionsController(),
+                decorationBuilder: (context, child) {
+                  return Material(
+                    child: child,
+                    elevation: 4.0,
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
+                  );
+                },
                 errorBuilder: (context, err) {
                   return Text(S.of(context).error_occured);
                 },
                 hideOnError: true,
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: _textEditingController,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).search,
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    suffixIcon: InkWell(
-                      splashColor: Colors.transparent,
-                      child: Icon(
-                        Icons.clear,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: _textEditingController,
+                    focusNode: focusNode,
+                    decoration: InputDecoration(
+                      hintText: S.of(context).search,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                      contentPadding:
+                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                      prefixIcon: Icon(
+                        Icons.search,
                         color: Colors.grey,
                       ),
-                      onTap: () {
-                        _textEditingController.clear();
-                        controller.close();
-                      },
+                      suffixIcon: InkWell(
+                        splashColor: Colors.transparent,
+                        child: Icon(
+                          Icons.clear,
+                          color: Colors.grey,
+                        ),
+                        onTap: () {
+                          _textEditingController.clear();
+                          controller.clear();
+                        },
+                      ),
                     ),
-                  ),
-                ),
-                suggestionsBoxController: controller,
+                  );
+                },
                 suggestionsCallback: (pattern) async {
                   List<SuggestedItem> dataCopy = [];
                   goods.forEach(
@@ -123,14 +132,14 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                             language:
                                 SevaCore.of(context).loggedInUser.language ??
                                     'en');
-                    if (spellCheckResult.hasErros) {
+                    if (spellCheckResult.hasErros!) {
                       dataCopy.add(SuggestedItem()
                         ..suggestionMode = SuggestionMode.USER_DEFINED
                         ..suggesttionTitle = pattern);
                     } else if (spellCheckResult.correctSpelling != pattern) {
                       dataCopy.add(SuggestedItem()
                         ..suggestionMode = SuggestionMode.SUGGESTED
-                        ..suggesttionTitle = spellCheckResult.correctSpelling);
+                        ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                       dataCopy.add(SuggestedItem()
                         ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -193,14 +202,14 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                       return Container();
                   }
                 },
-                noItemsFoundBuilder: (context) {
+                emptyBuilder: (context) {
                   return searchUserDefinedEntity(
                     keyword: _textEditingController.text,
                     language: 'en',
                     showLoader: false,
                   );
                 },
-                onSuggestionSelected: (SuggestedItem suggestion) {
+                onSelected: (SuggestedItem suggestion) {
                   if (ProfanityDetector()
                       .isProfaneString(suggestion.suggesttionTitle)) {
                     return;
@@ -208,7 +217,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
                   switch (suggestion.suggestionMode) {
                     case SuggestionMode.SUGGESTED:
-                      var newGoodId = Uuid().generateV4();
+                      var newGoodId = Uuid().v4();
                       addGoodsToDb(
                         goodsId: newGoodId,
                         goodsLanguage: 'en',
@@ -218,7 +227,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                       break;
 
                     case SuggestionMode.USER_DEFINED:
-                      var goodId = Uuid().generateV4();
+                      var goodId = Uuid().v4();
                       addGoodsToDb(
                         goodsId: goodId,
                         goodsLanguage: 'en',
@@ -321,24 +330,26 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   // }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
-        language: language,
+        keyword ?? '',
+        language: language ?? 'en',
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLinearLoading : LinearProgressIndicator();
+          return (showLoader ?? false)
+              ? getLinearLoading
+              : LinearProgressIndicator();
         }
 
         return getSuggestionLayout(
-          suggestion: keyword,
-          suggestionMode: suggestionMode,
+          suggestion: keyword ?? '',
+          suggestionMode: suggestionMode ?? SuggestionMode.FROM_DB,
         );
       },
     );
@@ -348,7 +359,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: LinearProgressIndicator(
-       backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
         valueColor: AlwaysStoppedAnimation<Color>(
           Theme.of(context).primaryColor,
         ),
@@ -357,9 +368,9 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   }
 
   static Future<void> addGoodsToDb({
-    String goodsId,
-    String goodsTitle,
-    String goodsLanguage,
+    String? goodsId,
+    String? goodsTitle,
+    String? goodsLanguage,
   }) async {
     await CollectionRef.donationCategories.doc(goodsId).set(
       {'goodTitle': goodsTitle, 'lang': goodsLanguage},
@@ -367,8 +378,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   }
 
   Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
+    String? suggestion,
+    SuggestionMode? suggestionMode,
   }) {
     return Padding(
       padding: const EdgeInsets.all(10.0),

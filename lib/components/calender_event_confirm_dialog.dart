@@ -3,12 +3,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
-
 class CalenderEventConfirmationDialog extends StatelessWidget {
-  final String title;
-  final bool isrequest;
-  final VoidCallback addToCalender;
-  final VoidCallback cancelled;
+  final String? title;
+  final bool? isrequest;
+  final VoidCallback? addToCalender;
+  final VoidCallback? cancelled;
 
   CalenderEventConfirmationDialog(
       {this.title, this.isrequest, this.addToCalender, this.cancelled});
@@ -22,7 +21,7 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
         children: <Widget>[
           Text(S.of(context).do_you_want_to_add +
               ' ' +
-              '$title ${isrequest ? 'request ' : 'offer '}' +
+              '$title ${isrequest == true ? 'request ' : 'offer '}' +
               S.of(context).event_to_calender),
           SizedBox(height: 10),
           Row(
@@ -39,7 +38,7 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                onPressed: cancelled,
+                onPressed: cancelled!,
               ),
               SizedBox(
                 width: 10,
@@ -47,7 +46,7 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
               CustomTextButton(
                 shape: StadiumBorder(),
                 // padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 // textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
                   S.of(context).yes,
@@ -57,9 +56,8 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                onPressed: addToCalender,
+                onPressed: addToCalender!,
               ),
-
             ],
           )
         ],

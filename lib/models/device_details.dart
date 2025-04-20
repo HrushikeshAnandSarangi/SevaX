@@ -1,5 +1,7 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class DeviceDetails {
   DeviceDetails({
@@ -9,10 +11,10 @@ class DeviceDetails {
     this.timestamp,
   });
 
-  String deviceId;
-  String deviceType;
-  int timestamp;
-  GeoFirePoint location;
+  String? deviceId;
+  String? deviceType;
+  int? timestamp;
+  GeoFirePoint? location;
 
   factory DeviceDetails.fromMap(Map<String, dynamic> json) => DeviceDetails(
         deviceId: json["deviceId"] == null ? null : json["deviceId"],
@@ -25,24 +27,24 @@ class DeviceDetails {
   Map<String, dynamic> toMap() => {
         "deviceId": deviceId == null ? null : deviceId,
         "deviceType": deviceType == null ? null : deviceType,
-        "location": location == null ? null : location.data,
+        "location": location == null ? null : location!.data,
         "timestamp": timestamp == null ? null : timestamp,
       };
 }
 
 GeoFirePoint getLocation(map) {
-  GeoFirePoint geoFirePoint;
+  GeoFirePoint geoFirePoint =
+      GeoFirePoint(GeoPoint(0, 0)); // Default initialization
   if (map.containsKey("location") &&
       map["location"] != null &&
       map['location']['geopoint'] != null) {
     if (map['location']['geopoint'] is GeoPoint) {
       GeoPoint geoPoint = map['location']['geopoint'];
-      geoFirePoint = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      geoFirePoint =
+          GeoFirePoint(GeoPoint(geoPoint.latitude, geoPoint.longitude));
     } else {
       geoFirePoint = GeoFirePoint(
         map["location"]["geopoint"]["_latitude"],
-        map["location"]["geopoint"]["_longitude"],
       );
     }
   }

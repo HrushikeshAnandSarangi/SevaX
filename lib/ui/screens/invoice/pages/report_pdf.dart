@@ -47,8 +47,8 @@ class ReportPdf {
 
     double getSubTotal() {
       double subtotal = 0;
-      model.details
-          .forEach((element) => subtotal += element.price * element.units);
+      model.details?.forEach(
+          (element) => subtotal += (element.price ?? 0) * (element.units ?? 0));
       return subtotal;
     }
 
@@ -62,7 +62,7 @@ class ReportPdf {
         crossAxisAlignment: CrossAxisAlignment.start,
         header: (Context context) {
           if (context.pageNumber == 1) {
-            return null;
+            return SizedBox.shrink();
           }
           return Container(
             alignment: Alignment.centerRight,
@@ -190,12 +190,13 @@ class ReportPdf {
             ),
             headers: ['DETAILS', 'NO.', 'PRICE', 'TOTAL'],
             data: List.generate(
-              model.details.length,
+              model.details?.length ?? 0,
               (index) => [
-                model.details[index].description,
-                model.details[index].units,
-                model.details[index].price,
-                model.details[index].units * model.details[index].price
+                model.details?[index].description ?? '',
+                model.details?[index].units ?? 0,
+                model.details?[index].price ?? 0,
+                ((model.details?[index].units ?? 0) *
+                    (model.details?[index].price ?? 0)),
               ],
             ),
           ),

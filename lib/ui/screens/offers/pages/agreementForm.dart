@@ -835,8 +835,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 } else {
                   if (agreementDocumentType ==
                       AgreementDocumentType.TEMPLATE.readable) {
-
-                    if(selectedAgreementTemplate == null){
+                    if (selectedAgreementTemplate == null) {
                       searchFocusNode.requestFocus();
                       return;
                     }

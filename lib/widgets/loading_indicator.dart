@@ -8,10 +8,10 @@ class LoadingViewIndicator extends StatelessWidget {
   final bool showChildInBackground;
 
   const LoadingViewIndicator({
-    Key key,
-    this.isLoading,
-    this.loadingIndicator,
-    this.child,
+    Key? key,
+    required this.isLoading,
+    required this.loadingIndicator,
+    required this.child,
     this.showChildInBackground = false,
   }) : super(key: key);
   @override

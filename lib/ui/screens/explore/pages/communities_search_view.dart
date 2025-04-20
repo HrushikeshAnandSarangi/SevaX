@@ -13,7 +13,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class CommunitiesSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
-  const CommunitiesSearchView({Key key, @required this.isUserSignedIn})
+  const CommunitiesSearchView({Key? key, required this.isUserSignedIn})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,11 @@ class CommunitiesSearchView extends StatelessWidget {
               return LoadingIndicator();
             }
 
-            if (snapshot.data.isEmpty) {
+            if (snapshot.data!.isEmpty) {
               return Text(S.of(context).no_search_result_found);
             }
 
-            int length = snapshot.data.length;
+            int length = snapshot.data!.length;
             return Column(
               children: List.generate(
                 length + 1,
@@ -61,9 +61,9 @@ class CommunitiesSearchView extends StatelessWidget {
                                 }
                                 return ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: snapshot.data.length,
+                                  itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    var community = snapshot.data[index];
+                                    var community = snapshot.data![index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0,
@@ -111,7 +111,7 @@ class CommunitiesSearchView extends StatelessWidget {
                   } else {
                     return ExploreCommunityCard(
                       model:
-                          snapshot.data[index >= length ? length ~/ 2 : index],
+                          snapshot.data![index >= length ? length ~/ 2 : index],
                       isSignedUser: isUserSignedIn,
                     );
                   }

@@ -12,8 +12,8 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CreateRequest extends StatefulWidget {
-  final bool isOfferRequest;
-  final OfferModel offer;
+  final bool? isOfferRequest;
+  final OfferModel? offer;
   final String timebankId;
   final UserModel userModel;
   final ProjectModel projectModel;
@@ -21,17 +21,17 @@ class CreateRequest extends StatefulWidget {
   final ComingFrom comingFrom;
   RequestModel requestModel;
 
-  CreateRequest({
-    Key key,
-    @required this.comingFrom,
-    this.isOfferRequest,
-    this.offer,
-    this.timebankId,
-    this.userModel,
-    this.projectId,
-    this.projectModel,
-    this.requestModel
-  }) : super(key: key);
+  CreateRequest(
+      {Key? key,
+      required this.comingFrom,
+      this.isOfferRequest,
+      this.offer,
+      required this.timebankId,
+      required this.userModel,
+      required this.projectId,
+      required this.projectModel,
+      required this.requestModel})
+      : super(key: key);
 
   @override
   _CreateRequestState createState() => _CreateRequestState();
@@ -68,13 +68,16 @@ class _CreateRequestState extends State<CreateRequest> {
               return RequestCreateEditForm(
                 formType: RequestFormType.CREATE,
                 comingFrom: widget.comingFrom,
-                isOfferRequest: widget.offer != null ? widget.isOfferRequest : false,
-                offer: widget.offer,
+                isOfferRequest: widget.offer != null
+                    ? widget.isOfferRequest ?? false
+                    : false,
+                offer: widget.offer!,
                 timebankId: widget.timebankId,
                 userModel: widget.userModel,
-                loggedInUser: snapshot.data.loggedinuser,
+                loggedInUser: snapshot.data!.loggedinuser,
                 projectId: widget.projectId,
                 projectModel: widget.projectModel,
+                requestModel: widget.requestModel,
               );
             }
             return Text('');
@@ -85,10 +88,11 @@ class _CreateRequestState extends State<CreateRequest> {
   }
 
   String get _title {
-    if (widget.projectId == null || widget.projectId.isEmpty || widget.projectId == "") {
+    if (widget.projectId == null ||
+        widget.projectId.isEmpty ||
+        widget.projectId == "") {
       return S.of(context).create_request;
     }
     return S.of(context).create_project_request;
   }
 }
-

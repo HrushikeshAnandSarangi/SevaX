@@ -3,12 +3,12 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/components/calendar_events/module/index.dart';
@@ -24,6 +24,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -50,13 +51,16 @@ import 'package:sevaexchange/components/sevaavatar/project_cover_photo.dart';
 import '../../flavor_config.dart';
 
 class CreateEditProject extends StatefulWidget {
-  final bool isCreateProject;
-  final String timebankId;
-  final String projectId;
-  final ProjectTemplateModel projectTemplateModel;
+  final bool? isCreateProject;
+  final String? timebankId;
+  final String? projectId;
+  final ProjectTemplateModel? projectTemplateModel;
 
   CreateEditProject(
-      {this.isCreateProject, this.timebankId, this.projectId, this.projectTemplateModel});
+      {this.isCreateProject,
+      this.timebankId,
+      this.projectId,
+      this.projectTemplateModel});
 
   @override
   _CreateEditProjectState createState() => _CreateEditProjectState();
@@ -69,15 +73,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   String communityImageError = '';
   TextEditingController searchTextController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  String errTxt;
+  String? errTxt;
   ProjectModel projectModel = ProjectModel();
   ProjectTemplateModel projectTemplateModel = ProjectTemplateModel();
-  GeoFirePoint location;
+  GeoFirePoint? location;
   String selectedAddress = '';
   String templateName = '';
   bool saveAsTemplate = false;
   TimebankModel timebankModel = TimebankModel({});
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
   String dateTimeEroor = '';
   String locationError = '';
   var startDate;
@@ -92,8 +96,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool makePublicBool = false;
 
   // bool isPulicCheckboxVisible = false;
-  CommunityModel communityModel;
-  End end = End();
+  CommunityModel? communityModel;
+  End end = End(endType: '', on: 0, after: 0);
 
   bool wasCreatedFromRecurring = false;
 
@@ -109,17 +113,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   void initState() {
     super.initState();
 
-    if (!widget.isCreateProject) {
+    if (!widget.isCreateProject!) {
       getData();
     } else {
       setState(() {
         if (widget.projectTemplateModel != null) {
-          this.projectModel.mode = widget.projectTemplateModel.mode;
-          this.projectModel.mode == ProjectMode.TIMEBANK_PROJECT
+          this.projectModel.mode = widget.projectTemplateModel!.mode!;
+          this.projectModel.mode == ProjectMode.timebankProject
               ? sharedValue = 0
               : sharedValue = 1;
         } else {
-          this.projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
+          this.projectModel.mode = ProjectMode.timebankProject;
         }
         projectModel.public = false;
       });
@@ -150,7 +154,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           setState(() {});
         } else {
           if (templateName != searchTextController.text) {
-            SearchManager.searchTemplateForDuplicate(queryString: searchTextController.text)
+            SearchManager.searchTemplateForDuplicate(
+                    queryString: searchTextController.text)
                 .then((commFound) {
               if (commFound) {
                 setState(() {
@@ -170,18 +175,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
   Future<void> getCommunity() async {
     timebankModel = await getTimebankDetailsbyFuture(
-      timebankId: widget.timebankId,
+      timebankId: widget.timebankId!,
     );
     communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: timebankModel.communityId);
-    if (widget.isCreateProject) {
-      location = communityModel.location;
+    if (widget.isCreateProject!) {
+      location = communityModel!.location!;
       selectedAddress = timebankModel.address;
     } else {
       if (projectModel.location == null ||
           projectModel.address == null ||
           projectModel.address == '') {
-        location = communityModel.location;
+        location = communityModel!.location;
         selectedAddress = timebankModel.address;
       }
     }
@@ -189,51 +194,61 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   _initializeFields() {
-    projectNameController.text = widget.isCreateProject
-        ? widget.projectTemplateModel != null
-            ? widget.projectTemplateModel.name
-            : ""
+    projectNameController.text = (widget.isCreateProject ?? false)
+        ? (widget.projectTemplateModel != null
+            ? widget.projectTemplateModel?.name ?? ""
+            : "")
         : projectModel.name ?? "";
-    projectStatementController.text = widget.isCreateProject
-        ? widget.projectTemplateModel != null
-            ? widget.projectTemplateModel.description
-            : ""
+    projectStatementController.text = (widget.isCreateProject ?? false)
+        ? (widget.projectTemplateModel != null
+            ? widget.projectTemplateModel?.description ?? ""
+            : "")
         : projectModel.description ?? "";
-    registrationLinkController.text = widget.isCreateProject
-        ? widget.projectTemplateModel != null
-            ? widget.projectTemplateModel.registrationLink
-            : ""
+    registrationLinkController.text = (widget.isCreateProject ?? false)
+        ? (widget.projectTemplateModel != null
+            ? widget.projectTemplateModel?.registrationLink ?? ""
+            : "")
         : projectModel.registrationLink ?? "";
   }
 
   void getData() async {
-    await FirestoreManager.getProjectFutureById(projectId: widget.projectId).then((onValue) {
-      projectModel = onValue;
-      wasCreatedFromRecurring = projectModel.isRecurring || projectModel.autoGenerated;
+    if (widget.projectId != null) {
+      await FirestoreManager.getProjectFutureById(projectId: widget.projectId!)
+          .then((onValue) {
+        projectModel = onValue;
+        wasCreatedFromRecurring = (projectModel.isRecurring ?? false) ||
+            (projectModel.autoGenerated ?? false);
 
-      selectedAddress = projectModel.address;
-      location = projectModel.location;
-      isDataLoaded = true;
-      setState(() {});
-      _initializeFields();
-    });
+        selectedAddress = projectModel.address ?? '';
+        location = projectModel.location;
+        isDataLoaded = true;
+        setState(() {});
+        _initializeFields();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isCreateProject) {
+    if (!(widget.isCreateProject ?? false)) {
       startDate = getUpdatedDateTimeAccToUserTimezone(
-          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-          dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.startTime));
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone ?? '',
+          dateTime:
+              DateTime.fromMillisecondsSinceEpoch(projectModel.startTime ?? 0));
       endDate = getUpdatedDateTimeAccToUserTimezone(
-          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-          dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone ?? '',
+          dateTime:
+              DateTime.fromMillisecondsSinceEpoch(projectModel.endTime ?? 0));
     }
-    emailIdController.text = widget.isCreateProject
-        ? widget.projectTemplateModel != null
-            ? widget.projectTemplateModel.emailId ?? SevaCore.of(context).loggedInUser.email
-            : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
-        : SevaCore.of(context).loggedInUser.email;
+    emailIdController.text = (widget.isCreateProject ?? false)
+        ? (widget.projectTemplateModel != null
+            ? widget.projectTemplateModel?.emailId ??
+                SevaCore.of(context).loggedInUser.email ??
+                ''
+            : projectModel.emailId ??
+                SevaCore.of(context).loggedInUser.email ??
+                '')
+        : SevaCore.of(context).loggedInUser.email ?? '';
 
     return ExitWithConfirmation(
       child: Scaffold(
@@ -252,11 +267,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           // automaticallyImplyLeading: true,
           centerTitle: true,
           title: Text(
-            widget.isCreateProject ? S.of(context).create_project : S.of(context).edit_project,
+            widget.isCreateProject!
+                ? S.of(context).create_project
+                : S.of(context).edit_project,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
-        body: widget.isCreateProject
+        body: widget.isCreateProject!
             ? DoseForm(
                 formKey: _formKey,
                 child: createProjectForm,
@@ -271,8 +288,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  Future<TimebankModel> getTimebankAdminStatus;
-  TimebankModel timebankModelFuture;
+  Future<TimebankModel>? getTimebankAdminStatus;
+  TimebankModel? timebankModelFuture;
 
   Widget get projectSwitch {
     return FutureBuilder(
@@ -283,7 +300,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           return Container();
         }
         timebankModel = snapshot.data;
-        if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (isAccessAvailable(
+            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID!)) {
           return Container(
             margin: EdgeInsets.only(bottom: 20),
             width: double.infinity,
@@ -291,9 +309,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               selectedColor: Theme.of(context).primaryColor,
               children: {
                 0: Text(
-                  timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  timebankModel.parentTimebankId ==
+                          FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : S.of(context).seva + timebankModel.name + S.of(context).event,
+                      : S.of(context).seva +
+                          timebankModel.name +
+                          S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -308,9 +329,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (val != sharedValue) {
                   setState(() {
                     if (val == 0) {
-                      projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
+                      projectModel.mode = ProjectMode.timebankProject;
                     } else {
-                      projectModel.mode = ProjectMode.MEMBER_PROJECT;
+                      projectModel.mode = ProjectMode.timebankProject;
                     }
                     sharedValue = val;
                   });
@@ -320,7 +341,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
           );
         } else {
-          this.projectModel.mode = ProjectMode.MEMBER_PROJECT;
+          this.projectModel.mode = ProjectMode.memberProject;
           return Container();
         }
       },
@@ -342,19 +363,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   padding: EdgeInsets.all(5.0),
                   child: Column(
                     children: <Widget>[
-                      widget.isCreateProject
+                      widget.isCreateProject!
                           ? widget.projectTemplateModel != null
                               ? ProjectCoverPhoto(
-                                  cover_url: widget.projectTemplateModel.cover_url ??
-                                      defaultProjectImageURL)
+                                  cover_url:
+                                      widget.projectTemplateModel!.cover_url ??
+                                          defaultProjectImageURL)
                               : ProjectCoverPhoto()
                           : ProjectCoverPhoto(
                               cover_url: projectModel.cover_url != null
-                                  ? projectModel.cover_url ?? defaultProjectImageURL
+                                  ? projectModel.cover_url ??
+                                      defaultProjectImageURL
                                   : defaultProjectImageURL,
                             ),
                       Text(''),
-                      !widget.isCreateProject
+                      !widget.isCreateProject!
                           ? Text(
                               "${S.of(context).cover_picture_label_event}",
                               style: TextStyle(
@@ -364,15 +387,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             )
                           : Container(),
                       SizedBox(height: 25),
-                      widget.isCreateProject
+                      widget.isCreateProject!
                           ? widget.projectTemplateModel != null
                               ? ProjectAvtaar(
-                                  photoUrl: widget.projectTemplateModel.photoUrl ??
-                                      defaultProjectImageURL)
+                                  photoUrl:
+                                      widget.projectTemplateModel!.photoUrl ??
+                                          defaultProjectImageURL)
                               : ProjectAvtaar()
                           : ProjectAvtaar(
                               photoUrl: projectModel.photoUrl != null
-                                  ? projectModel.photoUrl ?? defaultProjectImageURL
+                                  ? projectModel.photoUrl ??
+                                      defaultProjectImageURL
                                   : defaultProjectImageURL,
                             ),
                       Text(''),
@@ -426,12 +451,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 },
                 // onSaved: (value) => enteredName = value,
                 validator: (value) {
-                  if (value.trimLeft().isEmpty) {
+                  if (value!.trimLeft().isEmpty) {
                     return S.of(context).validation_error_project_name_empty;
                   } else if (profanityDetector.isProfaneString(value)) {
                     return S.of(context).profanity_text_alert;
                   } else if (value.substring(0, 1).contains('_') &&
-                      !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+                      !AppConfig.testingEmails
+                          .contains(AppConfig.loggedInEmail)) {
                     return 'Creating event with "_" is not allowed';
                   } else {
                     projectModel.name = value;
@@ -440,7 +466,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   return null;
                 },
               ),
-              widget.isCreateProject
+              widget.isCreateProject!
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
                           key: _timeKey,
@@ -461,9 +487,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       endTime: endDate,
                     ),
 
-              widget.isCreateProject
+              widget.isCreateProject!
                   ? RepeatWidget()
-                  : projectModel.isRecurring || projectModel.autoGenerated
+                  : projectModel.isRecurring! || projectModel.autoGenerated
                       ? Container()
                       : RepeatWidget(),
 
@@ -499,7 +525,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.description = value;
                 },
                 validator: (value) {
-                  if (value.trimLeft().isEmpty) {
+                  if (value!.trimLeft().isEmpty) {
                     return S.of(context).validation_error_mission_empty;
                   } else if (profanityDetector.isProfaneString(value)) {
                     return S.of(context).profanity_text_alert;
@@ -545,7 +571,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     caseSensitive: false,
                     multiLine: false,
                   );
-                  if (value.isNotEmpty && !regExp.hasMatch(value)) {
+                  if (value!.isNotEmpty && !regExp.hasMatch(value!)) {
                     return 'Add valid registration url';
                   } else {
                     projectModel.registrationLink = value;
@@ -571,7 +597,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 // cursorColor: Colors.black54,
                 validator: _validateEmailId,
                 onSaved: (value) {
-                  ExitWithConfirmation.of(context).fieldValues[4] = value;
+                  ExitWithConfirmation.of(context).fieldValues[4] = value!;
                   projectModel.emailId = value;
                 },
                 onChanged: (value) {
@@ -595,8 +621,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               SponsorsWidget(
                 textColor: Theme.of(context).primaryColor,
                 title: S.of(context).add_event_sponsors_text,
-                sponsorsMode: widget.isCreateProject ? SponsorsMode.CREATE : SponsorsMode.EDIT,
-                sponsors: projectModel.sponsors,
+                sponsorsMode: widget!.isCreateProject!
+                    ? SponsorsMode.CREATE
+                    : SponsorsMode.EDIT,
+                sponsors: projectModel.sponsors!,
                 isAdminVerified: false,
                 onSponsorsAdded: (
                   List<SponsorDataModel> sponsorsData,
@@ -641,8 +669,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ),
               Center(
                 child: LocationPickerWidget(
-                  selectedAddress: widget.isCreateProject ? selectedAddress : selectedAddress,
-                  location: widget.isCreateProject ? location : location,
+                  selectedAddress: widget.isCreateProject!
+                      ? selectedAddress
+                      : selectedAddress,
+                  location: widget.isCreateProject! ? location : location,
                   onChanged: (LocationDataModel dataModel) {
                     log("received data model");
                     setState(() {
@@ -661,29 +691,24 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   fontSize: 12,
                 ),
               ),
-              widget.isCreateProject
+              widget.isCreateProject!
                   ? Row(
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: Checkbox(
                             value: saveAsTemplate,
-                            onChanged: (bool value) {
+                            onChanged: (bool? value) {
                               if (saveAsTemplate) {
                                 setState(() {
                                   saveAsTemplate = false;
                                 });
                               } else {
-                                _showSaveAsTemplateDialog().then((templateName) {
-                                  if (templateName != null) {
-                                    setState(() {
-                                      saveAsTemplate = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      saveAsTemplate = false;
-                                    });
-                                  }
+                                _showSaveAsTemplateDialog()
+                                    .then((templateName) {
+                                  setState(() {
+                                    saveAsTemplate = templateName!.isNotEmpty;
+                                  });
                                 });
                               }
                             },
@@ -699,12 +724,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: ConfigurationCheck(
                     actionType: 'create_virtual_event',
-                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    role: MemberType.ADMIN,
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualRequest,
-                        isChecked: projectModel.virtualProject,
+                        isChecked: projectModel.virtualProject!,
                         checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                        onChangedCB: (bool val) {
+                        onChangedCB: (bool? val) {
                           if (projectModel.virtualProject != val) {
                             this.projectModel.virtualProject = val;
 
@@ -720,6 +745,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         }),
                   ),
                 ),
+                secondChild: SizedBox.shrink(),
               ),
 
               // HideWidget(
@@ -729,16 +755,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 child: TransactionsMatrixCheck(
                   comingFrom: ComingFrom.Projects,
-                  upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel!.public_to_sevax_global!,
                   transaction_matrix_type: 'create_public_event',
                   child: ConfigurationCheck(
                     actionType: 'create_public_event',
-                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    role: MemberType.ADMIN,
                     child: OpenScopeCheckBox(
                         infoType: InfoType.OpenScopeEvent,
-                        isChecked: projectModel.public,
+                        isChecked: projectModel.public!,
                         checkBoxTypeLabel: CheckBoxType.type_Events,
-                        onChangedCB: (bool val) {
+                        onChangedCB: (bool? val) {
                           if (projectModel.public != val) {
                             this.projectModel.public = val;
                             log('value ${projectModel.public}');
@@ -768,6 +795,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: Container(
                   alignment: Alignment.center,
                   child: CustomElevatedButton(
+                    color: Theme.of(context).primaryColor,
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    elevation: 2.0,
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
@@ -776,7 +806,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                              onPressed: () => ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
@@ -785,23 +816,29 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                       FocusScope.of(context).requestFocus(FocusNode());
                       // show a dialog
-                      projectModel.startTime = OfferDurationWidgetState.starttimestamp;
-                      projectModel.endTime = OfferDurationWidgetState.endtimestamp;
-                      if (widget.isCreateProject) {
-                        if (_formKey.currentState.validate()) {
-                          if (projectModel.startTime == 0 || projectModel.endTime == 0) {
-                            Scrollable.ensureVisible(_timeKey.currentContext);
+                      projectModel.startTime =
+                          OfferDurationWidgetState.starttimestamp;
+                      projectModel.endTime =
+                          OfferDurationWidgetState.endtimestamp;
+                      if (widget.isCreateProject!) {
+                        if (_formKey.currentState!.validate()) {
+                          if (projectModel.startTime == 0 ||
+                              projectModel.endTime == 0) {
+                            Scrollable.ensureVisible(_timeKey.currentContext!);
                             FocusScope.of(context).unfocus();
                             showDialogForTitle(
-                              dialogTitle: S.of(context).validation_error_no_date,
+                              dialogTitle:
+                                  S.of(context).validation_error_no_date,
                             );
                             return;
                           }
-                          if (DateTime.fromMillisecondsSinceEpoch(projectModel.startTime)
+                          if (DateTime.fromMillisecondsSinceEpoch(
+                                      projectModel.startTime!)
                                   .isBefore(DateTime.now()) ||
-                              DateTime.fromMillisecondsSinceEpoch(projectModel.endTime)
+                              DateTime.fromMillisecondsSinceEpoch(
+                                      projectModel.endTime!)
                                   .isBefore(DateTime.now())) {
-                            Scrollable.ensureVisible(_timeKey.currentContext);
+                            Scrollable.ensureVisible(_timeKey.currentContext!);
                             FocusScope.of(context).unfocus();
                             showDialogForTitle(
                               dialogTitle: S.of(context).past_time_selected,
@@ -809,50 +846,61 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             return;
                           }
                           projectModel.liveMode = !AppConfig.isTestCommunity;
-                          if (projectModel.public) {
+                          if (projectModel.public!) {
                             projectModel.timebanksPosted = [
-                              widget.timebankId,
+                              widget.timebankId!,
                               FlavorConfig.values.timebankId
                             ];
                           } else {
                             projectModel.timebanksPosted = [
-                              widget.timebankId,
+                              widget.timebankId!,
                             ];
                           }
 
-                          projectModel.communityId =
-                              SevaCore.of(context).loggedInUser.currentCommunity;
+                          projectModel.communityId = SevaCore.of(context)
+                              .loggedInUser
+                              .currentCommunity;
                           projectModel.completedRequests = [];
                           projectModel.pendingRequests = [];
                           projectModel.timebankId = widget.timebankId;
                           projectModel.photoUrl = globals.projectsAvtaarURL;
                           projectModel.cover_url = globals.projectsCoverURL;
-                          projectModel.emailId =
-                              projectModel.emailId ?? SevaCore.of(context).loggedInUser.email;
+                          projectModel.emailId = projectModel.emailId ??
+                              SevaCore.of(context).loggedInUser.email;
                           projectModel.location = location;
                           int timestamp = DateTime.now().millisecondsSinceEpoch;
                           projectModel.createdAt = timestamp;
 
-                          projectModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
+                          projectModel.creatorId =
+                              SevaCore.of(context).loggedInUser.sevaUserID;
                           projectModel.members = [];
                           projectModel.address = selectedAddress;
                           projectModel.id = Utils.getUuid();
                           projectModel.softDelete = false;
-                          projectModel.communityName = communityModel.name ?? timebankModel.name;
+                          projectModel.communityName =
+                              communityModel!.name ?? timebankModel.name;
                           projectModel.parentEventId = projectModel.id;
 
                           if (saveAsTemplate) {
-                            projectTemplateModel.communityId = projectModel.communityId;
-                            projectTemplateModel.timebankId = projectModel.timebankId;
+                            projectTemplateModel.communityId =
+                                projectModel.communityId;
+                            projectTemplateModel.timebankId =
+                                projectModel.timebankId;
                             projectTemplateModel.id = Utils.getUuid();
                             projectTemplateModel.name = projectModel.name;
                             projectTemplateModel.templateName = templateName;
-                            projectTemplateModel.photoUrl = projectModel.photoUrl;
-                            projectTemplateModel.cover_url = projectModel.cover_url;
-                            projectTemplateModel.description = projectModel.description;
-                            projectTemplateModel.registrationLink = projectModel.registrationLink;
-                            projectTemplateModel.creatorId = projectModel.creatorId;
-                            projectTemplateModel.createdAt = projectModel.createdAt;
+                            projectTemplateModel.photoUrl =
+                                projectModel.photoUrl;
+                            projectTemplateModel.cover_url =
+                                projectModel.cover_url;
+                            projectTemplateModel.description =
+                                projectModel.description;
+                            projectTemplateModel.registrationLink =
+                                projectModel.registrationLink;
+                            projectTemplateModel.creatorId =
+                                projectModel.creatorId;
+                            projectTemplateModel.createdAt =
+                                projectModel.createdAt;
                             projectTemplateModel.mode = projectModel.mode;
                             projectTemplateModel.softDelete = false;
                             projectTemplateModel.emailId = projectModel.emailId;
@@ -863,36 +911,45 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                           if (RepeatWidgetState.isRecurring) {
                             projectModel.isRecurring = true;
-                            projectModel.recurringDays = RepeatWidgetState.getRecurringdays();
+                            projectModel.recurringDays =
+                                RepeatWidgetState.getRecurringdays();
                             projectModel.occurenceCount = 1;
-                            end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.endType =
+                                RepeatWidgetState.endType == 0 ? "on" : "after";
                             end.on = end.endType == "on"
-                                ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-                                : null;
+                                ? RepeatWidgetState
+                                    .selectedDate.millisecondsSinceEpoch
+                                : null!;
                             end.after = (end.endType == "after"
                                 ? int.parse(RepeatWidgetState.after)
-                                : null);
+                                : null!);
                             projectModel.end = end;
 
                             String messagingRoomId =
-                                await ProjectMessagingRoomHelper.createMessagingRoomForEvent(
+                                await ProjectMessagingRoomHelper
+                                    .createMessagingRoomForEvent(
                               projectModel: projectModel,
                               projectCreator: SevaCore.of(context).loggedInUser,
                             );
 
-                            projectModel.associatedMessaginfRoomId = messagingRoomId;
+                            projectModel.associatedMessaginfRoomId =
+                                messagingRoomId;
 
-                            if (projectModel.isRecurring &&
-                                projectModel.recurringDays.length == 0) {
+                            if (projectModel.isRecurring! &&
+                                projectModel.recurringDays!.length == 0) {
                               showDialogForTitle(
-                                  dialogTitle: S.of(context).validation_error_empty_recurring_days);
+                                  dialogTitle: S
+                                      .of(context)
+                                      .validation_error_empty_recurring_days);
                               return;
                             }
                             showProgressDialog(S.of(context).creating_project);
 
-                            await WatchDog.createRecurringEvents(projectModel: projectModel);
+                            await WatchDog.createRecurringEvents(
+                                projectModel: projectModel);
                           } else {
-                            await ProjectMessagingRoomHelper.createProjectWithMessaging(
+                            await ProjectMessagingRoomHelper
+                                .createProjectWithMessaging(
                               projectModel: projectModel,
                               projectCreator: SevaCore.of(context).loggedInUser,
                             );
@@ -903,17 +960,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           globals.webImageUrl = null;
 
                           if (dialogContext != null) {
-                            Navigator.pop(dialogContext);
+                            Navigator.pop(dialogContext!);
                           }
                           //TODO rest
-                          _formKey.currentState.reset();
+                          _formKey.currentState!.reset();
 
-                          KloudlessWidgetManager<CreateMode, ProjectModel>().syncCalendar(
+                          KloudlessWidgetManager<CreateMode, ProjectModel>()
+                              .syncCalendar(
                             context: context,
-                            builder: KloudlessWidgetBuilder().fromContext<CreateMode, ProjectModel>(
+                            builder: KloudlessWidgetBuilder()
+                                .fromContext<CreateMode, ProjectModel>(
                               context: context,
                               model: projectModel,
-                              id: projectModel.id,
+                              id: projectModel.id!,
                             ),
                           );
 
@@ -924,18 +983,22 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       } else {
                         // return;
 
-                        if (_formKey.currentState.validate()) {
-                          projectModel.startTime = OfferDurationWidgetState.starttimestamp;
-                          projectModel.endTime = OfferDurationWidgetState.endtimestamp;
+                        if (_formKey.currentState!.validate()) {
+                          projectModel.startTime =
+                              OfferDurationWidgetState.starttimestamp;
+                          projectModel.endTime =
+                              OfferDurationWidgetState.endtimestamp;
                           projectModel.address = selectedAddress;
                           projectModel.location = location;
-                          if (projectModel.public) {
+                          if (projectModel.public!) {
                             projectModel.timebanksPosted = [
-                              projectModel.timebankId,
+                              projectModel.timebankId!,
                               FlavorConfig.values.timebankId
                             ];
                           } else {
-                            projectModel.timebanksPosted = [projectModel.timebankId];
+                            projectModel.timebanksPosted = [
+                              projectModel.timebankId!
+                            ];
                           }
 
                           if (globals.projectsAvtaarURL != null) {
@@ -946,32 +1009,44 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectModel.cover_url = globals.projectsCoverURL;
                           }
 
-                          if (projectModel.startTime == 0 || projectModel.endTime == 0) {
-                            showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
+                          if (projectModel.startTime == 0 ||
+                              projectModel.endTime == 0) {
+                            showDialogForTitle(
+                                dialogTitle:
+                                    S.of(context).validation_error_no_date);
                             return;
                           }
 
-                          if (projectModel.address == null || this.selectedAddress == null) {
-                            this.locationError = S.of(context).validation_error_location_mandatory;
+                          if (projectModel.address == null ||
+                              this.selectedAddress == null) {
+                            this.locationError = S
+                                .of(context)
+                                .validation_error_location_mandatory;
                             showDialogForTitle(
-                              dialogTitle: S.of(context).validation_error_add_project_location,
+                              dialogTitle: S
+                                  .of(context)
+                                  .validation_error_add_project_location,
                             );
                             return;
                           }
 
                           // showProgressDialog(S.of(context).updating_project);
                           //THIS CONDITION CHECKS IF THE EVENT WAS PREVIOUS NON RECURRING AND IS NOW MADE AS RECURRING
-                          if (!wasCreatedFromRecurring && RepeatWidgetState.isRecurring) {
+                          if (!wasCreatedFromRecurring &&
+                              RepeatWidgetState.isRecurring) {
                             projectModel.isRecurring = true;
-                            projectModel.recurringDays = RepeatWidgetState.getRecurringdays();
+                            projectModel.recurringDays =
+                                RepeatWidgetState.getRecurringdays();
                             projectModel.occurenceCount = 1;
-                            end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.endType =
+                                RepeatWidgetState.endType == 0 ? "on" : "after";
                             end.on = end.endType == "on"
-                                ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-                                : null;
+                                ? RepeatWidgetState
+                                    .selectedDate.millisecondsSinceEpoch
+                                : null!;
                             end.after = (end.endType == "after"
                                 ? int.parse(RepeatWidgetState.after)
-                                : null);
+                                : null!);
                             projectModel.end = end;
 
                             //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
@@ -983,21 +1058,25 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                               title: S.of(context).copy_requests_in_events,
                             ).then((value) async {
                               if (value)
-                                await WatchDog.cloneAndCreateRecurringEventsFromExisting(
-                                        eventModel: projectModel)
+                                await WatchDog
+                                        .cloneAndCreateRecurringEventsFromExisting(
+                                            eventModel: projectModel)
                                     .then((value) => logger.d(""))
                                     .catchError((onError) => {
                                           logger.d(onError.toString()),
                                         });
                               else
-                                await WatchDog.createRecurringEventsFromExisting(projectModel);
+                                await WatchDog
+                                    .createRecurringEventsFromExisting(
+                                        projectModel);
                             }).catchError((onError) {
                               logger.e("Error " + onError.toString());
                             });
                           } else {
                             //FOLLOW NORMAL PROCEDURE
                             //This segment updates events
-                            if (projectModel.isRecurring || projectModel.autoGenerated) {
+                            if (projectModel.isRecurring! ||
+                                projectModel.autoGenerated) {
                               WatchDog.showDialogForUpdation(
                                   context: context,
                                   updateSingleEvent: () async {
@@ -1006,7 +1085,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                     );
                                   },
                                   updateSubsequentEvents: () async {
-                                    WatchDog.updateSubsequentEvents(projectModel);
+                                    WatchDog.updateSubsequentEvents(
+                                        projectModel);
                                   });
                             } else {
                               await FirestoreManager.updateProject(
@@ -1022,9 +1102,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           globals.webImageUrl = null;
 
                           if (dialogContext != null) {
-                            Navigator.pop(dialogContext);
+                            Navigator.pop(dialogContext!);
                           }
-                          _formKey.currentState.reset();
+                          _formKey.currentState!.reset();
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         }
@@ -1032,7 +1112,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     },
                     shape: StadiumBorder(),
                     child: Text(
-                      widget.isCreateProject ? S.of(context).create_project : S.of(context).save,
+                      widget.isCreateProject!
+                          ? S.of(context).create_project
+                          : S.of(context).save,
                       style: TextStyle(fontSize: 16.0, color: Colors.white),
                     ),
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -1067,12 +1149,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     return location != null || projectModel.address != null;
   }
 
-  Future<void> showDialogForTitle({String dialogTitle}) async {
+  Future<void> showDialogForTitle({String? dialogTitle}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(dialogTitle),
+            title: Text(dialogTitle!),
             actions: <Widget>[
               CustomTextButton(
                 shape: StadiumBorder(),
@@ -1136,11 +1218,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  String _validateEmailId(String value) {
-    RegExp emailPattern =
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (value.isEmpty) return S.of(context).validation_error_invalid_email;
-    if (!emailPattern.hasMatch(value)) return S.of(context).validation_error_invalid_email;
+  String? _validateEmailId(String? value) {
+    if (value == null || value.isEmpty)
+      return S.of(context).validation_error_invalid_email;
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    if (!emailPattern.hasMatch(value))
+      return S.of(context).validation_error_invalid_email;
     return null;
   }
 
@@ -1150,7 +1234,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  Future<String> _showSaveAsTemplateDialog() {
+  Future<String?> _showSaveAsTemplateDialog() {
     return showDialog<String>(
         context: context,
         builder: (BuildContext viewContext) {
@@ -1173,7 +1257,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     child: Center(
                       child: Text(
                         S.of(context).template_title,
-                        style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Europa'),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Europa'),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -1197,7 +1284,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                               width: 1.0,
                             ),
                           ),
-                          contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                          contentPadding:
+                              EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                           hintText: S.of(context).template_hint,
                         ),
                         keyboardType: TextInputType.text,
@@ -1207,15 +1295,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           LengthLimitingTextInputFormatter(50),
                         ],
                         onChanged: (value) {
-                          ExitWithConfirmation.of(context).fieldValues[5] = value;
+                          ExitWithConfirmation.of(context).fieldValues[5] =
+                              value;
                         },
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return S.of(context).validation_error_template_name;
                           } else if (templateFound) {
-                            return S.of(context).validation_error_template_name_exists;
+                            return S
+                                .of(context)
+                                .validation_error_template_name_exists;
                           } else {
-                            templateName = value;
+                            templateName = value ?? '';
                             return null;
                           }
                         },
@@ -1236,7 +1327,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         },
                         child: Text(
                           S.of(context).cancel,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa'),
                         ),
                       ),
                       SizedBox(
@@ -1246,9 +1339,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         child: Text(S.of(context).save,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa')),
                         onPressed: () async {
-                          if (!_formDialogKey.currentState.validate()) {
+                          if (!(_formDialogKey.currentState?.validate() ??
+                              false)) {
                             return;
                           }
                           Navigator.pop(viewContext, templateName);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -9,7 +10,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
-import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_item.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
@@ -34,11 +35,11 @@ class AcceptBorrowRequest extends StatefulWidget {
   final VoidCallback onTap;
 
   AcceptBorrowRequest({
-    this.timeBankId,
-    this.userId,
-    this.requestModel,
-    this.parentContext,
-    this.onTap,
+    required this.timeBankId,
+    required this.userId,
+    required this.requestModel,
+    required this.parentContext,
+    required this.onTap,
   });
 
   @override
@@ -46,13 +47,27 @@ class AcceptBorrowRequest extends StatefulWidget {
 }
 
 class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
-  GeoFirePoint location;
+  GeoPoint? location;
   String selectedAddress = '';
+
+  Future<void> openPdfViewer(
+      String pdfUrl, String name, BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AgreementForm(
+          onPdfCreated: (String pdfLink, String documentNameFinal,
+              dynamic agreementConfig, String agreementId) {},
+          lendingModel: null!,
+        ),
+      ),
+    );
+  }
 
   String borrowAgreementLinkFinal = '';
   String agreementIdFinal = '';
   String documentName = '';
-  LendingModel selectedLendingPlaceModel;
+  LendingModel? selectedLendingPlaceModel;
   List<LendingModel> selectedItemModels = [];
   List<String> selectedModelsId = [];
   final _formKey = GlobalKey<FormState>();
@@ -160,7 +175,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             selectedLendingPlaceModel != null
                 ? LendingPlaceCardWidget(
                     lendingPlaceModel:
-                        selectedLendingPlaceModel.lendingPlaceModel,
+                        selectedLendingPlaceModel!.lendingPlaceModel!,
                     onDelete: () {
                       selectedLendingPlaceModel = null;
                       setState(() {});
@@ -170,7 +185,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         MaterialPageRoute(
                           builder: (context) {
                             return AddUpdateLendingPlace(
-                              lendingModel: selectedLendingPlaceModel,
+                              lendingModel: selectedLendingPlaceModel!,
                               onPlaceCreateUpdate: (LendingModel model) {
                                 selectedLendingPlaceModel = model;
                                 setState(() {});
@@ -183,7 +198,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   )
                 : Container(),
             SizedBox(height: 20),
-            requestAgreementFormComponent(widget.requestModel.roomOrTool),
+            requestAgreementFormComponent(widget.requestModel.roomOrTool!),
             SizedBox(height: 20),
             termsAcknowledegmentText,
             bottomActionButtons,
@@ -279,7 +294,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 itemBuilder: (context, index) {
                   LendingModel model = selectedItemModels[index];
                   return LendingItemCardWidget(
-                    lendingItemModel: model.lendingItemModel,
+                    lendingItemModel: model.lendingItemModel!,
                     onDelete: () {
                       selectedItemModels.remove(model);
                       setState(() {});
@@ -302,7 +317,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   );
                 }),
             SizedBox(height: 20),
-            requestAgreementFormComponent(widget.requestModel.roomOrTool),
+            requestAgreementFormComponent(widget.requestModel.roomOrTool!),
             SizedBox(height: 20),
             termsAcknowledegmentText,
             bottomActionButtons,
@@ -317,7 +332,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
     return Wrap(
       runSpacing: 5.0,
       spacing: 5.0,
-      children: widget.requestModel.borrowModel.requiredItems.values
+      children: widget.requestModel.borrowModel!.requiredItems!.values
           .toList()
           .map(
             (value) => value == null
@@ -325,6 +340,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 : CustomChipWithTick(
                     label: value,
                     isSelected: true,
+                    onTap: () {},
                   ),
           )
           .toList(),
@@ -349,10 +365,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         Center(
           child: LocationPickerWidget(
             selectedAddress: selectedAddress,
-            location: location,
+            location: location != null
+                ? GeoFirePoint(
+                    GeoPoint(location!.latitude, location!.longitude))
+                : null,
             onChanged: (LocationDataModel dataModel) {
               setState(() {
-                location = dataModel.geoPoint;
+                location = GeoPoint(dataModel.geoPoint.geopoint.latitude,
+                    dataModel.geoPoint.geopoint.longitude);
                 selectedAddress = dataModel.location;
               });
             },
@@ -406,14 +426,19 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           width: 110,
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 5, right: 5),
-            color: Colors.grey[300],
+            color: Colors.grey[300]!,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 2.0,
+            textColor: Colors.black,
             child: Text(
               S.of(context).send_text,
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
             ),
             onPressed: () async {
               //donation approved
-              if (_formKey.currentState.validate()) {
+              if (_formKey.currentState!.validate()) {
                 if (selectedLendingPlaceModel == null &&
                     widget.requestModel.roomOrTool ==
                         LendingType.PLACE.readable) {
@@ -469,7 +494,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                           borrowAgreementLink: borrowAgreementLinkFinal,
                           agreementId: agreementIdFinal,
                           // borrowedItemsIds: selectedModelsId.toList(),
-                          borrowedPlaceId: selectedLendingPlaceModel.id,
+                          borrowedPlaceId: selectedLendingPlaceModel!.id,
                           isApproved: false,
                           acceptorphotoURL:
                               SevaCore.of(context).loggedInUser.photoURL),
@@ -512,7 +537,12 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           width: 110,
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 5, right: 5),
-            color: Colors.grey[300],
+            color: Colors.grey[300]!,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 2.0,
+            textColor: Colors.black,
             child: Text(
               S.of(context).message,
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
@@ -536,8 +566,12 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
 
               createAndOpenChat(
                 context: context,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity!,
                 sender: sender,
+                timebankId: widget.requestModel.timebankId!,
+                feedId: '',
+                showToCommunities: [],
+                entityId: '',
                 reciever: reciever,
                 onChatCreate: () {
                   //Navigator.of(context).pop();
@@ -671,18 +705,18 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     MaterialPageRoute(
                       fullscreenDialog: true,
                       builder: (context) => AgreementForm(
-                        lendingModel: selectedLendingPlaceModel,
+                        lendingModel: selectedLendingPlaceModel!,
                         lendingModelListBorrowRequest:
                             selectedItemModels.length > 0
                                 ? selectedItemModels
-                                : null,
+                                : [],
                         requestModel: widget.requestModel,
                         isOffer: false,
-                        placeOrItem: widget.requestModel.roomOrTool,
-                        communityId: widget.requestModel.communityId,
-                        timebankId: widget.requestModel.timebankId,
-                        startTime: widget.requestModel.requestStart,
-                        endTime: widget.requestModel.requestEnd,
+                        placeOrItem: widget.requestModel.roomOrTool!,
+                        communityId: widget.requestModel.communityId!,
+                        timebankId: widget.requestModel.timebankId!,
+                        startTime: widget.requestModel.requestStart!,
+                        endTime: widget.requestModel.requestEnd!,
                         onPdfCreated: (pdfLink, documentNameFinal,
                             agreementConfig, agreementId) {
                           logger.e('COMES BACK FROM ON PDF CREATED:  ' +

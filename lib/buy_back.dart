@@ -3,7 +3,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class BuckBatch {
   static BuckBatch instance = BuckBatch();
-  static WriteBatch _batch;
+  static late WriteBatch _batch;
 
   BuckBatch() {
     _batch = CollectionRef.batch;

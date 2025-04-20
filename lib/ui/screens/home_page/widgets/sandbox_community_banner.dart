@@ -4,7 +4,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class SandBoxBanner extends StatelessWidget {
   final String title;
-  const SandBoxBanner({Key key, this.title}) : super(key: key);
+  const SandBoxBanner({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class SandBoxBanner extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.zero,
             decoration: BoxDecoration(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             child: Align(
               alignment: Alignment.topCenter,

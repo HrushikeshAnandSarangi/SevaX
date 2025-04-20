@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -23,10 +23,10 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class UpdateNewsFeed extends StatelessWidget {
-  final String timebankId;
-  final NewsModel newsMmodel;
-  final TimebankModel timebankModel;
-  String photoCredits;
+  final String? timebankId;
+  final NewsModel? newsMmodel;
+  final TimebankModel? timebankModel;
+  String? photoCredits;
 
   UpdateNewsFeed({this.timebankId, this.newsMmodel, this.timebankModel});
 
@@ -53,9 +53,9 @@ class UpdateNewsFeed extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: NewsCreateForm(
-              timebankId: timebankId,
-              newsModel: newsMmodel,
-              timebankModel: timebankModel,
+              timebankId: timebankId!,
+              newsModel: newsMmodel!,
+              timebankModel: timebankModel!,
             ),
           ),
         ),
@@ -66,11 +66,12 @@ class UpdateNewsFeed extends StatelessWidget {
 
 // Create a Form Widget
 class NewsCreateForm extends StatefulWidget {
-  final String timebankId;
-  NewsModel newsModel;
-  final TimebankModel timebankModel;
+  final String? timebankId;
+  NewsModel? newsModel;
+  final TimebankModel? timebankModel;
 
-  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel})
+  NewsCreateForm(
+      {Key? key, this.timebankId, this.newsModel, this.timebankModel})
       : super(key: key);
   @override
   NewsCreateFormState createState() {
@@ -86,37 +87,37 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final formKey = GlobalKey<DoseFormState>();
-  String imageUrl;
-  String photoCredits;
+  String? imageUrl;
+  String? photoCredits;
 
-  NewsModel newsObject;
-  TextStyle textStyle;
+  NewsModel? newsObject;
+  TextStyle? textStyle;
 
   List<DataModel> dataList = [];
-  DataModel selectedEntity;
-  GeoFirePoint location;
-  String selectedAddress;
+  DataModel? selectedEntity;
+  GeoFirePoint? location;
+  String? selectedAddress;
   List<String> selectedTimebanks = [];
   Future<void> writeToDB() async {
     log('url  ${globals.newsImageURL}');
-    newsObject.placeAddress = selectedAddress;
-    newsObject.email = SevaCore.of(context).loggedInUser.email;
-    newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
-    newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-    newsObject.newsImageUrl = globals.newsImageURL ?? '';
-    newsObject.location = location;
-    newsObject.root_timebank_id = FlavorConfig.values.timebankId;
-    newsObject.photoCredits = photoCredits != null ? photoCredits : '';
-    newsObject.newsDocumentUrl = globals.newsDocumentURL;
-    newsObject.newsDocumentName = globals.newsDocumentName;
-    newsObject.timebanksPosted = selectedTimebanks;
+    newsObject!.placeAddress = selectedAddress;
+    newsObject!.email = SevaCore.of(context).loggedInUser.email;
+    newsObject!.fullName = SevaCore.of(context).loggedInUser.fullname;
+    newsObject!.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+    newsObject!.newsImageUrl = globals.newsImageURL ?? '';
+    newsObject!.location = location;
+    newsObject!.root_timebank_id = FlavorConfig.values.timebankId;
+    newsObject!.photoCredits = photoCredits != null ? photoCredits : '';
+    newsObject!.newsDocumentUrl = globals.newsDocumentURL;
+    newsObject!.newsDocumentName = globals.newsDocumentName;
+    newsObject!.timebanksPosted = selectedTimebanks;
 
-    await FirestoreManager.updateNews(newsObject: newsObject);
+    await FirestoreManager.updateNews(newsObject: newsObject!);
     globals.newsImageURL = null;
     globals.newsDocumentName = null;
     globals.newsDocumentURL = null;
     if (dialogContext != null) {
-      Navigator.pop(dialogContext);
+      Navigator.pop(dialogContext!);
     }
     Navigator.pop(context);
     Navigator.pop(context);
@@ -125,16 +126,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   @override
   void initState() {
     newsObject = widget.newsModel;
-    globals.newsImageURL = newsObject.newsImageUrl;
-    globals.newsDocumentURL = newsObject.newsDocumentUrl;
-    globals.newsDocumentName = newsObject.newsDocumentName;
-    selectedTimebanks.add(this.widget.timebankModel.id);
+    globals.newsImageURL = newsObject!.newsImageUrl;
+    globals.newsDocumentURL = newsObject!.newsDocumentUrl;
+    globals.newsDocumentName = newsObject!.newsDocumentName;
+    selectedTimebanks.add(this.widget.timebankModel!.id);
     super.initState();
 
-    selectedAddress = newsObject.placeAddress;
-    location = newsObject.location;
+    selectedAddress = newsObject!.placeAddress;
+    location = newsObject!.location;
 
-    subheadingController.text = newsObject.subheading;
+    subheadingController.text = newsObject!.subheading!;
 
     dataList.add(EntityModel(entityType: EntityType.general));
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
@@ -163,11 +164,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   prefix0.TextEditingController subheadingController = TextEditingController();
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
 
   @override
   Widget build(BuildContext context) {
-    textStyle = Theme.of(context).textTheme.headline6;
+    textStyle = Theme.of(context).textTheme.titleLarge;
     // Build a Form widget using the formKey we created above
     return DoseForm(
         formKey: formKey,
@@ -218,15 +219,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 onChanged: (value) {
                                   ExitWithConfirmation.of(context)
                                       .fieldValues[1] = value;
-                                  widget.newsModel.subheading = value;
+                                  newsObject!.subheading = value;
                                 },
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value!.isEmpty) {
                                     return S
                                         .of(context)
                                         .validation_error_general_text;
                                   }
-                                  newsObject.subheading = value;
+                                  newsObject!.subheading = value;
                                   return null;
                                 },
                               ),
@@ -286,18 +287,26 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       // ),
                       // Text(""),
                       Offstage(
-                        offstage: !isAccessAvailable(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                        offstage: !isAccessAvailable(
+                                widget.timebankModel!,
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID!) ||
                             !isPrimaryTimebank(
                                 parentTimebankId:
-                                    widget.timebankModel.parentTimebankId),
+                                    widget.timebankModel!.parentTimebankId),
                         child: Center(
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Home,
                             upgradeDetails: AppConfig
-                                .upgradePlanBannerModel.parent_timebanks,
+                                .upgradePlanBannerModel!.parent_timebanks!,
                             transaction_matrix_type: "parent_timebanks",
                             child: CustomElevatedButton(
+                              color: Colors.grey[200]!,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               textColor: Colors.green,
                               elevation: 0,
                               child: Container(
@@ -312,7 +321,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Text(
-                                        "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                        "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel!.name)}",
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
@@ -326,7 +335,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 FocusScope.of(context).unfocus();
                                 _silblingTimebankSelectionBottomsheet(
                                   context,
-                                  this.widget.timebankModel,
+                                  this.widget.timebankModel!,
                                   selectedTimebanks,
                                   (selectedTimebanks) => {
                                     setState(
@@ -345,7 +354,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         padding: const EdgeInsets.only(top: 0),
                         child: Center(
                           child: NewsImage(
-                            photoCredits: newsObject.photoCredits,
+                            photoCredits: newsObject!.photoCredits,
                             geoFirePointLocation: location,
                             selectedAddress: selectedAddress,
                             onLocationDataModelUpdate:
@@ -370,6 +379,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     alignment: Alignment(0, 1),
                     padding: const EdgeInsets.only(top: 10.0),
                     child: CustomElevatedButton(
+                      color: Theme.of(context).primaryColor,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      elevation: 2,
+                      textColor: Colors.white,
                       shape: StadiumBorder(),
                       onPressed: () async {
                         var connResult =
@@ -387,7 +401,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           );
                           return;
                         }
-                        if (formKey.currentState.validate()) {
+                        if (formKey.currentState!.validate()) {
                           // If the form is valid, we want to show a Snackbar
                           showDialog(
                               barrierDismissible: false,
@@ -406,17 +420,18 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   ),
                                 );
                               });
-                          scrapeURLFromSubheading(newsObject.subheading);
-                          scrapeHashTagsFromSubHeadings(newsObject.subheading);
+                          scrapeURLFromSubheading(newsObject!.subheading!);
+                          scrapeHashTagsFromSubHeadings(
+                              newsObject!.subheading!);
 
-                          if (newsObject.urlsFromPost.length > 0) {
+                          if (newsObject!.urlsFromPost!.length > 0) {
                             await scrapeURLDetails(
-                                newsObject.urlsFromPost.first);
+                                newsObject!.urlsFromPost!.first);
                           } else {
-                            newsObject.title = '';
-                            newsObject.imageScraped = "NoData";
-                            newsObject.newsImageUrl = '';
-                            newsObject.description = '';
+                            newsObject!.title = '';
+                            newsObject!.imageScraped = "NoData";
+                            newsObject!.newsImageUrl = '';
+                            newsObject!.description = '';
                           }
 
                           writeToDB();
@@ -452,7 +467,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
           .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
     });
 
-    newsObject.urlsFromPost = scappedURLs;
+    newsObject!.urlsFromPost = scappedURLs;
   }
 
   void scrapeHashTagsFromSubHeadings(String subHeadings) {
@@ -461,9 +476,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     RegExp exp = RegExp(r"([#,@][^\s#\@]*)");
     Iterable<RegExpMatch> matches = exp.allMatches(subHeadings);
-    matches.map((x) => x[0]).forEach((m) => hashTags.add(m));
+    matches.map((x) => x[0]).forEach((m) => hashTags.add(m!));
 
-    newsObject.hashTags = hashTags;
+    newsObject!.hashTags = hashTags;
   }
 
   Future scrapeURLDetails(String subHeadings) async {
@@ -476,10 +491,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       if (await webScraper.loadData()) {
         var result = webScraper.getScrapedData();
         if (result != null) {
-          newsObject.title = result.title;
-          newsObject.imageScraped = result.image;
-          newsObject.newsImageUrl = result.image;
-          newsObject.description = result.body;
+          newsObject!.title = result.title;
+          newsObject!.imageScraped = result.image;
+          newsObject!.newsImageUrl = result.image;
+          newsObject!.description = result.body;
         }
       }
       return;

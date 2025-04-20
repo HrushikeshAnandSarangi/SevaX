@@ -77,7 +77,11 @@ class ExploreSearchPageBloc {
     FirestoreManager.getSubCategoriesFuture(context).then((value) {
       _requestCategory.add(value);
     });
-    Location location;
+    Location location = Location(
+      latitude: 0.0,
+      longitude: 0.0,
+      timestamp: DateTime.now(),
+    );
     var result = await LocationHelper.getLocation();
     result.fold((l) => null, (r) => location = r);
 
@@ -85,23 +89,18 @@ class ExploreSearchPageBloc {
       _communityCategory.add(value);
     });
 
-    ElasticSearchApi.getFeaturedCommunities().then((value) {
-      if (value != null) {
-        _featuredCommunities.add(value);
-      }
-    });
     CombineLatestStream.combine2(
       _searchText,
       _distance,
       (a, b) => [a, b],
     ).listen((value) {
-      String searchText = value[0];
+      String searchText = value[0] as String;
       DistanceFilterData distanceFilterData = DistanceFilterData(
         location,
-        value[1].distance,
+        (value[1] as ExploreDistanceModel).distance,
       );
 
-      if (searchText == null || searchText.isEmpty) {
+      if (searchText.isNotEmpty) {
         _selectedCommunityCategory.listen((categoryId) {
           ElasticSearchApi.getPublicCommunities(
             distanceFilterData: distanceFilterData,
@@ -165,7 +164,7 @@ class ExploreSearchPageBloc {
                     if (data.categoryId != null && data.categoryId != '_') {
                       logger.wtf("cond1 and 2 -> ${element.title}");
                       return cond1 &&
-                          element.categories.contains(data.categoryId);
+                          element.categories!.contains(data.categoryId);
                     } else {
                       logger.wtf("cond1 -> ${element.title}");
                       return cond1;
@@ -195,7 +194,7 @@ class ExploreSearchPageBloc {
                         (element) =>
                             data.filter.checkFilter(element) &&
                             (data.categoryId != null && data.categoryId != '_'
-                                ? element.categories.contains(data.categoryId)
+                                ? element.categories!.contains(data.categoryId)
                                 : true),
                       )
                       .toList(),

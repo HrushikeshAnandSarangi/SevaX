@@ -4,17 +4,18 @@ import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 // import 'package:location/location.dart';
 import 'package:path_drawing/path_drawing.dart';
@@ -53,8 +54,15 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, SingleTickerProviderStateMixin {
+class _RegisterPageState extends State<RegisterPage>
+    with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<DoseFormState> _formKey = GlobalKey();
+
+  bool hasImage() {
+    return selectedImage != null ||
+        (webImageUrl != null && webImageUrl.isNotEmpty);
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
   final emailFocus = FocusNode();
@@ -69,30 +77,30 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   bool _shouldObscureConfirmPassword = true;
   bool _isLoading = false;
 
-  String fullName;
-  String password;
+  late String fullName;
+  late String password;
   String email = '';
-  String imageUrl;
-  String webImageUrl;
-  String confirmPassword;
-  File selectedImage;
-  String isImageSelected;
+  late String imageUrl;
+  late String webImageUrl;
+  late String confirmPassword;
+  late File selectedImage;
+  late String isImageSelected;
 
-  ImagePickerHandler imagePicker;
+  late ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
   bool _isDocumentBeingUploaded = false;
   final int tenMegaBytes = 10485760;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  String _fileName;
-  String _path;
-  String cvName;
-  String cvUrl;
+  late String _fileName;
+  late String _path;
+  late String cvName;
+  late String cvUrl;
   String cvFileError = '';
-  GeoFirePoint location;
+  late GeoFirePoint location;
 
-  BuildContext parentContext;
+  late BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
 
   @override
@@ -102,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     LocationHelper.getLocation().then((value) {
       if (value != null) {
         value.fold((l) => null, (r) {
-          location = GeoFirePoint(r.latitude, r.longitude);
+          location = GeoFirePoint(GeoPoint(r.latitude, r.longitude));
           if (mounted) setState(() {});
         });
       }
@@ -143,7 +151,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                 child: FadeAnimation(
                     1.4,
                     Padding(
-                        padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
+                        padding:
+                            EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -191,8 +200,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   }
 
   Widget cvUpload({
-    String title,
-    String text,
+    String? title,
+    String? text,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           height: 8,
         ),
         Text(
-          title,
+          title!,
           style: TextStyle(
             fontSize: 15.0,
             fontWeight: FontWeight.w600,
@@ -235,7 +244,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                   'lib/assets/images/cv.png',
                   height: 40,
                   width: 40,
-                  color: FlavorConfig.values.theme.primaryColor,
+                  color: FlavorConfig.values.theme!.primaryColor,
                 ),
                 Text(
                   S.of(context).choose_pdf_file,
@@ -269,8 +278,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                                     trailing: IconButton(
                                       icon: Icon(Icons.clear),
                                       onPressed: () => setState(() {
-                                        cvName = null;
-                                        cvUrl = null;
+                                        cvName = null!;
+                                        cvUrl = null!;
                                       }),
                                     ),
                                   ),
@@ -307,22 +316,32 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                   width: 150.0,
                   height: 150.0,
                   decoration: BoxDecoration(
-                      image: DecorationImage(image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
+                      image: DecorationImage(
+                          image: NetworkImage(defaultCameraImageURL),
+                          fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                      boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]))
+                      boxShadow: [
+                        BoxShadow(blurRadius: 7.0, color: Colors.black12)
+                      ]))
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image:
-                              webImageUrl == null ? FileImage(selectedImage) : CachedNetworkImageProvider(webImageUrl),
+                          image: (webImageUrl != null && webImageUrl.isNotEmpty)
+                              ? CachedNetworkImageProvider(webImageUrl)
+                              : FileImage(selectedImage)
+                                  as ImageProvider<Object>,
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                      boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
+                      boxShadow: [
+                        BoxShadow(blurRadius: 7.0, color: Colors.black12)
+                      ]),
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
-                      decoration:
-                          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(50.0))),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(50.0))),
                       child: Icon(Icons.add_a_photo),
                     ),
                   ),
@@ -403,16 +422,16 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
             shouldRestrictLength: true,
             hint: S.of(context).full_name,
             validator: (value) {
-              if (value.isEmpty) {
+              if (value!.isEmpty) {
                 return S.of(context).validation_error_full_name;
-              } else if (profanityDetector.isProfaneString(value)) {
+              } else if (profanityDetector.isProfaneString(value!)) {
                 return S.of(context).profanity_text_alert;
               } else {
-                return null;
+                return null!;
               }
             },
             capitalization: TextCapitalization.words,
-            onSave: (value) => this.fullName = value,
+            onSave: (value) => this.fullName = value!,
           ),
           getFormField(
             focusNode: emailFocus,
@@ -423,13 +442,13 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
             shouldRestrictLength: false,
             hint: S.of(context).email.firstWordUpperCase(),
             validator: (value) {
-              if (!isValidEmail(value.trim())) {
+              if (!isValidEmail(value!.trim())) {
                 return S.of(context).validation_error_invalid_email;
               }
-              return null;
+              return null!;
             },
             capitalization: TextCapitalization.none,
-            onSave: (value) => this.email = value.trim(),
+            onSave: (value) => this.email = value!.trim(),
           ),
           getPasswordFormField(
             focusNode: pwdFocus,
@@ -442,14 +461,14 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
             shouldObscure: shouldObscurePassword,
             validator: (value) {
               this.password = '';
-              if (value.length < 6) {
+              if (value!.length < 6) {
                 return S.of(context).validation_error_invalid_password;
               }
-              this.password = value;
-              return null;
+              this.password = value!;
+              return null!;
             },
             onSave: (value) {
-              this.password = value;
+              this.password = value!;
             },
             suffix: Container(
                 height: 30,
@@ -459,7 +478,9 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                     setState(() {});
                   },
                   child: Icon(
-                    _shouldObscurePassword ? Icons.visibility_off : Icons.visibility,
+                    _shouldObscurePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
                 )),
           ),
@@ -470,26 +491,42 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
-            hint: S.of(context).confirm.firstWordUpperCase() + ' ' + S.of(context).password.firstWordUpperCase(),
+            hint: S.of(context).confirm.firstWordUpperCase() +
+                ' ' +
+                S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
-              if (value.length < 6) {
+              final strongPasswordRegex = RegExp(
+                  r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~])(?!.*\s).{8,}$');
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_invalid_password;
+              }
+              if (value.length < 8) {
+                return S.of(context).validation_error_invalid_password;
+              }
+              if (value.contains(' ')) {
+                return 'Password must not contain spaces.';
+              }
+              if (!strongPasswordRegex.hasMatch(value)) {
+                return 'Password must be at least 8 characters and include upper, lower, number, and special character, and no spaces.';
               }
               if (value != password) {
                 return S.of(context).validation_error_password_mismatch;
               }
-              return null;
+              return null!;
             },
             suffix: Container(
                 height: 30,
                 child: GestureDetector(
                   onTap: () {
-                    _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
+                    _shouldObscureConfirmPassword =
+                        !_shouldObscureConfirmPassword;
                     setState(() {});
                   },
                   child: Icon(
-                    shouldObscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                    shouldObscureConfirmPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
                 )),
           )
@@ -501,15 +538,16 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   Widget getFormField(
       {focusNode,
       onFieldSubmittedCB,
-      bool shouldRestrictLength,
-      String hint,
-      String Function(String value) validator,
-      Function(String value) onSave,
+      bool? shouldRestrictLength,
+      String? hint,
+      String? Function(String?)? validator,
+      void Function(String?)? onSave,
       bool shouldObscure = false,
-      Widget suffix,
+      Widget? suffix,
       TextCapitalization capitalization = TextCapitalization.none,
-      TextEditingController controller}) {
-    var size = shouldRestrictLength ? 20 : 150;
+      TextEditingController? controller}) {
+    var size =
+        (shouldRestrictLength != null && shouldRestrictLength) ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: DoseTextField(
@@ -525,7 +563,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           suffix: suffix,
           labelStyle: TextStyle(color: Colors.black),
           suffixStyle: TextStyle(color: Colors.black),
-          counterStyle: TextStyle(height: double.minPositive, color: Colors.black),
+          counterStyle:
+              TextStyle(height: double.minPositive, color: Colors.black),
           counterText: "",
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
@@ -548,15 +587,16 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   Widget getPasswordFormField(
       {focusNode,
       onFieldSubmittedCB,
-      bool shouldRestrictLength,
-      String hint,
-      String Function(String value) validator,
-      Function(String value) onSave,
+      bool? shouldRestrictLength,
+      String? hint,
+      String? Function(String?)? validator,
+      void Function(String?)? onSave,
       bool shouldObscure = false,
-      Widget suffix,
+      Widget? suffix,
       TextCapitalization capitalization = TextCapitalization.none,
-      TextEditingController controller}) {
-    var size = shouldRestrictLength ? 20 : 150;
+      TextEditingController? controller}) {
+    var size =
+        (shouldRestrictLength != null && shouldRestrictLength) ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: DoseTextField(
@@ -573,7 +613,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           suffix: suffix,
           labelStyle: TextStyle(color: Colors.black),
           suffixStyle: TextStyle(color: Colors.black),
-          counterStyle: TextStyle(height: double.minPositive, color: Colors.black),
+          counterStyle:
+              TextStyle(height: double.minPositive, color: Colors.black),
           counterText: "",
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
@@ -598,8 +639,11 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
       height: 47,
       width: 134,
       child: CustomElevatedButton(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        elevation: 2.0,
+        textColor: Colors.white,
         onPressed: isLoading
-            ? null
+            ? null!
             : () async {
                 var connResult = await Connectivity().checkConnectivity();
                 if (connResult == ConnectivityResult.none) {
@@ -608,7 +652,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                       content: Text(S.of(context).check_internet),
                       action: SnackBarAction(
                         label: S.of(context).dismiss,
-                        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                        onPressed: () =>
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                       ),
                     ),
                   );
@@ -617,8 +662,9 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
 
                 isLoading = true;
 
-                if (selectedImage == null && webImageUrl == null) {
-                  if (!_formKey.currentState.validate()) {
+                bool hasNoImage = !this.hasImage();
+                if (hasNoImage) {
+                  if (!(_formKey.currentState?.validate() ?? false)) {
                     isLoading = false;
                     return;
                   }
@@ -628,7 +674,9 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                     context: context,
                     builder: (BuildContext viewContext) {
                       return WillPopScope(
-                        onWillPop: () {},
+                        onWillPop: () async {
+                          return false;
+                        },
                         child: AlertDialog(
                           title: Text(S.of(context).add_photo),
                           content: Text(S.of(context).add_photo_hint),
@@ -636,7 +684,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                             Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CustomTextButton(
@@ -653,11 +702,12 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                                     ),
                                     onPressed: () async {
                                       Navigator.pop(viewContext);
-                                      if (!_formKey.currentState.validate()) {
+                                      if (!(_formKey.currentState?.validate() ??
+                                          false)) {
                                         isLoading = false;
                                         return;
                                       }
-                                      _formKey.currentState.save();
+                                      _formKey.currentState?.save();
 
                                       await profanityCheck();
                                       isLoading = false;
@@ -666,8 +716,10 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                                   CustomTextButton(
                                     shape: StadiumBorder(),
                                     padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
-                                    color: Theme.of(context).accentColor,
-                                    textColor: FlavorConfig.values.buttonTextColor,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    textColor:
+                                        FlavorConfig.values.buttonTextColor,
                                     child: Text(
                                       S.of(context).add_photo,
                                       style: TextStyle(
@@ -678,7 +730,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                                     ),
                                     onPressed: () {
                                       Navigator.pop(viewContext);
-                                      FocusScope.of(context).requestFocus(new FocusNode());
+                                      FocusScope.of(context)
+                                          .requestFocus(new FocusNode());
                                       imagePicker.showDialog(context);
                                       isLoading = false;
                                       return;
@@ -693,11 +746,11 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                     },
                   );
                 } else {
-                  if (!_formKey.currentState.validate()) {
+                  if (!(_formKey.currentState?.validate() ?? false)) {
                     isLoading = false;
                     return;
                   }
-                  _formKey.currentState.save();
+                  _formKey.currentState?.save();
                   await profanityCheck();
                   isLoading = false;
                 }
@@ -715,7 +768,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     );
   }
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
 
   void showDialogForAccountCreation() async {
     showDialog(
@@ -736,15 +789,16 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   }
 
   bool isValidEmail(String email) {
-    RegExp regex = RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
+    RegExp regex =
+        RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
     return regex.hasMatch(email);
   }
 
   @override
   addWebImageUrl() {
     // TODO: implement addWebImageUrl
-    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
-      webImageUrl = globals.webImageUrl;
+    if (globals.webImageUrl != null && globals.webImageUrl!.isNotEmpty) {
+      webImageUrl = globals.webImageUrl!;
       setState(() {});
     }
   }
@@ -760,17 +814,20 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
         profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
         if (profanityImageModel == null) {
           if (dialogContext != null) {
-            Navigator.pop(dialogContext);
+            Navigator.pop(dialogContext!);
           }
           showFailedLoadImage(context: context).then((value) {});
         } else {
-          profanityStatusModel = await getProfanityStatus(profanityImageModel: profanityImageModel);
+          profanityStatusModel = await getProfanityStatus(
+              profanityImageModel: profanityImageModel);
 
-          if (profanityStatusModel.isProfane) {
+          if (profanityStatusModel.isProfane!) {
             if (dialogContext != null) {
-              Navigator.pop(dialogContext);
+              Navigator.pop(dialogContext!);
             }
-            showProfanityImageAlert(context: context, content: profanityStatusModel.category).then((status) {
+            showProfanityImageAlert(
+                    context: context, content: profanityStatusModel.category!)
+                .then((status) {
               if (status == 'Proceed') {
                 deleteFireBaseImage(imageUrl: imageUrl).then((value) {
                   if (value) {
@@ -789,7 +846,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     }
   }
 
-  Future createUser({String imageUrl}) async {
+  Future createUser({String? imageUrl}) async {
     var appLanguage = AppLanguage();
     log('Called createUser');
     if (cvName != null) {
@@ -806,9 +863,11 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
 
       user.photoURL = imageUrl;
 
-      user.timezone = TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
+      user.timezone =
+          TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
       Locale _sysLng = ui.window.locale;
-      Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+      Locale _language =
+          S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
       appLanguage.changeLanguage(_language);
       user.language = _language.languageCode;
 
@@ -816,13 +875,17 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
         user.cvName = cvName;
         user.cvUrl = cvUrl;
       }
-      await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
+      await FirestoreManager.addCreationSourceOfUser(
+          locationVal: location, userEmailId: user.email!);
 
       await FirestoreManager.updateUser(user: user);
 
       logger.i('----- START OF JOINED SEVAX GLOBAL LOG CODE -------');
 
-      await CollectionRef.timebank.doc(FlavorConfig.values.timebankId).collection('entryExitLogs').add({
+      await CollectionRef.timebank
+          .doc(FlavorConfig.values.timebankId)
+          .collection('entryExitLogs')
+          .add({
         'mode': ExitJoinType.JOIN.readable,
         'modeType': JoinMode.JOINED_SEVAX_GLOBAL.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -849,7 +912,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
       });
 
       logger.d("===========|||===========");
-      Navigator.pop(dialogContext);
+      Navigator.pop(dialogContext!);
       // Navigator.pop(context, user);
       // Phoenix.rebirth(context);
       logger.d("===========|||====||||||||=======");
@@ -861,21 +924,22 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
       );
     } on PlatformException catch (error) {
       if (dialogContext != null) {
-        Navigator.pop(dialogContext);
+        Navigator.pop(dialogContext!);
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error.message),
+          content: Text(error.message!),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
       return null;
     } on EmailAlreadyInUseException catch (e) {
       if (dialogContext != null) {
-        Navigator.pop(dialogContext);
+        Navigator.pop(dialogContext!);
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -884,13 +948,14 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
               e._message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
     } catch (error) {
       if (dialogContext != null) {
-        Navigator.pop(dialogContext);
+        Navigator.pop(dialogContext!);
       }
       // FirebaseCrashlytics.instance.log(error.toString());
       error;
@@ -904,13 +969,16 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
-      this.webImageUrl = null;
+      this.webImageUrl = null!;
       isImageSelected = S.of(context).update_photo;
     });
   }
 
   Future<String> uploadImage(String email) async {
-    Reference ref = FirebaseStorage.instance.ref().child('profile_images').child(email + '.jpg');
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('profile_images')
+        .child(email + '.jpg');
     UploadTask uploadTask = ref.putFile(
       selectedImage,
       SettableMetadata(
@@ -919,16 +987,21 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
       ),
     );
 
-    String imageURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    String imageURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     return imageURL;
   }
 
   Future addUserToTimebank(UserModel loggedInUser) async {
-    TimebankModel timebankModel = await FirestoreManager.getTimeBankForId(
+    TimebankModel? timebankModel = await FirestoreManager.getTimeBankForId(
       timebankId: FlavorConfig.values.timebankId,
     );
+    if (timebankModel == null) {
+      // Handle the null case appropriately, e.g., return or throw
+      return;
+    }
     List<String> _members = timebankModel.members;
-    timebankModel.members = [..._members, loggedInUser.email];
+    timebankModel.members = [..._members, loggedInUser.email!];
     await FirestoreManager.updateTimebank(timebankModel: timebankModel);
   }
 
@@ -955,14 +1028,13 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     //  bool _isDocumentBeingUploaded = false;
     //File _file;
     //List<File> _files;
-    String _fileName;
-    String _path;
-    Map<String, String> _paths;
+    String? _path;
+    Map<String, String> _paths = {};
     try {
-      _paths = null;
-      FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
       if (result != null) {
-        _path = result.files.single.path;
+        _path = result.files.single.path!;
       }
     } on PlatformException catch (e) {
       logger.e(e);
@@ -999,7 +1071,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String name = email + timestampString + _fileName;
-    Reference ref = FirebaseStorage.instance.ref().child('cv_files').child(name);
+    Reference ref =
+        FirebaseStorage.instance.ref().child('cv_files').child(name);
     UploadTask uploadTask = ref.putFile(
       File(_path),
       SettableMetadata(
@@ -1008,7 +1081,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
       ),
     );
     String documentURL = '';
-    documentURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    documentURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
 
     cvUrl = documentURL;
     log('link  ' + documentURL);
@@ -1115,7 +1189,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     );
   }
 
-  Widget signInButton({String imageRef, String msg, Function operation}) {
+  Widget signInButton(
+      {String? imageRef, String? msg, VoidCallback? operation}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black45),
@@ -1126,7 +1201,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
       height: 56,
       child: InkWell(
         customBorder: CircleBorder(),
-        onTap: operation,
+        onTap: operation!,
         child: Row(
           children: <Widget>[
             Column(
@@ -1141,7 +1216,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                     left: 12,
                     right: 12,
                   ),
-                  child: Image.asset(imageRef),
+                  child: Image.asset(imageRef!),
                 ),
               ],
             ),
@@ -1151,7 +1226,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
                   height: 15,
                 ),
                 Text(
-                  msg,
+                  msg!,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -1189,7 +1264,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1197,15 +1273,20 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
-    UserModel user;
+    late UserModel user;
     try {
-      user = await auth.signInWithApple();
+      var result = await auth.signInWithApple();
+      if (result == null) {
+        throw Exception('Failed to sign in with Apple');
+      }
+      user = result;
     } on PlatformException catch (error) {
       handlePlatformException(error);
     } on Exception catch (error) {
       logger.e(error);
     }
-    await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
+    await FirestoreManager.addCreationSourceOfUser(
+        locationVal: location, userEmailId: user.email!);
 
     isLoading = false;
     _processLogin(user);
@@ -1228,7 +1309,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1237,9 +1319,13 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
 
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
-    UserModel user;
+    late UserModel user;
     try {
-      user = await auth.handleGoogleSignIn();
+      var result = await auth.handleGoogleSignIn();
+      if (result == null) {
+        throw Exception('Failed to sign in with Google');
+      }
+      user = result;
     } on PlatformException catch (erorr) {
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1258,7 +1344,8 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
     } on Exception catch (error) {
       logger.e(error);
     }
-    await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
+    await FirestoreManager.addCreationSourceOfUser(
+        locationVal: location, userEmailId: user.email!);
 
     isLoading = false;
     _processLogin(user);
@@ -1277,10 +1364,10 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   }
 
   void handlePlatformException(PlatformException error) {
-    if (error.message.contains("no user record")) {
+    if (error.message!.contains("no user record")) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error.message),
+          content: Text(error.message!),
           action: SnackBarAction(
             label: S.of(context).dismiss,
             onPressed: () {
@@ -1289,10 +1376,10 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           ),
         ),
       );
-    } else if (error.message.contains("password")) {
+    } else if (error.message!.contains("password")) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error.message),
+          content: Text(error.message!),
           action: SnackBarAction(
             label: S.of(context).change_password,
             onPressed: () {
@@ -1302,7 +1389,7 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
           ),
         ),
       );
-    } else if (error.message.contains("already")) {
+    } else if (error.message!.contains("already")) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).validation_error_email_registered),
@@ -1318,7 +1405,9 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
   }
 
   Future<void> resetPassword(String email) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email.toLowerCase()).then((onValue) {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email.toLowerCase())
+        .then((onValue) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(
@@ -1333,11 +1422,10 @@ class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, S
 }
 
 class EmailAlreadyInUseException implements Exception {
-  String _message;
+  final String _message;
 
-  EmailAlreadyInUseException([String message = 'Invalid value']) {
-    this._message = message;
-  }
+  EmailAlreadyInUseException([String message = 'Invalid value'])
+      : _message = message;
 
   @override
   String toString() {

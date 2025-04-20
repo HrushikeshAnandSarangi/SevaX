@@ -1,8 +1,8 @@
 class BasicUserDetails {
-  String fullname;
-  String email;
-  String sevaUserID;
-  String photoURL;
+  String? fullname;
+  String? email;
+  String? sevaUserID;
+  String? photoURL;
 
   BasicUserDetails({
     this.fullname,

@@ -9,10 +9,10 @@ import 'package:sevaexchange/components/sevaavatar/image_picker_handler.dart';
 import './user_image_picker_dialog.dart';
 
 class UserImagePickerHandler {
-  UserImagePickerDialog imagePicker;
-  AnimationController _controller;
-  UserImagePickerListener _listener;
-  bool isAspectRatioFixed;
+  late UserImagePickerDialog imagePicker;
+  late AnimationController _controller;
+  late UserImagePickerListener _listener;
+  late bool isAspectRatioFixed;
 
   UserImagePickerHandler(this._listener, this._controller,
       {this.isAspectRatioFixed = true});
@@ -20,15 +20,19 @@ class UserImagePickerHandler {
   void openCamera() async {
     imagePicker.dismissDialog();
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    cropImage(pickedFile.path);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      cropImage(pickedFile.path);
+    }
   }
 
   void openGallery() async {
     imagePicker.dismissDialog();
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    cropImage(pickedFile.path);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      cropImage(pickedFile.path);
+    }
   }
 
   void openStockImages(context) async {
@@ -70,7 +74,7 @@ class UserImagePickerHandler {
   }
 
   Future cropImage(String path) async {
-    File croppedFile = await ImageCropper().cropImage(
+    final croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
         ratioX: isAspectRatioFixed ? 1.0 : 1.0,
@@ -79,7 +83,9 @@ class UserImagePickerHandler {
       maxWidth: isAspectRatioFixed ? 512 : 512,
       maxHeight: isAspectRatioFixed ? 512 : 512,
     );
-    _listener.userImage(croppedFile);
+    if (croppedFile != null) {
+      _listener.userImage(File(croppedFile.path));
+    }
   }
 
   void showDialog(BuildContext context) {

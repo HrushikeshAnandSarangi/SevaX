@@ -8,8 +8,8 @@ enum PaymentMode {
 }
 
 class PaymentDetailModel {
-  PaymentEventType paymentEventType;
-  PaymentMode paymentMode;
+  PaymentEventType? paymentEventType;
+  PaymentMode? paymentMode;
 
   PaymentDetailModel({this.paymentMode, this.paymentEventType});
 }
@@ -17,10 +17,10 @@ class PaymentDetailModel {
 abstract class PaymentEventType {}
 
 class ACHPayment extends PaymentEventType {
-  String bank_name;
-  String bank_address;
-  String routing_number;
-  String account_number;
+  String? bank_name;
+  String? bank_address;
+  String? routing_number;
+  String? account_number;
 
   ACHPayment({
     this.bank_name,
@@ -33,7 +33,7 @@ class ACHPayment extends PaymentEventType {
 class ZellePayment extends PaymentEventType {
   String zelleId;
 
-  ZellePayment({this.zelleId});
+  ZellePayment({required this.zelleId});
 }
 
 class PayPalPayment extends PaymentEventType {

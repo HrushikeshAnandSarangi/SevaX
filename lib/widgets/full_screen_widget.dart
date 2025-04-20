@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class FullScreenImage extends StatelessWidget {
   final String imageUrl;
 
-  FullScreenImage({this.imageUrl});
+  FullScreenImage({required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class FullScreenImage extends StatelessWidget {
             alignment: Alignment.topRight,
             child: InkWell(
               onTap: () {
-               Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               child: Container(
                 decoration: BoxDecoration(

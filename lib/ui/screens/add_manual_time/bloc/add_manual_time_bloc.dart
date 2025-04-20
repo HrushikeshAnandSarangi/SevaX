@@ -7,7 +7,7 @@ import 'package:sevaexchange/repositories/manual_time_repository.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 class AddManualTimeBloc {
   AddManualTimeBloc() {
@@ -52,10 +52,10 @@ class AddManualTimeBloc {
     UserRole userType,
   ) async {
     if (_error.value == false && _reason.value != null) {
-      String notificationId = Uuid().generateV4();
+      String notificationId = Uuid().v4();
 
       ManualTimeModel model = ManualTimeModel(
-        id: Uuid().generateV4(),
+        id: Uuid().v4(),
         type: type,
         typeId: typeId,
         userDetails: UserDetails(
@@ -100,14 +100,14 @@ class AddManualTimeBloc {
               model,
             ),
             model: model,
-            notificationId: null,
+            notificationId: model.id!,
             userModel: user,
           );
         } else {
           await ManualTimeRepository.createClaim(model);
           await NotificationsRepository.createNotification(
             notificationsModel,
-            user.email,
+            user.email ?? '',
           );
         }
 

@@ -11,11 +11,12 @@ import '../../flavor_config.dart';
 
 class SevaMailer {
   static Future<bool> createAndSendEmail({
-    @required MailContent mailContent,
+    required MailContent mailContent,
   }) async {
     try {
       await http.post(
-        "${FlavorConfig.values.cloudFunctionBaseURL}/mailForSoftDelete",
+        Uri.parse(
+            "${FlavorConfig.values.cloudFunctionBaseURL}/mailForSoftDelete"),
         headers: {"Content-Type": "application/json"},
         body: json.encode(
           {
@@ -35,10 +36,10 @@ class SevaMailer {
 }
 
 class MailContent {
-  final String mailSender;
-  final String mailReciever;
-  final String mailSubject;
-  final String mailContent;
+  final String? mailSender;
+  final String? mailReciever;
+  final String? mailSubject;
+  final String? mailContent;
 
   MailContent.createMail({
     this.mailSender,
@@ -52,7 +53,8 @@ class MailDonationReciept {
   static Future<void> sendReciept(DonationModel donationModel) async {
     try {
       var result = await http.post(
-        '${FlavorConfig.values.cloudFunctionBaseURL}/sendReceiptToDonor',
+        Uri.parse(
+            '${FlavorConfig.values.cloudFunctionBaseURL}/sendReceiptToDonor'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "donationModel": donationModel.toMap(),
@@ -70,7 +72,8 @@ class MailBorrowRequestReceipts {
     try {
       log('inside send borrow requests receipts api');
       await http.post(
-        'https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/sendBorrowRequestReceipts',
+        Uri.parse(
+            'https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/sendBorrowRequestReceipts'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "requestModel": requestModel.toMap(),

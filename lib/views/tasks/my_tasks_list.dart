@@ -48,13 +48,12 @@ class MyTaskPageState extends State<MyTaskPage> {
   @override
   Widget build(BuildContext context) {
     UserModel model = SevaCore.of(context).loggedInUser;
-    ;
     return TabBarView(
       controller: widget.controller,
       children: [
         MyTaskList(
-          email: model.email,
-          sevaUserId: model.sevaUserID,
+          email: model.email ?? '',
+          sevaUserId: model.sevaUserID ?? '',
         ),
         NotAcceptedTaskList(),
         CompletedList()
@@ -67,7 +66,7 @@ class MyTaskList extends StatefulWidget {
   final String email;
   final String sevaUserId;
 
-  MyTaskList({this.email, this.sevaUserId});
+  MyTaskList({required this.email, required this.sevaUserId});
 
   @override
   State<StatefulWidget> createState() => MyTasksListState();
@@ -76,8 +75,8 @@ class MyTaskList extends StatefulWidget {
 class MyTasksListState extends State<MyTaskList> {
   final subjectBorrow = ReplaySubject<int>();
 
-  RequestModel requestModelNew;
-  Stream<dynamic> myTasksStream;
+  RequestModel? requestModelNew;
+  late Stream<dynamic> myTasksStream;
 
   List<TasksCardWrapper> toDoItems = [];
 
@@ -86,7 +85,8 @@ class MyTasksListState extends State<MyTaskList> {
     super.initState();
     myTasksStream = ToDo.getToDoList(widget.email, widget.sevaUserId);
     subjectBorrow
-        .transform(ThrottleStreamTransformer((_) => TimerStream(true, const Duration(seconds: 1))))
+        .transform(ThrottleStreamTransformer(
+            (_) => TimerStream(true, const Duration(seconds: 1))))
         .listen((data) {
       logger.e('COMES BACK HERE 1');
       checkForReviewBorrowRequests();
@@ -114,7 +114,7 @@ class MyTasksListState extends State<MyTaskList> {
             feedbackCallback: (int value) {
               subjectBorrow.add(value);
             },
-            email: widget.email);
+            email: widget.email) as List<TasksCardWrapper>;
 
         if (toDoItems.length == 0)
           return Center(
@@ -134,122 +134,141 @@ class MyTasksListState extends State<MyTaskList> {
     );
   }
 
+  late BuildContext creditRequestDialogContext;
+
   void checkForReviewBorrowRequests() async {
     logger.e('COMES BACK HERE 2');
+    if (requestModelNew == null) return;
 
-    Map results = await Navigator.of(context).push(
+    Map? results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return BorrowRequestFeedBackView(requestModel: requestModelNew);
+          return BorrowRequestFeedbackView(requestModel: requestModelNew!);
         },
       ),
     );
 
-    if (results != null && results.containsKey('selection')) {
+    if (results?.containsKey('selection') ?? false) {
       showProgressForCreditRetrieval();
-      onActivityResult(results, SevaCore.of(context).loggedInUser);
-    } else {}
+      onActivityResult(results!, SevaCore.of(context).loggedInUser);
+    }
   }
 
   Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
+    if (requestModelNew == null) return;
     // adds review to firestore
     try {
       logger.i('here 1');
       await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
-        "reviewed": requestModelNew.email,
+        "reviewed": requestModelNew!.email,
         "ratings": results['selection'],
         "device_info": results['device_info'],
-        "requestId": requestModelNew.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments"),
+        "requestId": requestModelNew!.id,
+        "comments":
+            (results['didComment'] ? results['comment'] : "No comments"),
         "liveMode": !AppConfig.isTestCommunity,
       });
       logger.i('here 2');
       await sendMessageToMember(
-          message: results['didComment'] ? results['comment'] : "No comments", loggedInUser: loggedInUser);
+          message: results['didComment'] ? results['comment'] : "No comments",
+          loggedInUser: loggedInUser);
       logger.i('here 3');
       startTransaction();
-    } on Exception catch (e) {
-      // TODO
+    } on Exception {
+      // Handle exception
     }
   }
 
   Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    String message,
+    required UserModel loggedInUser,
+    required String message,
   }) async {
-    TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
-    UserModel userModel = await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
-    if (userModel != null && timebankModel != null) {
-      ParticipantInfo receiver = ParticipantInfo(
-        id: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.sevaUserID
-            : requestModelNew.timebankId,
-        photoUrl:
-            requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.photoURL : timebankModel.photoUrl,
-        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.fullname : timebankModel.name,
-        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
+    if (requestModelNew == null) return;
 
-      ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
-        photoUrl: loggedInUser.photoURL,
-        name: loggedInUser.fullname,
-        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-      await sendBackgroundMessage(
-          messageContent: utils.getReviewMessage(
-            requestTitle: requestModelNew.title,
-            context: context,
-            userName: loggedInUser.fullname,
-            isForCreator: true,
-            reviewMessage: message,
-          ),
-          reciever: receiver,
-          isTimebankMessage: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
-          timebankId: requestModelNew.timebankId,
-          communityId: loggedInUser.currentCommunity,
-          sender: sender);
-    }
+    TimebankModel? timebankModel =
+        await getTimeBankForId(timebankId: requestModelNew!.timebankId!);
+    UserModel? userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModelNew!.sevaUserId!);
+
+    if (timebankModel == null || userModel == null) return;
+
+    ParticipantInfo receiver = ParticipantInfo(
+      id: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? userModel.sevaUserID
+          : requestModelNew!.timebankId!,
+      photoUrl: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? userModel.photoURL
+          : timebankModel.photoUrl,
+      name: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? userModel.fullname
+          : timebankModel.name,
+      type: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? ChatType.TYPE_PERSONAL
+          : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+    );
+
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID!,
+      photoUrl: loggedInUser.photoURL,
+      name: loggedInUser.fullname,
+      type: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? ChatType.TYPE_PERSONAL
+          : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+    );
+
+    await sendBackgroundMessage(
+        messageContent: utils.getReviewMessage(
+          requestTitle: requestModelNew!.title!,
+          context: context,
+          userName: loggedInUser.fullname,
+          isForCreator: true,
+          reviewMessage: message,
+        ),
+        reciever: receiver,
+        isTimebankMessage:
+            requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+                ? false
+                : true,
+        timebankId: requestModelNew!.timebankId!,
+        communityId: loggedInUser.currentCommunity!,
+        sender: sender);
   }
 
   void startTransaction() async {
-    // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-    // logger.e('comes here 1');
+    if (requestModelNew == null) return;
 
     //doing below since in RequestModel if != null nothing happens
     //so manually removing user from task
-    requestModelNew.approvedUsers = [];
-    requestModelNew.acceptors = [];
+    requestModelNew!.approvedUsers = [];
+    requestModelNew!.acceptors = [];
 
-    if (requestModelNew.requestType == RequestType.BORROW) {
-      if (SevaCore.of(context).loggedInUser.sevaUserID == requestModelNew.sevaUserId) {
-        requestModelNew.borrowerReviewed = true;
+    if (requestModelNew!.requestType == RequestType.BORROW) {
+      if (SevaCore.of(context).loggedInUser.sevaUserID ==
+          requestModelNew!.sevaUserId) {
+        requestModelNew!.borrowerReviewed = true;
       } else {
-        requestModelNew.lenderReviewed = true;
+        requestModelNew!.lenderReviewed = true;
       }
     }
 
-    FirestoreManager.requestComplete(model: requestModelNew);
+    FirestoreManager.requestComplete(model: requestModelNew!);
 
     FirestoreManager.createTaskCompletedNotification(
       model: NotificationsModel(
         id: utils.Utils.getUuid(),
-        data: requestModelNew.toMap(),
+        data: requestModelNew!.toMap(),
         type: NotificationType.RequestCompleted,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: requestModelNew.sevaUserId,
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
-        isTimebankNotification: requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID!,
+        targetUserId: requestModelNew!.sevaUserId!,
+        communityId: requestModelNew!.communityId!,
+        timebankId: requestModelNew!.timebankId!,
+        isTimebankNotification:
+            requestModelNew!.requestMode == RequestMode.TIMEBANK_REQUEST,
         isRead: false,
       ),
     );
@@ -257,8 +276,6 @@ class MyTasksListState extends State<MyTaskList> {
     Navigator.of(creditRequestDialogContext).pop();
     //Navigator.of(context).pop();
   }
-
-  BuildContext creditRequestDialogContext;
 
   void showProgressForCreditRetrieval() {
     showDialog(
@@ -299,13 +316,13 @@ class MyTasksListState extends State<MyTaskList> {
           },
           child: ListTile(
             title: Text(
-              model.title,
+              model.title ?? '',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(model.fullName),
+                Text(model.fullName ?? ''),
                 // SizedBox(height: 4),
                 // Text(
                 //   timeAgo.format(
@@ -323,16 +340,24 @@ class MyTasksListState extends State<MyTaskList> {
                   //runAlignment: WrapAlignment.center,
                   spacing: 8,
                   children: <Widget>[
-                    model.isSpeakerCompleted
+                    (model.isSpeakerCompleted ?? false)
                         ? Text(S.of(context).requested_for_completion)
                         : Container(
                             height: 35,
                             child: CustomElevatedButton(
                               padding: EdgeInsets.zero,
                               color: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              elevation: 2.0,
+                              textColor: Colors.white,
                               child: Text(
                                 S.of(context).speaker_claim_credits,
-                                style: TextStyle(color: Colors.white, fontFamily: 'Europa', fontSize: 12),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Europa',
+                                    fontSize: 12),
                               ),
                               onPressed: () async {
                                 Navigator.of(context).push(
@@ -341,7 +366,8 @@ class MyTasksListState extends State<MyTaskList> {
                                       return OneToManySpeakerTimeEntryComplete(
                                         requestModel: model,
                                         onFinish: () async {
-                                          await oneToManySpeakerCompletesRequest(context, model);
+                                          await oneToManySpeakerCompletesRequest(
+                                              context, model);
                                         },
                                         isFromtasks: true,
                                       );
@@ -358,7 +384,8 @@ class MyTasksListState extends State<MyTaskList> {
               ],
             ),
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(model.photoUrl ?? defaultUserImageURL),
+              backgroundImage:
+                  NetworkImage(model.photoUrl ?? defaultUserImageURL),
             ),
             onTap: () {
               return null;
@@ -371,7 +398,8 @@ class MyTasksListState extends State<MyTaskList> {
 
   String getTime(int timeInMilliseconds, String timezoneAbb) {
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
-    DateTime localtime = getDateTimeAccToUserTimezone(dateTime: datetime, timezoneAbb: timezoneAbb);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
     String from = DateFormat.jm().format(
       localtime,
     );
@@ -379,9 +407,11 @@ class MyTasksListState extends State<MyTaskList> {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
+    DateFormat dateFormat =
+        DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
-    DateTime localtime = getDateTimeAccToUserTimezone(dateTime: datetime, timezoneAbb: timezoneAbb);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
     String from = dateFormat.format(
       localtime,
     );
@@ -454,7 +484,8 @@ class MyTasksListState extends State<MyTaskList> {
     }
   }
 
-  Future oneToManySpeakerCompletesRequest(BuildContext context, RequestModel requestModel) async {
+  Future oneToManySpeakerCompletesRequest(
+      BuildContext context, RequestModel requestModel) async {
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: requestModel.timebankId,
         targetUserId: requestModel.sevaUserId,
@@ -476,8 +507,11 @@ class MyTasksListState extends State<MyTaskList> {
       'isSpeakerCompleted': true,
     });
 
-    await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
-        requestModel: requestModel, userEmail: SevaCore.of(context).loggedInUser.email, fromNotification: false);
+    await FirestoreManager
+        .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
+            requestModel: requestModel,
+            userEmail: SevaCore.of(context).loggedInUser.email ?? '',
+            fromNotification: false);
   }
 }
 
@@ -486,30 +520,41 @@ class TaskCardView extends StatefulWidget {
   final String userTimezone;
 
   // TODO needs flow correction to tasks model
-  TaskCardView({@required this.requestModel, this.userTimezone});
+  const TaskCardView({required this.requestModel, required this.userTimezone});
 
   @override
   TaskCardViewState createState() => TaskCardViewState();
 }
 
 class TaskCardViewState extends State<TaskCardView> {
+  List<String> get minuteList {
+    List<String> data = [];
+    for (int i = 0; i < 60; i += 5) {
+      data.add('$i');
+    }
+    return data;
+  }
+
   String selectedMinuteValue = "0";
-  String selectedHourValue;
+  String selectedHourValue = "0";
 
 //One To Many Request Variables
   String selectedMinutesPrepTime = "0";
-  String selectedHoursPrepTime;
+  String selectedHoursPrepTime = "0";
   String selectedMinutesDeliveryTime = "0";
-  String selectedHoursDeliveryTime;
+  String selectedHoursDeliveryTime = "0";
 
-  RequestModel requestModel;
+  late RequestModel requestModel;
   final subject = ReplaySubject<int>();
 
   @override
   void initState() {
     super.initState();
     this.requestModel = widget.requestModel;
-    subject.transform(ThrottleStreamTransformer((_) => TimerStream(true, const Duration(seconds: 1)))).listen((data) {
+    subject
+        .transform(ThrottleStreamTransformer(
+            (_) => TimerStream(true, const Duration(seconds: 1))))
+        .listen((data) {
       checkForReview();
     });
   }
@@ -517,8 +562,10 @@ class TaskCardViewState extends State<TaskCardView> {
   final _formKey = GlobalKey<DoseFormState>();
 
   TextEditingController hoursController = TextEditingController();
-  TextEditingController selectedHoursPrepTimeController = TextEditingController();
-  TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
+  TextEditingController selectedHoursPrepTimeController =
+      TextEditingController();
+  TextEditingController selectedHoursDeliveryTimeController =
+      TextEditingController();
   List<FocusNode> focusNodeList = List.generate(3, (_) => FocusNode());
 
   @override
@@ -526,7 +573,7 @@ class TaskCardViewState extends State<TaskCardView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          requestModel.title,
+          requestModel.title!,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -549,24 +596,30 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        requestModel.title,
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+                        requestModel.title ?? '',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.w700),
                       ),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
-                      child: RichTextView(text: requestModel.description),
+                      child: RichTextView(text: requestModel.description ?? ''),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${S.of(context).from}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                            DateFormat(
+                                    'MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs!
+                                                .getString('language_code') ??
+                                            'en')
+                                        .toLanguageTag())
                                 .format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      requestModel.requestStart ?? 0),
                                   timezoneAbb: widget.userTimezone),
                             ),
                       ),
@@ -576,11 +629,16 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${S.of(context).until}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                            DateFormat(
+                                    'MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs!
+                                                .getString('language_code') ??
+                                            'en')
+                                        .toLanguageTag())
                                 .format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd),
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      requestModel.requestEnd ?? 0),
                                   timezoneAbb: widget.userTimezone),
                             ),
                       ),
@@ -588,18 +646,24 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
-                      child: Text('${S.of(context).posted_by} ' + requestModel.fullName),
+                      child: Text('${S.of(context).posted_by} ' +
+                          (requestModel.fullName ?? '')),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${S.of(context).posted_date}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                            DateFormat(
+                                    'MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs!
+                                                .getString('language_code') ??
+                                            'en')
+                                        .toLanguageTag())
                                 .format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(requestModel.postTimestamp),
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      requestModel.postTimestamp ?? 0),
                                   timezoneAbb: widget.userTimezone),
                             ),
                       ),
@@ -608,8 +672,10 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       child: Text(' '),
                     ),
-                    (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                            requestModel.selectedInstructor.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID)
+                    (requestModel.requestType ==
+                                RequestType.ONE_TO_MANY_REQUEST &&
+                            requestModel.selectedInstructor?.sevaUserID ==
+                                SevaCore.of(context).loggedInUser.sevaUserID)
                         ? DoseForm(
                             formKey: _formKey,
                             child: Column(
@@ -619,7 +685,9 @@ class TaskCardViewState extends State<TaskCardView> {
                                   children: [
                                     Text(
                                       S.of(context).enter_prep_time,
-                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
                                       textAlign: TextAlign.left,
                                     ),
                                   ],
@@ -630,10 +698,12 @@ class TaskCardViewState extends State<TaskCardView> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           DoseTextField(
-                                            controller: selectedHoursPrepTimeController,
+                                            controller:
+                                                selectedHoursPrepTimeController,
                                             focusNode: focusNodeList[0],
                                             keyboardType: TextInputType.number,
                                             formatters: [
@@ -641,15 +711,20 @@ class TaskCardViewState extends State<TaskCardView> {
                                                 RegExp('[\\.|\\,|\\ |\\-]'),
                                               ),
                                             ],
-                                            decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 20)),
+                                            decoration: InputDecoration(
+                                                contentPadding: EdgeInsets.only(
+                                                    bottom: 20)),
                                             validator: (value) {
                                               if (value == null) {
-                                                return S.of(context).enter_hours;
+                                                return S
+                                                    .of(context)
+                                                    .enter_hours;
                                               }
                                               if (value.isEmpty) {
                                                 S.of(context).select_hours;
                                               }
-                                              this.selectedHoursPrepTime = value;
+                                              this.selectedHoursPrepTime =
+                                                  value;
                                               return null;
                                             },
                                           ),
@@ -672,23 +747,30 @@ class TaskCardViewState extends State<TaskCardView> {
                                     ),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           DropdownButtonFormField<String>(
                                             validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return S.of(context).validation_error_invalid_hours;
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return S
+                                                    .of(context)
+                                                    .validation_error_invalid_hours;
                                               }
 
                                               selectedMinutesPrepTime = value;
                                               return null;
                                             },
                                             items: minuteList.map((value) {
-                                              return DropdownMenuItem(child: Text(value), value: value);
+                                              return DropdownMenuItem(
+                                                  child: Text(value),
+                                                  value: value);
                                             }).toList(),
                                             onChanged: (value) {
                                               setState(() {
-                                                selectedMinutesPrepTime = value;
+                                                selectedMinutesPrepTime =
+                                                    value!;
                                               });
                                             },
                                             value: selectedMinutesPrepTime,
@@ -704,7 +786,9 @@ class TaskCardViewState extends State<TaskCardView> {
                                   children: [
                                     Text(
                                       S.of(context).enter_delivery_time,
-                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
                                       textAlign: TextAlign.left,
                                     ),
                                   ],
@@ -715,10 +799,12 @@ class TaskCardViewState extends State<TaskCardView> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           DoseTextField(
-                                            controller: selectedHoursDeliveryTimeController,
+                                            controller:
+                                                selectedHoursDeliveryTimeController,
                                             focusNode: focusNodeList[1],
                                             keyboardType: TextInputType.number,
                                             formatters: [
@@ -726,15 +812,20 @@ class TaskCardViewState extends State<TaskCardView> {
                                                 RegExp('[\\.|\\,|\\ |\\-]'),
                                               ),
                                             ],
-                                            decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 20)),
+                                            decoration: InputDecoration(
+                                                contentPadding: EdgeInsets.only(
+                                                    bottom: 20)),
                                             validator: (value) {
                                               if (value == null) {
-                                                return S.of(context).enter_hours;
+                                                return S
+                                                    .of(context)
+                                                    .enter_hours;
                                               }
                                               if (value.isEmpty) {
                                                 S.of(context).select_hours;
                                               }
-                                              this.selectedHoursDeliveryTime = value;
+                                              this.selectedHoursDeliveryTime =
+                                                  value;
                                               return null;
                                             },
                                           ),
@@ -757,23 +848,31 @@ class TaskCardViewState extends State<TaskCardView> {
                                     ),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           DropdownButtonFormField<String>(
                                             validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return S.of(context).validation_error_invalid_hours;
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return S
+                                                    .of(context)
+                                                    .validation_error_invalid_hours;
                                               }
 
-                                              selectedMinutesDeliveryTime = value;
+                                              selectedMinutesDeliveryTime =
+                                                  value;
                                               return null;
                                             },
                                             items: minuteList.map((value) {
-                                              return DropdownMenuItem(child: Text(value), value: value);
+                                              return DropdownMenuItem(
+                                                  child: Text(value),
+                                                  value: value);
                                             }).toList(),
                                             onChanged: (value) {
                                               setState(() {
-                                                selectedMinutesDeliveryTime = value;
+                                                selectedMinutesDeliveryTime =
+                                                    value!;
                                               });
                                             },
                                             value: selectedMinutesDeliveryTime,
@@ -794,10 +893,12 @@ class TaskCardViewState extends State<TaskCardView> {
                               children: <Widget>[
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20.0),
                                         child: DoseTextField(
                                           isRequired: true,
                                           controller: hoursController,
@@ -808,7 +909,9 @@ class TaskCardViewState extends State<TaskCardView> {
                                               RegExp('[\\.|\\,|\\ |\\-]'),
                                             ),
                                           ],
-                                          decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 0)),
+                                          decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.only(bottom: 0)),
                                           validator: (value) {
                                             if (value == null) {
                                               return S.of(context).enter_hours;
@@ -840,25 +943,32 @@ class TaskCardViewState extends State<TaskCardView> {
                                 ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20.0),
                                         child: DropdownButtonFormField<String>(
                                           validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              return S.of(context).validation_error_invalid_hours;
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return S
+                                                  .of(context)
+                                                  .validation_error_invalid_hours;
                                             }
 
                                             selectedMinuteValue = value;
                                             return null;
                                           },
                                           items: minuteList.map((value) {
-                                            return DropdownMenuItem(child: Text(value), value: value);
+                                            return DropdownMenuItem(
+                                                child: Text(value),
+                                                value: value);
                                           }).toList(),
                                           onChanged: (value) {
                                             setState(() {
-                                              selectedMinuteValue = value;
+                                              selectedMinuteValue = value!;
                                             });
                                           },
                                           value: selectedMinuteValue,
@@ -876,12 +986,20 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(8.0),
                       child: CustomElevatedButton(
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         onPressed: () {
                           subject.add(0);
                         },
                         child: Text(
                           S.of(context).completed,
-                          style: Theme.of(context).primaryTextTheme.button,
+                          style: Theme.of(context).primaryTextTheme.labelLarge,
                         ),
                       ),
                     )
@@ -895,7 +1013,7 @@ class TaskCardViewState extends State<TaskCardView> {
     );
   }
 
-  void showDialogFoInfo({String title, String content}) {
+  void showDialogFoInfo({required String title, required String content}) {
     showDialog(
         context: context,
         builder: (BuildContext buildContext) {
@@ -916,97 +1034,7 @@ class TaskCardViewState extends State<TaskCardView> {
         });
   }
 
-  void checkForReview() async {
-    int totalMinutes = 0;
-    var maxClaim;
-    double creditRequest = 0.0;
-    logger.i('This 1');
-    logger.i('TYPE:  ' + requestModel.requestType.toString());
-
-    if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        requestModel.selectedInstructor.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID) {
-      if (selectedHoursPrepTimeController.text == null ||
-          selectedHoursPrepTimeController.text.length == 0 ||
-          selectedHoursDeliveryTimeController.text == null ||
-          selectedHoursDeliveryTimeController.text.length == 0) {
-        return;
-      }
-
-      totalMinutes = int.parse(selectedMinutesPrepTime) +
-          int.parse(selectedMinutesDeliveryTime) +
-          (int.parse(selectedHoursPrepTimeController.text) * 60) +
-          (int.parse(selectedHoursDeliveryTimeController.text) * 60);
-    } else if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        requestModel.selectedInstructor.sevaUserID != SevaCore.of(context).loggedInUser.sevaUserID) {
-      logger.i('This 2');
-
-      if (hoursController.text == null || hoursController.text.length == 0) {
-        return;
-      }
-      String x = selectedMinuteValue == "5"
-          ? "${hoursController.text}.0$selectedMinuteValue"
-          : "${hoursController.text}.$selectedMinuteValue";
-      totalMinutes = (double.parse(x) * 60).toInt();
-      //totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
-    } else {
-      logger.i('This 3');
-
-      // if (hoursController.text == null || hoursController.text.length == 0) {
-      //   return;
-      // }
-      String x = selectedMinuteValue == "5"
-          ? "${hoursController.text}.0$selectedMinuteValue"
-          : "${hoursController.text}.$selectedMinuteValue";
-      totalMinutes = (double.parse(x) * 60).toInt();
-    }
-
-    //  totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
-    // creditRequest = totalMinutes / 60;
-    creditRequest = double.parse((totalMinutes / 60).toStringAsFixed(2));
-    //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
-    maxClaim = (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
-
-    if (requestModel.isFromOfferRequest && creditRequest < requestModel.minimumCredits ?? 0) {
-      showDialogFoInfo(
-        title: S.of(context).enter_hours,
-        content: S.of(context).minimum_credits_offer,
-      );
-      return;
-    }
-
-    if (!requestModel.isFromOfferRequest && creditRequest > maxClaim) {
-      showDialogFoInfo(
-        title: S.of(context).limit_exceeded,
-        content: "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
-      );
-      return;
-      //show dialog
-    } else if (creditRequest == 0 && requestModel.requestType != RequestType.BORROW) {
-      showDialogFoInfo(
-        title: S.of(context).enter_hours,
-        content: S.of(context).validation_error_invalid_hours,
-      );
-      return;
-    }
-
-    Map results = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ReviewFeedback(
-            feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
-            // requestModel: requestModel,
-          );
-        },
-      ),
-    );
-
-    if (results != null && results.containsKey('selection')) {
-      showProgressForCreditRetrieval();
-      onActivityResult(results, SevaCore.of(context).loggedInUser);
-    } else {}
-  }
-
-  BuildContext creditRequestDialogContext;
+  late BuildContext creditRequestDialogContext;
 
   void showProgressForCreditRetrieval() {
     showDialog(
@@ -1026,205 +1054,397 @@ class TaskCardViewState extends State<TaskCardView> {
         });
   }
 
-  Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
-    // adds review to firestore
-    try {
-      logger.i('here 1');
-      await CollectionRef.reviews.add({
-        "reviewer": SevaCore.of(context).loggedInUser.email,
-        "reviewed": requestModel.email,
-        "ratings": results['selection'],
-        "device_info": results['device_info'],
-        "requestId": requestModel.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments"),
-        'liveMode': !AppConfig.isTestCommunity,
-      });
-      logger.i('here 2');
-      await sendMessageToMember(
-          message: results['didComment'] ? results['comment'] : "No comments",
-          requestModel: requestModel,
-          loggedInUser: loggedInUser);
-      logger.i('here 3');
-      startTransaction();
-    } on Exception catch (e) {
-      throw e;
-    }
-  }
+  void checkForReview() async {
+    int totalMinutes = 0;
+    var maxClaim;
+    double creditRequest = 0.0;
+    logger.i('This 1');
+    logger.i('TYPE:  ' + requestModel.requestType.toString());
 
-  Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    RequestModel requestModel,
-    String message,
-  }) async {
-    TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModel.timebankId);
-    UserModel userModel = await FirestoreManager.getUserForId(sevaUserId: requestModel.sevaUserId);
-    if (userModel != null && timebankModel != null) {
-      ParticipantInfo receiver = ParticipantInfo(
-        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.sevaUserID : requestModel.timebankId,
-        photoUrl:
-            requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.photoURL : timebankModel.photoUrl,
-        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.fullname : timebankModel.name,
-        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
+    if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        requestModel.selectedInstructor?.sevaUserID ==
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+      if (selectedHoursPrepTimeController.text.isEmpty ||
+          selectedHoursDeliveryTimeController.text.isEmpty) {
+        return;
+      }
 
-      ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
-        photoUrl: loggedInUser.photoURL,
-        name: loggedInUser.fullname,
-        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-      await sendBackgroundMessage(
-          messageContent: utils.getReviewMessage(
-            requestTitle: requestModel.title,
-            context: context,
-            userName: loggedInUser.fullname,
-            isForCreator: true,
-            reviewMessage: message,
-          ),
-          reciever: receiver,
-          isTimebankMessage: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
-          timebankId: requestModel.timebankId,
-          communityId: loggedInUser.currentCommunity,
-          sender: sender);
-    }
-  }
+      totalMinutes = int.parse(selectedMinutesPrepTime) +
+          int.parse(selectedMinutesDeliveryTime) +
+          (int.parse(selectedHoursPrepTimeController.text) * 60) +
+          (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+    } else if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        requestModel.selectedInstructor?.sevaUserID !=
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+    } else if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        requestModel.selectedInstructor?.sevaUserID !=
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+      logger.i('This 2');
 
-  void startTransaction() async {
-    if (_formKey.currentState.validate()) {
-      // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-      int totalMinutes = 0;
-
-      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          requestModel.selectedInstructor.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID) {
-        totalMinutes = int.parse(selectedMinutesPrepTime) +
-            int.parse(selectedMinutesDeliveryTime) +
-            (int.parse(selectedHoursPrepTimeController.text) * 60) +
-            (int.parse(selectedHoursDeliveryTimeController.text) * 60);
-      } else {
+      if (hoursController.text.isEmpty) {
         String x = selectedMinuteValue == "5"
             ? "${hoursController.text}.0$selectedMinuteValue"
             : "${hoursController.text}.$selectedMinuteValue";
         totalMinutes = (double.parse(x) * 60).toInt();
-        // totalMinutes = int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
-        // TODO needs flow correction need to be removed when tasks introduced- Eswar
+        //totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
+      } else {
+        logger.i('This 3');
+
+        // if (hoursController.text == null || hoursController.text.length == 0) {
+        //   return;
+        // }
+        String x = selectedMinuteValue == "5"
+            ? "${hoursController.text}.0$selectedMinuteValue"
+            : "${hoursController.text}.$selectedMinuteValue";
+        totalMinutes = (double.parse(x) * 60).toInt();
       }
 
-      this.requestModel.durationOfRequest = totalMinutes;
+      //  totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
+      // creditRequest = totalMinutes / 60;
+      creditRequest = double.parse((totalMinutes / 60).toStringAsFixed(2));
+      //Just keeping 20 hours limit for previous versions of app which did not have number of hours
+      maxClaim = (requestModel.numberOfHours ?? 20) /
+          (requestModel.numberOfApprovals ?? 1);
 
-      TransactionModel transactionModel = TransactionModel(
-          from: requestModel.sevaUserId,
-          to: SevaCore.of(context).loggedInUser.sevaUserID,
-          credits: num.parse((totalMinutes / 60).toStringAsFixed(2)),
-          timestamp: DateTime.now().millisecondsSinceEpoch,
-          communityId: requestModel.communityId,
-          fromEmail_Id: requestModel.email,
-          toEmail_Id: SevaCore.of(context).loggedInUser.email,
-          offerId: requestModel.offerId ?? '');
-
-      logger.d("#offerId ${transactionModel.offerId}");
-
-      if (requestModel.transactions == null) {
-        requestModel.transactions = [transactionModel];
-      } else if (!requestModel.transactions.any((model) => model.to == transactionModel.to)) {
-        requestModel.transactions.add(transactionModel);
+      if (requestModel.isFromOfferRequest == true &&
+          creditRequest < (requestModel.minimumCredits ?? 0)) {
+        showDialogFoInfo(
+          title: S.of(context).error,
+          content: S.of(context).minimum_credits_offer,
+        );
+        return;
       }
 
-      FirestoreManager.requestComplete(model: requestModel);
-      // END OF CODE correction mentioned above
-      // await transactionBloc.createNewTransaction(
-      //   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-      //       ? requestModel.sevaUserId
-      //       : requestModel.timebankId,
-      //   SevaCore.of(context).loggedInUser.sevaUserID,
-      //   DateTime.now().millisecondsSinceEpoch,
-      //   totalMinutes / 60,
-      //   false,
-      //   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
-      //       ? RequestMode.TIMEBANK_REQUEST.toString()
-      //       : RequestMode.PERSONAL_REQUEST.toString(),
-      //   this.requestModel.id,
-      //   this.requestModel.timebankId,
-      //   communityId: requestModel.communityId,
-      //   toEmailORId: SevaCore.of(context).loggedInUser.email,
-      //   fromEmailORId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-      //       ? requestModel.email
-      //       : requestModel.timebankId,
-      // );
+      if (requestModel.isFromOfferRequest == false &&
+          creditRequest > maxClaim) {
+        showDialogFoInfo(
+          title: S.of(context).error,
+          content:
+              "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
+        );
+        return;
+      } else if (creditRequest == 0 &&
+          requestModel.requestType != RequestType.BORROW) {
+        showDialogFoInfo(
+          title: S.of(context).enter_hours,
+          content: S.of(context).validation_error_invalid_hours,
+        );
+        return;
+      }
 
-      FirestoreManager.createTaskCompletedNotification(
-        model: NotificationsModel(
-          id: utils.Utils.getUuid(),
-          data: requestModel.toMap(),
-          type: NotificationType.RequestCompleted,
-          senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-          targetUserId: requestModel.sevaUserId,
-          communityId: requestModel.communityId,
-          timebankId: requestModel.timebankId,
-          isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
-          isRead: false,
+      Future<void> sendMessageToMember({
+        required UserModel loggedInUser,
+        required RequestModel requestModel,
+        required String message,
+      }) async {
+        // Fetch the timebank model
+        TimebankModel? timebankModel =
+            await getTimeBankForId(timebankId: requestModel.timebankId!);
+        UserModel? userModel = await FirestoreManager.getUserForId(
+            sevaUserId: requestModel.sevaUserId!);
+        if (userModel != null && timebankModel != null) {
+          ParticipantInfo receiver = ParticipantInfo(
+            id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? userModel.sevaUserID
+                : requestModel.timebankId,
+            photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? userModel.photoURL
+                : timebankModel.photoUrl,
+            name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? userModel.fullname
+                : timebankModel.name,
+            type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? ChatType.TYPE_PERSONAL
+                : timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId
+                    ? ChatType.TYPE_TIMEBANK
+                    : ChatType.TYPE_GROUP,
+          );
+
+          ParticipantInfo sender = ParticipantInfo(
+            id: loggedInUser.sevaUserID,
+            photoUrl: loggedInUser.photoURL,
+            name: loggedInUser.fullname,
+            type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? ChatType.TYPE_PERSONAL
+                : timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId
+                    ? ChatType.TYPE_TIMEBANK
+                    : ChatType.TYPE_GROUP,
+          );
+          await sendBackgroundMessage(
+              messageContent: utils.getReviewMessage(
+                requestTitle: requestModel.title,
+                context: context,
+                userName: loggedInUser.fullname,
+                isForCreator: true,
+                reviewMessage: message,
+              ),
+              reciever: receiver,
+              isTimebankMessage:
+                  requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                      ? false
+                      : true,
+              timebankId: requestModel.timebankId!,
+              communityId: loggedInUser.currentCommunity!,
+              sender: sender);
+        }
+      }
+
+      Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
+        // Use the class-level creditRequestDialogContext variable
+        Future<void> startTransaction() async {
+          if (_formKey.currentState?.validate() ?? false) {
+            int totalMinutes = 0;
+
+            if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                requestModel.selectedInstructor?.sevaUserID ==
+                    SevaCore.of(context).loggedInUser.sevaUserID) {
+              totalMinutes = int.parse(selectedMinutesPrepTime) +
+                  int.parse(selectedMinutesDeliveryTime) +
+                  (int.parse(selectedHoursPrepTimeController.text) * 60) +
+                  (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+            } else {
+              String x = selectedMinuteValue == "5"
+                  ? "${hoursController.text}.0$selectedMinuteValue"
+                  : "${hoursController.text}.$selectedMinuteValue";
+              totalMinutes = (double.parse(x) * 60).toInt();
+              // totalMinutes = int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
+              // TODO needs flow correction need to be removed when tasks introduced- Eswar
+            }
+
+            requestModel.durationOfRequest = totalMinutes;
+
+            TransactionModel transactionModel = TransactionModel(
+                from: requestModel.sevaUserId,
+                to: SevaCore.of(context).loggedInUser.sevaUserID,
+                credits: num.parse((totalMinutes / 60).toStringAsFixed(2)),
+                timestamp: DateTime.now().millisecondsSinceEpoch,
+                communityId: requestModel.communityId,
+                fromEmail_Id: requestModel.email,
+                toEmail_Id: SevaCore.of(context).loggedInUser.email,
+                offerId: requestModel.offerId ?? '');
+
+            logger.d("#offerId ${transactionModel.offerId}");
+
+            if (requestModel.transactions == null) {
+              requestModel.transactions = [transactionModel];
+            } else if (!(requestModel.transactions
+                    ?.any((model) => model.to == transactionModel.to) ??
+                false)) {
+              requestModel.transactions!.add(transactionModel);
+            }
+
+            FirestoreManager.requestComplete(model: requestModel);
+
+            FirestoreManager.createTaskCompletedNotification(
+              model: NotificationsModel(
+                id: utils.Utils.getUuid(),
+                data: requestModel.toMap(),
+                type: NotificationType.RequestCompleted,
+                senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                targetUserId: requestModel.sevaUserId,
+                communityId: requestModel.communityId,
+                timebankId: requestModel.timebankId,
+                isTimebankNotification:
+                    requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+                isRead: false,
+              ),
+            );
+            Navigator.of(creditRequestDialogContext).pop();
+            Navigator.of(context).pop();
+          }
+        }
+
+        // adds review to firestore
+        try {
+          logger.i('here 1');
+          await CollectionRef.reviews.add({
+            "reviewer": SevaCore.of(context).loggedInUser.email,
+            "reviewed": requestModel.email,
+            "ratings": results['selection'],
+            "device_info": results['device_info'],
+            "requestId": requestModel.id,
+            "comments":
+                (results['didComment'] ? results['comment'] : "No comments"),
+            'liveMode': !AppConfig.isTestCommunity,
+          });
+          logger.i('here 2');
+          await sendMessageToMember(
+              message:
+                  results['didComment'] ? results['comment'] : "No comments",
+              requestModel: requestModel,
+              loggedInUser: loggedInUser);
+          logger.i('here 3');
+          startTransaction();
+        } on Exception catch (e) {
+          throw e;
+        }
+      }
+
+      Map results = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return ReviewFeedback(
+              feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
+              // requestModel: requestModel,
+            );
+          },
         ),
       );
-      Navigator.of(creditRequestDialogContext).pop();
-      Navigator.of(context).pop();
-    }
-  }
 
-  List<String> get minuteList {
-    List<String> data = [];
-    for (int i = 0; i < 60; i += 5) {
-      data.add('$i');
+      if (results != null && results.containsKey('selection')) {
+        if (results.containsKey('selection')) {
+          showProgressForCreditRetrieval();
+          onActivityResult(results, SevaCore.of(context).loggedInUser);
+        }
+      }
+
+      void startTransaction() async {
+        if (_formKey.currentState?.validate() ?? false) {
+          int totalMinutes = 0;
+
+          if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+              requestModel.selectedInstructor?.sevaUserID ==
+                  SevaCore.of(context).loggedInUser.sevaUserID) {
+            totalMinutes = int.parse(selectedMinutesPrepTime) +
+                int.parse(selectedMinutesDeliveryTime) +
+                (int.parse(selectedHoursPrepTimeController.text) * 60) +
+                (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+          } else {
+            String x = selectedMinuteValue == "5"
+                ? "${hoursController.text}.0$selectedMinuteValue"
+                : "${hoursController.text}.$selectedMinuteValue";
+            totalMinutes = (double.parse(x) * 60).toInt();
+            // totalMinutes = int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
+            // TODO needs flow correction need to be removed when tasks introduced- Eswar
+          }
+
+          this.requestModel.durationOfRequest = totalMinutes;
+
+          TransactionModel transactionModel = TransactionModel(
+              from: requestModel.sevaUserId,
+              to: SevaCore.of(context).loggedInUser.sevaUserID,
+              credits: num.parse((totalMinutes / 60).toStringAsFixed(2)),
+              timestamp: DateTime.now().millisecondsSinceEpoch,
+              communityId: requestModel.communityId,
+              fromEmail_Id: requestModel.email,
+              toEmail_Id: SevaCore.of(context).loggedInUser.email,
+              offerId: requestModel.offerId ?? '');
+
+          logger.d("#offerId ${transactionModel.offerId}");
+
+          if (requestModel.transactions == null) {
+            requestModel.transactions = [transactionModel];
+          } else if (!(requestModel.transactions
+                  ?.any((model) => model.to == transactionModel.to) ??
+              false)) {
+            requestModel.transactions!.add(transactionModel);
+          }
+
+          FirestoreManager.requestComplete(model: requestModel);
+          // END OF CODE correction mentioned above
+          // await transactionBloc.createNewTransaction(
+          //   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          //       ? requestModel.sevaUserId
+          //       : requestModel.timebankId,
+          //   SevaCore.of(context).loggedInUser.sevaUserID,
+          //   DateTime.now().millisecondsSinceEpoch,
+          //   totalMinutes / 60,
+          //   false,
+          //   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+          //       ? RequestMode.TIMEBANK_REQUEST.toString()
+          //       : RequestMode.PERSONAL_REQUEST.toString(),
+          //   this.requestModel.id,
+          //   this.requestModel.timebankId,
+          //   communityId: requestModel.communityId,
+          //   toEmailORId: SevaCore.of(context).loggedInUser.email,
+          //   fromEmailORId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          //       ? requestModel.email
+          //       : requestModel.timebankId,
+          // );
+
+          FirestoreManager.createTaskCompletedNotification(
+            model: NotificationsModel(
+              id: utils.Utils.getUuid(),
+              data: requestModel.toMap(),
+              type: NotificationType.RequestCompleted,
+              senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+              targetUserId: requestModel.sevaUserId,
+              communityId: requestModel.communityId,
+              timebankId: requestModel.timebankId,
+              isTimebankNotification:
+                  requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+              isRead: false,
+            ),
+          );
+          Navigator.of(creditRequestDialogContext).pop();
+          Navigator.of(context).pop();
+        }
+      }
     }
-    return data;
   }
 }
 
-class BorrowRequestFeedBackView extends StatefulWidget {
+class BorrowRequestFeedbackView extends StatefulWidget {
   final RequestModel requestModel;
 
-  // TODO needs flow correction to tasks model
-  BorrowRequestFeedBackView({@required this.requestModel});
+  const BorrowRequestFeedbackView({Key? key, required this.requestModel})
+      : super(key: key);
 
   @override
-  BorrowRequestFeedBackViewState createState() => BorrowRequestFeedBackViewState();
+  BorrowRequestFeedbackViewState createState() =>
+      BorrowRequestFeedbackViewState();
 }
 
-class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
-  RequestModel requestModel;
+class BorrowRequestFeedbackViewState extends State<BorrowRequestFeedbackView> {
+  late RequestModel requestModel;
+
+  // Controllers for handling input data
+  final TextEditingController hoursController = TextEditingController();
+  final TextEditingController prepTimeController = TextEditingController();
+  final TextEditingController deliveryTimeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    this.requestModel = widget.requestModel;
+    requestModel = widget.requestModel;
   }
 
-  TextEditingController hoursController = TextEditingController();
-  TextEditingController selectedHoursPrepTimeController = TextEditingController();
-  TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
+  @override
+  void dispose() {
+    // Clean up controllers when the widget is disposed
+    hoursController.dispose();
+    prepTimeController.dispose();
+    deliveryTimeController.dispose();
+    super.dispose();
+  }
+
+  FeedbackType _determineFeedbackType() {
+    final bool isUserBorrower =
+        SevaCore.of(context).loggedInUser.sevaUserID == requestModel.sevaUserId;
+
+    if (requestModel.requestType == RequestType.BORROW) {
+      return isUserBorrower
+          ? FeedbackType.FOR_BORROW_REQUEST_BORROWER
+          : FeedbackType.FOR_BORROW_REQUEST_LENDER;
+    }
+
+    // Default fallback for other request types
+    return FeedbackType.FOR_REQUEST_CREATOR;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          requestModel.title,
-          style: TextStyle(fontSize: 18),
+          requestModel.title ?? '',
+          style: const TextStyle(fontSize: 18),
         ),
       ),
       body: ReviewFeedback(
-        feedbackType: (requestModel.requestType == RequestType.BORROW &&
-                SevaCore.of(context).loggedInUser.sevaUserID == requestModel.sevaUserId)
-            ? FeedbackType.FOR_BORROW_REQUEST_BORROWER
-            : FeedbackType.FOR_BORROW_REQUEST_LENDER,
-        //FeedbackType.FOR_REQUEST_CREATOR
-        // requestModel: requestModel,
+        feedbackType: _determineFeedbackType(),
       ),
     );
   }

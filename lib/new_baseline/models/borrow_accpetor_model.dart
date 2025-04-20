@@ -25,22 +25,22 @@ class BorrowAcceptorModel {
     this.communityId,
   });
 
-  String id;
-  String acceptorEmail;
-  String acceptorId;
-  String acceptorName;
-  String acceptorMobile;
-  String borrowAgreementLink;
-  String agreementId;
-  String selectedAddress;
-  bool isApproved;
-  List<String> borrowedItemsIds;
-  String borrowedPlaceId;
-  String notificationId;
-  int timestamp;
-  String acceptorphotoURL;
-  LendingOfferStatus status;
-  String communityId;
+  String? id;
+  String? acceptorEmail;
+  String? acceptorId;
+  String? acceptorName;
+  String? acceptorMobile;
+  String? borrowAgreementLink;
+  String? agreementId;
+  String? selectedAddress;
+  bool? isApproved;
+  List<String>? borrowedItemsIds;
+  String? borrowedPlaceId;
+  String? notificationId;
+  int? timestamp;
+  String? acceptorphotoURL;
+  LendingOfferStatus? status;
+  String? communityId;
 
   factory BorrowAcceptorModel.fromJson(String str) =>
       BorrowAcceptorModel.fromMap(json.decode(str));
@@ -93,12 +93,12 @@ class BorrowAcceptorModel {
         "isApproved": isApproved == null ? null : isApproved,
         "borrowedItemsIds": borrowedItemsIds == null
             ? []
-            : List<dynamic>.from(borrowedItemsIds.map((x) => x)),
+            : List<dynamic>.from(borrowedItemsIds?.map((x) => x) ?? []),
         "borrowedPlaceId": borrowedPlaceId == null ? null : borrowedPlaceId,
         "timestamp": timestamp == null ? null : timestamp,
         "acceptorphotoURL": acceptorphotoURL == null ? null : acceptorphotoURL,
         "notificationId": notificationId == null ? null : notificationId,
         "communityId": communityId == null ? null : communityId,
-        "status": status == null ? null : status.readable,
+        "status": status == null ? null : status?.readable,
       };
 }

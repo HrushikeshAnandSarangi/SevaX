@@ -7,37 +7,37 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 class SelectionModal extends StatefulWidget {
   @override
   _SelectionModalState createState() => _SelectionModalState();
-  final List dataSource;
-  final bool admin;
-  final List values;
-  final bool filterable;
-  final String textField;
-  final String valueField;
-  final Widget title;
-  final int maxLength;
-  final Color buttonBarColor;
-  final String cancelButtonText;
-  final IconData cancelButtonIcon;
-  final Color cancelButtonColor;
-  final Color cancelButtonTextColor;
-  final String saveButtonText;
-  final IconData saveButtonIcon;
-  final Color saveButtonColor;
-  final Color saveButtonTextColor;
-  final String deleteButtonTooltipText;
-  final IconData deleteIcon;
-  final Color deleteIconColor;
-  final Color selectedOptionsBoxColor;
-  final String selectedOptionsInfoText;
-  final Color selectedOptionsInfoTextColor;
-  final IconData checkedIcon;
-  final IconData uncheckedIcon;
-  final Color checkBoxColor;
-  final Color searchBoxColor;
-  final String searchBoxHintText;
-  final Color searchBoxFillColor;
-  final IconData searchBoxIcon;
-  final String searchBoxToolTipText;
+  final List? dataSource;
+  final bool? admin;
+  final List? values;
+  final bool? filterable;
+  final String? textField;
+  final String? valueField;
+  final Widget? title;
+  final int? maxLength;
+  final Color? buttonBarColor;
+  final String? cancelButtonText;
+  final IconData? cancelButtonIcon;
+  final Color? cancelButtonColor;
+  final Color? cancelButtonTextColor;
+  final String? saveButtonText;
+  final IconData? saveButtonIcon;
+  final Color? saveButtonColor;
+  final Color? saveButtonTextColor;
+  final String? deleteButtonTooltipText;
+  final IconData? deleteIcon;
+  final Color? deleteIconColor;
+  final Color? selectedOptionsBoxColor;
+  final String? selectedOptionsInfoText;
+  final Color? selectedOptionsInfoTextColor;
+  final IconData? checkedIcon;
+  final IconData? uncheckedIcon;
+  final Color? checkBoxColor;
+  final Color? searchBoxColor;
+  final String? searchBoxHintText;
+  final Color? searchBoxFillColor;
+  final IconData? searchBoxIcon;
+  final String? searchBoxToolTipText;
   SelectionModal(
       {this.filterable,
       this.dataSource,
@@ -74,11 +74,11 @@ class SelectionModal extends StatefulWidget {
 }
 
 class _SelectionModalState extends State<SelectionModal> {
-  RequestModel requestModel;
+  late RequestModel requestModel;
   int sharedValue = 0;
   final globalKey = GlobalKey<ScaffoldState>();
   final TextEditingController _controller = TextEditingController();
-  bool _isSearching;
+  late bool _isSearching;
 
   List _localDataSourceWithState = [];
   List _searchresult = [];
@@ -101,14 +101,14 @@ class _SelectionModalState extends State<SelectionModal> {
   void initState() {
     super.initState();
     requestModel = RequestModel(communityId: '');
-    requestModel.requestMode = widget.admin
+    requestModel.requestMode = (widget.admin ?? false)
         ? RequestMode.TIMEBANK_REQUEST
         : RequestMode.PERSONAL_REQUEST;
-    widget.dataSource.forEach((item) {
+    widget.dataSource?.forEach((item) {
       var newItem = {
         'value': item[widget.valueField],
         'text': item[widget.textField],
-        'checked': widget.values.contains(item[widget.valueField])
+        'checked': widget.values?.contains(item[widget.valueField]) ?? false
       };
       _localDataSourceWithState.add(newItem);
     });
@@ -120,13 +120,14 @@ class _SelectionModalState extends State<SelectionModal> {
 
   void filterProjects() {
     _localDataSourceWithState = [];
-    widget.dataSource.forEach((item) {
+    widget.dataSource?.forEach((item) {
       var newItem = {
-        'value': item[widget.valueField],
-        'text': item[widget.textField],
-        'checked': widget.values.contains(item[widget.valueField])
+        'value': item[widget.valueField ?? ''],
+        'text': item[widget.textField ?? ''],
+        'checked':
+            widget.values?.contains(item[widget.valueField ?? '']) ?? false
       };
-      if (widget.admin) {
+      if (widget.admin ?? false) {
         if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
           if (item['timebankproject'] != null && item['timebankproject']) {
             _localDataSourceWithState.add(newItem);
@@ -151,7 +152,7 @@ class _SelectionModalState extends State<SelectionModal> {
     _searchresult = List.from(_localDataSourceWithState);
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).primaryColor,
       leading: null,
@@ -178,7 +179,7 @@ class _SelectionModalState extends State<SelectionModal> {
     return SafeArea(
       child: Column(
         children: <Widget>[
-          widget.filterable ? _buildSearchText() : SizedBox(),
+          (widget.filterable ?? false) ? _buildSearchText() : SizedBox(),
           Expanded(
             child: _optionsList(),
           ),
@@ -195,8 +196,15 @@ class _SelectionModalState extends State<SelectionModal> {
                     },
                     child: Text(
                       S.of(context).cancel,
-                      style: Theme.of(context).primaryTextTheme.button,
+                      style: Theme.of(context).primaryTextTheme.labelLarge,
                     ),
+                    color: widget.cancelButtonColor ??
+                        Theme.of(context).primaryColor,
+                    textColor: widget.cancelButtonTextColor ?? Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    elevation: 2,
                   ),
                   ElevatedButton.icon(
                     icon: Icon(
@@ -206,7 +214,7 @@ class _SelectionModalState extends State<SelectionModal> {
                     onPressed: _localDataSourceWithState
                                 .where((item) => item['checked'])
                                 .length >
-                            widget.maxLength
+                            (widget.maxLength ?? 0)
                         ? null
                         : () {
                             var selectedValuesObjectList =
@@ -220,15 +228,15 @@ class _SelectionModalState extends State<SelectionModal> {
                             Navigator.pop(context, selectedValues);
                           },
                     style: ElevatedButton.styleFrom(
-                      primary: widget.saveButtonColor ??
+                      backgroundColor: widget.saveButtonColor ??
                           Theme.of(context).primaryColor,
                     ),
                     label: Text(
                       widget.saveButtonText ?? S.of(context).done,
                       style: Theme.of(context)
                           .primaryTextTheme
-                          .button
-                          .merge(TextStyle(
+                          .labelLarge
+                          ?.merge(TextStyle(
                             color: widget.saveButtonTextColor ?? Colors.white,
                           )),
                     ),
@@ -260,7 +268,9 @@ class _SelectionModalState extends State<SelectionModal> {
         ),
         deleteButtonTooltipMessage:
             widget.deleteButtonTooltipText ?? S.of(context).tap_to_delete,
-        deleteIcon: widget.deleteIcon ?? Icon(Icons.cancel),
+        deleteIcon: (widget.deleteIcon != null)
+            ? Icon(widget.deleteIcon as IconData)
+            : const Icon(Icons.cancel),
         deleteIconColor: widget.deleteIconColor ?? Colors.grey,
         onDeleted: () {
           existingItem['checked'] = false;
@@ -327,7 +337,7 @@ class _SelectionModalState extends State<SelectionModal> {
   }
 
   Widget requestSwitch() {
-    if (widget.admin) {
+    if (widget.admin ?? false) {
       return Container(
           margin: EdgeInsets.only(top: 10, bottom: 10),
           width: double.infinity,
@@ -398,7 +408,9 @@ class _SelectionModalState extends State<SelectionModal> {
                     height: 15.0,
                     child: IconButton(
                       padding: EdgeInsets.only(top: 8),
-                      icon: widget.searchBoxIcon ?? Icon(Icons.clear),
+                      icon: (widget.searchBoxIcon != null)
+                          ? Icon(widget.searchBoxIcon as IconData)
+                          : Icon(Icons.clear),
                       onPressed: () {
                         _controller.clear();
                         searchOperation('');

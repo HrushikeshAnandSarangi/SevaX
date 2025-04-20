@@ -34,10 +34,10 @@ class FindCommunitiesView extends StatefulWidget {
   final bool isFromHome;
 
   FindCommunitiesView(
-      {@required this.keepOnBackPress,
-      @required this.loggedInUser,
-      @required this.showBackBtn,
-      @required this.isFromHome});
+      {required this.keepOnBackPress,
+      required this.loggedInUser,
+      required this.showBackBtn,
+      required this.isFromHome});
 
   @override
   State<StatefulWidget> createState() {
@@ -49,13 +49,13 @@ enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
 
 class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final TextEditingController searchTextController = TextEditingController();
-  static String JOIN;
-  static String JOINED;
+  static String? JOIN;
+  static String? JOINED;
   bool showAppbar = false;
-  String nearTimebankText;
+  String? nearTimebankText;
   var radius;
   final profanityDetector = ProfanityDetector();
-  BuildContext parentContext;
+  BuildContext? parentContext;
   String errorText = '';
   final _debouncer = Debouncer(milliseconds: 500);
 
@@ -159,7 +159,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   void logOut() {
-    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    String loggedInEmail = SevaCore.of(context).loggedInUser.email!;
 
     showDialog(
       context: context,
@@ -193,7 +193,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   ),
                   CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Text(
                       S.of(context).log_out,
                       style: TextStyle(
@@ -209,8 +209,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       // ));
 
                       try {
-                        await FCMNotificationManager.removeDeviceRegisterationForMember(
-                            email: loggedInEmail);
+                        await FCMNotificationManager
+                            .removeDeviceRegisterationForMember(
+                                email: loggedInEmail);
                       } catch (e) {
                         throw e;
                       }
@@ -250,7 +251,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         Text(
           S.of(context).looking_existing_timebank,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
@@ -260,7 +262,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           style: TextStyle(color: Colors.black),
           controller: searchTextController,
           validator: (value) {
-            if (profanityDetector.isProfaneString(value)) {
+            if (profanityDetector.isProfaneString(value!)) {
               // errorText =
               return S.of(context).profanity_text_alert;
             }
@@ -279,7 +281,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 ),
                 onPressed: () {
                   //searchTextController.clear();
-                  WidgetsBinding.instance.addPostFrameCallback((_) => searchTextController.clear());
+                  WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => searchTextController.clear());
                 },
               ),
             ),
@@ -316,7 +319,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         widget.isFromHome ? Container() : createCommunity(),
         CustomTextButton(
           shape: StadiumBorder(),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           onPressed: () async {
             await CollectionRef.users.doc(widget.loggedInUser.email).update(
               {
@@ -334,7 +337,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ModalRoute.withName('/'),
             );
           },
-          child: Text(S.of(context).skip, style: TextStyle(color: Colors.white)),
+          child:
+              Text(S.of(context).skip, style: TextStyle(color: Colors.white)),
         ),
       ]),
     );
@@ -344,7 +348,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     if (searchTextController.text.trim().length < 1) {
       return Column(
         children: <Widget>[
-          getEmptyWidget('Users', nearTimebankText),
+          getEmptyWidget('Users', nearTimebankText!),
           Expanded(child: nearByTimebanks()),
         ],
       );
@@ -362,7 +366,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           return LoadingIndicator();
         }
 
-        if (snapshot.data == null || snapshot.data.isEmpty) {
+        if (snapshot.data == null || snapshot.data!.isEmpty) {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
             child: Center(
@@ -372,7 +376,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           );
         }
 
-        List<CommunityModel> communityList = snapshot.data;
+        List<CommunityModel> communityList = snapshot.data!;
 
         return Padding(
           padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
@@ -384,10 +388,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             itemBuilder: (BuildContext context, int index) {
               CompareUserStatus status;
 
-              status = _compareUserStatus(communityList[index], widget.loggedInUser.sevaUserID);
+              status = _compareUserStatus(
+                  communityList[index], widget.loggedInUser.sevaUserID!);
 
               return timeBankWidget(
-                  communityModel: communityList[index], context: context, status: status);
+                  communityModel: communityList[index],
+                  context: context,
+                  status: status);
             },
           ),
         );
@@ -396,11 +403,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   Widget timeBankWidget(
-      {CommunityModel communityModel, BuildContext context, CompareUserStatus status}) {
+      {CommunityModel? communityModel,
+      BuildContext? context,
+      CompareUserStatus? status}) {
     return ListTile(
       // onTap: goToNext(snapshot.data),
-      title:
-          Text(communityModel.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+      title: Text(communityModel!.name,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       subtitle: FutureBuilder(
         future: getUserForId(sevaUserId: communityModel.created_by),
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
@@ -412,7 +421,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              S.of(context).created_by + "${snapshot.data.fullname}",
+              S.of(context).created_by + "${snapshot.data!.fullname}",
             );
           } else {
             return Container();
@@ -421,17 +430,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
         CustomElevatedButton(
-          onPressed: communityModel.id != SevaCore.of(context).loggedInUser.currentCommunity
+          onPressed: (communityModel.id !=
+                  SevaCore.of(context!).loggedInUser.currentCommunity)
               ? () {
                   var communityModell = communityModel;
                   createEditCommunityBloc.selectCommunity(communityModell);
-                  createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
-                  // snapshot.data.comm
-                  // unities[index].
-                  Navigator.of(context).push(
+                  createEditCommunityBloc
+                      .updateUserDetails(SevaCore.of(context!).loggedInUser);
+                  Navigator.of(context!).push(
                     MaterialPageRoute(
                       builder: (_context) => SevaCore(
-                        loggedInUser: SevaCore.of(context).loggedInUser,
+                        loggedInUser: SevaCore.of(context!).loggedInUser,
                         child: ExploreCommunityDetails(
                           communityId: communityModell.id,
                           isSignedUser: true,
@@ -440,19 +449,21 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     ),
                   );
                 }
-              : null,
+              : null!,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(0.0),
-                child: Text(getUserTimeBankStatusTitle(status) ?? ""),
+                child: Text(getUserTimeBankStatusTitle(status!) ?? ""),
               ),
             ],
           ),
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context!).colorScheme.secondary,
           textColor: Colors.white,
           shape: StadiumBorder(),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          elevation: 2.0,
         )
       ]),
     );
@@ -461,15 +472,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget nearByTimebanks() {
     return StreamBuilder<List<CommunityModel>>(
         stream: FirestoreManager.getNearCommunitiesListStream(
-          nearbySettings: SevaCore.of(context).loggedInUser.nearBySettings,
+          nearbySettings: SevaCore.of(context).loggedInUser.nearBySettings!,
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
           if (snapshot.hasData) {
-            if (snapshot.data.length != 0) {
-              List<CommunityModel> communityList = snapshot.data;
+            if (snapshot.data!.length != 0) {
+              List<CommunityModel> communityList = snapshot.data!;
 
               return ListView.builder(
                   padding: EdgeInsets.only(
@@ -482,7 +493,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     CompareUserStatus status;
                     status = _compareUserStatus(
                       communityList[index],
-                      widget.loggedInUser.sevaUserID,
+                      widget.loggedInUser.sevaUserID!,
                     );
 
                     return timeBankWidget(
@@ -521,13 +532,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   String getUserTimeBankStatusTitle(CompareUserStatus status) {
     switch (status) {
       case CompareUserStatus.JOIN:
-        return JOIN;
+        return JOIN!;
 
       case CompareUserStatus.JOINED:
-        return JOINED;
+        return JOINED!;
 
       default:
-        return JOIN;
+        return JOIN!;
     }
   }
 
@@ -585,22 +596,33 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           child: Column(
             children: <Widget>[
               CustomElevatedButton(
+                color: Theme.of(context).colorScheme.secondary,
+                shape: StadiumBorder(),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                elevation: 2.0,
+                textColor: Colors.white,
                 child: Text(
                   S.of(context).create_timebank,
-                  style: Theme.of(context).primaryTextTheme.button,
+                  style: Theme.of(context).primaryTextTheme.labelLarge,
                 ),
                 onPressed: () async {
                   globals.isFromOnBoarding = true;
-                  var timebankAdvisory = S.of(context).create_timebank_confirmation;
+                  var timebankAdvisory =
+                      S.of(context).create_timebank_confirmation;
                   Map<String, bool> onActivityResult =
-                      await showTimebankAdvisory(dialogTitle: timebankAdvisory);
-                  if (onActivityResult['PROCEED']) {
-                    createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
+                      (await showTimebankAdvisory(
+                                  dialogTitle: timebankAdvisory))
+                              ?.cast<String, bool>() ??
+                          {};
+                  if (onActivityResult['PROCEED'] == true) {
+                    createEditCommunityBloc
+                        .updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
-                      parentContext,
+                      parentContext!,
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(
-                          loggedInUser: SevaCore.of(parentContext).loggedInUser,
+                          loggedInUser:
+                              SevaCore.of(parentContext!).loggedInUser,
                           child: CreateEditCommunityView(
                             isCreateTimebank: true,
                             timebankId: FlavorConfig.values.timebankId,
@@ -620,25 +642,20 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
-  Future<Map> showTimebankAdvisory({String dialogTitle}) {
-    return showDialog(
+  Future<Map<dynamic, dynamic>> showTimebankAdvisory(
+      {String? dialogTitle}) async {
+    final result = await showDialog<Map<dynamic, dynamic>>(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-//            title: Text(
-//              dialogTitle,
-//              style: TextStyle(
-//                fontSize: 16,
-//              ),
-//            ),
-          actionsPadding: EdgeInsets.only(right: 20),
+            actionsPadding: EdgeInsets.only(right: 20),
             content: Form(
               child: Container(
                 height: 200,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Text(
-                    dialogTitle,
+                    dialogTitle ?? '',
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -663,7 +680,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
               CustomTextButton(
                 shape: StadiumBorder(),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(
@@ -672,11 +689,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   ),
                 ),
                 onPressed: () {
-                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                  Navigator.of(viewContext).pop({'PROCEED': true});
                 },
               ),
             ],
           );
         });
+    return result ?? {};
   }
 }

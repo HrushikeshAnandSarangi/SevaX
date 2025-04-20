@@ -32,54 +32,52 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import '../../flavor_config.dart';
 import '../core.dart';
 
-String getCashDonationAmount({OfferModel offerDataModel}) {
+String getCashDonationAmount({required OfferModel offerDataModel}) {
   String TAGET_NOT_DEFINED = '';
   return offerDataModel.type == RequestType.CASH
-      ? offerDataModel.cashModel.targetAmount.toString()
+      ? offerDataModel.cashModel?.targetAmount.toString() ?? TAGET_NOT_DEFINED
       : TAGET_NOT_DEFINED;
 }
 
-String getOfferTitle({OfferModel offerDataModel}) {
+String getOfferTitle({required OfferModel offerDataModel}) {
   return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
-      ? offerDataModel.individualOfferDataModel.title
-      : offerDataModel.groupOfferDataModel.classTitle;
+      ? offerDataModel.individualOfferDataModel?.title ?? ''
+      : offerDataModel.groupOfferDataModel?.classTitle ?? '';
 }
 
-String getOfferDescription({OfferModel offerDataModel}) {
+String getOfferDescription({required OfferModel offerDataModel}) {
   return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
-      ? offerDataModel.individualOfferDataModel.description
-      : offerDataModel.groupOfferDataModel.classDescription;
+      ? offerDataModel.individualOfferDataModel?.description ?? ''
+      : offerDataModel.groupOfferDataModel?.classDescription ?? '';
 }
 
-List<String> getOfferParticipants({OfferModel offerDataModel}) {
+List<String> getOfferParticipants({required OfferModel offerDataModel}) {
   if (offerDataModel.type == RequestType.GOODS) {
-    return offerDataModel.goodsDonationDetails.donors ?? [];
+    return offerDataModel.goodsDonationDetails?.donors ?? [];
   } else if (offerDataModel.type == RequestType.CASH) {
-    return offerDataModel.cashModel.donors ?? [];
+    return offerDataModel.cashModel?.donors ?? [];
   } else if (offerDataModel.type == RequestType.LENDING_OFFER) {
-    return offerDataModel.lendingOfferDetailsModel.offerAcceptors ?? [];
+    return offerDataModel.lendingOfferDetailsModel?.offerAcceptors ?? [];
   } else {
     return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
-        ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []
-        : offerDataModel.groupOfferDataModel.signedUpMembers ?? [];
+        ? offerDataModel.individualOfferDataModel?.offerAcceptors ?? []
+        : offerDataModel.groupOfferDataModel?.signedUpMembers ?? [];
   }
 }
 
-String getOfferLocation({String selectedAddress}) {
-  if (selectedAddress != null) {
-    if (selectedAddress.contains(',')) {
-      var slices = selectedAddress.split(',');
-      return selectedAddress.split(',')[slices.length - 1];
-    } else {
-      return selectedAddress;
-    }
+String getOfferLocation({required String selectedAddress}) {
+  if (selectedAddress.contains(',')) {
+    var slices = selectedAddress.split(',');
+    return selectedAddress.split(',')[slices.length - 1];
   } else {
-    return null;
+    return selectedAddress;
   }
 }
 
 String getFormatedTimeFromTimeStamp(
-    {int timeStamp, String timeZone, String format = "EEEEEEE, MMMM dd"}) {
+    {required int timeStamp,
+    required String timeZone,
+    String format = "EEEEEEE, MMMM dd"}) {
   return DateFormat(format, Locale(getLangTag()).toLanguageTag()).format(
     getDateTimeAccToUserTimezone(
         dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
@@ -90,10 +88,11 @@ String getFormatedTimeFromTimeStamp(
 bool isOfferVisible(OfferModel offerModel, String userId) {
   var currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
   if (offerModel.offerType == OfferType.GROUP_OFFER) {
-    if (offerModel.groupOfferDataModel.signedUpMembers.length ==
-            offerModel.groupOfferDataModel.sizeOfClass ||
-        offerModel.groupOfferDataModel.endDate < currentTimeStamp) {
-      if (offerModel.groupOfferDataModel.signedUpMembers.contains(userId)) {
+    if (offerModel.groupOfferDataModel?.signedUpMembers?.length ==
+            offerModel.groupOfferDataModel?.sizeOfClass ||
+        (offerModel.groupOfferDataModel?.endDate ?? 0) < currentTimeStamp) {
+      if (offerModel.groupOfferDataModel?.signedUpMembers?.contains(userId) ??
+          false) {
         return false;
       } else if (offerModel.sevaUserId == userId) {
         return false;
@@ -130,12 +129,12 @@ String getButtonLabel(context, OfferModel offerModel, String userId) {
 }
 
 Future<void> deleteOffer({
-  BuildContext context,
-  String offerId,
+  BuildContext? context,
+  String? offerId,
 }) async {
   bool status = false;
   await showDialog(
-    context: context,
+    context: context!,
     barrierDismissible: true,
     builder: (BuildContext dialogContext) {
       return AlertDialog(
@@ -175,7 +174,7 @@ Future<void> deleteOffer({
             child: CustomTextButton(
               shape: StadiumBorder(),
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               textColor: FlavorConfig.values.buttonTextColor,
               onPressed: () async {
                 await CollectionRef.offers
@@ -227,39 +226,39 @@ Future<bool> offerActions(
     //Check balance here
     var hasSufficientCreditsResult =
         await SevaCreditLimitManager.hasSufficientCredits(
-      email: SevaCore.of(context).loggedInUser.email,
-      credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
-      userId: _userId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      email: SevaCore.of(context).loggedInUser.email!,
+      credits: model.groupOfferDataModel?.numberOfClassHours?.toDouble() ?? 0.0,
+      userId: _userId!,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
     );
 
-    CommunityModel communityMoel;
+    late CommunityModel communityMoel;
     await CollectionRef.communities
         .doc(SevaCore.of(context).loggedInUser.currentCommunity)
         .get()
         .then((value) {
-      communityMoel = CommunityModel(value.data());
+      communityMoel = CommunityModel(value.data() as Map<String, dynamic>);
     });
 
     if (hasSufficientCreditsResult.hasSuffiientCredits) {
-      var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
-      var email = SevaCore.of(context).loggedInUser.email;
+      var myUserID = SevaCore.of(context).loggedInUser.sevaUserID ?? '';
+      var email = SevaCore.of(context).loggedInUser.email ?? '';
 
       await confirmationDialog(
         context: context,
         title:
-            "${S.of(context).you_are_signing_up_for_this_test} ${model.groupOfferDataModel.classTitle.trim()}. ${S.of(context).doing_so_will_debit_a_total_of} ${model.groupOfferDataModel.numberOfClassHours} ${S.of(context).credits_from_you_after_you_say_ok}.",
+            "${S.of(context).you_are_signing_up_for_this_test} ${model.groupOfferDataModel?.classTitle.trim()}. ${S.of(context).doing_so_will_debit_a_total_of} ${model.groupOfferDataModel?.numberOfClassHours} ${S.of(context).credits_from_you_after_you_say_ok}.",
         onConfirmed: () async {
           await updateOffer(
-            offerId: model.id,
+            offerId: model.id ?? '',
             userId: myUserID,
             userEmail: email,
             allowCalenderEvent: true,
             communityId: communityMoel.id,
             communityName: communityMoel.name,
-            memberName: SevaCore.of(context).loggedInUser.fullname,
-            memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+            memberName: SevaCore.of(context).loggedInUser.fullname ?? '',
+            memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL ?? '',
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank ?? '',
           ).then((value) => {
                 if (true)
                   {
@@ -269,7 +268,7 @@ Future<bool> offerActions(
                       builder: KloudlessWidgetBuilder()
                           .fromContext<ApplyMode, OfferModel>(
                         context: context,
-                        id: model.id,
+                        id: model.id ?? '',
                         model: model,
                       ),
                     )
@@ -323,21 +322,21 @@ Future<bool> offerActions(
       ),
     );
   } else {
-    if (!_isParticipant) addBookMark(model.id, _userId);
+    if (!_isParticipant && model.id != null) addBookMark(model.id!, _userId!);
   }
   return true;
 }
 
 Future<bool> updateOffer({
-  String userId,
-  bool allowCalenderEvent,
-  String userEmail,
-  String offerId,
-  @required String communityId,
-  @required String communityName,
-  @required String memberName,
-  @required String memberPhotoUrl,
-  @required String timebankId,
+  String? userId,
+  bool? allowCalenderEvent,
+  String? userEmail,
+  String? offerId,
+  required String communityId,
+  required String communityName,
+  required String memberName,
+  required String memberPhotoUrl,
+  required String timebankId,
 }) async {
   return await CollectionRef.offers
       .doc(offerId)
@@ -346,11 +345,11 @@ Future<bool> updateOffer({
           'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
             [userId],
           ),
-          if (allowCalenderEvent)
+          if (allowCalenderEvent!)
             'allowedCalenderUsers': FieldValue.arrayUnion(
               [userEmail],
             ),
-          'participantDetails.' + userId: AcceptorModel(
+          'participantDetails.' + userId!: AcceptorModel(
             communityId: communityId,
             communityName: communityName,
             memberEmail: userEmail,
@@ -364,13 +363,13 @@ Future<bool> updateOffer({
       .catchError((onError) => false);
 }
 
-void handleFeedBackNotificationLendingOffer({
-  BuildContext context,
-  OfferModel offerModel,
-  String notificationId,
-  String email,
-  FeedbackType feedbackType,
-  LendingOfferAcceptorModel lendingOfferAcceptorModel,
+Future<void> handleFeedBackNotificationLendingOffer({
+  required BuildContext context,
+  required OfferModel offerModel,
+  required String notificationId,
+  required String email,
+  required FeedbackType feedbackType,
+  required LendingOfferAcceptorModel lendingOfferAcceptorModel,
 }) async {
   Map results = await Navigator.of(context).push(
     MaterialPageRoute(
@@ -381,7 +380,7 @@ void handleFeedBackNotificationLendingOffer({
     ),
   );
 
-  if (results != null && results.containsKey('selection')) {
+  if (results.containsKey('selection')) {
     CollectionRef.reviews.add(
       {
         "reviewer": email,
@@ -397,17 +396,23 @@ void handleFeedBackNotificationLendingOffer({
     );
 
     await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-        feedbackType, results, null, SevaCore.of(context).loggedInUser,
-        offerModel: offerModel,
-        borrowerEmail: lendingOfferAcceptorModel.acceptorEmail);
+      feedbackType,
+      results,
+      RequestModel(
+          communityId:
+              SevaCore.of(context).loggedInUser.currentCommunity ?? ''),
+      SevaCore.of(context).loggedInUser,
+      offerModel: offerModel,
+      borrowerEmail: lendingOfferAcceptorModel.acceptorEmail,
+    );
     if (feedbackType == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER) {
       lendingOfferAcceptorModel.isLenderGaveReview = true;
       await LendingOffersRepo.updateLendingParticipantModel(
-          offerId: offerModel.id, model: lendingOfferAcceptorModel);
+          offerId: offerModel.id!, model: lendingOfferAcceptorModel);
     } else {
       lendingOfferAcceptorModel.isBorrowerGaveReview = true;
       await LendingOffersRepo.updateLendingParticipantModel(
-          offerId: offerModel.id, model: lendingOfferAcceptorModel);
+          offerId: offerModel.id!, model: lendingOfferAcceptorModel);
     }
 
     var loggedInUser = SevaCore.of(context).loggedInUser;
@@ -431,14 +436,14 @@ void handleFeedBackNotificationLendingOffer({
                 results['didComment'] ? results['comment'] : "No comments",
             userName: loggedInUser.fullname,
             context: context,
-            requestTitle: offerModel.individualOfferDataModel.title,
+            requestTitle: offerModel.individualOfferDataModel?.title ?? '',
             isForCreator: true,
             isOfferReview: true,
           ),
           reciever: receiver,
           isTimebankMessage: false,
           timebankId: '',
-          communityId: loggedInUser.currentCommunity,
+          communityId: loggedInUser.currentCommunity ?? '',
           sender: sender);
     } else {
       ParticipantInfo receiver = ParticipantInfo(
@@ -460,17 +465,17 @@ void handleFeedBackNotificationLendingOffer({
                 results['didComment'] ? results['comment'] : "No comments",
             userName: loggedInUser.fullname,
             context: context,
-            requestTitle: offerModel.individualOfferDataModel.title,
+            requestTitle: offerModel.individualOfferDataModel?.title,
             isForCreator: false,
             isOfferReview: true,
           ),
           reciever: receiver,
           isTimebankMessage: false,
           timebankId: '',
-          communityId: loggedInUser.currentCommunity,
+          communityId: loggedInUser.currentCommunity ?? '',
           sender: sender);
     }
-    if (notificationId != null) {
+    {
       NotificationsRepository.readUserNotification(notificationId, email);
     }
   }

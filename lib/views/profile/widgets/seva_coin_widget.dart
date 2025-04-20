@@ -4,10 +4,10 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class SevaCoinWidget extends StatelessWidget {
-  final double amount;
-  final Function onTap;
+  final double? amount;
+  final VoidCallback? onTap;
 
-  const SevaCoinWidget({Key key, this.amount, this.onTap}) : super(key: key);
+  const SevaCoinWidget({Key? key, this.amount, this.onTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,6 +16,9 @@ class SevaCoinWidget extends StatelessWidget {
       child: CustomElevatedButton(
         shape: StadiumBorder(),
         color: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        elevation: 2.0,
+        textColor: Colors.black,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -42,16 +45,16 @@ class SevaCoinWidget extends StatelessWidget {
             ),
             SizedBox(width: 5),
             Text(
-              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${AppConfig.isTestCommunity ? S.of(context).seva_credits : S.of(context).seva_credits}',
+              '${amount != null ? double.parse(amount!.toStringAsFixed(2)) : 0} ${AppConfig.isTestCommunity ? S.of(context).seva_credits : S.of(context).seva_credits}',
               style: TextStyle(
-                color: amount > 0 ? Colors.blue : Colors.red,
+                color: amount! > 0 ? Colors.blue : Colors.red,
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
               ),
             ),
           ],
         ),
-        onPressed: onTap,
+        onPressed: onTap ?? () {},
       ),
     );
   }

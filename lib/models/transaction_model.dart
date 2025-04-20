@@ -5,20 +5,20 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'models.dart';
 
 class TransactionModel extends DataModel {
-  String from;
-  String fromEmail_Id;
-  String to;
-  String toEmail_Id;
-  bool liveMode;
-  int timestamp;
-  num credits;
-  bool isApproved;
-  String type;
-  String typeid;
-  String timebankid;
-  List<String> transactionbetween;
-  String communityId;
-  String offerId;
+  String? from;
+  String? fromEmail_Id;
+  String? to;
+  String? toEmail_Id;
+  bool? liveMode;
+  int? timestamp;
+  num? credits;
+  bool? isApproved;
+  String? type;
+  String? typeid;
+  String? timebankid;
+  List<String>? transactionbetween;
+  String? communityId;
+  String? offerId;
 
   TransactionModel(
       {this.from,
@@ -37,8 +37,8 @@ class TransactionModel extends DataModel {
       this.offerId});
 
   //local variables
-  String get createdDate =>
-      DateFormat('MMMM dd').format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+  String get createdDate => DateFormat('MMMM dd')
+      .format(DateTime.fromMillisecondsSinceEpoch(timestamp ?? 0));
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('from')) {
@@ -74,7 +74,8 @@ class TransactionModel extends DataModel {
       this.timebankid = map['timebankid'];
     }
     if (map.containsKey('transactionbetween')) {
-      List<String> transactionbetween = List.castFrom(map['transactionbetween']);
+      List<String> transactionbetween =
+          List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
     }
     if (map.containsKey('communityId')) {
@@ -103,7 +104,7 @@ class TransactionModel extends DataModel {
       map['timestamp'] = this.timestamp;
     }
     if (this.credits != null) {
-      map['credits'] = num.parse(this.credits.toStringAsFixed(2));
+      map['credits'] = num.parse(this.credits?.toStringAsFixed(2) ?? '0');
     }
     if (this.to != null) {
       map['to'] = this.to;
@@ -120,12 +121,15 @@ class TransactionModel extends DataModel {
     if (this.typeid != null) {
       map['typeid'] = this.typeid;
     } else {
-      map['typeid'] = this.fromEmail_Id + '*' + DateTime.now().millisecondsSinceEpoch.toString();
+      map['typeid'] = this.fromEmail_Id! +
+          '*' +
+          DateTime.now().millisecondsSinceEpoch.toString();
     }
     if (this.timebankid != null) {
       map['timebankid'] = this.timebankid;
     }
-    if (this.transactionbetween != null && this.transactionbetween.isNotEmpty) {
+    if (this.transactionbetween != null &&
+        this.transactionbetween?.isNotEmpty == true) {
       map['transactionbetween'] = this.transactionbetween;
     }
 

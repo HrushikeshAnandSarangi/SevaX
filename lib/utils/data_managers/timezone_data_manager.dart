@@ -10,14 +10,16 @@ extension DateTimeTimezone on BuildContext {
     return getDateTimeAccToUserTimezone(
         dateTime: DateTime.fromMillisecondsSinceEpoch(milliSeconds),
         timezoneAbb: SevaCore.of(this)?.loggedInUser?.timezone ??
-            Provider.of<AppTimeZone>(this).appTimeZone.toString().toUpperCase()
-    );
+            Provider.of<AppTimeZone>(this)
+                .appTimeZone
+                .toString()
+                .toUpperCase());
   }
 }
 
 DateTime getDateTimeAccToUserTimezone({
-  @required String timezoneAbb,
-  @required DateTime dateTime,
+  required String timezoneAbb,
+  required DateTime dateTime,
 }) {
   var temp = TimezoneListData().getTimezoneData(timezoneAbb);
   int offsetFromUtc = temp[0];
@@ -29,8 +31,8 @@ DateTime getDateTimeAccToUserTimezone({
 }
 
 DateTime getUpdatedDateTimeAccToUserTimezone({
-  @required String timezoneAbb,
-  @required DateTime dateTime,
+  required String timezoneAbb,
+  required DateTime dateTime,
 }) {
   var temp = TimezoneListData().getTimezoneData(timezoneAbb);
   int offsetFromUtc = temp[0];

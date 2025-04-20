@@ -5,12 +5,14 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 class AboutMode {
   String title;
   String urlToHit;
 
-  AboutMode({this.title, this.urlToHit}) {
+  AboutMode({required this.title, required this.urlToHit}) {
     logger.i("========= Web View " + urlToHit);
   }
 }
@@ -25,9 +27,9 @@ class SevaWebView extends StatefulWidget {
 }
 
 class _WebViewExampleState extends State<SevaWebView> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-  num _stackToView = 1;
+  int _stackToView = 1;
+  late WebViewController _webViewController;
+  bool _controllerInitialized = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,60 +42,59 @@ class _WebViewExampleState extends State<SevaWebView> {
         ),
       ),
       body: Builder(builder: (BuildContext context) {
-        return IndexedStack(index: _stackToView, children: [
-          WebView(
-            initialUrl: widget.aboutMode.urlToHit,
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller.complete(webViewController);
-            },
-            javascriptChannels: <JavascriptChannel>[
-              _toasterJavascriptChannel(context),
-            ].toSet(),
-            navigationDelegate: (NavigationRequest request) {
-              if (request.url.startsWith('https://www.youtube.com/')) {
-                return NavigationDecision.prevent;
-              }
-              return NavigationDecision.navigate;
-            },
-            onPageStarted: (String url) {},
-            onPageFinished: (String url) {
-              setState(() {
-                _stackToView = 0;
-                logger.d("Finished Loading== $url");
-              });
-            },
-            gestureNavigationEnabled: true,
-          ),
-          Container(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                LoadingIndicator(),
-                SizedBox(height: 4),
-                Text(S.of(context).loading),
-              ],
+        if (!_controllerInitialized) {
+          _webViewController = WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..setNavigationDelegate(NavigationDelegate(
+              onNavigationRequest: (NavigationRequest request) {
+                if (request.url.startsWith('https://www.youtube.com/')) {
+                  return NavigationDecision.prevent;
+                }
+                return NavigationDecision.navigate;
+              },
+              onPageStarted: (String url) {},
+              onPageFinished: (String url) {
+                setState(() {
+                  _stackToView = 0;
+                  logger.d("Finished Loading== $url");
+                });
+              },
+            ))
+            ..addJavaScriptChannel(
+              'Toaster',
+              onMessageReceived: (JavaScriptMessage message) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(message.message)),
+                );
+              },
+            )
+            ..loadRequest(Uri.parse(widget.aboutMode.urlToHit));
+          _controllerInitialized = true;
+        }
+        return IndexedStack(
+          index: _stackToView,
+          children: [
+            WebViewWidget(controller: _webViewController),
+            Container(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  LoadingIndicator(),
+                  SizedBox(height: 4),
+                  Text(S.of(context).loading),
+                ],
+              ),
             ),
-          ),
-        ]);
+          ],
+        );
       }),
     );
   }
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        });
-  }
+  BuildContext? dialogContext;
 
-  BuildContext dialogContext;
-
-  void showDialogForProgress() {
+  void showDialogForProgress(BuildContext context) {
     showDialog(
       barrierDismissible: true,
       context: context,

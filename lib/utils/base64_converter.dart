@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-Future<String> convertImageToBase64({File file}) async {
-  List<int> imageBytes = file.readAsBytesSync();
-  String base64Image = base64Encode(imageBytes);
-
-  return base64Image;
+Future<String> convertImageToBase64({required File file}) async {
+  final imageBytes = await file.readAsBytes();
+  return base64Encode(imageBytes);
 }

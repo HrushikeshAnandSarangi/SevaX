@@ -60,9 +60,9 @@ Map<InfoType, String> infoKeyMapper = {
 };
 
 Widget infoButton({
-  @required BuildContext context,
-  @required GlobalKey key,
-  @required InfoType type,
+  required BuildContext context,
+  required GlobalKey key,
+  required InfoType type,
 }) {
   assert(context != null);
   assert(key != null);
@@ -81,7 +81,7 @@ Widget infoButton({
       width: 16,
     ),
     onPressed: () {
-      RenderBox renderBox = key.currentContext.findRenderObject();
+      RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
       showDialogFromInfoWindow(
           context: context,
@@ -93,11 +93,11 @@ Widget infoButton({
 }
 
 void showDialogFromInfoWindow(
-    {@required BuildContext context,
-    @required GlobalKey key,
-    @required InfoType type,
-    @required Offset buttonPosition}) {
-  Map<String, dynamic> details = json.decode(AppConfig.remoteConfig
+    {required BuildContext context,
+    required GlobalKey key,
+    required InfoType type,
+    required Offset buttonPosition}) {
+  Map<String, dynamic> details = json.decode(AppConfig.remoteConfig!
       .getString("i_button_info_${S.of(context).localeName}"));
 
   showDialog(

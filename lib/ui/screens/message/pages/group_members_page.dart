@@ -28,19 +28,22 @@ class GroupMembersPage extends StatelessWidget {
             return ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data?.length ?? 0,
               itemBuilder: (_, int index) {
-                TimebankModel model = snapshot.data[index];
+                TimebankModel model = snapshot.data![index];
                 List<ParticipantInfo> members = [];
 
                 model.members.forEach((element) {
                   if (_bloc.allMembers.containsKey(element)) {
-                    members.add(_bloc.allMembers[element]);
+                    if (_bloc.allMembers[element] != null) {
+                      members.add(_bloc.allMembers[element]!);
+                    }
                   }
                 });
 
                 return HideWidget(
                   hide: members.isEmpty,
+                  secondChild: Container(),
                   child: ExpansionTile(
                     leading: CustomNetworkImage(
                       model.photoUrl ?? defaultGroupImageURL,

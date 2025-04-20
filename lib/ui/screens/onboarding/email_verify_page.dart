@@ -17,7 +17,8 @@ class VerifyEmail extends StatefulWidget {
   final String email;
   final bool emailSent;
 
-  const VerifyEmail({Key key, this.firebaseUser, this.email, this.emailSent = false})
+  const VerifyEmail(
+      {Key key, this.firebaseUser, this.email, this.emailSent = false})
       : super(key: key);
 
   @override
@@ -31,10 +32,15 @@ class _VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     if (!widget.emailSent) {
-      CollectionRef.users.doc(widget.email).set({'emailSent': true}, SetOptions(merge: true)).then(
+      CollectionRef.users
+          .doc(widget.email)
+          .set({'emailSent': true}, SetOptions(merge: true)).then(
         (_) => widget.firebaseUser
             .sendEmailVerification()
-            .then((onValue) => {logger.i("Email successfully sent ${widget.firebaseUser.email}")})
+            .then((onValue) => {
+                  logger
+                      .i("Email successfully sent ${widget.firebaseUser.email}")
+                })
             .catchError((err) => {logger.e("Email not sent due to $err")}),
       );
     }
@@ -140,12 +146,15 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         isDismissible: false,
                       );
                       progressDialog.show();
-                      widget.firebaseUser.sendEmailVerification().then((onValue) {
+                      widget.firebaseUser
+                          .sendEmailVerification()
+                          .then((onValue) {
                         progressDialog.hide();
                         showVerificationEmailDialog();
                       }).catchError((onError) {
                         progressDialog.hide();
-                        final snackBar = SnackBar(content: Text(onError.message));
+                        final snackBar =
+                            SnackBar(content: Text(onError.message));
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         logger.e(onError);

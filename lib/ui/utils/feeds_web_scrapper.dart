@@ -13,11 +13,11 @@ class FeedsWebScraperError implements Exception {
 }
 
 class FeedWebScraperData {
-  final String title;
-  final String subtitle;
-  final String image;
-  final String body;
-  final String link;
+  final String? title;
+  final String? subtitle;
+  final String? image;
+  final String? body;
+  final String? link;
 
   FeedWebScraperData({
     this.title,
@@ -35,17 +35,17 @@ class FeedWebScraperData {
 
 class FeedsWebScraper {
   final String url;
-  http.Response _response;
+  late http.Response _response;
   static String _title = 'og:title';
   static String _description = 'og:description';
   static String _image = 'og:image';
   static String _siteName = 'og:site_name';
 
-  FeedsWebScraper({this.url});
+  FeedsWebScraper({required this.url});
 
   Future<bool> loadData() async {
     try {
-      _response = await http.get(url);
+      _response = await http.get(Uri.parse(url));
       return true;
     } catch (e) {
       throw FeedsWebScraperError(e.toString());
@@ -73,11 +73,13 @@ class FeedsWebScraper {
   }
 
   String _getMetaData(Document document, String tag) {
-    var metaTag = document.getElementsByTagName("meta")?.firstWhere(
+    var metaTag = document.getElementsByTagName("meta").firstWhere(
           (meta) => meta.attributes['property'] == tag,
-          orElse: () => null,
+          orElse: () => Element.tag('meta'),
         );
-    return metaTag?.attributes != null ? metaTag?.attributes['content'] : null;
+    return metaTag.attributes.containsKey('content')
+        ? metaTag.attributes['content'] ?? ''
+        : '';
   }
 
   String _getParagraphs(Document document) {

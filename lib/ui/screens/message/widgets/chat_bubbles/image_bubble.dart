@@ -14,11 +14,14 @@ class ImageBubble extends StatelessWidget {
   final bool isGroupMessage;
   final ParticipantInfo info;
 
-  const ImageBubble(
-      {Key key, this.isSent, this.messageModel, this.isGroupMessage, this.info})
-      : assert(isGroupMessage != null),
-        assert(isGroupMessage ? info != null : info == null),
-        super(key: key);
+  const ImageBubble({
+    Key? key,
+    required this.isSent,
+    required this.messageModel,
+    required this.isGroupMessage,
+    required this.info,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -35,7 +38,7 @@ class ImageBubble extends StatelessWidget {
           children: <Widget>[
             isGroupMessage && !isSent
                 ? Text(
-                    info.name,
+                    info.name ?? '',
                     style: TextStyle(
                       color: info.color,
                       fontWeight: FontWeight.bold,
@@ -52,7 +55,7 @@ class ImageBubble extends StatelessWidget {
                 child: messageModel.data == null
                     ? Center(child: ImageUploading(isSending: isSent))
                     : CustomNetworkImage(
-                        messageModel.data,
+                        messageModel.data ?? '',
                         fit: BoxFit.cover,
                         clipOval: false,
                       ),
@@ -63,15 +66,15 @@ class ImageBubble extends StatelessWidget {
                   messageModel.message == null || messageModel.message == '',
               child: Padding(
                 padding: EdgeInsets.only(top: 4),
-                child: Text(messageModel.message),
+                child: Text(messageModel.message ?? ''),
               ),
             ),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
                 formatChatDate(
-                  messageModel.timestamp,
-                  SevaCore.of(context).loggedInUser.timezone,
+                  messageModel.timestamp ?? 0,
+                  SevaCore.of(context).loggedInUser.timezone ?? '',
                   S.of(context).localeName,
                 ),
                 style: TextStyle(fontSize: 10, color: Colors.grey[700]),
@@ -87,7 +90,7 @@ class ImageBubble extends StatelessWidget {
 class ImageUploading extends StatelessWidget {
   final bool isSending;
 
-  const ImageUploading({Key key, this.isSending}) : super(key: key);
+  const ImageUploading({Key? key, required this.isSending}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(

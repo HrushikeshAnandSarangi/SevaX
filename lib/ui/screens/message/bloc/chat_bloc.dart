@@ -18,7 +18,7 @@ class ChatBloc {
 
   Stream<List<MessageModel>> get messages => _messages.stream;
 
-  NewsModel getNewsModel(String id) {
+  NewsModel? getNewsModel(String id) {
     if (_feedsCache.containsKey(id)) {
       return _feedsCache[id];
     }
@@ -26,18 +26,23 @@ class ChatBloc {
   }
 
   void setNewsModel(NewsModel model) {
-    _feedsCache.putIfAbsent(model.id, () => model);
+    if (model.id != null) {
+      _feedsCache.putIfAbsent(model.id!, () => model);
+    }
   }
 
   Future<void> getAllMessages(String chatId, String userId) async {
     DocumentSnapshot chatModelSnapshot =
         await CollectionRef.chats.doc(chatId).get();
-    ChatModel chatModel = ChatModel.fromMap(chatModelSnapshot.data());
+    final data = chatModelSnapshot.data();
+    if (data == null) return;
+    ChatModel chatModel = ChatModel.fromMap(data as Map<String, dynamic>);
     chatModel.id = chatModelSnapshot.id;
     Stream<QuerySnapshot> querySnapshot;
 
-    if (chatModel.deletedBy.containsKey(userId)) {
-      int timestamp = chatModel.deletedBy[userId];
+    if (chatModel.deletedBy != null &&
+        chatModel.deletedBy!.containsKey(userId)) {
+      int timestamp = chatModel.deletedBy![userId];
       querySnapshot = CollectionRef.chats
           .doc(chatModel.id)
           .collection('messages')
@@ -54,23 +59,26 @@ class ChatBloc {
     querySnapshot.listen((QuerySnapshot event) {
       List<MessageModel> messages = [];
       event.docs.forEach((DocumentSnapshot document) {
-        MessageModel model = MessageModel.fromMap(document.data());
-
-        model.id = document.id;
-        messages.add(model);
+        final docData = document.data();
+        if (docData != null) {
+          MessageModel model =
+              MessageModel.fromMap(docData as Map<String, dynamic>);
+          model.id = document.id;
+          messages.add(model);
+        }
       });
       if (!_messages.isClosed) _messages.add(messages);
     });
   }
 
   Future<void> pushNewMessage({
-    ChatModel chatModel,
-    String messageContent,
-    String senderId,
-    String recieverId,
-    MessageType type,
-    File file,
-    @required String timebankId,
+    required ChatModel chatModel,
+    required String messageContent,
+    required String senderId,
+    required String recieverId,
+    required MessageType type,
+    required File file,
+    required String timebankId,
   }) async {
     MessageModel messageModel = MessageModel(
       fromId: senderId,
@@ -80,23 +88,23 @@ class ChatBloc {
       timestamp: DateTime.now().toUtc().millisecondsSinceEpoch,
     );
 
-    if (chatModel.isTimebankMessage) {}
+    if (chatModel.isTimebankMessage ?? false) {}
 
     createNewMessage(
-      chatId: chatModel.id,
+      chatId: chatModel.id ?? '',
       senderId: senderId,
       messageModel: messageModel,
       timebankId: timebankId,
-      isTimebankMessage: chatModel.isTimebankMessage,
+      isTimebankMessage: chatModel.isTimebankMessage ?? false,
       isAdmin: senderId.contains("-"), //timebank id contains "-"
       file: file,
-      participants: chatModel.participants,
+      participants: chatModel.participants ?? <String>[],
     );
   }
 
   Future<void> markMessageAsRead({
-    String chatId,
-    String userId,
+    required String chatId,
+    required String userId,
   }) async {
     return CollectionRef.chats.doc(chatId).set(
       {
@@ -119,9 +127,9 @@ class ChatBloc {
   }
 
   Future<void> blockMember({
-    String loggedInUserEmail,
-    String userId,
-    String blockedUserId,
+    required String loggedInUserEmail,
+    required String userId,
+    required String blockedUserId,
   }) async {
     return await UserRepository.blockUser(
       loggedInUserEmail: loggedInUserEmail,

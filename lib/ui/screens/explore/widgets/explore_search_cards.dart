@@ -3,7 +3,7 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreEventCard extends StatelessWidget {
   const ExploreEventCard(
-      {Key key,
+      {Key? key,
       this.photoUrl,
       this.title,
       this.description,
@@ -16,24 +16,24 @@ class ExploreEventCard extends StatelessWidget {
       this.tagsToShow = const []})
       : super(key: key);
 
-  final String photoUrl;
-  final String title;
-  final String description;
-  final String location;
-  final String communityName;
-  final String time;
-  final String date;
-  final Widget memberList;
-  final VoidCallback onTap;
-  final List<String> tagsToShow;
+  final String? photoUrl;
+  final String? title;
+  final String? description;
+  final String? location;
+  final String? communityName;
+  final String? time;
+  final String? date;
+  final Widget? memberList;
+  final VoidCallback? onTap;
+  final List<String>? tagsToShow;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: tagsToShow != null && tagsToShow.isNotEmpty
-          ? tagsToShow.length > 3 && memberList == null
+      height: tagsToShow?.isNotEmpty == true
+          ? tagsToShow!.length > 3 && memberList == null
               ? 440
-              : tagsToShow.length > 3 && memberList != null
+              : tagsToShow!.length > 3 && memberList != null
                   ? 505
                   : 500
           : 485,
@@ -56,24 +56,25 @@ class ExploreEventCard extends StatelessWidget {
                       width: 308,
                       height: double.infinity,
                       child: Image.network(
-                        photoUrl,
+                        photoUrl ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
                 Text(
-                  title,
+                  title ?? '',
                   style: const TextStyle(fontSize: 22),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 HideWidget(
-                  hide: communityName != null && communityName.isEmpty,
+                  hide: communityName?.isEmpty ?? true,
                   child: Text(
-                    communityName,
+                    communityName ?? '',
                     style: const TextStyle(fontSize: 12),
                   ),
+                  secondChild: const SizedBox.shrink(),
                 ),
                 SizedBox(height: 4),
                 Row(
@@ -85,7 +86,7 @@ class ExploreEventCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  description,
+                  description ?? '',
                   style: const TextStyle(
                     fontSize: 14,
                     fontFamily: 'Europa',
@@ -100,23 +101,24 @@ class ExploreEventCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: tagsToShow
-                      .map(
-                        (label) => Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Chip(
-                            label: Text(
-                              label,
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
+                          ?.map(
+                            (label) => Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Chip(
+                                label: Text(
+                                  label,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                                side: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                backgroundColor: Colors.transparent,
+                              ),
                             ),
-                            side: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            backgroundColor: Colors.transparent,
-                          ),
-                        ),
-                      )
-                      .toList(),
+                          )
+                          .toList() ??
+                      [],
                 ),
                 const Spacer(),
                 // SizedBox(height: 15),
@@ -130,7 +132,7 @@ class ExploreEventCard extends StatelessWidget {
     );
   }
 
-  List<Widget> iconText(BuildContext context, IconData icon, String text) {
+  List<Widget> iconText(BuildContext context, IconData icon, String? text) {
     return text == null || text.isEmpty
         ? []
         : [
@@ -155,7 +157,7 @@ class ExploreEventCard extends StatelessWidget {
 
 class ExploreRequestCard extends StatelessWidget {
   const ExploreRequestCard({
-    Key key,
+    Key? key,
     this.photoUrl,
     this.title,
     this.description,
@@ -166,14 +168,14 @@ class ExploreRequestCard extends StatelessWidget {
     this.memberList,
   }) : super(key: key);
 
-  final String photoUrl;
-  final String title;
-  final String description;
-  final String location;
-  final String communityName;
-  final String time;
-  final String date;
-  final Widget memberList;
+  final String? photoUrl;
+  final String? title;
+  final String? description;
+  final String? location;
+  final String? communityName;
+  final String? time;
+  final String? date;
+  final Widget? memberList;
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +196,7 @@ class ExploreRequestCard extends StatelessWidget {
                 width: 308,
                 height: double.infinity,
                 child: Image.network(
-                  photoUrl,
+                  photoUrl ?? '',
                   fit: BoxFit.cover,
                 ),
               ),
@@ -210,7 +212,7 @@ class ExploreRequestCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          title,
+                          title ?? '',
                           style: const TextStyle(fontSize: 24),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -218,7 +220,7 @@ class ExploreRequestCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
-                            communityName,
+                            communityName ?? '',
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
@@ -234,7 +236,7 @@ class ExploreRequestCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    description,
+                    description ?? '',
                     style: const TextStyle(fontSize: 14),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
@@ -250,7 +252,7 @@ class ExploreRequestCard extends StatelessWidget {
     );
   }
 
-  List<Widget> iconText(BuildContext context, IconData icon, String text) {
+  List<Widget> iconText(BuildContext context, IconData icon, String? text) {
     return text == null || text.isEmpty
         ? []
         : [
@@ -272,7 +274,7 @@ class ExploreRequestCard extends StatelessWidget {
 
 class ExploreOfferCard extends StatelessWidget {
   const ExploreOfferCard({
-    Key key,
+    Key? key,
     this.photoUrl,
     this.title,
     this.description,
@@ -283,14 +285,14 @@ class ExploreOfferCard extends StatelessWidget {
     this.memberList,
   }) : super(key: key);
 
-  final String photoUrl;
-  final String title;
-  final String description;
-  final String location;
-  final String communityName;
-  final String time;
-  final String date;
-  final Widget memberList;
+  final String? photoUrl;
+  final String? title;
+  final String? description;
+  final String? location;
+  final String? communityName;
+  final String? time;
+  final String? date;
+  final Widget? memberList;
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +313,7 @@ class ExploreOfferCard extends StatelessWidget {
                 width: 308,
                 height: double.infinity,
                 child: Image.network(
-                  photoUrl,
+                  photoUrl ?? '',
                   fit: BoxFit.cover,
                 ),
               ),
@@ -327,7 +329,7 @@ class ExploreOfferCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          title,
+                          title ?? '',
                           style: const TextStyle(fontSize: 24),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -335,7 +337,7 @@ class ExploreOfferCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
-                            communityName,
+                            communityName ?? '',
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
@@ -351,7 +353,7 @@ class ExploreOfferCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    description,
+                    description ?? '',
                     style: const TextStyle(fontSize: 14),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
@@ -367,7 +369,7 @@ class ExploreOfferCard extends StatelessWidget {
     );
   }
 
-  List<Widget> iconText(BuildContext context, IconData icon, String text) {
+  List<Widget> iconText(BuildContext context, IconData icon, String? text) {
     return text == null || text.isEmpty
         ? []
         : [

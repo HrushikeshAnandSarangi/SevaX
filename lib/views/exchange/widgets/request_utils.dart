@@ -14,11 +14,13 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class RequestUtils {
-  void updateExitWithConfirmationValue(BuildContext context, int index, String value) {
+  void updateExitWithConfirmationValue(
+      BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
-  Future createProjectOneToManyRequest({context, projectModel, requestModel, createEvent}) async {
+  Future createProjectOneToManyRequest(
+      {context, projectModel, requestModel, createEvent}) async {
     //Create new Event/Project for ONE TO MANY Request
     if (projectModel == null &&
         createEvent &&
@@ -39,7 +41,7 @@ class RequestUtils {
         communityId: requestModel.communityId,
         photoUrl: requestModel.photoUrl,
         creatorId: requestModel.sevaUserId,
-        mode: ProjectMode.TIMEBANK_PROJECT,
+        mode: ProjectMode.timebankProject,
         timebankId: requestModel.timebankId,
         associatedMessaginfRoomId: '',
         requestedSoftDelete: false,
@@ -54,7 +56,8 @@ class RequestUtils {
       await createProject(projectModel: newProjectModel);
 
       log("======================== createProjectWithMessaging()");
-      await ProjectMessagingRoomHelper.createProjectWithMessagingOneToManyRequest(
+      await ProjectMessagingRoomHelper
+          .createProjectWithMessagingOneToManyRequest(
         projectModel: newProjectModel,
         projectCreator: SevaCore.of(context).loggedInUser,
       );
@@ -62,10 +65,10 @@ class RequestUtils {
   }
 
   Widget optionRadioButton<T>({
-    String title,
-    T value,
-    T groupvalue,
-    Function onChanged,
+    required String title,
+    required T value,
+    required T groupvalue,
+    required ValueChanged<T?> onChanged,
     bool isEnabled = true,
   }) {
     return ListTile(
@@ -75,7 +78,7 @@ class RequestUtils {
       leading: Radio<T>(
         value: value,
         groupValue: groupvalue,
-        onChanged: (isEnabled ?? true) ? onChanged : null,
+        onChanged: isEnabled ? onChanged : null,
       ),
     );
   }
@@ -106,7 +109,8 @@ class RequestUtils {
         });
   }
 
-  void showDialogForTitle({String dialogTitle, BuildContext context}) async {
+  void showDialogForTitle(
+      {required String dialogTitle, required BuildContext context}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -139,72 +143,83 @@ class RequestUtils {
     fontFamily: 'Europa',
   );
 
-  bool isFromRequest({String projectId}) {
-    return projectId == null || projectId.isEmpty || projectId == "";
+  bool isFromRequest({required String projectId}) {
+    return projectId.isEmpty || projectId == "";
   }
 
   getInitialTitle(offer, isOfferRequest) {
-    return offer != null && isOfferRequest ? getOfferTitle(offerDataModel: offer) : "";
+    return offer != null && isOfferRequest
+        ? getOfferTitle(offerDataModel: offer)
+        : "";
   }
 
   getInitialDescription(offer, isOfferRequest) {
-    return offer != null && isOfferRequest ? getOfferDescription(offerDataModel: offer) : "";
+    return offer != null && isOfferRequest
+        ? getOfferDescription(offerDataModel: offer)
+        : "";
   }
 
   getInitialAmount(offer, isOfferRequest) {
-    return offer != null && isOfferRequest ? getCashDonationAmount(offerDataModel: offer) : "";
+    return offer != null && isOfferRequest
+        ? getCashDonationAmount(offerDataModel: offer)
+        : "";
   }
 
   String mobilePattern = r'^[0-9]+$';
-  RegExp emailPattern =
-      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   String validateEmailAndPhone(String value, context) {
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
     } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
-      return null;
+      return '';
     } else {
       return S.of(context).enter_valid_link;
     }
   }
 
-  initializePaymentModel({CashModel cashModel}) {
+  initializePaymentModel({required CashModel cashModel}) {
     PaymentDetailModel paymentDetailModel = PaymentDetailModel();
     switch (cashModel.paymentType) {
       case RequestPaymentType.ACH:
         paymentDetailModel.paymentMode = PaymentMode.ACH;
         paymentDetailModel.paymentEventType = ACHPayment(
-            bank_name: cashModel.achdetails.bank_name,
-            bank_address: cashModel.achdetails.bank_address,
-            account_number: cashModel.achdetails.account_number,
-            routing_number: cashModel.achdetails.routing_number);
+            bank_name: cashModel.achdetails?.bank_name ?? '',
+            bank_address: cashModel.achdetails?.bank_address ?? '',
+            account_number: cashModel.achdetails?.account_number ?? '',
+            routing_number: cashModel.achdetails?.routing_number ?? '');
         break;
       case RequestPaymentType.ZELLEPAY:
         paymentDetailModel.paymentMode = PaymentMode.ZELLEPAY;
         paymentDetailModel.paymentEventType = ZellePayment(
-          zelleId: cashModel.zelleId,
+          zelleId: cashModel.zelleId ?? '',
         );
         break;
       case RequestPaymentType.PAYPAL:
         paymentDetailModel.paymentMode = PaymentMode.PAYPAL;
         paymentDetailModel.paymentEventType = PayPalPayment(
-          paypalId: cashModel.paypalId,
+          paypalId: cashModel.paypalId ?? '',
         );
         break;
       case RequestPaymentType.VENMO:
         paymentDetailModel.paymentMode = PaymentMode.VENMO;
-        paymentDetailModel.paymentEventType = VenmoPayment(venmoId: cashModel.venmoId);
+        paymentDetailModel.paymentEventType =
+            VenmoPayment(venmoId: cashModel.venmoId ?? '');
         break;
       case RequestPaymentType.SWIFT:
         paymentDetailModel.paymentMode = PaymentMode.SWIFT;
-        paymentDetailModel.paymentEventType = SwiftPayment(swiftId: cashModel.swiftId);
+        paymentDetailModel.paymentEventType =
+            SwiftPayment(swiftId: cashModel.swiftId ?? '');
         break;
       case RequestPaymentType.OTHER:
         paymentDetailModel.paymentMode = PaymentMode.OTHER;
-        paymentDetailModel.paymentEventType =
-            OtherPayment(others: cashModel.others, other_details: cashModel.other_details);
+        paymentDetailModel.paymentEventType = OtherPayment(
+            others: cashModel.others ?? '',
+            other_details: cashModel.other_details ?? '');
+        break;
+      default:
         break;
     }
     return paymentDetailModel;

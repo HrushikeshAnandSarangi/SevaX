@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/ui/screens/timezone/timezone_search_delegate.dart';
-import 'package:sevaexchange/ui/screens/timezone/widgets/timezone_card.dart';
+import '../../ui/screens/timezone/timezone_search_delegate.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -1458,8 +1457,8 @@ class TimezoneListData {
     for (var i = 0; i < timezonelist.length; i++) {
       if (timezonelist[i].timezoneName == timezoneName) {
         return [
-          timezonelist[i].offsetFromUtc,
-          timezonelist[i].offsetFromUtcMin
+          timezonelist[i].offsetFromUtc!,
+          timezonelist[i].offsetFromUtcMin!
         ];
       }
     }
@@ -1469,7 +1468,7 @@ class TimezoneListData {
   String getTimeZoneByCodeData(timezoneCode) {
     for (var i = 0; i < timezonelist.length; i++) {
       if (timezonelist[i].timezoneAbb == timezoneCode) {
-        return timezonelist[i].timezoneName;
+        return timezonelist[i].timezoneName!;
       }
     }
     return "Pacific STANDARD TIME";
@@ -1483,8 +1482,8 @@ class TimezoneListData {
     List<String> x = [];
     List<String> y = [];
     timezonelist.forEach((element) {
-      x.add(element.timezoneName);
-      y.add(element.timezoneAbb);
+      x.add(element.timezoneName!);
+      y.add(element.timezoneAbb!);
     });
   }
 
@@ -1495,10 +1494,10 @@ class TimezoneListData {
     List<TimeZoneModel> data = List<TimeZoneModel>.from(timezoneList);
     data.retainWhere(
       (element) =>
-          element.timezoneName.toLowerCase().contains(
+          element.timezoneName!.toLowerCase().contains(
                 query.toLowerCase(),
               ) ||
-          element.timezoneAbb.toLowerCase().contains(query.toLowerCase()),
+          element.timezoneAbb!.toLowerCase().contains(query.toLowerCase()),
     );
     return data;
   }
@@ -1516,9 +1515,9 @@ class _TimezoneViewState extends State<TimezoneView> {
   void initState() {
     timezonelist = TimezoneListData().getData();
     timezonelist.sort((a, b) {
-      return a.timezoneName
+      return a.timezoneName!
           .toLowerCase()
-          .compareTo(b.timezoneName.toLowerCase());
+          .compareTo(b.timezoneName!.toLowerCase());
     });
     // TODO: implement initState
     super.initState();
@@ -1538,14 +1537,14 @@ class _TimezoneViewState extends State<TimezoneView> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () async {
-              TimeZoneModel timezone = await showSearch(
+              TimeZoneModel? timezone = await showSearch(
                 context: context,
                 delegate: TimezoneSearchDelegate(
                   timezoneList: timezonelist,
                   textStyle: TextStyle(
                     color: Colors.white,
                   ),
-                  selectedTimezone: SevaCore.of(context).loggedInUser.timezone,
+                  selectedTimezone: SevaCore.of(context).loggedInUser.timezone!,
                 ),
               );
               if (timezone != null) {
@@ -1568,7 +1567,7 @@ class _TimezoneViewState extends State<TimezoneView> {
 }
 
 class TimezoneList extends StatefulWidget {
-  final List<TimeZoneModel> timezoneList;
+  final List<TimeZoneModel>? timezoneList;
 
   TimezoneList({this.timezoneList});
 
@@ -1578,13 +1577,13 @@ class TimezoneList extends StatefulWidget {
 
 class TimezoneListState extends State<TimezoneList> {
   List<TimeZoneModel> timezonelist = [];
-  String isSelected;
+  String? isSelected;
 //  ScrollController _scrollController =   ScrollController();
   final TextEditingController searchTextController = TextEditingController();
 
   @override
   void initState() {
-    timezonelist = widget.timezoneList;
+    timezonelist = widget.timezoneList!;
     super.initState();
   }
 
@@ -1592,7 +1591,7 @@ class TimezoneListState extends State<TimezoneList> {
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
         stream: FirestoreManager.getUserForIdStream(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -1600,7 +1599,7 @@ class TimezoneListState extends State<TimezoneList> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          UserModel userModel = snapshot.data;
+          UserModel userModel = snapshot.data as UserModel;
           isSelected = userModel.timezone;
           return ListView.builder(
             itemCount: timezonelist.length,
@@ -1612,13 +1611,14 @@ class TimezoneListState extends State<TimezoneList> {
               DateTime timeInUtc = DateTime.now().toUtc();
 
               DateTime localtime = timeInUtc.add(Duration(
-                  hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));
+                  hours: model.offsetFromUtc!,
+                  minutes: model.offsetFromUtcMin!));
 
               return TimezoneCard(
                 isSelected: isSelected == model.timezoneName,
-                title: model.timezoneName,
+                title: model.timezoneName!,
                 subTitle: format.format(localtime),
-                code: model.timezoneAbb,
+                code: model.timezoneAbb!,
                 onTap: () async {
                   if (userModel.timezone != model.timezoneName) {
                     userModel.timezone = model.timezoneName;
@@ -1635,10 +1635,10 @@ class TimezoneListState extends State<TimezoneList> {
 }
 
 class TimeZoneModel {
-  String timezoneName;
-  int offsetFromUtc;
-  int offsetFromUtcMin;
-  String timezoneAbb;
+  String? timezoneName;
+  int? offsetFromUtc;
+  int? offsetFromUtcMin;
+  String? timezoneAbb;
 
   TimeZoneModel(
       {this.timezoneName,

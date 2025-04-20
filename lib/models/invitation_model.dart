@@ -2,10 +2,10 @@ import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class InvitationModel extends DataModel {
-  String id;
-  InvitationType type;
-  Map<String, dynamic> data;
-  String timebankId;
+  String? id;
+  InvitationType? type;
+  Map<String, dynamic>? data;
+  String? timebankId;
 
   InvitationModel({
     this.id,

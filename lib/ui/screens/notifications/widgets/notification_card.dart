@@ -81,7 +81,8 @@ class NotificationCard extends StatelessWidget {
                                 shape: StadiumBorder(),
                                 color: Colors.grey,
                                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                onPressed: () => {Navigator.of(dialogContext).pop()},
+                                onPressed: () =>
+                                    {Navigator.of(dialogContext).pop()},
                                 child: Text(
                                   S.of(context).cancel,
                                   style: TextStyle(
@@ -166,7 +167,9 @@ class NotificationCard extends StatelessWidget {
                         DateTime.fromMillisecondsSinceEpoch(
                           timestamp,
                         ),
-                        locale: S.of(context).localeName == 'sn' ? 'en' : S.of(context).localeName,
+                        locale: S.of(context).localeName == 'sn'
+                            ? 'en'
+                            : S.of(context).localeName,
                       ),
                     ),
                     Text(

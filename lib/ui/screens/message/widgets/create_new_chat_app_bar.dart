@@ -46,7 +46,9 @@ class CreateNewChatAppBar extends PreferredSize {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      isSelectionEnabled ? S.of(context).add_participants : S.of(context).new_chat,
+                      isSelectionEnabled
+                          ? S.of(context).add_participants
+                          : S.of(context).new_chat,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     isSelectionEnabled
@@ -73,10 +75,13 @@ class CreateNewChatAppBar extends PreferredSize {
                           return (snapshot.data?.length ?? 0) > 0
                               ? customButton(S.of(context).next, () {
                                   if (isFromEditGroup) {
-                                    _bloc.selectedMembers.first.then((List<String> members) {
-                                      List<ParticipantInfo> infos = List.generate(
+                                    _bloc.selectedMembers.first
+                                        .then((List<String> members) {
+                                      List<ParticipantInfo> infos =
+                                          List.generate(
                                         members.length,
-                                        (index) => _bloc.allMembers[members[index]],
+                                        (index) =>
+                                            _bloc.allMembers[members[index]],
                                       );
 
                                       Navigator.of(context).pop(infos);
@@ -85,11 +90,13 @@ class CreateNewChatAppBar extends PreferredSize {
                                     Navigator.of(context)
                                         .push(
                                       MaterialPageRoute<ChatModel>(
-                                        builder: (context) => CreateGroupPage(bloc: _bloc),
+                                        builder: (context) =>
+                                            CreateGroupPage(bloc: _bloc),
                                       ),
                                     )
                                         .then((ChatModel value) {
-                                      if (value != null) Navigator.of(context).pop(value);
+                                      if (value != null)
+                                        Navigator.of(context).pop(value);
                                     });
                                   }
                                 })

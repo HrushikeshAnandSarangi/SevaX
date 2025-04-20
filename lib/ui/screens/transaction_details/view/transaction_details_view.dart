@@ -68,13 +68,17 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
     if (transaction.typeid != null) {
       logger.e('TypeID CHECK 1: ' + transaction.typeid.toString());
       try {
-        requestModel = await FirestoreManager.getRequestFutureById(requestId: transaction.typeid);
+        requestModel = await FirestoreManager.getRequestFutureById(
+            requestId: transaction.typeid);
       } catch (e) {
         log('error fetching request model: ' + e.toString());
       }
       try {
-        timebankModel = await FirestoreManager.getTimeBankForId(timebankId: transaction.timebankid);
-        communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(communityId: transaction.communityId);
+        timebankModel = await FirestoreManager.getTimeBankForId(
+            timebankId: transaction.timebankid);
+        communityModel =
+            await FirestoreManager.getCommunityDetailsByCommunityId(
+                communityId: transaction.communityId);
       } catch (e) {
         log('error fetching timebank and/or community model: ' + e.toString());
       }
@@ -130,7 +134,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
       body: StreamBuilder<List<TransactionModel>>(
           stream: _bloc.data(context),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                snapshot.data == null) {
               return LoadingIndicator();
             }
 
@@ -152,7 +157,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                       children: [
                         Text(
                           '${S.of(context).transations}',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 7),
                         RichText(
@@ -188,7 +194,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                     Icons.search,
                                     color: Theme.of(context).primaryColor,
                                   ),
-                                  contentPadding: const EdgeInsets.only(bottom: 8),
+                                  contentPadding:
+                                      const EdgeInsets.only(bottom: 8),
                                   border: border,
                                   enabledBorder: border,
                                   disabledBorder: border,
@@ -212,30 +219,44 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) => InkWell(
+                        itemBuilder: (BuildContext context, int index) =>
+                            InkWell(
                           onTap: () => onRowTap(snapshot.data[index]),
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                                padding: const EdgeInsets.only(
+                                    left: 12.0, right: 12.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
+                                        SevaCore.of(context)
+                                                .loggedInUser
+                                                .photoURL ??
+                                            defaultUserImageURL,
                                         //need to add condition if from or to
                                       ),
                                     ),
                                     SizedBox(width: 8),
                                     SizedBox(
-                                        width: MediaQuery.of(context).size.width / 8,
-                                        child: Text(SevaCore.of(context).loggedInUser.fullname, style: tableCellStyle)),
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                8,
+                                        child: Text(
+                                            SevaCore.of(context)
+                                                .loggedInUser
+                                                .fullname,
+                                            style: tableCellStyle)),
                                     SizedBox(width: 15),
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        getTransactionTypeLabel(snapshot.data[index].type, context).toString(),
+                                        getTransactionTypeLabel(
+                                                snapshot.data[index].type,
+                                                context)
+                                            .toString(),
                                         style: tableCellStyle,
                                       ),
                                     ),
@@ -244,7 +265,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                       flex: 2,
                                       child: Text(
                                           DateFormat('MMMM dd').format(
-                                            DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].timestamp),
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                snapshot.data[index].timestamp),
                                           ),
                                           style: tableCellStyle),
                                     ),
@@ -255,7 +277,10 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                         "${snapshot.data[index].to == widget.id ? "+" : "-"}${snapshot.data[index].credits}",
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          color: snapshot.data[index].to == widget.id ? Colors.green : Colors.black,
+                                          color: snapshot.data[index].to ==
+                                                  widget.id
+                                              ? Colors.green
+                                              : Colors.black,
                                           fontSize: 16,
                                           // fontFamily: 'Europa',
                                         ),
@@ -316,7 +341,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   }
 
   Widget getText(String title) {
-    final TextStyle style = TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Europa');
+    final TextStyle style =
+        TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Europa');
     return Text(
       title,
       style: style,

@@ -2,17 +2,17 @@ import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class AgreementFormSelectionModel extends DataModel {
-  int createdAt;
-  String documentName;
-  String placeOrItem;
-  String otherDetails;
-  String specificConditions;
-  bool isDamageLiability;
-  bool isUseDisclaimer;
-  bool isDeliveryReturn;
-  bool isMaintainRepair;
-  bool isOffer;
-  String agreementLink;
+  int? createdAt;
+  String? documentName;
+  String? placeOrItem;
+  String? otherDetails;
+  String? specificConditions;
+  bool? isDamageLiability;
+  bool? isUseDisclaimer;
+  bool? isDeliveryReturn;
+  bool? isMaintainRepair;
+  bool? isOffer;
+  String? agreementLink;
 
   AgreementFormSelectionModel(
       {this.createdAt,

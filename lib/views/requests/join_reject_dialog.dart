@@ -15,10 +15,10 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class JoinRejectDialogView extends StatefulWidget {
-  final RequestInvitationModel requestInvitationModel;
-  final String timeBankId;
-  final String notificationId;
-  final UserModel userModel;
+  final RequestInvitationModel? requestInvitationModel;
+  final String? timeBankId;
+  final String? notificationId;
+  final UserModel? userModel;
   bool isFromOfferRequest;
   JoinRejectDialogView({
     this.requestInvitationModel,
@@ -35,7 +35,7 @@ class JoinRejectDialogView extends StatefulWidget {
 class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
   _JoinRejectDialogViewState();
 
-  BuildContext progressContext;
+  late BuildContext progressContext;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    widget.requestInvitationModel.timebankModel.photoUrl ??
+                    widget.requestInvitationModel!.timebankModel!.photoUrl ??
                         defaultUserImageURL),
               ),
             ),
@@ -63,7 +63,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.requestInvitationModel.requestModel.title ??
+                widget.requestInvitationModel!.requestModel!.title ??
                     S.of(context).anonymous,
                 style: TextStyle(
                   fontSize: 18,
@@ -74,14 +74,15 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                widget.requestInvitationModel.requestModel.fullName ??
-                    "${S.of(context).timebank}"+ S.of(context).name_not_updated,
+                widget.requestInvitationModel!.requestModel!.fullName ??
+                    "${S.of(context).timebank}" +
+                        S.of(context).name_not_updated,
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.requestInvitationModel.requestModel.description ??
+                widget.requestInvitationModel!.requestModel!.description ??
                     S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -91,8 +92,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Center(
               child: Text(
                   widget.isFromOfferRequest
-                      ? "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}"
-                      : "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}",
+                      ? "${S.of(context).by_accepting}${widget.requestInvitationModel!.requestModel!.title!} ${S.of(context).will_be_added_to_request}"
+                      : "${S.of(context).by_accepting}${widget.requestInvitationModel!.requestModel!.title} ${S.of(context).will_be_added_to_request}",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -106,104 +107,119 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: CustomElevatedButton(
-                    color: Theme.of(context).primaryColor,
-                    child: Text(
-                      S.of(context).accept,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
-                    ),
-                    onPressed: () async {
-                      //Once approvedp
-                      CommunityModel communityModel = CommunityModel({});
-                      await CollectionRef.communities
-                          .doc(widget.userModel.currentCommunity)
-                          .get()
-                          .then((value) {
-                        communityModel = CommunityModel(value.data());
-                        setState(() {});
-                      });
-                      AcceptorModel acceptorModel = AcceptorModel(
-                        memberPhotoUrl: widget.userModel.photoURL,
-                        communityId: widget.userModel.currentCommunity,
-                        communityName: communityModel.name,
-                        memberName: widget.userModel.fullname,
-                        memberEmail: widget.userModel.email,
-                        timebankId: communityModel.primary_timebank,
-                      );
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CustomElevatedButton(
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        child: Text(
+                          S.of(context).accept,
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
+                        ),
+                        onPressed: () async {
+                          //Once approvedp
+                          CommunityModel communityModel = CommunityModel({});
+                          await CollectionRef.communities
+                              .doc(widget.userModel!.currentCommunity!)
+                              .get()
+                              .then((value) {
+                            communityModel = CommunityModel(
+                                value.data() as Map<String, dynamic>);
+                            setState(() {});
+                          });
+                          AcceptorModel acceptorModel = AcceptorModel(
+                            memberPhotoUrl: widget.userModel!.photoURL,
+                            communityId: widget.userModel!.currentCommunity,
+                            communityName: communityModel.name,
+                            memberName: widget.userModel!.fullname,
+                            memberEmail: widget.userModel!.email,
+                            timebankId: communityModel.primary_timebank,
+                          );
 
-                      if (widget.userModel.calendarId != null) {
-                        showDialog(
-                          context: context,
-                          builder: (_context) {
-                            return CalenderEventConfirmationDialog(
-                              title: widget
-                                  .requestInvitationModel.requestModel.title,
-                              isrequest: true,
-                              cancelled: () async {
-                                approveInvitationForVolunteerRequest(
-                                    allowedCalender: false,
-                                    model: widget.requestInvitationModel,
-                                    notificationId: widget.notificationId,
-                                    user: widget.userModel,
-                                    acceptorModel: acceptorModel);
-                                Navigator.pop(_context);
-                                Navigator.of(context).pop();
-                              },
-                              addToCalender: () async {
-                                approveInvitationForVolunteerRequest(
-                                    allowedCalender: true,
-                                    model: widget.requestInvitationModel,
-                                    notificationId: widget.notificationId,
-                                    user: widget.userModel,
-                                    acceptorModel: acceptorModel);
-                                Navigator.pop(_context);
-                                Navigator.of(context).pop();
+                          if (widget.userModel!.calendarId != null) {
+                            showDialog(
+                              context: context,
+                              builder: (_context) {
+                                return CalenderEventConfirmationDialog(
+                                  title: widget.requestInvitationModel!
+                                      .requestModel!.title,
+                                  isrequest: true,
+                                  cancelled: () async {
+                                    approveInvitationForVolunteerRequest(
+                                        allowedCalender: false,
+                                        model: widget.requestInvitationModel!,
+                                        notificationId: widget.notificationId!,
+                                        user: widget.userModel!,
+                                        acceptorModel: acceptorModel);
+                                    Navigator.pop(_context);
+                                    Navigator.of(context).pop();
+                                  },
+                                  addToCalender: () async {
+                                    approveInvitationForVolunteerRequest(
+                                        allowedCalender: true,
+                                        model: widget.requestInvitationModel!,
+                                        notificationId: widget.notificationId!,
+                                        user: widget.userModel!,
+                                        acceptorModel: acceptorModel);
+                                    Navigator.pop(_context);
+                                    Navigator.of(context).pop();
+                                  },
+                                );
                               },
                             );
-                          },
-                        );
 
-                        //  calenderConfirmation(context);
-                      } else {
-                        approveInvitationForVolunteerRequest(
-                            allowedCalender: false,
-                            model: widget.requestInvitationModel,
-                            notificationId: widget.notificationId,
-                            user: widget.userModel,
-                            acceptorModel: acceptorModel);
+                            //  calenderConfirmation(context);
+                          } else {
+                            approveInvitationForVolunteerRequest(
+                                allowedCalender: false,
+                                model: widget.requestInvitationModel!,
+                                notificationId: widget.notificationId!,
+                                user: widget.userModel!,
+                                acceptorModel: acceptorModel);
 
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                ),
-                Container(
-                  width: double.infinity,
-                  child: CustomElevatedButton(
-                    color: Theme.of(context).accentColor,
-                    child: Text(
-                      S.of(context).decline,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
-                    ),
-                    onPressed: () async {
-                      // request declined
-                      //   showProgressDialog(context, 'Rejecting Invitation');
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      CustomElevatedButton(
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        child: Text(
+                          S.of(context).decline,
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
+                        ),
+                        onPressed: () async {
+                          // request declined
+                          //   showProgressDialog(context, 'Rejecting Invitation');
 
-                      declineInvitationbRequest(
-                          model: widget.requestInvitationModel,
-                          notificationId: widget.notificationId,
-                          userModel: widget.userModel);
+                          declineInvitationbRequest(
+                              model: widget.requestInvitationModel,
+                              notificationId: widget.notificationId,
+                              userModel: widget.userModel);
 
-                      if (progressContext != null) {
-                        Navigator.pop(progressContext);
-                      }
-                      Navigator.of(context).pop();
-                    },
+                          if (progressContext != null) {
+                            Navigator.pop(progressContext);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -225,51 +241,51 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
 
   void declineInvitationbRequest({
-    RequestInvitationModel model,
-    String notificationId,
-    UserModel userModel,
+    RequestInvitationModel? model,
+    String? notificationId,
+    UserModel? userModel,
   }) {
     rejectInviteRequest(
-        requestId: model.requestModel.id,
-        rejectedUserId: userModel.sevaUserID,
-        notificationId: notificationId,
-        acceptedUserEmail: userModel.email,
+        requestId: model!.requestModel!.id!,
+        rejectedUserId: userModel!.sevaUserID!,
+        notificationId: notificationId!,
+        acceptedUserEmail: userModel.email!,
         model: model);
 
-    FirestoreManager.readUserNotification(notificationId, userModel.email);
+    FirestoreManager.readUserNotification(notificationId, userModel.email!);
   }
 
   void approveInvitationForVolunteerRequest({
-    RequestInvitationModel model,
-    String notificationId,
-    UserModel user,
-    bool allowedCalender,
-    AcceptorModel acceptorModel,
+    RequestInvitationModel? model,
+    String? notificationId,
+    UserModel? user,
+    bool? allowedCalender,
+    AcceptorModel? acceptorModel,
   }) {
     acceptInviteRequest(
-      user: user,
-      model: model,
-      requestId: model.requestModel.id,
-      acceptedUserEmail: user.email,
-      acceptedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      allowedCalender: allowedCalender,
-      acceptorModel: acceptorModel,
+      user: user!,
+      model: model!,
+      requestId: model.requestModel!.id!,
+      acceptedUserEmail: user.email!,
+      acceptedUserId: user.sevaUserID!,
+      notificationId: notificationId!,
+      allowedCalender: allowedCalender!,
+      acceptorModel: acceptorModel!,
     );
 
-    var offerId = widget.requestInvitationModel.offerModel.id;
-    var offerMode = widget.requestInvitationModel.requestModel.requestMode;
-    var timebankId = widget.requestInvitationModel.offerModel.timebankId;
+    var offerId = widget.requestInvitationModel!.offerModel!.id;
+    var offerMode = widget.requestInvitationModel!.requestModel!.requestMode;
+    var timebankId = widget.requestInvitationModel!.offerModel!.timebankId!;
     var uuid = utils.Utils.getUuid();
 
     //Create accetor document
@@ -290,7 +306,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       }
     });
 
-    FirestoreManager.readUserNotification(notificationId, user.email);
+    FirestoreManager.readUserNotification(notificationId, user.email!);
   }
 
   Widget _getCloseButton(BuildContext context) {

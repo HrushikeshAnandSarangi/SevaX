@@ -20,18 +20,18 @@ import 'package:sevaexchange/utils/search_via_zipcode.dart';
 
 class SearchManager {
   static Future<http.Response> makeGetRequest({
-    @required String url,
-    Map<String, String> headers,
+    required String url,
+    Map<String, String>? headers,
   }) async {
-    return await http.get(url, headers: headers);
+    return await http.get(Uri.parse(url), headers: headers);
   }
 
   static Future<http.Response> makePostRequest({
-    @required String url,
-    Map<String, String> headers,
+    required String url,
+    Map<String, String>? headers,
     dynamic body,
   }) async {
-    return await http.post(url, body: body, headers: headers);
+    return await http.post(Uri.parse(url), body: body, headers: headers);
   }
 
   static Stream<List<UserModel>> searchForUser({
@@ -130,7 +130,7 @@ class SearchManager {
   }
 
   static Future<bool> searchCommunityForDuplicate(
-      {@required String queryString}) async {
+      {required String queryString}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
 //    '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
@@ -244,7 +244,7 @@ class SearchManager {
   }
 
   static Future<bool> searchAgrrementTemplateForDuplicate(
-      {@required String queryString}) async {
+      {required String queryString}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
 
@@ -317,7 +317,7 @@ class SearchManager {
   }
 
   static Future<bool> searchTemplateForDuplicate(
-      {@required String queryString}) async {
+      {required String queryString}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/posttemplates/_doc/_search';
 
@@ -350,7 +350,7 @@ class SearchManager {
   }
 
   static Future<bool> searchRequestCategoriesForDuplicate(
-      {@required queryString, @required BuildContext context}) async {
+      {required queryString, required BuildContext context}) async {
     var key = S.of(context).localeName;
 
     String url =
@@ -482,8 +482,8 @@ class SearchManager {
   }
 
   static Stream<List<UserModel>> searchForUserWithTimebankId({
-    @required queryString,
-    @required List<String> validItems,
+    required queryString,
+    required List<String> validItems,
   }) async* {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
@@ -520,7 +520,7 @@ class SearchManager {
   }
 
   static Future<List<TimebankModel>> searchTimebankModelsOfUserFuture(
-      {@required String queryString, @required UserModel currentUser}) async {
+      {required String queryString, required UserModel currentUser}) async {
     String url = FlavorConfig.values.elasticSearchBaseURL +
         "//elasticsearch/sevaxtimebanks/sevaxtimebank/_search";
     dynamic body = json.encode({
@@ -552,12 +552,12 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if (sourceMap['softDelete'] == false &&
-          currentUser.blockedBy.length == 0) {
+          currentUser.blockedBy!.length == 0) {
         var timeBank = TimebankModel.fromMap(sourceMap);
         timeBanksList.add(timeBank);
       } else {
         if (sourceMap['softDelete'] == false &&
-            !currentUser.blockedBy.contains(sourceMap["creator_id"])) {
+            !currentUser.blockedBy!.contains(sourceMap["creator_id"])) {
           var timeBank = TimebankModel.fromMap(sourceMap);
           timeBanksList.add(timeBank);
         }
@@ -567,8 +567,8 @@ class SearchManager {
   }
 
   static Future<List<UserModel>> searchForUserWithTimebankIdFuture({
-    @required String queryString,
-    @required List<String> validItems,
+    required String queryString,
+    required List<String> validItems,
   }) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
@@ -604,8 +604,8 @@ class SearchManager {
   }
 
   static Future<List<String>> searchSkills({
-    @required String queryString,
-    @required String language,
+    required String queryString,
+    required String language,
   }) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/skills/_doc/_search';
@@ -626,8 +626,8 @@ class SearchManager {
   }
 
   static Future<List<String>> getSkills({
-    @required List<String> skillsList,
-    @required String languageCode,
+    required List<String> skillsList,
+    required String languageCode,
   }) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/skills/_doc/_search';
@@ -654,8 +654,8 @@ class SearchManager {
   }
 
   static Future<List<String>> getInterests({
-    @required List<String> interestList,
-    @required String languageCode,
+    required List<String> interestList,
+    required String languageCode,
   }) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/interests/_doc/_search';
@@ -682,8 +682,8 @@ class SearchManager {
   }
 
   static Future<List<String>> searchInterest({
-    @required String queryString,
-    @required String language,
+    required String queryString,
+    required String language,
   }) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/interests/_doc/_search';
@@ -772,14 +772,14 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
-      if (model.associatedRequest == null || model.associatedRequest.isEmpty)
+      if (model.associatedRequest == null || model.associatedRequest!.isEmpty)
         offerList.add(model);
     });
     yield offerList;
   }
 
   static Stream<List<RequestModel>> searchForRequest({
-    @required String queryString,
+    required String queryString,
   }) async* {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/requests/request/_search';

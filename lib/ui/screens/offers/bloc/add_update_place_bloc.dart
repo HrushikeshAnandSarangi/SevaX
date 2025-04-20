@@ -67,9 +67,11 @@ class AddUpdatePlaceBloc extends BlocBase {
 
   Function(String value) get onHouseRulesChanged => _house_rules.sink.add;
 
-  Function(String value) get onEstimatedValueChanged => _estimated_value.sink.add;
+  Function(String value) get onEstimatedValueChanged =>
+      _estimated_value.sink.add;
 
-  Function(String value) get onContactInformationChanged => _contactInformation.sink.add;
+  Function(String value) get onContactInformationChanged =>
+      _contactInformation.sink.add;
 
   Function(List<String> value) get onHouseImageAdded => _house_images.sink.add;
 
@@ -91,7 +93,8 @@ class AddUpdatePlaceBloc extends BlocBase {
   void createLendingOfferPlace({UserModel creator}) {
     LendingModel lendingModel;
     if (!validateForm()) {
-      if (_amenities.value.values == null || _amenities.value.values.length < 1) {
+      if (_amenities.value.values == null ||
+          _amenities.value.values.length < 1) {
         _message.add('amenities');
       } else {
         _message.add('create');
@@ -125,7 +128,8 @@ class AddUpdatePlaceBloc extends BlocBase {
   void updateLendingOfferPlace({LendingModel model}) async {
     LendingModel lendingModel = model;
     if (!validateForm()) {
-      if (_amenities.value.values == null || _amenities.value.values.length < 1) {
+      if (_amenities.value.values == null ||
+          _amenities.value.values.length < 1) {
         _message.add('amenities');
       } else {
         lendingModel.lendingPlaceModel.amenities = _amenities.value;
@@ -140,8 +144,10 @@ class AddUpdatePlaceBloc extends BlocBase {
             int.parse(_no_of_bathRooms.value);
         lendingModel.lendingPlaceModel.commonSpace = _commonSpaces.value;
         lendingModel.lendingPlaceModel.houseRules = _house_rules.value;
-        lendingModel.lendingPlaceModel.estimatedValue = int.parse(_estimated_value.value);
-        lendingModel.lendingPlaceModel.contactInformation = _contactInformation.value;
+        lendingModel.lendingPlaceModel.estimatedValue =
+            int.parse(_estimated_value.value);
+        lendingModel.lendingPlaceModel.contactInformation =
+            _contactInformation.value;
 
         LendingOffersRepo.updateNewLendingPlace(model: lendingModel).then((_) {
           _model.add(lendingModel);
@@ -169,7 +175,9 @@ class AddUpdatePlaceBloc extends BlocBase {
   String validateGuest(String val) {
     logger.d("#room guest ${_no_of_guests.value}");
 
-    if (_no_of_guests.value == null || _no_of_guests.value.isEmpty || _no_of_guests.value == "0") {
+    if (_no_of_guests.value == null ||
+        _no_of_guests.value.isEmpty ||
+        _no_of_guests.value == "0") {
       _no_of_guests.addError(AddPlaceValidationErrors.no_guests_error);
       return AddPlaceValidationErrors.no_guests_error;
     }
@@ -178,7 +186,9 @@ class AddUpdatePlaceBloc extends BlocBase {
 
   String validateRooms(String val) {
     logger.d("#room ${_no_of_rooms.value}");
-    if (_no_of_rooms.value == null || _no_of_rooms.value.isEmpty || _no_of_rooms.value == '0') {
+    if (_no_of_rooms.value == null ||
+        _no_of_rooms.value.isEmpty ||
+        _no_of_rooms.value == '0') {
       _no_of_rooms.addError(AddPlaceValidationErrors.no_rooms_error);
       return AddPlaceValidationErrors.no_rooms_error;
     }
@@ -273,7 +283,9 @@ class AddUpdatePlaceBloc extends BlocBase {
       _amenities.addError(AddPlaceValidationErrors.amenities_error);
       flag = true;
     }
-    if (_estimated_value.value == null || _estimated_value.value == 0 || _estimated_value == '') {
+    if (_estimated_value.value == null ||
+        _estimated_value.value == 0 ||
+        _estimated_value == '') {
       _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
       flag = true;
     }

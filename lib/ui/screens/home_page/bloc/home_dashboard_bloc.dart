@@ -19,11 +19,13 @@ class HomeDashBoardBloc extends BlocBase {
   Stream<SelectedCommuntityGroup> getCurrentGroups(UserModel user) {
     return CombineLatestStream.combine2(
       FirestoreManager.getTimebanksForUserStream(
-        userId: user.sevaUserID,
-        communityId: user.currentCommunity,
+        userId: user.sevaUserID ?? '',
+        communityId: user.currentCommunity ?? '',
       ),
       _selectedCommunity.debounceTime(Duration.zero),
-      (x, y) => SelectedCommuntityGroup(timebanks: x, currentCommunity: y),
+      (x, y) => SelectedCommuntityGroup(
+          timebanks: x as List<TimebankModel>,
+          currentCommunity: y as CommunityModel),
     );
   }
 
@@ -35,7 +37,7 @@ class HomeDashBoardBloc extends BlocBase {
   Stream<List<CommunityModel>> get communities => _communities.stream;
 
   void getAllCommunities(UserModel user) async {
-    Set<String> communitiesList = Set.from(user.communities);
+    Set<String> communitiesList = Set.from(user.communities ?? []);
 
 //    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
 //      await communitiesList.remove(FlavorConfig.values.timebankId);
@@ -45,10 +47,11 @@ class HomeDashBoardBloc extends BlocBase {
       communitiesList.forEach((id) async {
         var value = await CollectionRef.communities.doc(id).get();
         if (value.exists) {
-          c.add(CommunityModel(value.data()));
+          c.add(CommunityModel(value.data() as Map<String, dynamic>));
           if (id == user.currentCommunity) {
             _selectedCommunity.drain();
-            _selectedCommunity.add(CommunityModel(value.data()));
+            _selectedCommunity
+                .add(CommunityModel(value.data() as Map<String, dynamic>));
           }
           c.sort(
             (a, b) => a.name.toLowerCase().compareTo(
@@ -64,7 +67,7 @@ class HomeDashBoardBloc extends BlocBase {
   }
 
   Future<bool> setDefaultCommunity(
-      {CommunityModel community, BuildContext context}) {
+      {required CommunityModel community, required BuildContext context}) {
     CollectionRef.users.doc(SevaCore.of(context).loggedInUser.email).update({
       "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity,
       "currentTimebank": community.primary_timebank
@@ -84,5 +87,6 @@ class SelectedCommuntityGroup {
   final List<TimebankModel> timebanks;
   final CommunityModel currentCommunity;
 
-  SelectedCommuntityGroup({this.timebanks, this.currentCommunity});
+  SelectedCommuntityGroup(
+      {required this.timebanks, required this.currentCommunity});
 }

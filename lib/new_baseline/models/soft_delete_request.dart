@@ -3,13 +3,12 @@ import 'dart:collection';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 
 class SoftDeleteRequestDataHolder {
-  int noOfOpenRequests;
-  int noOfOpenOffers;
-  int noOfOpenProjects;
-  bool requestAccepted;
-  String entityTitle;
-  SoftDelete softDeleteType;
-
+  int noOfOpenRequests = 0;
+  int noOfOpenOffers = 0;
+  int noOfOpenProjects = 0;
+  bool requestAccepted = false;
+  String entityTitle = '';
+  SoftDelete? softDeleteType;
 
   SoftDeleteRequestDataHolder.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('noOfOpenRequests')) {
@@ -62,7 +61,8 @@ class SoftDeleteRequestDataHolder {
         return SoftDelete.REQUEST_DELETE_PROJECT;
 
       default:
-        return null;
+        return SoftDelete
+            .REQUEST_DELETE_GROUP; // Provide a default value instead of null
     }
   }
 }

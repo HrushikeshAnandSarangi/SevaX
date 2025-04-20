@@ -17,32 +17,35 @@ import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
 
 class ProjectAvtaar extends StatefulWidget {
-  final String photoUrl;
+  final String? photoUrl;
 
-  ProjectAvtaar({this.photoUrl});
+  const ProjectAvtaar({Key? key, this.photoUrl}) : super(key: key);
 
+  @override
   _ProjectsAvtaarState createState() => _ProjectsAvtaarState();
 }
 
-@override
 class _ProjectsAvtaarState extends State<ProjectAvtaar>
-    with TickerProviderStateMixin, ImagePickerListener {
-  File _image;
-  AnimationController _controller;
-  ImagePickerHandler imagePicker;
-  bool _isImageBeingUploaded = false;
-  ProfanityImageModel profanityImageModel = ProfanityImageModel();
-  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  Future<String> _uploadImage() async {
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    Reference ref = FirebaseStorage.instance
+    with TickerProviderStateMixin
+    implements ImagePickerListener {
+  File? _image;
+  late AnimationController _controller;
+  late ImagePickerHandler? imagePicker;
+  bool? _isImageBeingUploaded = false;
+  ProfanityImageModel? profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel? profanityStatusModel = ProfanityStatusModel();
+  Future<String>? _uploadImage() async {
+    int? timestamp = DateTime.now().millisecondsSinceEpoch;
+    String? timestampString = timestamp.toString();
+    Reference? ref = FirebaseStorage.instance
         .ref()
         .child('projects_avtaar')
-        .child(
-            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+        .child(SevaCore.of(context).loggedInUser.email! +
+            timestampString +
+            '.jpg');
+    if (_image == null) return '';
     UploadTask uploadTask = ref.putFile(
-      _image,
+      _image!,
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'Projects Logo'},
@@ -57,7 +60,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     return imageURL;
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({required String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     this._isImageBeingUploaded = false;
@@ -69,40 +72,45 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
         });
       });
     } else {
-      profanityStatusModel =
-          await getProfanityStatus(profanityImageModel: profanityImageModel);
+      if (profanityImageModel != null) {
+        profanityStatusModel =
+            await getProfanityStatus(profanityImageModel: profanityImageModel!);
 
-      if (profanityStatusModel.isProfane) {
-        showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
-            .then((status) {
-          if (status == 'Proceed') {
-            deleteFireBaseImage(imageUrl: imageURL).then((value) {
-              if (value) {
-                setState(() {
-                  globals.projectsAvtaarURL = null;
-                });
+        if (profanityStatusModel != null) {
+          if (profanityStatusModel?.isProfane ?? false) {
+            showProfanityImageAlert(
+                    context: context,
+                    content: profanityStatusModel?.category ?? '')
+                .then((status) {
+              if (status == 'Proceed') {
+                deleteFireBaseImage(imageUrl: imageURL).then((value) {
+                  if (value) {
+                    setState(() {
+                      globals.projectsAvtaarURL = null;
+                    });
+                  }
+                }).catchError((e) => log(e));
               }
-            }).catchError((e) => log(e));
+            });
+          } else {
+            setState(() {
+              globals.projectsAvtaarURL = imageURL;
+            });
           }
-        });
-      } else {
-        setState(() {
-          globals.projectsAvtaarURL = imageURL;
-        });
+        }
       }
     }
   }
 
   @override
-  void userImage(dynamic _image, type) {
+  void userImage(dynamic _image, String type) {
     if (type == 'stock_image') {
       setState(() {
-        globals.projectsAvtaarURL = _image;
+        globals.projectsAvtaarURL = (_image as File?)?.path;
       });
     } else {
       setState(() {
-        this._image = _image;
+        this._image = _image as File?;
         this._isImageBeingUploaded = true;
         _uploadImage();
       });
@@ -119,13 +127,38 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     );
 
     imagePicker = ImagePickerHandler(this, _controller, false);
-    imagePicker.init();
+    imagePicker?.init();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Widget _getSevaXDefaultImage() {
+    return Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(widget.photoUrl ?? defaultCameraImageURL),
+                fit: BoxFit.cover),
+            borderRadius: const BorderRadius.all(Radius.circular(75.0)),
+            boxShadow: const [
+          BoxShadow(blurRadius: 7.0, color: Colors.black12)
+        ]));
+  }
+
+  Widget _getDefaultAvtarWidget() {
+    return _getSevaXDefaultImage();
+  }
+
+  Widget _getHumanityFirstDefaultImage() {
+    return Container(
+      child: CircleAvatar(
+        radius: 40.0,
+        backgroundImage: AssetImage('lib/assets/images/genericlogo.png'),
+      ),
+    );
   }
 
   @override
@@ -137,8 +170,8 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
         : 150.0;
     return Container(
       child: GestureDetector(
-        onTap: () => imagePicker.showDialog(context),
-        child: _isImageBeingUploaded
+        onTap: () => imagePicker?.showDialog(context),
+        child: _isImageBeingUploaded ?? false
             ? Container(
                 margin: EdgeInsets.only(top: 20),
                 child: Container(
@@ -157,59 +190,20 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
             : Container(
                 width: widthOfAvtar,
                 height: widthOfAvtar,
-                child: globals.projectsAvtaarURL == null
-                    ? Stack(
-                        children: <Widget>[
-                          defaultAvtarWidget,
-                        ],
-                      )
-                    : Container(
-                        child: CircleAvatar(
-                          radius: 40.0,
-                          // child: CachedNetworkImage(
-                          //   imageUrl: avatarURL,
-                          //   placeholder: CircularProgressIndicator(),
-                          // ),
-                          backgroundImage:
-                              NetworkImage(globals.projectsAvtaarURL),
-                          backgroundColor: const Color(0xFF778899),
-                        ),
-                      ),
+                child: CircleAvatar(
+                  radius: 40.0,
+                  backgroundImage:
+                      NetworkImage(globals.projectsAvtaarURL ?? ''),
+                  backgroundColor: const Color(0xFF778899),
+                ),
               ),
       ),
     );
   }
 
-  Widget get defaultAvtarWidget {
-    return (FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-        ? sevaXdeafaultImage
-        : sevaXdeafaultImage;
-  }
-
-  Widget get humanityFirstdefaultImage {
-    return Container(
-      child: CircleAvatar(
-        radius: 40.0,
-        backgroundImage: AssetImage('lib/assets/images/genericlogo.png'),
-      ),
-    );
-  }
-
-  Widget get sevaXdeafaultImage {
-    return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(widget.photoUrl ?? defaultCameraImageURL),
-                fit: BoxFit.cover),
-            borderRadius: BorderRadius.all(Radius.circular(75.0)),
-            boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
-  }
-
   @override
-  addWebImageUrl() {
-    // TODO: implement addWebImageUrl
-    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+  void addWebImageUrl() {
+    if (globals.webImageUrl != null && globals.webImageUrl!.isNotEmpty) {
       globals.projectsAvtaarURL = globals.webImageUrl;
       setState(() {});
     }

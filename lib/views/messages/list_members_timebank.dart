@@ -5,7 +5,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 Stream<List<TimebankModel>> getTimebankDetails({
-  String timebankId,
+  String? timebankId,
 }) async* {
   var data = CollectionRef.timebank
       .where('timebankId', isEqualTo: timebankId)
@@ -17,7 +17,7 @@ Stream<List<TimebankModel>> getTimebankDetails({
         List<TimebankModel> timebanks = [];
         querySnapshot.docs.forEach((documentSnapshot) {
           timebanks.add(TimebankModel.fromMap(
-            documentSnapshot.data(),
+            documentSnapshot.data() as Map<String, dynamic>,
           ));
         });
         timebankCodeSink.add(timebanks);
@@ -27,10 +27,10 @@ Stream<List<TimebankModel>> getTimebankDetails({
 }
 
 Future<TimebankModel> getTimebankDetailsbyFuture({
-  String timebankId,
+  String? timebankId,
 }) async {
   return CollectionRef.timebank.doc(timebankId).get().then((timebankModel) {
-    return TimebankModel.fromMap(timebankModel.data());
+    return TimebankModel.fromMap(timebankModel.data() as Map<String, dynamic>);
   }).catchError((onError) {
     return onError;
   });

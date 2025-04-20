@@ -68,14 +68,14 @@ class PersonalNotifications extends StatefulWidget {
   _PersonalNotificationsState createState() => _PersonalNotificationsState();
 }
 
-UserModel loggedInUser;
-BuildContext dialogContext;
+UserModel? loggedInUser;
+BuildContext? dialogContext;
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
   final subjectBorrow = ReplaySubject<int>();
-  RequestModel requestModelNew;
-  OfferModel offerModelNew;
+  RequestModel? requestModelNew;
+  OfferModel? offerModelNew;
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     });
   }
 
-  BuildContext parentContext;
+  BuildContext? parentContext;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             snapshot.data == null) {
           return LoadingIndicator();
         }
-        if (snapshot.data.isEmpty) {
+        if (snapshot.data?.isEmpty ?? true) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
@@ -133,7 +133,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     context,
                     S.of(context).clear_notications,
                   )) {
-                    _bloc.clearAllNotification(user.email);
+                    _bloc.clearAllNotification(user.email!);
                   }
                 },
               ),
@@ -142,20 +142,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               child: ListView.builder(
                 shrinkWrap: true,
                 padding: EdgeInsets.only(bottom: 20),
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data?.length ?? 0,
                 itemBuilder: (context, index) {
-                  NotificationsModel notification = snapshot.data[index];
+                  NotificationsModel notification = snapshot.data![index];
 
                   Future<void> onDismissed() async {
                     await _bloc.clearNotification(
-                      notificationId: notification.id,
-                      email: user.email,
+                      notificationId: notification.id ?? '',
+                      email: user.email!,
                     );
                   }
 
                   switch (notification.type) {
                     case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getWidgetNotificaitonForDeletionrequest(
                         bloc: _bloc,
                         context: context,
@@ -1903,7 +1903,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               : requestModel.approvedUsers.first,
           "ratings": results['selection'],
           "requestId": requestModel.id,
-          "comments": results['didComment'] ? results['comment'] : "No comments",
+          "comments":
+              results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
         },
       );
@@ -1911,9 +1912,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           feedbackType, results, requestModel, loggedInUser);
 
-      TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
-      UserModel userModel =
-          await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
+      TimebankModel timebankModel =
+          await getTimeBankForId(timebankId: requestModelNew.timebankId);
+      UserModel userModel = await FirestoreManager.getUserForId(
+          sevaUserId: requestModelNew.sevaUserId);
       if (userModel != null && timebankModel != null) {
         ParticipantInfo sender = ParticipantInfo(
           id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
@@ -1948,11 +1950,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               requestTitle: requestModel.title,
               context: context,
               userName: loggedInUser.fullname,
-              reviewMessage: results['didComment'] ? results['comment'] : "No comments",
+              reviewMessage:
+                  results['didComment'] ? results['comment'] : "No comments",
             ),
             reciever: reciever,
             isTimebankMessage:
-                requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+                requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                    ? false
+                    : true,
             timebankId: requestModel.timebankId,
             communityId: loggedInUser.currentCommunity,
             sender: sender);

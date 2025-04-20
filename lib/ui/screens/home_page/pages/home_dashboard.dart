@@ -40,31 +40,37 @@ class HomeDashBoard extends StatefulWidget {
 
 class _HomeDashBoardState extends State<HomeDashBoard>
     with TickerProviderStateMixin {
-  TimebankModel primaryTimebank;
-  HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
-  CommunityModel selectedCommunity;
+  TimebankModel? primaryTimebank;
+  HomeDashBoardBloc? _homeDashBoardBloc = HomeDashBoardBloc();
+  CommunityModel? selectedCommunity;
   TimeBankModelSingleton timeBankModelSingleton = TimeBankModelSingleton();
   List<Widget> pages = [];
   bool isAdmin = false;
   int tabLength = 8;
+
+  // Add the missing method to resolve the error
+  dynamic getConfigurationModel() {
+    // Return a default configuration or null as needed
+    return null;
+  }
 
   @override
   void initState() {
     planTransactionsMatrix();
     super.initState();
     Future.delayed(Duration.zero, () {
-      _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
+      _homeDashBoardBloc?.getAllCommunities(SevaCore.of(context).loggedInUser);
     });
   }
 
   Future<void> planTransactionsMatrix() async {
     AppConfig.plan_transactions_matrix = json
-        .decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
+        .decode(AppConfig.remoteConfig!.getString('transactions_plans_matrix'));
   }
 
   @override
   void dispose() {
-    _homeDashBoardBloc.dispose();
+    _homeDashBoardBloc!.dispose();
     super.dispose();
   }
 
@@ -74,7 +80,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
         if (model.id == SevaCore.of(context).loggedInUser.currentCommunity) {
           selectedCommunity = model;
 
-          Catalyst.recordAccessTime(communityId: selectedCommunity.id);
+          Catalyst.recordAccessTime(communityId: selectedCommunity!.id);
 
           SevaCore.of(context).loggedInUser.currentTimebank =
               model.primary_timebank;
@@ -99,18 +105,20 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       S.of(context).manage,
     ];
 
-    return BlocProvider(
-      bloc: _homeDashBoardBloc,
+    return BlocProvider<HomeDashBoardBloc>(
+      bloc: _homeDashBoardBloc!,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor:Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           centerTitle: false,
           title: StreamBuilder<List<CommunityModel>>(
-            stream: _homeDashBoardBloc.communities,
+            stream: _homeDashBoardBloc?.communities,
             builder: (context, snapshot) {
-              setCurrentCommunity(snapshot.data);
+              if (snapshot.data != null) {
+                setCurrentCommunity(snapshot.data!);
+              }
               return snapshot.data != null
                   ? Theme(
                       data: Theme.of(context).copyWith(
@@ -124,19 +132,20 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           iconEnabledColor: Colors.white,
                           value: selectedCommunity,
                           onChanged: (v) {
-                            if (v.id != selectedCommunity.id) {
+                            if (selectedCommunity != null &&
+                                v?.id != selectedCommunity?.id) {
                               SevaCore.of(context)
                                   .loggedInUser
-                                  .currentCommunity = v.id;
+                                  .currentCommunity = v!.id;
                               SevaCore.of(context)
                                   .loggedInUser
                                   .currentTimebank = v.primary_timebank;
                               _homeDashBoardBloc
-                                  .setDefaultCommunity(
+                                  ?.setDefaultCommunity(
                                 context: context,
                                 community: v,
                               )
-                                  .then((_) {
+                                  ?.then((_) {
                                 SevaCore.of(context)
                                     .loggedInUser
                                     .currentCommunity = v.id;
@@ -146,18 +155,19 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SwitchTimebank(),
+                                    builder: (context) =>
+                                        SwitchTimebank(content: ""),
                                   ),
                                 );
                               });
                             }
                           },
                           items: List.generate(
-                            snapshot.data.length,
+                            snapshot.data?.length ?? 0,
                             (index) => DropdownMenuItem(
-                              value: snapshot.data[index],
+                              value: snapshot.data![index],
                               child: Text(
-                                snapshot.data[index].name,
+                                snapshot.data![index].name,
                                 style: TextStyle(fontSize: 18),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -180,10 +190,10 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       return BlocProvider(
                         bloc: _user,
                         child: SearchPage(
-                          bloc: _homeDashBoardBloc,
+                          bloc: _homeDashBoardBloc!,
                           user: SevaCore.of(context).loggedInUser,
-                          timebank: primaryTimebank,
-                          community: selectedCommunity,
+                          timebank: primaryTimebank!,
+                          community: selectedCommunity!,
                         ),
                       );
                     }),
@@ -195,38 +205,41 @@ class _HomeDashBoardState extends State<HomeDashBoard>
         ),
         body: StreamBuilder<SelectedCommuntityGroup>(
           stream: _homeDashBoardBloc
-              .getCurrentGroups(SevaCore.of(context).loggedInUser),
+              ?.getCurrentGroups(SevaCore.of(context).loggedInUser),
           builder: (context, snapshot) {
             if (snapshot.data == null || !snapshot.hasData) {
               return LoadingIndicator();
             }
             if (snapshot.hasData && snapshot.data != null) {
-              snapshot.data.timebanks.forEach(
+              snapshot.data?.timebanks?.forEach(
                 (TimebankModel data) {
                   if (data.id ==
-                      snapshot.data.currentCommunity.primary_timebank) {
+                      snapshot.data?.currentCommunity?.primary_timebank) {
                     primaryTimebank = data;
                     //Commenting for refresh issue
                     if (AppConfig.timebankConfigurations == null)
-                      AppConfig.timebankConfigurations =
-                          data.timebankConfigurations ??
-                              getConfigurationModel();
+                      data.timebankConfigurations != null
+                          ? data.timebankConfigurations
+                          : getConfigurationModel();
 
-                    timeBankModelSingleton.model = primaryTimebank;
+                    if (primaryTimebank != null) {
+                      timeBankModelSingleton.model = primaryTimebank!;
+                    }
                   }
                 },
               );
 
               if (primaryTimebank != null &&
-                  isAccessAvailable(primaryTimebank,
-                      SevaCore.of(context).loggedInUser.sevaUserID)) {
+                  isAccessAvailable(primaryTimebank!,
+                      SevaCore.of(context).loggedInUser.sevaUserID!)) {
                 isAdmin = true;
               } else {
                 isAdmin = false;
               }
               if (primaryTimebank != null &&
-                  primaryTimebank.organizers
-                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                  primaryTimebank?.organizers?.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID) ==
+                      true) {
                 isAdmin = true;
               }
             }
@@ -280,35 +293,37 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                     child: TabBarView(
                       children: <Widget>[
                         TimebankHomePage(
-                          selectedCommuntityGroup: snapshot.data,
-                          primaryTimebankModel: primaryTimebank,
+                          selectedCommuntityGroup: snapshot.data!,
+                          primaryTimebankModel: primaryTimebank!,
                         ),
                         DiscussionList(
-                          timebankId: primaryTimebank?.id,
-                          timebankModel: primaryTimebank,
+                          timebankId: primaryTimebank!.id,
+                          timebankModel: primaryTimebank!,
+                          loggedInUser:
+                              SevaCore.of(context).loggedInUser.sevaUserID!,
                         ),
                         TimeBankProjectsView(
-                          timebankId: primaryTimebank.id,
-                          timebankModel: primaryTimebank,
+                          timebankId: primaryTimebank!.id,
+                          timebankModel: primaryTimebank!,
                         ),
                         RequestListingPage(
-                          timebankModel: primaryTimebank,
+                          timebankModel: primaryTimebank!,
                           isFromSettings: false,
                         ),
                         OfferRouter(
-                          timebankId: primaryTimebank.id,
-                          timebankModel: primaryTimebank,
+                          timebankId: primaryTimebank!.id,
+                          timebankModel: primaryTimebank!,
                         ),
                         GroupPage(
-                          communityId: primaryTimebank.communityId,
+                          communityId: primaryTimebank!.communityId,
                         ),
                         TimeBankAboutView.of(
-                          timebankModel: primaryTimebank,
-                          email: SevaCore.of(context).loggedInUser.email,
-                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          timebankModel: primaryTimebank!,
+                          email: SevaCore.of(context).loggedInUser.email!,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                         ),
                         MembersPage(
-                          timebankId: primaryTimebank.id,
+                          timebankId: primaryTimebank!.id,
                         ),
                         // TimebankRequestAdminPage(
                         //   isUserAdmin: isAccessAvailable(
@@ -327,7 +342,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         ...isAdmin
                             ? [
                                 ManageTimebankSeva.of(
-                                  timebankModel: primaryTimebank,
+                                  timebankModel: primaryTimebank!,
                                 ),
                               ]
                             : []

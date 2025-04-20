@@ -14,31 +14,27 @@ import 'package:shimmer/shimmer.dart';
 import '../../flavor_config.dart';
 
 class SelectMembersInGroup extends StatefulWidget {
-  String timebankId;
-  String userEmail;
-  List<String> listOfAlreadyExistingMembers = [];
-  var userSelected = HashMap<String, UserModel>();
-  var listOfMembers = HashMap<String, UserModel>();
+  final String timebankId;
+  final String userEmail;
+  final List<String> listOfAlreadyExistingMembers;
+  final HashMap<String, UserModel> userSelected;
+  final HashMap<String, UserModel> listOfMembers;
 
   SelectMembersInGroup({
-    String timebankId,
-    HashMap<String, UserModel> userSelected,
-    String userEmail,
-    List<String> listOfalreadyExistingMembers,
-  }) {
-    this.timebankId = timebankId;
-    this.userSelected = userSelected;
-    this.userEmail = userEmail;
-    this.listOfAlreadyExistingMembers = listOfalreadyExistingMembers;
-  }
+    required this.timebankId,
+    required this.userSelected,
+    required this.userEmail,
+    List<String>? listOfalreadyExistingMembers,
+  })  : listOfAlreadyExistingMembers = listOfalreadyExistingMembers ?? [],
+        listOfMembers = HashMap<String, UserModel>();
 
   @override
   State<StatefulWidget> createState() => _SelectMembersInGroupState();
 }
 
 class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
-  String _timebankId;
-  ScrollController _controller;
+  String? _timebankId;
+  ScrollController? _controller;
   var _indexSoFar = 0;
   var _pageIndex = 1;
   var currSelectedState = false;
@@ -55,19 +51,20 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   void initState() {
     _timebankId = widget.timebankId;
     _controller = ScrollController();
-    _controller.addListener(_scrollListener);
+    _controller!.addListener(_scrollListener);
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_scrollListener);
+    _controller?.removeListener(_scrollListener);
     super.dispose();
   }
 
   void _scrollListener() {
-    if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange &&
+    if (_controller != null &&
+        _controller!.offset >= _controller!.position.maxScrollExtent &&
+        !_controller!.position.outOfRange &&
         !_isLoading &&
         nullcount < 3) {
       loadNextBatchItems().then((onValue) {
@@ -120,8 +117,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     return finalWidget;
   }
 
-  TimebankModel timebankModel;
-  Widget getList({String timebankId}) {
+  late TimebankModel timebankModel;
+  Widget getList({required String timebankId}) {
     if (timebankModel != null) {
       return listViewWidget;
     }
@@ -140,7 +137,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         if (snapshot.data == null) {
           return listViewWidget;
         }
-        timebankModel = snapshot.data;
+        timebankModel = snapshot.data!;
         return listViewWidget;
       },
     );
@@ -182,7 +179,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   Future<Widget> updateModelIndex(int index) async {
-    UserModel user = indexToModelMap[index];
+    UserModel? user = indexToModelMap[index];
+    if (user == null) {
+      throw Exception('User not found for index: $index');
+    }
 
     return getUserWidget(user, context);
   }
@@ -202,7 +202,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     if (!_isLoading && !_lastReached && nullcount < 3) {
       _isLoading = true;
       var onValue = await FirestoreManager.getUsersForTimebankId(
-          _timebankId, _pageIndex, widget.userEmail);
+          _timebankId ?? '', _pageIndex, widget.userEmail);
       var userModelList = onValue.userModelList;
       if (userModelList == null || userModelList.length == 0) {
         nullcount++;
@@ -215,7 +215,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
               widget.listOfMembers.containsKey(member)) {
-            return getUserWidget(widget.listOfMembers[member], context);
+            final userModel = widget.listOfMembers[member];
+            if (userModel != null) {
+              return getUserWidget(userModel, context);
+            }
           }
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -224,7 +227,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return shimmerWidget;
               }
-              UserModel user = snapshot.data;
+              UserModel user = snapshot.data!;
 
               if (user == null) {
                 return Offstage();
@@ -237,7 +240,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               if (user.email == widget.userEmail) {
                 return Offstage();
               }
-              widget.listOfMembers[user.sevaUserID] = user;
+              widget.listOfMembers[user.sevaUserID ?? ''] = user;
               return getUserWidget(user, context);
             },
           );
@@ -281,13 +284,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     return GestureDetector(
       onTap: () async {
         if (!widget.userSelected.containsKey(user.email)) {
-          widget.userSelected[user.email] = user;
+          widget.userSelected[user.email ?? ''] = user;
           currSelectedState = true;
         } else {
           widget.userSelected.remove(user.email);
           currSelectedState = false;
         }
-        selectedUserModelIndex = emailIndexMap[user.email];
+        selectedUserModelIndex = emailIndexMap[user.email] ?? -1;
         setState(() {
           if (selectedUserModelIndex != -1) {
             updateModelIndex(selectedUserModelIndex).then((onValue) {
@@ -298,15 +301,15 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         });
       },
       child: Card(
-        color: isSelected(user.email) ? Colors.green : Colors.white,
+        color: isSelected(user.email ?? '') ? Colors.green : Colors.white,
         child: ListTile(
           leading: CircleAvatar(
             backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
           ),
           title: Text(
-            user.fullname,
+            user.fullname ?? '',
             style: TextStyle(
-              color: getTextColorForSelectedItem(user.email),
+              color: getTextColorForSelectedItem(user.email ?? ''),
             ),
           ),
           subtitle: Container(),
@@ -329,13 +332,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.subtitle2,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     );
   }
 
   Widget getDataCard({
-    @required String title,
+    required String title,
   }) {
     return Container(
       child: Column(

@@ -22,14 +22,14 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 
 class RecurringEventsList extends StatefulWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
+  final String? timebankId;
+  final TimebankModel? timebankModel;
   final String parentEventId;
 
   RecurringEventsList({
     this.timebankId,
     this.timebankModel,
-    @required this.parentEventId,
+    required this.parentEventId,
   });
 
   @override
@@ -74,7 +74,7 @@ class EventListState extends State<RecurringEventsList> {
                     return LoadingIndicator();
                   default:
                     List<ProjectModel> projectModelList =
-                        projectListSnapshot.data;
+                        projectListSnapshot.data!;
 
                     if (projectModelList.length == 0) {
                       return Center(
@@ -85,6 +85,7 @@ class EventListState extends State<RecurringEventsList> {
                             sub_title: isAdminOrOwner
                                 ? S.of(context).no_content_common_description
                                 : S.of(context).cannot_create_project,
+                            titleFontSize: 16.0,
                           ),
                         ),
                       );
@@ -97,21 +98,21 @@ class EventListState extends State<RecurringEventsList> {
                         ProjectModel project = projectModelList[index];
                         int totalTask = project.completedRequests != null &&
                                 project.pendingRequests != null
-                            ? project.pendingRequests.length +
-                                project.completedRequests.length
+                            ? project.pendingRequests!.length +
+                                project.completedRequests!.length
                             : 0;
 
                         return ProjectsCard(
-                          isRecurring: project.isRecurring,
-                          timestamp: project.createdAt,
-                          startTime: project.startTime,
-                          endTime: project.endTime,
-                          title: project.name,
-                          description: project.description,
-                          photoUrl: project.photoUrl,
-                          location: project.address,
+                          isRecurring: project.isRecurring!,
+                          timestamp: project.createdAt!,
+                          startTime: project.startTime!,
+                          endTime: project.endTime!,
+                          title: project.name!,
+                          description: project.description!,
+                          photoUrl: project.photoUrl!,
+                          location: project.address!,
                           tasks: totalTask,
-                          pendingTask: project.pendingRequests?.length,
+                          pendingTask: project.pendingRequests!.length!,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -121,9 +122,9 @@ class EventListState extends State<RecurringEventsList> {
                                       context),
                                   child: ProjectRequests(
                                     ComingFrom.Projects,
-                                    timebankId: widget.timebankId,
+                                    timebankId: widget.timebankId!,
                                     projectModel: project,
-                                    timebankModel: widget.timebankModel,
+                                    timebankModel: widget.timebankModel!,
                                   ),
                                 ),
                               ),
@@ -142,9 +143,9 @@ class EventListState extends State<RecurringEventsList> {
   }
 
   void navigateToCreateProject() {
-    if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-        !isAccessAvailable(widget.timebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (widget.timebankModel!.id == FlavorConfig.values.timebankId &&
+        !isAccessAvailable(widget.timebankModel!,
+            SevaCore.of(context).loggedInUser.sevaUserID!)) {
       showAdminAccessMessage(context: context);
     } else {
       Navigator.push(
@@ -162,7 +163,7 @@ class EventListState extends State<RecurringEventsList> {
 
   void showProjectsWebPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_${S.of(context).localeName}",
       ),
     );
@@ -175,9 +176,9 @@ class EventListState extends State<RecurringEventsList> {
   }
 }
 
-void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
+void showInfoOfConcept({String? dialogTitle, BuildContext? mContext}) {
   showDialog(
-      context: mContext,
+      context: mContext!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
 //            title: Text(
@@ -192,7 +193,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Text(
-                  dialogTitle,
+                  dialogTitle!,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -201,7 +202,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 S.of(mContext).ok,
                 style: TextStyle(

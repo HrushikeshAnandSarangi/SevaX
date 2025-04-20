@@ -29,10 +29,12 @@ class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
       @required this.isFromtasks});
 
   @override
-  OneToManySpeakerTimeEntryCompleteState createState() => OneToManySpeakerTimeEntryCompleteState();
+  OneToManySpeakerTimeEntryCompleteState createState() =>
+      OneToManySpeakerTimeEntryCompleteState();
 }
 
-class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeEntryComplete> {
+class OneToManySpeakerTimeEntryCompleteState
+    extends State<OneToManySpeakerTimeEntryComplete> {
   int prepTime = 0;
 
   // int speakingTime = 0;
@@ -49,8 +51,10 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
   final _formKey = GlobalKey<DoseFormState>();
 
   TextEditingController hoursController = TextEditingController();
-  TextEditingController selectedHoursPrepTimeController = TextEditingController();
-  TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
+  TextEditingController selectedHoursPrepTimeController =
+      TextEditingController();
+  TextEditingController selectedHoursDeliveryTimeController =
+      TextEditingController();
   FocusNode HoursPrepTimeNode = FocusNode();
 
   @override
@@ -73,7 +77,8 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) => SingleChildScrollView(
+          builder: (BuildContext context, BoxConstraints constraints) =>
+              SingleChildScrollView(
             child: Container(
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width * 0.9,
@@ -96,7 +101,9 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                 width: constraints.maxWidth * 0.7,
                                 child: Text(
                                   S.of(context).speaker_claim_form_field_title,
-                                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500),
+                                  style: TextStyle(
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.w500),
                                   textAlign: TextAlign.left,
                                 ),
                               ),
@@ -112,19 +119,25 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                               children: <Widget>[
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       DoseTextField(
                                         isRequired: true,
-                                        controller: selectedHoursPrepTimeController,
+                                        controller:
+                                            selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
                                         focusNode: HoursPrepTimeNode,
-                                        formatters: [FilteringTextInputFormatter.digitsOnly],
+                                        formatters: [
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
                                         decoration: InputDecoration(
                                           //errorText: S.of(context).enter_hours,
-                                          contentPadding: EdgeInsets.only(bottom: 5),
-                                          hintText:
-                                              S.of(context).speaker_claim_form_field_title_hint,
+                                          contentPadding:
+                                              EdgeInsets.only(bottom: 5),
+                                          hintText: S
+                                              .of(context)
+                                              .speaker_claim_form_field_title_hint,
                                           hintStyle: TextStyle(fontSize: 13),
                                         ),
                                         validator: (value) {
@@ -271,23 +284,29 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                       return AlertDialog(
                                         title: Text(S.of(context).loading),
                                         content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+                                          backgroundColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.5),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                        ),
                                       );
                                     });
 
                                 //store form input to map in requestModel
-                                requestModel.selectedSpeakerTimeDetails.prepTime = prepTime;
+                                requestModel.selectedSpeakerTimeDetails
+                                    .prepTime = prepTime;
                                 // requestModel.selectedSpeakerTimeDetails
                                 //     .speakingTime = speakingTime;
 
                                 Set<String> approvedUsersList =
                                     Set.from(requestModel.approvedUsers);
-                                approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
-                                requestModel.approvedUsers = approvedUsersList.toList();
+                                approvedUsersList.add(
+                                    SevaCore.of(context).loggedInUser.email);
+                                requestModel.approvedUsers =
+                                    approvedUsersList.toList();
 
                                 await CollectionRef.requests
                                     .doc(requestModel.id)
@@ -295,7 +314,8 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
 
                                 //Navigator.of(creditRequestDialogContext).pop();
 
-                                Navigator.of(dialogContext).pop(); //this is to pop loader
+                                Navigator.of(dialogContext)
+                                    .pop(); //this is to pop loader
 
                                 widget.onFinish();
 
@@ -303,7 +323,9 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                   await FirestoreManager
                                       .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
                                           requestModel: requestModel,
-                                          userEmail: SevaCore.of(context).loggedInUser.email,
+                                          userEmail: SevaCore.of(context)
+                                              .loggedInUser
+                                              .email,
                                           fromNotification: false);
 
                                   // Navigator.of(context).pop();
@@ -318,7 +340,9 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                             },
                             child: Text(
                               S.of(context).accept,
-                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -331,9 +355,13 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                           child: CustomElevatedButton(
                             onPressed: () {
                               ParticipantInfo sender = ParticipantInfo(
-                                id: SevaCore.of(context).loggedInUser.sevaUserID,
-                                name: SevaCore.of(context).loggedInUser.fullname,
-                                photoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                                id: SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID,
+                                name:
+                                    SevaCore.of(context).loggedInUser.fullname,
+                                photoUrl:
+                                    SevaCore.of(context).loggedInUser.photoURL,
                                 type: ChatType.TYPE_PERSONAL,
                               );
 
@@ -347,7 +375,9 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                               createAndOpenChat(
                                 isTimebankMessage: true,
                                 context: context,
-                                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                                communityId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
                                 timebankId: requestModel.timebankId,
                                 sender: sender,
                                 reciever: reciever,
@@ -360,7 +390,9 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                             },
                             child: Text(
                               S.of(context).message,
-                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -389,11 +421,11 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
           return AlertDialog(
             title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -470,5 +502,4 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
 // Navigator.of(context).pop();
 // }
 //}
-
 }

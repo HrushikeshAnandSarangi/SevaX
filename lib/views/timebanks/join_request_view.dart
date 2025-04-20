@@ -14,7 +14,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../flavor_config.dart';
 
 class JoinRequestView extends StatefulWidget {
-  final String timebankId;
+  final String? timebankId;
   JoinRequestView({this.timebankId});
   JoinRequestViewState createState() => JoinRequestViewState();
 }
@@ -22,7 +22,7 @@ class JoinRequestView extends StatefulWidget {
 class JoinRequestViewState extends State<JoinRequestView>
     with SingleTickerProviderStateMixin {
   static bool isAdminOrCoordinator = false;
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class JoinRequestViewState extends State<JoinRequestView>
         children: [
           TimebankRequests(
             parentContext: context,
-            timebankId: widget.timebankId,
+            timebankId: widget.timebankId!,
           ),
           CampaignRequests(
             parentContext: context,
@@ -71,14 +71,14 @@ class JoinRequestViewState extends State<JoinRequestView>
 }
 
 class TimebankRequests extends StatelessWidget {
-  final BuildContext parentContext;
-  final String timebankId;
+  final BuildContext? parentContext;
+  final String? timebankId;
   TimebankRequests({this.parentContext, this.timebankId});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return StreamBuilder<Object>(
-        stream: getTimebankJoinRequest(timebankID: timebankId),
+        stream: getTimebankJoinRequest(timebankID: timebankId!),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -87,7 +87,8 @@ class TimebankRequests extends StatelessWidget {
             return LoadingIndicator();
           }
 
-          List<JoinRequestModel> joinrequestModelList = snapshot.data;
+          List<JoinRequestModel> joinrequestModelList =
+              snapshot.data as List<JoinRequestModel>;
 
           if (joinrequestModelList.length == 0) {
             return Center(child: Text(S.of(context).no_pending_join_request));
@@ -97,8 +98,8 @@ class TimebankRequests extends StatelessWidget {
               itemCount: joinrequestModelList.length,
               itemBuilder: (listContext, index) {
                 JoinRequestModel model = joinrequestModelList[index];
-                return FutureBuilder<Object>(
-                    future: getTimeBankForId(timebankId: model.entityId),
+                return FutureBuilder<TimebankModel?>(
+                    future: getTimeBankForId(timebankId: model.entityId!),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
@@ -106,13 +107,22 @@ class TimebankRequests extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return LoadingIndicator();
                       }
-                      TimebankModel timebankModel = snapshot.data;
+                      TimebankModel? timebankModel =
+                          snapshot.data as TimebankModel?;
+                      if (timebankModel == null) {
+                        return Text('Timebank not found');
+                      }
                       return Slidable(
-                        actionPane: SlidableBehindActionPane(),
-                        actions: <Widget>[],
-                        secondaryActions: <Widget>[],
+                        endActionPane: ActionPane(
+                          motion: BehindMotion(),
+                          children: [],
+                        ),
+                        startActionPane: ActionPane(
+                          motion: BehindMotion(),
+                          children: [],
+                        ),
                         child: FutureBuilder<Object>(
-                            future: getUserForId(sevaUserId: model.userId),
+                            future: getUserForId(sevaUserId: model.userId!),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
@@ -121,20 +131,20 @@ class TimebankRequests extends StatelessWidget {
                                   ConnectionState.waiting) {
                                 return Center(child: notificationShimmer);
                               }
-                              UserModel userModel = snapshot.data;
+                              UserModel userModel = snapshot.data as UserModel;
 
                               return Container(
                                 margin: EdgeInsets.all(2),
                                 decoration: notificationDecoration,
                                 child: ListTile(
-                                  title: Text(userModel.fullname),
+                                  title: Text(userModel.fullname!),
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         userModel.photoURL ??
                                             defaultUserImageURL),
                                   ),
                                   subtitle: Text(
-                                     S.of(context).reason +':${model.reason}',
+                                    S.of(context).reason + ':${model.reason}',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -155,13 +165,13 @@ class TimebankRequests extends StatelessWidget {
   }
 
   void showDialogForApproval({
-    BuildContext context,
-    UserModel userModel,
-    JoinRequestModel model,
-    TimebankModel timebankModel,
+    BuildContext? context,
+    UserModel? userModel,
+    JoinRequestModel? model,
+    TimebankModel? timebankModel,
   }) {
     showDialog(
-        context: context,
+        context: context!,
         builder: (BuildContext viewContext) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
@@ -177,7 +187,7 @@ class TimebankRequests extends StatelessWidget {
                     width: 70,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        userModel.photoURL ?? defaultUserImageURL,
+                        userModel!.photoURL ?? defaultUserImageURL,
                       ),
                     ),
                   ),
@@ -187,7 +197,7 @@ class TimebankRequests extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(4.0),
                     child: Text(
-                      userModel.fullname,
+                      userModel.fullname!,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -198,7 +208,7 @@ class TimebankRequests extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                       S.of(context).about +" ${userModel.fullname}",
+                        S.of(context).about + " ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -217,7 +227,7 @@ class TimebankRequests extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                    child: Text(model.reason),
+                    child: Text(model!.reason!),
                   ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
@@ -227,17 +237,23 @@ class TimebankRequests extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).allow,
                           style: TextStyle(color: Colors.white),
                         ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        color: Theme.of(context).colorScheme.secondary,
                         onPressed: () async {
                           // Once approved
-                          List<String> members = timebankModel.members;
+                          List<String> members = timebankModel!.members;
                           Set<String> usersSet = members.toSet();
 
-                          usersSet.add(model.userId);
+                          usersSet.add(model.userId!);
                           timebankModel.members = usersSet.toList();
                           model.accepted = true;
                           await updateJoinRequest(model: model);
@@ -245,18 +261,20 @@ class TimebankRequests extends StatelessWidget {
                           Navigator.pop(viewContext);
                         },
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(4.0),
-                      ),
                       CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).reject,
                           style: TextStyle(color: Colors.white),
                         ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        color: Theme.of(context).colorScheme.secondary,
                         onPressed: () async {
                           // request declined
-
                           model.accepted = false;
                           await updateJoinRequest(model: model);
                           Navigator.pop(viewContext);
@@ -301,9 +319,9 @@ class TimebankRequests extends StatelessWidget {
 
   Widget getBio(BuildContext context, UserModel userModel) {
     if (userModel.bio != null) {
-      if (userModel.bio.length < 100) {
+      if (userModel.bio!.length < 100) {
         return Center(
-          child: Text(userModel.bio),
+          child: Text(userModel.bio!),
         );
       }
       return Container(
@@ -311,7 +329,7 @@ class TimebankRequests extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
-            userModel.bio,
+            userModel!.bio!,
             maxLines: null,
             overflow: null,
             textAlign: TextAlign.center,
@@ -371,7 +389,7 @@ class TimebankRequests extends StatelessWidget {
 
 class CampaignRequests extends StatelessWidget {
   final BuildContext parentContext;
-  CampaignRequests({this.parentContext});
+  CampaignRequests({required this.parentContext});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

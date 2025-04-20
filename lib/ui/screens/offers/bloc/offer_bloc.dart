@@ -14,8 +14,10 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class OfferBloc extends BlocBase {
   final _participants = BehaviorSubject<List<OfferParticipantsModel>>();
-  final _completedParticipants = BehaviorSubject<List<TimeOfferParticipantsModel>>();
-  final _timeOfferParticipants = BehaviorSubject<List<TimeOfferParticipantsModel>>();
+  final _completedParticipants =
+      BehaviorSubject<List<TimeOfferParticipantsModel>>();
+  final _timeOfferParticipants =
+      BehaviorSubject<List<TimeOfferParticipantsModel>>();
   final _totalEarnings = BehaviorSubject<num>.seeded(0.0);
 
   OfferModel offerModel;
@@ -38,7 +40,8 @@ class OfferBloc extends BlocBase {
         .listen((QuerySnapshot snap) {
       List<OfferParticipantsModel> offer = [];
       snap.docs.forEach((DocumentSnapshot doc) {
-        OfferParticipantsModel model = OfferParticipantsModel.fromJson(doc.data());
+        OfferParticipantsModel model =
+            OfferParticipantsModel.fromJson(doc.data());
         model.id = doc.id;
         offer.add(model);
       });
@@ -50,23 +53,26 @@ class OfferBloc extends BlocBase {
         .collection("offerAcceptors")
         .snapshots()
         .listen((QuerySnapshot snap) async {
-
       List<TransactionModel> completedParticipantsTransactions =
-          await getCompletedMembersTransaction(associatedOfferId: offerModel.id);
+          await getCompletedMembersTransaction(
+              associatedOfferId: offerModel.id);
 
       List<TimeOfferParticipantsModel> offer = [];
       List<TimeOfferParticipantsModel> completedParticipants = [];
       _totalEarnings.value = 0;
 
       for (int i = 0; i < snap.docs.length; i++) {
-        TimeOfferParticipantsModel model = TimeOfferParticipantsModel.fromJSON(snap.docs[i].data());
+        TimeOfferParticipantsModel model =
+            TimeOfferParticipantsModel.fromJSON(snap.docs[i].data());
         offer.add(model);
 
         for (int j = 0; j < completedParticipantsTransactions.length; j++) {
-          if (completedParticipantsTransactions[j].from == model.participantDetails.sevauserid ||
+          if (completedParticipantsTransactions[j].from ==
+                  model.participantDetails.sevauserid ||
               completedParticipantsTransactions[j].from == model.timebankId) {
             completedParticipants.add(model);
-            _totalEarnings.value += completedParticipantsTransactions[j].credits;
+            _totalEarnings.value +=
+                completedParticipantsTransactions[j].credits;
             completedParticipantsTransactions.removeAt(j);
           }
         }
@@ -81,7 +87,10 @@ class OfferBloc extends BlocBase {
   }) async {
     var completedParticipants = <TransactionModel>[];
 
-    await CollectionRef.transactions.where('offerId', isEqualTo: associatedOfferId).get().then(
+    await CollectionRef.transactions
+        .where('offerId', isEqualTo: associatedOfferId)
+        .get()
+        .then(
           (value) => {
             logger.i(" >>>>>>>> " + value.docs.length.toString()),
             value.docs.forEach((map) {
@@ -89,7 +98,6 @@ class OfferBloc extends BlocBase {
               completedParticipants.add(model);
             })
           },
-          
         );
     return completedParticipants;
   }
@@ -103,13 +111,18 @@ class OfferBloc extends BlocBase {
     if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
       ref.update(
         {
-          "status": ParticipantStatus.NO_ACTION_FROM_CREATOR.toString().split('.')[1],
+          "status":
+              ParticipantStatus.NO_ACTION_FROM_CREATOR.toString().split('.')[1],
         },
       );
     }
     if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
       ref.update(
-        {"status": ParticipantStatus.CREATOR_REQUESTED_CREDITS.toString().split('.')[1]},
+        {
+          "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
+              .toString()
+              .split('.')[1]
+        },
       );
     }
 
@@ -132,11 +145,16 @@ class OfferBloc extends BlocBase {
     var batch = CollectionRef.batch;
 
     batch.update(
-        CollectionRef.offers.doc(offerId).collection("offerAcceptors").doc(acceptorDocumentId),
+        CollectionRef.offers
+            .doc(offerId)
+            .collection("offerAcceptors")
+            .doc(acceptorDocumentId),
         {"status": action.readable});
 
-    batch
-        .delete(CollectionRef.users.doc(hostEmail).collection('notifications').doc(notificationId));
+    batch.delete(CollectionRef.users
+        .doc(hostEmail)
+        .collection('notifications')
+        .doc(notificationId));
 
     batch.commit();
   }

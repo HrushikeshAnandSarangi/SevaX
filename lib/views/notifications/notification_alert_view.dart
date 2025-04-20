@@ -19,19 +19,20 @@ class NotificationAlert extends StatefulWidget {
 
 class _NotificationAlertState extends State<NotificationAlert> {
   bool isTurnedOn = false;
-  Stream settingsStreamer;
-  Map<dynamic, dynamic> notificationSetting;
+  Stream<UserModel>? settingsStreamer;
+  Map<dynamic, dynamic>? notificationSetting;
   @override
   void initState() {
     super.initState();
     settingsStreamer =
-        FirestoreManager.getUserDetails(userId: widget.sevaUserId);
+        FirestoreManager.getUserDetails(userId: widget.sevaUserId)
+            as Stream<UserModel>;
   }
 
   bool getCurrentStatus(String key) {
     if (notificationSetting != null) {
-      return notificationSetting.containsKey(key)
-          ? notificationSetting[key]
+      return notificationSetting!.containsKey(key)
+          ? notificationSetting![key]
           : true;
     } else {
       return true;
@@ -53,12 +54,12 @@ class _NotificationAlertState extends State<NotificationAlert> {
         ),
       ),
       body: StreamBuilder<UserModel>(
-          stream: settingsStreamer,
+          stream: settingsStreamer!,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return LoadingIndicator();
             }
-            notificationSetting = snapshot.data.notificationSetting;
+            notificationSetting = snapshot.data!.notificationSetting;
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +69,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).request_accepted,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'RequestAccept',
                         status: status,
                       );
@@ -80,7 +81,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).request_completed,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'RequestCompleted',
                         status: status,
                       );
@@ -92,7 +93,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).offer_debit,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'TYPE_DEBIT_FROM_OFFER',
                         status: status,
                       );
@@ -104,7 +105,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).recieved_credits_one_to_many,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType:
                             'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK',
                         status: status,
@@ -118,7 +119,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).feedback_one_to_many_offer,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'TYPE_FEEDBACK_FROM_SIGNUP_MEMBER',
                         status: status,
                       );
@@ -130,7 +131,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).promotion_to_admin_from_member,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'MEMBER_PROMOTED_AS_ADMIN',
                         status: status,
                       );
@@ -142,7 +143,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: S.of(context).demotion_from_admin_to_member,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'MEMBER_DEMOTED_FROM_ADMIN',
                         status: status,
                       );
@@ -156,7 +157,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: "${S.of(context).notification_for_new_messages}.",
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'TYPE_MESSAGING_NOTIFICATION',
                         status: status,
                       );
@@ -170,7 +171,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     title: "${S.of(context).feeds_notification_text}",
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userEmail: SevaCore.of(context).loggedInUser.email!,
                         notificationType: 'TYPE_FEEDS_NOTIFICATION',
                         status: status,
                       );

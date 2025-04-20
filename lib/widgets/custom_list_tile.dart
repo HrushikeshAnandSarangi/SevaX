@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
-  final Widget title;
-  final Widget leading;
-  final Widget subtitle;
-  final Widget trailing;
+  final Widget? title;
+  final Widget? leading;
+  final Widget? subtitle;
+  final Widget? trailing;
 
   CustomListTile({
-    Key key,
+    Key? key,
     this.title,
     this.leading,
     this.subtitle,

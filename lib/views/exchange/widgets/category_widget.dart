@@ -1,140 +1,170 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 
 class CategoryWidget extends StatefulWidget {
   final RequestModel requestModel;
   final VoidCallback onDone;
-  List<CategoryModel> selectedCategoryModels;
-  String categoryMode;
+  final List<CategoryModel> initialSelectedCategories;
+  final String initialCategoryMode;
 
-
-  CategoryWidget({this.requestModel, this.onDone, this.selectedCategoryModels, this.categoryMode});
+  const CategoryWidget({
+    Key? key,
+    required this.requestModel,
+    required this.onDone,
+    required this.initialSelectedCategories,
+    required this.initialCategoryMode,
+  }) : super(key: key);
 
   @override
   _CategoryWidgetState createState() => _CategoryWidgetState();
 }
 
 class _CategoryWidgetState extends State<CategoryWidget> {
-  List<String> selectedCategoryIds = [];
-  List<Widget> _buildselectedSubCategories() {
-    List<CategoryModel> subCategories = [];
-    subCategories = widget.selectedCategoryModels;
-    log('lll l ${subCategories.length}');
-    subCategories.forEach((item) {});
-    final ids = subCategories.map((e) => e.typeId).toSet();
-    subCategories.retainWhere((x) => ids.remove(x.typeId));
-    log('lll after ${subCategories.length}');
+  late List<CategoryModel> selectedCategories;
+  late String categoryMode;
+  late List<String> selectedCategoryIds;
 
-    List<Widget> selectedSubCategories = [];
-    selectedCategoryIds.clear();
-    subCategories.forEach((item) {
-      selectedCategoryIds.add(item.typeId);
-      selectedSubCategories.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 7, bottom: 7),
-          child: Container(
-            height: 35,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("${item.getCategoryName(context).toString()}",
-                      style: TextStyle(color: Colors.white)),
-                  SizedBox(width: 3),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedCategoryIds.remove(item.typeId);
-                        selectedSubCategories.remove(item.typeId);
-                        subCategories.removeWhere((category) => category.typeId == item.typeId);
-                        widget.requestModel.categories = selectedCategoryIds;
-                      });
-                    },
-                    child: Icon(Icons.cancel_rounded, color: Colors.grey[100], size: 28),
+  @override
+  void initState() {
+    super.initState();
+    selectedCategories = List.from(widget.initialSelectedCategories);
+    categoryMode = widget.initialCategoryMode;
+    selectedCategoryIds =
+        selectedCategories.map((e) => e.typeId).whereType<String>().toList();
+    _syncWithRequestModel();
+  }
+
+  void _syncWithRequestModel() {
+    widget.requestModel.categories = selectedCategoryIds;
+  }
+
+  List<Widget> _buildSelectedSubCategories() {
+    final uniqueCategories = selectedCategories
+        .fold<Map<String, CategoryModel>>(
+          {},
+          (map, category) {
+            final key = category.typeId;
+            if (key != null) map.putIfAbsent(key, () => category);
+            return map;
+          },
+        )
+        .values
+        .toList();
+
+    return uniqueCategories.map((item) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 7, bottom: 7),
+        child: Container(
+          height: 35,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: Theme.of(context).primaryColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  item.getCategoryName(context),
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(width: 3),
+                InkWell(
+                  onTap: () => _removeCategory(item),
+                  child: Icon(
+                    Icons.cancel_rounded,
+                    color: Colors.grey[100],
+                    size: 28,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       );
-    });
-    return selectedSubCategories;
+    }).toList();
   }
 
-  // Navigat to Category class and geting data from the class
-  void moveToCategory() async {
-    var category = await Navigator.push(
+  void _removeCategory(CategoryModel item) {
+    if (item.typeId == null || !selectedCategoryIds.contains(item.typeId))
+      return;
+
+    setState(() {
+      selectedCategories
+          .removeWhere((category) => category.typeId == item.typeId);
+      selectedCategoryIds =
+          selectedCategories.map((e) => e.typeId).whereType<String>().toList();
+      _syncWithRequestModel();
+    });
+
+    widget.onDone();
+  }
+
+  Future<void> _navigateToCategorySelection() async {
+    final result = await Navigator.push<List<dynamic>>(
       context,
       MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (context) => Category(selectedSubCategoriesids: selectedCategoryIds)),
+        fullscreenDialog: true,
+        builder: (context) => Category(
+          selectedSubCategoriesids: selectedCategoryIds,
+        ),
+      ),
     );
-    if (category != null) {
-      widget.categoryMode = category[0];
-      widget.selectedCategoryModels = await updateInformation(category[1]);
-      widget.requestModel.categories =selectedCategoryIds ;
-      setState(() {});
+
+    if (result != null &&
+        result.length == 2 &&
+        result[0] is String &&
+        result[1] is List<CategoryModel>) {
+      setState(() {
+        categoryMode = result[0] as String;
+        selectedCategories = result[1] as List<CategoryModel>;
+        selectedCategoryIds = selectedCategories
+            .map((e) => e.typeId)
+            .whereType<String>()
+            .toList();
+        _syncWithRequestModel();
+      });
+
+      widget.onDone();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // logger.d("LENGTH ${widget.selectedCategoryModels.length}");
     return InkWell(
+      onTap: _navigateToCategorySelection,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              widget.categoryMode == null
-                  ? Text(
-                      S.of(context).choose_category,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
-                  : Text(
-                      "${widget.categoryMode}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 16,
+              Text(
+                categoryMode.isNotEmpty
+                    ? categoryMode
+                    : S.of(context).choose_category,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
               ),
+              const Spacer(),
+              const Icon(Icons.arrow_forward_ios_outlined, size: 16),
             ],
           ),
-          SizedBox(height: 20),
-          widget.selectedCategoryModels != null && widget.selectedCategoryModels.length > 0
-              ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(),
-                )
-              : Container(),
+          const SizedBox(height: 20),
+          if (selectedCategories.isNotEmpty)
+            Wrap(
+              alignment: WrapAlignment.start,
+              children: _buildSelectedSubCategories(),
+            ),
         ],
       ),
-      onTap: () => moveToCategory(),
     );
   }
 }

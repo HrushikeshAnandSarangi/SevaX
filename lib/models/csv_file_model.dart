@@ -1,12 +1,12 @@
 import 'package:sevaexchange/models/data_model.dart';
 
 class CsvFileModel extends DataModel {
-  String csvTitle;
-  String timebankId;
-  String csvUrl;
-  String sevaUserId;
-  String communityId;
-  int timestamp;
+  String? csvTitle;
+  String? timebankId;
+  String? csvUrl;
+  String? sevaUserId;
+  String? communityId;
+  int? timestamp;
 
   CsvFileModel(
       {this.timebankId,
@@ -45,23 +45,23 @@ class CsvFileModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
-    if (this.timebankId != null && this.timebankId.isNotEmpty) {
+    if (this.timebankId != null && this.timebankId?.isNotEmpty == true) {
       object['timebankId'] = this.timebankId;
     }
 
-    if (this.csvTitle != null && this.csvTitle.isNotEmpty) {
+    if (this.csvTitle != null && this.csvTitle?.isNotEmpty == true) {
       object['csvTitle'] = this.csvTitle;
     }
 
-    if (this.csvUrl != null && this.csvUrl.isNotEmpty) {
+    if (this.csvUrl != null && this.csvUrl?.isNotEmpty == true) {
       object['csvUrl'] = this.csvUrl;
     }
 
-    if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
+    if (this.sevaUserId != null && this.sevaUserId?.isNotEmpty == true) {
       object['sevaUserId'] = this.sevaUserId;
     }
 
-    if (this.communityId != null && this.communityId.isNotEmpty) {
+    if (this.communityId != null && this.communityId?.isNotEmpty == true) {
       object['communityId'] = this.communityId;
     }
 

@@ -1,8 +1,8 @@
 class ReviewModel {
-  double ratings;
-  String req_Id;
-  String comments;
-  String user_id;
+  double? ratings;
+  String? req_Id;
+  String? comments;
+  String? user_id;
 
   String toString() {
     return "Ratings ${ratings} \n" +

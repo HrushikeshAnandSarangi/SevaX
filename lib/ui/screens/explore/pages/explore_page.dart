@@ -46,7 +46,7 @@ import '../../../../new_baseline/models/community_model.dart';
 class ExplorePage extends StatefulWidget {
   final bool isUserSignedIn;
 
-  const ExplorePage({Key key, @required this.isUserSignedIn}) : super(key: key);
+  const ExplorePage({Key? key, required this.isUserSignedIn}) : super(key: key);
 
   @override
   _ExplorePageState createState() => _ExplorePageState();
@@ -83,7 +83,7 @@ List findCardsData = [
 class _ExplorePageState extends State<ExplorePage> {
   TextEditingController _searchController = TextEditingController();
   ExplorePageBloc _exploreBloc = ExplorePageBloc();
-  FindCommunitiesBloc _bloc;
+  FindCommunitiesBloc? _bloc;
 
   bool seeAllBool = false;
   int seeAllSliceVal = 4;
@@ -91,7 +91,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   bool dataLoaded = false;
 
-  GeoPoint geoPoint;
+  GeoPoint? geoPoint;
 
   void initState() {
     super.initState();
@@ -104,7 +104,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 _exploreBloc.load(
                     isUserLoggedIn: widget.isUserSignedIn,
                     sevaUserID: widget.isUserSignedIn
-                        ? SevaCore.of(context).loggedInUser.sevaUserID
+                        ? SevaCore.of(context!).loggedInUser.sevaUserID!
                         : '',
                     context: context),
               });
@@ -117,8 +117,8 @@ class _ExplorePageState extends State<ExplorePage> {
             setState(() {});
           });
         }
-        _bloc.init(
-          SevaCore.of(context)?.loggedInUser?.nearBySettings,
+        _bloc?.init(
+          SevaCore.of(context).loggedInUser.nearBySettings!,
         );
       });
     });
@@ -164,7 +164,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       height: 40,
                       child: TextField(
                         controller: _searchController,
-                        onChanged: _bloc.onSearchChange,
+                        onChanged: _bloc!.onSearchChange,
                         decoration: InputDecoration(
                           hintText: S.of(context).explore_search_hint,
                           hintStyle: TextStyle(
@@ -354,7 +354,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           }
                           if (snapshot.hasError ||
                               snapshot.data == null ||
-                              snapshot.data.isEmpty) {
+                              snapshot.data!.isEmpty) {
                             return Container();
                           }
                           return Column(
@@ -371,7 +371,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     ),
                                   ),
                                   SeeAllButton(
-                                    hideButton: snapshot.data.length < 6,
+                                    hideButton: snapshot.data!.length < 6,
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
@@ -393,17 +393,17 @@ class _ExplorePageState extends State<ExplorePage> {
                                 height: 255,
                                 child: ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: snapshot.data.length,
+                                  itemCount: snapshot.data!.length,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
                                     ProjectModel projectModel =
-                                        snapshot.data[index];
-                                    String landMark = projectModel.address;
+                                        snapshot.data![index];
+                                    String landMark = projectModel.address!;
 
                                     if (projectModel.address != null &&
-                                        projectModel.address.contains(',')) {
+                                        projectModel.address!.contains(',')) {
                                       List<String> x =
-                                          projectModel.address.split(',');
+                                          projectModel.address!.split(',');
                                       landMark = x[x.length > 3
                                           ? x.length - 3
                                           : x.length - 1];
@@ -411,15 +411,15 @@ class _ExplorePageState extends State<ExplorePage> {
                                     String formattedStartTime =
                                         getStartDateFormat(
                                             DateTime.fromMillisecondsSinceEpoch(
-                                                projectModel.startTime),
-                                            context: context);
+                                                projectModel.startTime!));
                                     return Row(
                                       children: [
                                         widget.isUserSignedIn
-                                            ? FutureBuilder<TimebankModel>(
+                                            ? FutureBuilder<TimebankModel?>(
                                                 future: getTimeBankForId(
                                                     timebankId: projectModel
-                                                        .timebankId),
+                                                            .timebankId ??
+                                                        ''),
                                                 builder: (context, snapshot) {
                                                   if (snapshot
                                                           .connectionState ==
@@ -437,7 +437,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     eventStartDate:
                                                         formattedStartTime,
                                                     userIds: projectModel
-                                                        .associatedmembers.keys
+                                                        .associatedmembers!.keys
                                                         .toList(),
                                                     imageUrl: projectModel
                                                             .photoUrl ??
@@ -447,7 +447,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                         '',
                                                     city: landMark ?? '',
                                                     description:
-                                                        projectModel.name,
+                                                        projectModel.name!,
                                                     onTap: () {
                                                       Navigator.push(context,
                                                           MaterialPageRoute(
@@ -455,13 +455,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                                                   (context) {
                                                         return ProjectRequests(
                                                           ComingFrom.Projects,
-                                                          timebankId:
-                                                              projectModel
-                                                                  .timebankId,
+                                                          timebankId: projectModel
+                                                                  .timebankId ??
+                                                              '',
                                                           projectModel:
                                                               projectModel,
                                                           timebankModel:
-                                                              snapshot.data,
+                                                              snapshot.data!,
                                                         );
                                                       }));
                                                     },
@@ -471,7 +471,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 eventStartDate:
                                                     formattedStartTime,
                                                 userIds: projectModel
-                                                    .associatedmembers.keys
+                                                    .associatedmembers!.keys
                                                     .toList(),
                                                 imageUrl:
                                                     projectModel.photoUrl ??
@@ -480,7 +480,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                         .communityName ??
                                                     '',
                                                 city: landMark ?? '',
-                                                description: projectModel.name,
+                                                description: projectModel.name!,
                                                 onTap: () {
                                                   showSignInAlertMessage(
                                                       context: context,
@@ -522,7 +522,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       }
                       if (snapshot.hasError ||
                           snapshot.data == null ||
-                          snapshot.data.isEmpty) {
+                          snapshot.data!.isEmpty) {
                         return Container();
                       }
                       return Column(
@@ -540,7 +540,7 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                               // requestList.length > 4
                               SeeAllButton(
-                                hideButton: snapshot.data.length < 6,
+                                hideButton: snapshot.data!.length < 6,
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -559,31 +559,31 @@ class _ExplorePageState extends State<ExplorePage> {
                             height: 260,
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: snapshot.data.length > 6
+                              itemCount: (snapshot.data?.length ?? 0) > 6
                                   ? 6
-                                  : snapshot.data.length,
+                                  : (snapshot.data?.length ?? 0),
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                RequestModel model = snapshot.data[index];
-                                String landMark = model.address;
+                                final model = snapshot.data![index];
+                                String? landMark = model.address;
 
                                 if (model.address != null &&
-                                    model.address.contains(',')) {
-                                  List<String> x = model.address.split(',');
+                                    model.address!.contains(',')) {
+                                  List<String> x = model.address!.split(',');
                                   landMark = x[x.length > 3
                                       ? x.length - 3
                                       : x.length - 1];
                                 }
                                 String formattedStartTime = getStartDateFormat(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                        model.requestStart),
-                                    context: context);
+                                        model.requestStart ?? 0));
                                 return Row(
                                   children: [
                                     widget.isUserSignedIn
-                                        ? FutureBuilder<TimebankModel>(
+                                        ? FutureBuilder<TimebankModel?>(
                                             future: getTimeBankForId(
-                                                timebankId: model.timebankId),
+                                                timebankId:
+                                                    model.timebankId ?? ''),
                                             builder: (context, snapshot) {
                                               if (snapshot.connectionState ==
                                                   ConnectionState.waiting) {
@@ -603,17 +603,17 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 communityName:
                                                     model.communityName ?? '',
                                                 city: landMark ?? '',
-                                                description: model.title,
+                                                description: model.title ?? '',
                                                 onTap: () {
                                                   if (model.sevaUserId ==
                                                           SevaCore.of(context)
                                                               .loggedInUser
                                                               .sevaUserID ||
                                                       isAccessAvailable(
-                                                          snapshot.data,
+                                                          snapshot.data!,
                                                           SevaCore.of(context)
                                                               .loggedInUser
-                                                              .sevaUserID)) {
+                                                              .sevaUserID!)) {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -626,8 +626,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                               RequestTabHolder(
                                                             communityModel: BlocProvider
                                                                     .of<HomeDashBoardBloc>(
-                                                                        context)
-                                                                .selectedCommunityModel,
+                                                                        context)!
+                                                                .selectedCommunityModel!,
                                                             isAdmin: true,
                                                           ),
                                                         ),
@@ -646,7 +646,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                               RequestDetailsAboutPage(
                                                             requestItem: model,
                                                             timebankModel:
-                                                                snapshot.data,
+                                                                snapshot.data!,
                                                             isAdmin: false,
                                                             //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                                                           ),
@@ -655,7 +655,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     );
                                                   }
                                                 },
-                                                userIds: model.approvedUsers,
+                                                userIds:
+                                                    model.approvedUsers ?? [],
                                               );
                                             })
                                         : ExploreRequestsCard(
@@ -706,7 +707,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     }
                     if (snapshot.hasError ||
                         snapshot.data == null ||
-                        snapshot.data.isEmpty) {
+                        snapshot.data!.isEmpty) {
                       return Container();
                     }
                     return Column(
@@ -723,7 +724,7 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                             ),
                             SeeAllButton(
-                              hideButton: snapshot.data.length < 6,
+                              hideButton: snapshot.data!.length < 6,
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -743,31 +744,31 @@ class _ExplorePageState extends State<ExplorePage> {
                           height: 290,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: snapshot.data.length > 6
+                            itemCount: snapshot.data!.length > 6
                                 ? 6
-                                : snapshot.data.length,
+                                : snapshot.data!.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              OfferModel offer = snapshot.data[index];
-                              String landMark = offer.selectedAdrress;
+                              final offer = snapshot.data![index];
+                              String? landMark = offer.selectedAdrress;
 
                               if (offer.selectedAdrress != null &&
-                                  offer.selectedAdrress.contains(',')) {
+                                  offer.selectedAdrress!.contains(',')) {
                                 List<String> x =
-                                    offer.selectedAdrress.split(',');
+                                    offer.selectedAdrress!.split(',');
                                 landMark = x[
                                     x.length > 3 ? x.length - 3 : x.length - 1];
                               }
                               String formattedStartTime = getStartDateFormat(
                                   DateTime.fromMillisecondsSinceEpoch(
-                                      offer.timestamp),
-                                  context: context);
+                                      offer.timestamp ?? 0));
                               return Row(
                                 children: [
                                   widget.isUserSignedIn
-                                      ? FutureBuilder<TimebankModel>(
+                                      ? FutureBuilder<TimebankModel?>(
                                           future: getTimeBankForId(
-                                              timebankId: offer.timebankId),
+                                              timebankId:
+                                                  offer.timebankId ?? ''),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.waiting) {
@@ -797,7 +798,6 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   return OfferDetailsRouter(
                                                     offerModel: offer,
                                                     comingFrom: ComingFrom.Home,
-                                                    //TODO : fix the timebank model
                                                   );
                                                 }));
                                               },
@@ -885,14 +885,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                   height: 300,
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: snapshot.data.length,
+                                    itemCount: snapshot.data?.length ?? 0,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
-                                      CommunityModel community =
-                                          snapshot.data[index];
+                                      final community = snapshot.data![index];
                                       return ExploreFeaturedCard(
-                                        imageUrl: community.logo_url,
-                                        communityName: community.name,
+                                        imageUrl: community.logo_url ?? '',
+                                        communityName: community.name ?? '',
                                         onTap: () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
@@ -922,9 +921,12 @@ class _ExplorePageState extends State<ExplorePage> {
                   alignment: Alignment.centerLeft,
                   child: StreamBuilder<List<CommunityModel>>(
                     stream: widget.isUserSignedIn
-                        // ? _bloc.nearyByCommunities
-                        ? Searches.getNearBYCommunities(geoPoint: geoPoint)
-                        : Searches.getNearBYCommunities(geoPoint: geoPoint),
+                        ? (geoPoint != null
+                            ? Searches.getNearBYCommunities(geoPoint: geoPoint!)
+                            : Stream.value([]))
+                        : (geoPoint != null
+                            ? Searches.getNearBYCommunities(geoPoint: geoPoint!)
+                            : Stream.value([])),
                     builder: (context, snapshot) {
                       // ConnectionState.
 
@@ -954,14 +956,18 @@ class _ExplorePageState extends State<ExplorePage> {
                                       builder: (context) =>
                                           CommunityByCategoryView(
                                         isFromNearby: true,
-                                        model: CommunityCategoryModel(),
+                                        model: CommunityCategoryModel(
+                                          id: '',
+                                          logo: '',
+                                          data: {},
+                                        ),
                                         geoPoint: geoPoint,
                                         isUserSignedIn: widget.isUserSignedIn,
                                       ),
                                     ),
                                   );
                                 },
-                                hideButton: snapshot.data.length <= 4,
+                                hideButton: (snapshot.data?.length ?? 0) <= 4,
                               )
                             ],
                           ),
@@ -974,50 +980,51 @@ class _ExplorePageState extends State<ExplorePage> {
                             mainAxisSpacing: 0.2,
                             physics: NeverScrollableScrollPhysics(),
                             children: List.generate(
-                              snapshot.data.length,
+                              snapshot.data?.length ?? 0,
                               (index) {
                                 var status = widget.isUserSignedIn
-                                    ? _bloc.compareUserStatus(
-                                        snapshot.data[index],
+                                    ? _bloc?.compareUserStatus(
+                                        snapshot.data![index],
                                         SevaCore.of(context)
-                                            ?.loggedInUser
-                                            ?.sevaUserID,
+                                            .loggedInUser
+                                            .sevaUserID!,
                                       )
                                     : CompareUserStatus.JOIN;
-                                CommunityModel community = snapshot.data[index];
+                                final community = snapshot.data![index];
                                 return CommunityCard(
-                                  memberIds: community.members.length > 20
-                                      ? community.members.sublist(0, 20)
-                                      : community.members
-                                          .sublist(0, community.members.length),
-                                  imageUrl: community.logo_url,
-                                  name: community.name,
-                                  memberCount:
-                                      community.members.length.toString(),
+                                  memberIds:
+                                      (community.members?.length ?? 0) > 20
+                                          ? community.members!.sublist(0, 20)
+                                          : community.members!.sublist(
+                                              0, community.members!.length),
+                                  imageUrl: community.logo_url ?? '',
+                                  name: community.name ?? '',
+                                  memberCount: (community.members?.length ?? 0)
+                                      .toString(),
                                   buttonLabel:
                                       status == CompareUserStatus.JOINED
                                           ? S.of(context).joined
                                           : S.of(context).info,
-                                  buttonColor:
-                                      status == CompareUserStatus.JOINED
-                                          ? HexColor("#D2D2D2")
-                                          : Theme.of(context).accentColor,
+                                  buttonColor: status ==
+                                          CompareUserStatus.JOINED
+                                      ? HexColor("#D2D2D2")
+                                      : Theme.of(context).colorScheme.secondary,
                                   textColor: Colors.white,
-                                  onbuttonPress:
-                                      status == CompareUserStatus.JOINED
-                                          ? null
-                                          : () {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ExploreCommunityDetails(
-                                                    communityId: community.id,
-                                                    isSignedUser:
-                                                        widget.isUserSignedIn,
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                  onbuttonPress: status ==
+                                          CompareUserStatus.JOINED
+                                      ? null!
+                                      : () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ExploreCommunityDetails(
+                                                communityId: community.id ?? '',
+                                                isSignedUser:
+                                                    widget.isUserSignedIn,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                 );
                               },
                             ),
@@ -1064,19 +1071,20 @@ class _ExplorePageState extends State<ExplorePage> {
 }
 
 class SeeAllButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool hideButton;
 
   const SeeAllButton({
-    Key key,
-    this.onPressed,
-    this.hideButton,
+    Key? key,
+    required this.onPressed,
+    required this.hideButton,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return HideWidget(
       hide: hideButton,
+      secondChild: SizedBox.shrink(),
       child: InkWell(
         child: Row(
           children: [
@@ -1097,14 +1105,18 @@ class SeeAllButton extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
-  SearchBar({Key key, this.hintText, this.onChanged, this.controller})
-      : super(key: key);
+  SearchBar({
+    Key? key,
+    required this.hintText,
+    required this.onChanged,
+    required this.controller,
+  }) : super(key: key);
 
   final String hintText;
   final ValueChanged<String> onChanged;
   final TextEditingController controller;
   final border = OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey[400], width: 0.5),
+    borderSide: BorderSide(color: Colors.grey[400] ?? Colors.grey, width: 0.5),
     borderRadius: BorderRadius.circular(30),
   );
 

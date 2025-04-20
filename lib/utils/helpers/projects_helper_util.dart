@@ -14,15 +14,15 @@ class DBHelper {
 }
 
 class ChatContext extends DataModel {
-  final String chatContext;
-  final String contextId;
+  final String? chatContext;
+  final String? contextId;
 
   ChatContext({this.chatContext, this.contextId});
   @override
   Map<String, String> toMap() {
     return {
-      'chatContext': chatContext,
-      'contextId': contextId,
+      'chatContext': chatContext!,
+      'contextId': contextId!,
     };
   }
 

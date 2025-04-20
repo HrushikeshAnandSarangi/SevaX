@@ -1,4 +1,5 @@
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LocationDataModel {
   String location;
@@ -7,5 +8,5 @@ class LocationDataModel {
 
   LocationDataModel(this.location, this.lat, this.lng);
 
-  GeoFirePoint get geoPoint => GeoFirePoint(lat, lng);
+  GeoFirePoint get geoPoint => GeoFirePoint(GeoPoint(lat, lng));
 }

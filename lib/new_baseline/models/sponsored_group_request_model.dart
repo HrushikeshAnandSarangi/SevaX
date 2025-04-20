@@ -2,16 +2,16 @@ import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class SponsoredGroupModel extends DataModel {
-  String creatorId;
-  String creatorName;
-  String userPhotoUrl;
-  int timestamp;
+  String? creatorId;
+  String? creatorName;
+  String? userPhotoUrl;
+  int? timestamp;
   String id;
-  String timebankTitle;
-  String timebankId;
-  String timebankPhotUrl;
-  String timebankCoverUrl;
-  String notificationId;
+  String? timebankTitle;
+  String? timebankId;
+  String? timebankPhotUrl;
+  String? timebankCoverUrl;
+  String? notificationId;
 
   SponsoredGroupModel({
     this.creatorId,
@@ -23,9 +23,7 @@ class SponsoredGroupModel extends DataModel {
     this.timebankPhotUrl,
     this.timebankCoverUrl,
     this.notificationId,
-  }) {
-    id = utils.Utils.getUuid();
-  }
+  }) : id = utils.Utils.getUuid();
 
   factory SponsoredGroupModel.fromMap(Map<String, dynamic> json) {
     SponsoredGroupModel sponsoredGroupModel = SponsoredGroupModel(

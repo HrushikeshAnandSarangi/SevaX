@@ -6,13 +6,13 @@ class OpenScopeCheckBox extends StatelessWidget {
   final bool isChecked;
   final InfoType infoType;
   final CheckBoxType checkBoxTypeLabel;
-  final ValueChanged<bool> onChangedCB;
+  final ValueChanged<bool?> onChangedCB;
 
   OpenScopeCheckBox(
-      {this.isChecked,
-      @required this.infoType,
-      @required this.checkBoxTypeLabel,
-      @required this.onChangedCB});
+      {required this.isChecked,
+      required this.infoType,
+      required this.checkBoxTypeLabel,
+      required this.onChangedCB});
 
   @override
   Widget build(BuildContext context) {

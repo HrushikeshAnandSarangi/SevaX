@@ -14,7 +14,7 @@ class CompletedList extends StatefulWidget {
 class _CompletedListState extends State<CompletedList> {
   List<TasksCardWrapper> completedTasks = [];
 
-  Stream<Object> requestStream;
+  Stream<Object>? requestStream;
 
   @override
   void didChangeDependencies() {
@@ -23,12 +23,13 @@ class _CompletedListState extends State<CompletedList> {
       loggedinMemberEmail: SevaCore.of(context).loggedInUser.email,
       loggedInmemberId: SevaCore.of(context).loggedInUser.sevaUserID,
     );
-    requestStream.listen(
+    requestStream?.listen(
       (list) {
         if (!mounted) return;
         setState(() {
           completedTasks = CompletedTasks.classifyCompletedTasks(
-              completedSink: list, context: context);
+                  completedSink: list as List<dynamic>, context: context)
+              .cast<TasksCardWrapper>();
         });
       },
     );

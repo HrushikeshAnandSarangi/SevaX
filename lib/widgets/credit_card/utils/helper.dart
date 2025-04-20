@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'card_type.dart';
 
-Widget getCardTypeIcon({CardType cardType, String brand}) {
-  switch (cardType == null ? getCardType(brand) : cardType) {
+Widget getCardTypeIcon({CardType? cardType, String? brand}) {
+  switch (cardType == null ? getCardType(brand ?? '') : cardType) {
     case CardType.americanExpress:
       return Image.asset(
         "images/card_provider/american_express.png",

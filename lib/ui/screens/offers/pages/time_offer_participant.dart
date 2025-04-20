@@ -19,7 +19,8 @@ class TimeOfferParticipants extends StatelessWidget {
   final OfferModel offerModel;
   final TimebankModel timebankModel;
 
-  const TimeOfferParticipants({Key key, this.offerModel, this.timebankModel}) : super(key: key);
+  const TimeOfferParticipants({Key key, this.offerModel, this.timebankModel})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
@@ -49,12 +50,15 @@ class TimeOfferParticipants extends StatelessWidget {
                     imageUrl: snapshot.data[index].participantDetails.photourl,
                     bio: snapshot.data[index].participantDetails.bio,
                     onImageTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
                         return ProfileViewer(
                           timebankId: timebankModel.id,
                           entityName: timebankModel.name,
-                          isFromTimebank: isPrimaryTimebank(parentTimebankId: timebankModel.parentTimebankId),
-                          userEmail: snapshot.data[index].participantDetails.email,
+                          isFromTimebank: isPrimaryTimebank(
+                              parentTimebankId: timebankModel.parentTimebankId),
+                          userEmail:
+                              snapshot.data[index].participantDetails.email,
                         );
                       }));
                     },
@@ -78,7 +82,8 @@ class TimeOfferParticipants extends StatelessWidget {
                           acceptorDoumentId: snapshot.data[index].id,
                           offerId: snapshot.data[index].offerId,
                           status: snapshot.data[index].status,
-                          notificationId: snapshot.data[index].acceptorNotificationId,
+                          notificationId:
+                              snapshot.data[index].acceptorNotificationId,
                           hostEmail: snapshot.data[index].hostEmail,
                           timeOfferParticipantsModel: snapshot.data[index],
                           context: context,
@@ -146,7 +151,8 @@ class TimeOfferParticipants extends StatelessWidget {
                   return OfferJoinRequestDialog(
                     offerId: timeOfferParticipantsModel.offerId,
                     requestId: timeOfferParticipantsModel.requestId,
-                    requestStartDate: timeOfferParticipantsModel.requestStartDate,
+                    requestStartDate:
+                        timeOfferParticipantsModel.requestStartDate,
                     requestEndDate: timeOfferParticipantsModel.requestEndDate,
                     requestTitle: timeOfferParticipantsModel.requestTitle,
                     timeBankId: timeOfferParticipantsModel.timebankId,
@@ -218,7 +224,8 @@ class TimeOfferParticipants extends StatelessWidget {
     try {
       String communityId1 = loggedInUser.currentCommunity;
 
-      String communityId2 = offerModel.participantDetails[user.sevauserid]['communityId'];
+      String communityId2 =
+          offerModel.participantDetails[user.sevauserid]['communityId'];
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -238,7 +245,8 @@ class TimeOfferParticipants extends StatelessWidget {
       communityId: communityId,
       sender: sender,
       reciever: reciever,
-      showToCommunities: showToCommunities.isNotEmpty ? showToCommunities : null,
+      showToCommunities:
+          showToCommunities.isNotEmpty ? showToCommunities : null,
       interCommunity: showToCommunities.isNotEmpty,
     );
   }
@@ -318,7 +326,8 @@ class TimeOfferParticipantsModel {
     this.hostEmail,
   });
 
-  factory TimeOfferParticipantsModel.fromJSON(Map<String, dynamic> json) => TimeOfferParticipantsModel(
+  factory TimeOfferParticipantsModel.fromJSON(Map<String, dynamic> json) =>
+      TimeOfferParticipantsModel(
         requestEndDate: json["requestEndDate"],
         requestStartDate: json["requestStartDate"],
         requestTitle: json["requestTitle"],
@@ -326,7 +335,8 @@ class TimeOfferParticipantsModel {
         communityId: json["communityId"],
         status: ReadableOfferAcceptanceStatus.getValue(json["status"]),
         timebankId: json["timebankId"],
-        participantDetails: ParticipantDetails.fromJson(Map<String, dynamic>.from(json["participantDetails"])),
+        participantDetails: ParticipantDetails.fromJson(
+            Map<String, dynamic>.from(json["participantDetails"])),
         timestamp: json["timestamp"],
         acceptorDocumentId: json["acceptorDocumentId"],
         acceptorNotificationId: json["acceptorNotificationId"],
@@ -351,5 +361,4 @@ class TimeOfferParticipantsModel {
   //       hostEmail: json['hostEmail'],
   //     );
   // }
-
 }

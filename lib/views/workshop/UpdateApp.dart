@@ -9,8 +9,8 @@ class UpdateView extends StatefulWidget {
   bool isForced;
 
   UpdateView({
-    @required this.onSkipped,
-    @required this.isForced,
+    required this.onSkipped,
+    required this.isForced,
   });
 
   @override
@@ -42,6 +42,11 @@ class UpdateAppState extends State<UpdateView> {
                 : Offstage(),
             CustomElevatedButton(
               color: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              elevation: 2.0,
+              textColor: Colors.white,
               onPressed: () {
                 StoreRedirect.redirect(
                     androidAppId: "com.sevaexchange.sevax",

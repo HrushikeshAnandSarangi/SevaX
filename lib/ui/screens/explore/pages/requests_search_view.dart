@@ -20,9 +20,9 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import '../../../../l10n/l10n.dart';
 
 class RequestsSearchView extends StatelessWidget {
-  final bool isUserSignedIn;
+  final bool? isUserSignedIn;
 
-  const RequestsSearchView({Key key, this.isUserSignedIn}) : super(key: key);
+  const RequestsSearchView({Key? key, this.isUserSignedIn}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
@@ -35,25 +35,25 @@ class RequestsSearchView extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
             }
-            if (snapshot.data == null || snapshot.data.isEmpty) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Text(S.of(context).no_result_found);
             }
 
             return ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                var request = snapshot.data[index];
+                var request = snapshot.data![index];
                 // var date =
                 //     DateTime.fromMillisecondsSinceEpoch(request.requestStart);
 
-                return isUserSignedIn
-                    ? FutureBuilder<TimebankModel>(
+                return isUserSignedIn!
+                    ? FutureBuilder<TimebankModel?>(
                         future:
-                            getTimeBankForId(timebankId: request.timebankId),
+                            getTimeBankForId(timebankId: request.timebankId!),
                         builder: (context, snapshot) {
-                         /* if (snapshot.connectionState ==
+                          /* if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
@@ -65,7 +65,7 @@ class RequestsSearchView extends StatelessWidget {
                           }*/
                           return ExploreEventCard(
                             onTap: () {
-                              bool isAdmin = snapshot.data.admins.contains(
+                              bool isAdmin = snapshot.data!.admins.contains(
                                 SevaCore.of(context).loggedInUser.sevaUserID,
                               );
                               Navigator.push(
@@ -87,14 +87,16 @@ class RequestsSearchView extends StatelessWidget {
                             description: request.description,
                             location: request.address,
                             communityName: request.communityName ?? ' ',
-                            date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
-                            time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
+                            date: DateFormat('d MMMM, y').format(
+                                context.getDateTime(request.requestStart!)),
+                            time: DateFormat.jm().format(
+                                context.getDateTime(request.requestStart!)),
                             memberList: MemberAvatarListWithCount(
                               userIds: request.approvedUsers,
                             ),
                             tagsToShow: TagBuilder(
-                              isPublic: request.public,
-                              isVirtual: request.virtualRequest,
+                              isPublic: request.public!,
+                              isVirtual: request.virtualRequest!,
                               isMoneyRequest:
                                   request.requestType == RequestType.CASH,
                               isGoodsRequest:
@@ -119,14 +121,16 @@ class RequestsSearchView extends StatelessWidget {
                         description: request.description,
                         location: request.address,
                         communityName: request.communityName ?? ' ',
-                        date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
-                        time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
+                        date: DateFormat('d MMMM, y')
+                            .format(context.getDateTime(request.requestStart!)),
+                        time: DateFormat.jm()
+                            .format(context.getDateTime(request.requestStart!)),
                         memberList: MemberAvatarListWithCount(
                           userIds: request.approvedUsers,
                         ),
                         tagsToShow: TagBuilder(
-                          isPublic: request.public,
-                          isVirtual: request.virtualRequest,
+                          isPublic: request.public!,
+                          isVirtual: request.virtualRequest!,
                           isMoneyRequest:
                               request.requestType == RequestType.CASH,
                           isGoodsRequest:
@@ -147,7 +151,7 @@ class RequestsSearchView extends StatelessWidget {
         SizedBox(height: 12),
         RequestCategories(
           onTap: (value) {
-            _bloc.onRequestCategoryChanged(value.typeId);
+            _bloc.onRequestCategoryChanged(value.typeId!);
             Provider.of<ScrollController>(context, listen: false)?.animateTo(
               0,
               duration: Duration(milliseconds: 300),

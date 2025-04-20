@@ -8,18 +8,19 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GoodsAndAmountDonations extends StatefulWidget {
-  final Function onTap;
+  final VoidCallback onTap;
   final bool isTimeBank;
   final String timebankId;
   final bool isGoods;
   final String userId;
 
-  GoodsAndAmountDonations(
-      {this.onTap,
-      this.isTimeBank,
-      this.timebankId,
-      this.isGoods,
-      this.userId});
+  GoodsAndAmountDonations({
+    required this.onTap,
+    required this.isTimeBank,
+    required this.timebankId,
+    required this.isGoods,
+    required this.userId,
+  });
 
   @override
   _GoodsAndAmountDonationsState createState() =>

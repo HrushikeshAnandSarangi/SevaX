@@ -12,7 +12,7 @@ class TimebankMembersPage extends StatefulWidget {
 }
 
 class _TimebankMembersPageState extends State<TimebankMembersPage> {
-  List<String> keys;
+  late List<String> keys;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _TimebankMembersPageState extends State<TimebankMembersPage> {
               return LoadingIndicator();
             }
 
-            if (snapshot.data.length == 0) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -63,7 +63,7 @@ class _TimebankMembersPageState extends State<TimebankMembersPage> {
                       ),
                     ),
                     MemberListBuilder(
-                      infos: _bloc.sortedMembers[keys[index]],
+                      infos: _bloc.sortedMembers[keys[index]] ?? [],
                       physics: NeverScrollableScrollPhysics(),
                     ),
                   ],

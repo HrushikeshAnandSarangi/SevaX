@@ -11,10 +11,10 @@ String timeBankBalanceTransactionModelToJson(
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TimeBankBalanceTransactionModel {
-  String communityId;
-  String userId;
-  String requestId;
-  double amount;
+  String? communityId;
+  String? userId;
+  String? requestId;
+  double? amount;
   var timestamp;
 
   TimeBankBalanceTransactionModel(

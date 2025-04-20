@@ -18,7 +18,8 @@ class JoinRequestRepository {
         handleData: (data, sink) {
           List<JoinRequestModel> requestList = [];
           data.docs.forEach((DocumentSnapshot documentSnapshot) {
-            var model = JoinRequestModel.fromMap(documentSnapshot.data());
+            var model = JoinRequestModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             if (model != null &&
                 !model.operationTaken &&
                 model.userId != null) {

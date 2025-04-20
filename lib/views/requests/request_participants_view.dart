@@ -21,9 +21,9 @@ import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
   final RequestModel requestModel;
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
 
-  RequestParticipantsView({@required this.requestModel, this.timebankModel});
+  RequestParticipantsView({required this.requestModel, this.timebankModel});
 
   @override
   _RequestParticipantsViewState createState() =>
@@ -31,11 +31,11 @@ class RequestParticipantsView extends StatefulWidget {
 }
 
 class _RequestParticipantsViewState extends State<RequestParticipantsView> {
-  List<String> acceptors;
-  List<String> approvedMembers;
-  List<String> newList;
-  RequestModel requestModel;
-  List<String> oneToManyRequestAttenders;
+  List<String>? acceptors;
+  List<String>? approvedMembers;
+  List<String>? newList;
+  RequestModel? requestModel;
+  List<String>? oneToManyRequestAttenders;
   // RequestModel requestModel;
   HashMap<String, AcceptorItem> filteredList = HashMap();
 
@@ -43,7 +43,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   void initState() {
     super.initState();
     requestModel = widget.requestModel;
-    FirestoreRequestManager.getRequestStreamById(requestId: requestModel.id)
+    FirestoreRequestManager.getRequestStreamById(requestId: requestModel!.id!)
         .listen((_requestModel) {
       requestModel = _requestModel;
       try {
@@ -54,10 +54,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     });
   }
 
-  Future<Map<String, dynamic>> getUserDetails({String memberEmail}) async {
+  Future<Map<String, dynamic>> getUserDetails({String? memberEmail}) async {
     var user = await CollectionRef.users.doc(memberEmail).get();
 
-    return Map<String, dynamic>.from(user.data());
+    return Map<String, dynamic>.from(user.data() as Map<String, dynamic>);
   }
 
   @override
@@ -68,17 +68,17 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   Widget get list {
     var futures = <Future>[];
     futures.clear();
-    acceptors = requestModel.acceptors ?? [];
-    approvedMembers = requestModel.approvedUsers ?? [];
+    acceptors = requestModel!.acceptors ?? [];
+    approvedMembers = requestModel!.approvedUsers ?? [];
     if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
       oneToManyRequestAttenders =
           widget.requestModel.oneToManyRequestAttenders ?? [];
-      newList = acceptors + approvedMembers + oneToManyRequestAttenders;
+      newList = acceptors! + approvedMembers! + oneToManyRequestAttenders!;
     } else {
-      newList = acceptors + approvedMembers;
+      newList = acceptors! + approvedMembers!;
     }
 
-    List<String> result = LinkedHashSet<String>.from(newList).toList();
+    List<String> result = LinkedHashSet<String>.from(newList!).toList();
 
     result.forEach((email) {
       futures.add(getUserDetails(memberEmail: email));
@@ -96,25 +96,25 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
             return LoadingIndicator();
           }
 
-          if (snapshot.data.length == 0) {
+          if (snapshot.data!.length == 0) {
             return Center(
               child: Text(S.of(context).no_pending_requests),
             );
           }
-          List<UserModel> snap = snapshot.data.map((f) {
+          List<UserModel> snap = snapshot.data!.map((f) {
             return UserModel.fromMap(f, 'from participants view');
           }).toList();
 
           snap.sort((a, b) =>
-              a.fullname.toLowerCase().compareTo(b.fullname.toLowerCase()));
+              a.fullname!.toLowerCase().compareTo(b.fullname!.toLowerCase()));
 
           logger.e('borrowAcceptorModel length 1: ' + snap.length.toString());
 
-          if (requestModel.requestType == RequestType.BORROW) {
+          if (requestModel!.requestType == RequestType.BORROW) {
             return BorrowRequestParticipants(
               userModelList: snap,
-              timebankModel: widget.timebankModel,
-              requestModel: requestModel,
+              timebankModel: widget.timebankModel!,
+              requestModel: requestModel!,
             );
           } else {
             return ListView(
@@ -124,7 +124,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
                   UserRequestStatusType status;
                   status =
-                      getUserRequestStatusType(userModel.email, requestModel);
+                      getUserRequestStatusType(userModel.email!, requestModel!);
 
                   return makeUserWidget(userModel, context, status);
                 }).toList()
@@ -145,9 +145,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
             left: 5,
             top: 10,
             child: getUserThumbnail(
-              userModel.photoURL,
-              userModel.email,
-              userModel.sevaUserID,
+              userModel.photoURL!,
+              userModel.email!,
+              userModel.sevaUserID!,
             ),
           ),
         ],
@@ -162,12 +162,12 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       userId: sevaUserID,
       height: 60,
       width: 60,
-      timebankModel: widget.timebankModel,
+      timebankModel: widget.timebankModel!,
     );
   }
 
   Widget getUserCard(UserModel userModel,
-      {BuildContext context, UserRequestStatusType statusType}) {
+      {BuildContext? context, UserRequestStatusType? statusType}) {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
@@ -199,7 +199,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      userModel.fullname,
+                      userModel.fullname!,
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -216,7 +216,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               ),
               Expanded(
                 child: Text(
-                  userModel.bio ?? S.of(context).bio_not_updated,
+                  userModel.bio ?? S.of(context!).bio_not_updated,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -237,15 +237,17 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                 color: Colors.indigo,
                                 textColor: Colors.white,
                                 elevation: 5,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                                 onPressed: () async {
                                   approveMemberForVolunteerRequest(
-                                    model: requestModel,
+                                    model: requestModel!,
                                     notificationId: Utils.getUuid(),
                                     user: userModel,
-                                    context: context,
+                                    context: context!,
                                   );
                                 },
-                                child: Text(S.of(context).approve,
+                                child: Text(S.of(context!).approve,
                                     style: TextStyle(fontSize: 12)),
                               ),
                             ),
@@ -260,9 +262,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                 color: Colors.redAccent,
                                 textColor: Colors.white,
                                 elevation: 5,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                                 onPressed: () async {
                                   declineRequestedMember(
-                                      model: requestModel,
+                                      model: requestModel!,
                                       notificationId: "sampleID",
                                       user: userModel);
                                 },
@@ -285,8 +289,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                 color: Colors.green,
                                 textColor: Colors.white,
                                 elevation: 5,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                                 onPressed: () {},
-                                child: Text(S.of(context).approved,
+                                child: Text(S.of(context!).approved,
                                     style: TextStyle(
                                       fontSize: 12,
                                     )),
@@ -302,11 +308,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   }
 
   bool ifUserIsNotApproved(UserModel user) {
-    return !requestModel.approvedUsers.contains(user.email);
+    return !requestModel!.approvedUsers!.contains(user.email);
   }
 
   Widget oneToManyParticipantsWidget(userModel) {
-    return (widget.requestModel.oneToManyRequestAttenders
+    return (widget.requestModel.oneToManyRequestAttenders!
             .contains(userModel.email))
         ? Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -320,7 +326,8 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   shape: StadiumBorder(),
                   color: HexColor('#64C328'),
                   textColor: Colors.white,
-                  // elevation: 5,
+                  elevation: 5,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   onPressed: () {},
                   child: Text(S.of(context).attending,
                       style: TextStyle(
@@ -330,7 +337,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               ),
             ],
           )
-        : (widget.requestModel.approvedUsers.contains(userModel.email))
+        : (widget.requestModel.approvedUsers!.contains(userModel.email))
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -343,7 +350,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       shape: StadiumBorder(),
                       color: HexColor('#64C328'),
                       textColor: Colors.white,
-                      // elevation: 5,
+                      elevation: 5,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       onPressed: () {},
                       child: Text(S.of(context).speaker,
                           style: TextStyle(
@@ -353,7 +362,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   ),
                 ],
               )
-            : (widget.requestModel.acceptors.contains(userModel.email))
+            : (widget.requestModel.acceptors!.contains(userModel.email))
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
@@ -366,7 +375,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           shape: StadiumBorder(),
                           color: HexColor('#64C328'),
                           textColor: Colors.white,
-                          // elevation: 5,
+                          elevation: 5,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           onPressed: () {},
                           //checking if speaker is the creator then we can directly show as speaker
                           child: userModel.email == widget.requestModel.email
@@ -555,43 +566,43 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 //  }
 
   void declineRequestedMember({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
   }) {
-    List<String> acceptedUsers = model.acceptors ?? [];
+    List<String> acceptedUsers = model!.acceptors ?? [];
     Set<String> usersSet = acceptedUsers.toSet();
 
-    usersSet.remove(user.email);
+    usersSet.remove(user?.email!);
     model.acceptors = usersSet.toList();
 
     rejectAcceptRequest(
       requestModel: model,
-      rejectedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      rejectedUserId: user!.sevaUserID!,
+      notificationId: notificationId!,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
     );
   }
 
   void approveMemberForVolunteerRequest({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    BuildContext context,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    BuildContext? context,
   }) {
-    List<String> approvedUsers = model.approvedUsers;
+    List<String> approvedUsers = model!.approvedUsers!;
     Set<String> acceptedSet = approvedUsers.toSet();
 
-    acceptedSet.add(user.email);
+    acceptedSet.add(user!.email!);
     model.approvedUsers = acceptedSet.toList();
 
-    if (model.numberOfApprovals <= model.approvedUsers.length)
+    if (model.numberOfApprovals! <= model.approvedUsers!.length)
       model.accepted = true;
     approveAcceptRequest(
         requestModel: model,
-        approvedUserId: user.sevaUserID,
-        notificationId: notificationId,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        approvedUserId: user.sevaUserID!,
+        notificationId: notificationId!,
+        communityId: SevaCore.of(context!).loggedInUser.currentCommunity!,
         directToMember: true);
   }
 
@@ -672,41 +683,37 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   UserRequestStatusType getUserRequestStatusType(
       String sevaUserEmail, RequestModel requestModel) {
-    if (requestModel.acceptors.contains(sevaUserEmail)) {
+    if (requestModel.acceptors!.contains(sevaUserEmail)) {
       return UserRequestStatusType.ACCEPTED;
-    } else if (requestModel.approvedUsers.contains(sevaUserEmail)) {
+    } else if (requestModel.approvedUsers!.contains(sevaUserEmail)) {
       return UserRequestStatusType.APPROVED;
     }
+    return UserRequestStatusType.ACCEPTED; // Default return value
   }
 }
 
 Future<List<UserModel>> getRequestStatus({
-  @required String requestId,
+  required String requestId,
 }) async {
-  CollectionRef.requests.doc(requestId).get().then(
-    (requestDetails) async {
-      var futures = <Future>[];
-      RequestModel model = RequestModel.fromMap(
-        requestDetails.data(),
-      );
-
-      model.approvedUsers.forEach((membersId) {
-        futures.add(
-          CollectionRef.users.doc(membersId).get().then((onValue) {
-            return onValue;
-          }),
-        );
-      });
-
-      return Future.wait(futures).then((onValue) {
-        for (int i = 0; i < model.approvedUsers.length; i++) {
-          var user = UserModel.fromDynamic(onValue[i]);
-          usersRequested.add(user);
-        }
-        return usersRequested;
-      });
-    },
+  final requestDetails = await CollectionRef.requests.doc(requestId).get();
+  var futures = <Future>[];
+  RequestModel model = RequestModel.fromMap(
+    requestDetails.data() as Map<String, dynamic>,
   );
+
+  model.approvedUsers!.forEach((membersId) {
+    futures.add(
+      CollectionRef.users.doc(membersId).get(),
+    );
+  });
+
+  final results = await Future.wait(futures);
+  usersRequested.clear();
+  for (var doc in results) {
+    var user = UserModel.fromDynamic(doc);
+    usersRequested.add(user);
+  }
+  return usersRequested;
 }
 
 List<UserModel> usersRequested = [];
@@ -715,7 +722,7 @@ class AcceptorItem {
   final String email;
   final bool approved;
 
-  AcceptorItem({this.email, this.approved});
+  AcceptorItem({required this.email, required this.approved});
 }
 
 enum UserRequestStatusType { ACCEPTED, APPROVED }

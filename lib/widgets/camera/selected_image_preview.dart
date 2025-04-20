@@ -10,14 +10,14 @@ import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 class SelectedImagePreview extends StatefulWidget {
   final File file;
 
-  const SelectedImagePreview({Key key, this.file}) : super(key: key);
+  const SelectedImagePreview({Key? key, required this.file}) : super(key: key);
 
   @override
   _SelectedImagePreviewState createState() => _SelectedImagePreviewState();
 }
 
 class _SelectedImagePreviewState extends State<SelectedImagePreview> {
-  File _file;
+  late File _file;
   TextEditingController textController = TextEditingController();
   final profanityDetector = ProfanityDetector();
   bool isProfane = false;
@@ -37,10 +37,12 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
           IconButton(
             icon: Icon(Icons.crop_rotate),
             onPressed: () {
-              ImageCropper().cropImage(sourcePath: _file.path).then((File file) {
-                if (file != null) {
+              ImageCropper()
+                  .cropImage(sourcePath: _file.path)
+                  .then((croppedFile) {
+                if (croppedFile != null) {
                   setState(() {
-                    _file = file;
+                    _file = File(croppedFile.path);
                   });
                 }
               });

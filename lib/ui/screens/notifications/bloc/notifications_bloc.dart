@@ -86,6 +86,10 @@ class NotificationsBloc extends BlocBase {
   //Used for clearing all notifications
   List<String> personalNotificationsToBeCleared = [];
 
+  bool checkIfDismissible(NotificationType type) {
+    return dismissiableNotification.contains(type);
+  }
+
   Stream<List<NotificationsModel>> get personalNotifications =>
       _personalNotifications.stream;
 
@@ -101,7 +105,7 @@ class NotificationsBloc extends BlocBase {
   Stream<int> get notificationCount => CombineLatestStream.combine2(
         personalNotificationCount,
         timebankNotificationCount,
-        (p, t) => p + t,
+        (p, t) => ((p as int?) ?? 0) + ((t as int?) ?? 0),
       );
 
   void init(String userEmail, String userId, String communityId) {
@@ -110,9 +114,14 @@ class NotificationsBloc extends BlocBase {
       List<NotificationsModel> notifications = [];
       personalNotificationsToBeCleared = [];
       query.docs.forEach((DocumentSnapshot document) {
-        var notification = NotificationsModel.fromMap(document.data());
-        if (checkIfDismissible(notification.type)) {
-          personalNotificationsToBeCleared.add(notification.id);
+        var notification = NotificationsModel.fromMap(
+          (document.data() ?? {}) as Map<String, dynamic>,
+        );
+        if (notification.type != null &&
+            checkIfDismissible(notification.type!)) {
+          if (notification.id != null) {
+            personalNotificationsToBeCleared.add(notification.id!);
+          }
         }
         notifications.add(notification);
       });
@@ -142,33 +151,38 @@ class NotificationsBloc extends BlocBase {
       });
 
       for (NotificationsModel notification in notificationSnapshot) {
-        if (_adminTimebankIds.contains(notification.timebankId)) {
-          var userRole = getLoggedInUserRole(
-              _adminTimebanks[notification.timebankId], userId);
+        final timebankId = notification.timebankId;
+        if (timebankId != null && _adminTimebankIds.contains(timebankId)) {
+          final timebankModel = _adminTimebanks[timebankId];
+          if (timebankModel != null) {
+            var userRole = getLoggedInUserRole(timebankModel, userId);
 
-          if (notification.type == NotificationType.MANUAL_TIME_CLAIM) {
-            var data = ManualTimeModel.fromMap(
-              Map<String, dynamic>.from(notification.data),
-            );
+            if (notification.type == NotificationType.MANUAL_TIME_CLAIM) {
+              var data = ManualTimeModel.fromMap(
+                Map<String, dynamic>.from(notification.data ?? {}),
+              );
 
-            if (!isManualTimeNotificationVisible(
-                    userRole,
-                    data.claimedBy,
-                    _adminTimebanks[notification.timebankId].parentTimebankId ==
-                        FlavorConfig.values.timebankId) ||
-                data.userDetails.id == userId) {
-              continue;
+              if (!isManualTimeNotificationVisible(
+                      userRole,
+                      data.claimedBy ?? UserRole.Member,
+                      (timebankModel.parentTimebankId ?? '') ==
+                          (FlavorConfig.values.timebankId ?? '')) ||
+                  (data.userDetails?.id ?? '') == userId) {
+                continue;
+              }
             }
           }
         }
 
-        if (_adminTimebankIds.contains(notification.timebankId)) {
+        if (timebankId != null && _adminTimebankIds.contains(timebankId)) {
           _adminNotificationCount++;
         }
-        if (_adminNotificationsMap.containsKey(notification.timebankId)) {
-          _adminNotificationsMap[notification.timebankId].add(notification);
-        } else {
-          _adminNotificationsMap[notification.timebankId] = [notification];
+        if (timebankId != null) {
+          if (_adminNotificationsMap.containsKey(timebankId)) {
+            _adminNotificationsMap[timebankId]?.add(notification);
+          } else {
+            _adminNotificationsMap[timebankId] = [notification];
+          }
         }
       }
 
@@ -183,11 +197,8 @@ class NotificationsBloc extends BlocBase {
     });
   }
 
-  bool checkIfDismissible(NotificationType type) {
-    return dismissiableNotification.contains(type);
-  }
-
-  Future clearNotification({String email, String notificationId}) {
+  Future clearNotification(
+      {required String email, required String notificationId}) {
     return NotificationsRepository.readUserNotification(
       notificationId,
       email,
@@ -216,7 +227,7 @@ class NotificationsBloc extends BlocBase {
   }
 
   Future<void> clearAllNotification(String email,
-      {List<String> notificationIdsToBeCleared}) async {
+      {List<String>? notificationIdsToBeCleared}) async {
     var x = notificationIdsToBeCleared ?? personalNotificationsToBeCleared;
     WriteBatch batch = CollectionRef.batch;
     x.forEach((String id) {
@@ -228,12 +239,11 @@ class NotificationsBloc extends BlocBase {
     await batch.commit();
   }
 
-  void dispose() async {
+  @override
+  void dispose() {
     _personalNotifications.close();
-    await _adminNotificationData.drain();
     _adminNotificationData.close();
     _personalNotificationCount.close();
-    await _timebankNotificationCount.drain();
     _timebankNotificationCount.close();
   }
 }
@@ -243,8 +253,8 @@ class TimebankNotificationData {
   final Map<String, TimebankModel> timebanks;
 
   TimebankNotificationData({
-    @required this.notifications,
-    @required this.timebanks,
+    required this.notifications,
+    required this.timebanks,
   });
 
   bool get isAdmin => timebanks.isNotEmpty;
@@ -255,7 +265,7 @@ class TimebankNotificationData {
 
     timebanks.forEach((key, value) {
       if (notifications.containsKey(key)) {
-        if (notifications[key].length == 0) {
+        if ((notifications[key]?.length ?? 0) == 0) {
           status = false;
         } else {
           status = true;

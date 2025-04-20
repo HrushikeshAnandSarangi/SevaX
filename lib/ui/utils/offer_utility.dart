@@ -1,4 +1,4 @@
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class CustomLocation {
   final GeoFirePoint location;

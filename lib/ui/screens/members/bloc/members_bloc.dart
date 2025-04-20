@@ -17,23 +17,25 @@ class MembersBloc extends BlocBase {
     //Fetch all memebers of the community
     UserRepository.getMembersOfCommunity(communityId).listen((members) {
       members.forEach((member) {
-        _membersMap[member.sevaUserID] = member;
-        _memberEmailIdMapping[member.email] = member.sevaUserID;
+        if (member.sevaUserID != null && member.email != null) {
+          _membersMap[member.sevaUserID!] = member;
+          _memberEmailIdMapping[member.email!] = member.sevaUserID!;
+        }
       });
       _members.add(members);
     }).onError((e) => _members.addError(e));
   }
 
   /// returns [UserModel] if found and [Null] if user is not found
-  UserModel getMemberFromLocalData({String userId, String email}) {
-    assert(
-        userId != null || email != null && !(userId != null && email != null));
-    logger.i(userId, email);
+  UserModel? getMemberFromLocalData({String? userId, String? email}) {
+    assert((userId != null || email != null) &&
+        !(userId != null && email != null));
+    logger.i('userId: $userId, email: $email');
     if (userId != null) {
       if (_isMemberPresentInCache(userId: userId)) {
         return _membersMap[userId];
       }
-    } else {
+    } else if (email != null) {
       if (_isMemberPresentInCache(email: email)) {
         return _membersMap[_memberEmailIdMapping[email]];
       }
@@ -42,22 +44,23 @@ class MembersBloc extends BlocBase {
     return null;
   }
 
-  Future<UserModel> getUserModel({String userId, String email,bool isUserSignedIn = true}) async {
-    UserModel user = getMemberFromLocalData(email: email, userId: userId);
+  Future<UserModel> getUserModel(
+      {String? userId, String? email, bool isUserSignedIn = true}) async {
+    UserModel? user = getMemberFromLocalData(email: email, userId: userId);
     if (user != null) {
       return Future.value(user);
     } else {
       if (isUserSignedIn) {
         user = userId != null
             ? await UserRepository.fetchUserById(userId)
-            : await UserRepository.fetchUserByEmail(email);
-      }else{
+            : await UserRepository.fetchUserByEmail(email!);
+      } else {
         user = userId != null
             ? await Searches.getUserElastic(userId: userId)
-            : await Searches.getUserByEmailElastic(userEmail: email);
+            : await Searches.getUserByEmailElastic(userEmail: email!);
       }
-      _membersMap[user.sevaUserID] = user;
-      _memberEmailIdMapping[user.email] = user.sevaUserID;
+      _membersMap[user.sevaUserID!] = user;
+      _memberEmailIdMapping[user.email!] = user.sevaUserID!;
       return user;
     }
   }
@@ -66,18 +69,19 @@ class MembersBloc extends BlocBase {
   List<String> getUserImagesForUserId(List<String> ids) {
     List<String> images = [];
     ids.forEach((id) {
-      images.add(getMemberFromLocalData(userId: id).photoURL);
+      images.add(getMemberFromLocalData(userId: id)?.photoURL ?? '');
     });
     return images;
   }
 
-  Future<List<String>> getUserImages(List<String> ids,{bool isUserSignedIn = true}) async {
+  Future<List<String>> getUserImages(List<String> ids,
+      {bool isUserSignedIn = true}) async {
     try {
       List<Future<UserModel>> futures = ids
           .map(
             (id) => id.contains('@')
-                ? getUserModel(email: id,isUserSignedIn: isUserSignedIn)
-                : getUserModel(userId: id,isUserSignedIn:isUserSignedIn),
+                ? getUserModel(email: id, isUserSignedIn: isUserSignedIn)
+                : getUserModel(userId: id, isUserSignedIn: isUserSignedIn),
           )
           .toList();
 
@@ -86,7 +90,7 @@ class MembersBloc extends BlocBase {
       // users.forEach((element) {
       //   // logger.e(element.fullname);
       // });
-      return users.map((user) => user.photoURL).toList();
+      return users.map((user) => user.photoURL).whereType<String>().toList();
     } on Exception catch (e) {
       logger.e(e);
       // logger.e("error is -> $e");
@@ -124,7 +128,7 @@ class MembersBloc extends BlocBase {
     _members.close();
   }
 
-  bool _isMemberPresentInCache({String userId, String email}) {
+  bool _isMemberPresentInCache({String? userId, String? email}) {
     if (userId != null) {
       return _membersMap.containsKey(userId);
     } else if (email != null) {

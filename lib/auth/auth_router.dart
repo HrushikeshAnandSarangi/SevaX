@@ -17,13 +17,13 @@ class AuthRouter extends StatefulWidget {
 }
 
 class _AuthRouterState extends State<AuthRouter> {
-  String sevaUserId;
+  String? sevaUserId;
   final AppLanguage appLanguage = AppLanguage();
 
-  AuthStatus authStatus;
+  AuthStatus? authStatus;
 
-  UserModel signedInUser;
-  UserModel fetchedUser;
+  UserModel? signedInUser;
+  UserModel? fetchedUser;
 
   @override
   void initState() {
@@ -40,13 +40,12 @@ class _AuthRouterState extends State<AuthRouter> {
             skipToHomePage: false,
           ),
         );
-        break;
       default:
         return Container();
     }
   }
 
-  Widget getMaterialApp({@required Widget view}) {
+  Widget getMaterialApp({required Widget view}) {
     return ChangeNotifierProvider<AppLanguage>(
         create: (_) => appLanguage,
         child: Consumer<AppLanguage>(

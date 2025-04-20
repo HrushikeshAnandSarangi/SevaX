@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Umeshify extends StatefulWidget {
-  Umeshify({this.text, this.onOpen});
+  Umeshify({required this.text, required this.onOpen});
 
   final String text;
   final Function(String url) onOpen;

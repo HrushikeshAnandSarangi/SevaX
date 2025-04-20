@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -29,11 +29,11 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CreateOfferRequest extends StatefulWidget {
-  final OfferModel offer;
-  final String timebankId;
+  final OfferModel? offer;
+  final String? timebankId;
 
   CreateOfferRequest({
-    Key key,
+    Key? key,
     this.offer,
     this.timebankId,
   }) : super(key: key);
@@ -45,16 +45,16 @@ class CreateOfferRequest extends StatefulWidget {
 class _CreateOfferRequestState extends State<CreateOfferRequest>
     with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
-  RequestModel requestModel;
+  RequestModel? requestModel;
   var focusNodes = List.generate(3, (_) => FocusNode());
   List<String> eventsIdsArr = [];
-  GeoFirePoint location;
+  GeoFirePoint? location;
   String selectedAddress = '';
   int sharedValue = 0;
-  String _selectedTimebankId;
-  TimebankModel timebankModel;
+  String? _selectedTimebankId;
+  TimebankModel? timebankModel;
   final profanityDetector = ProfanityDetector();
-  CommunityModel communityModel;
+  CommunityModel? communityModel;
   @override
   void initState() {
     super.initState();
@@ -65,26 +65,30 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     Future.delayed(Duration.zero, () {
       requestModel = RequestModel(
         requestType: RequestType.TIME,
-        goodsDonationDetails: GoodsDonationDetails(),
+        goodsDonationDetails: GoodsDonationDetails(
+          donors: [],
+          address: '',
+          requiredGoods: {},
+        ),
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         timebankId: widget.timebankId,
         email: SevaCore.of(context).loggedInUser.email,
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       );
-      this.requestModel.virtualRequest = false;
-      this.requestModel.public = false;
-      this.requestModel.timebankId = _selectedTimebankId;
-      this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-      requestModel.requestType = widget.offer.type;
-      requestModel.offerId = widget.offer.id;
-      this.requestModel.title = widget.offer.individualOfferDataModel.title;
-      this.requestModel.description =
-          widget.offer.individualOfferDataModel.description;
+      this.requestModel!.virtualRequest = false;
+      this.requestModel!.public = false;
+      this.requestModel!.timebankId = _selectedTimebankId;
+      this.requestModel!.requestMode = RequestMode.TIMEBANK_REQUEST;
+      requestModel!.requestType = widget.offer!.type;
+      requestModel!.offerId = widget.offer!.id;
+      this.requestModel!.title = widget.offer!.individualOfferDataModel!.title;
+      this.requestModel!.description =
+          widget.offer!.individualOfferDataModel!.description;
 
       fetchRemoteConfig();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         FirestoreManager.getTimeBankForId(
-          timebankId: widget.timebankId,
+          timebankId: widget.timebankId!,
         ).then((onValue) {
           setState(() {
             timebankModel = onValue;
@@ -134,6 +138,12 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                               child: Container(
                                 child: CustomElevatedButton(
                                   onPressed: createRequest,
+                                  color: Theme.of(context).primaryColor,
+                                  shape: StadiumBorder(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 12),
+                                  elevation: 2.0,
+                                  textColor: Colors.white,
                                   child: Text(
                                     S
                                         .of(context)
@@ -142,7 +152,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                                         .padRight(10),
                                     style: Theme.of(context)
                                         .primaryTextTheme
-                                        .button,
+                                        .labelLarge,
                                   ),
                                 ),
                               ),
@@ -165,9 +175,8 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
   }
 
   Future<void> fetchRemoteConfig() async {
-    AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
-    AppConfig.remoteConfig.activateFetched();
+    AppConfig.remoteConfig = FirebaseRemoteConfig.instance;
+    await AppConfig.remoteConfig!.fetchAndActivate();
   }
 
   TextStyle hintTextStyle = TextStyle(
@@ -183,13 +192,13 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
   Widget headerContainer() {
     if (isAccessAvailable(
-        timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+        timebankModel!, SevaCore.of(context).loggedInUser.sevaUserID!)) {
       return requestSwitch(
-        timebankModel: timebankModel,
+        timebankModel: timebankModel!,
       );
     } else {
-      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      this.requestModel.requestType = RequestType.TIME;
+      this.requestModel!.requestMode = RequestMode.PERSONAL_REQUEST;
+      this.requestModel!.requestType = RequestType.TIME;
       return Container();
     }
   }
@@ -209,7 +218,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
   }
 
   Widget requestSwitch({
-    TimebankModel timebankModel,
+    TimebankModel? timebankModel,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: 0),
@@ -218,7 +227,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         selectedColor: Theme.of(context).primaryColor,
         children: {
           0: Text(
-            timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+            timebankModel!.parentTimebankId == FlavorConfig.values.timebankId
                 ? S.of(context).timebank_request(1)
                 : S.of(context).seva +
                     timebankModel.name +
@@ -239,9 +248,9 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           if (val != sharedValue) {
             setState(() {
               if (val == 0) {
-                requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+                requestModel!.requestMode = RequestMode.TIMEBANK_REQUEST;
               } else {
-                requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+                requestModel!.requestMode = RequestMode.PERSONAL_REQUEST;
                 //requestModel.requestType = RequestType.TIME;
               }
               sharedValue = val;
@@ -253,19 +262,19 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     );
   }
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
 
   void createRequest() async {
     logger.i("Inside create Request ======");
-    requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
-    requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
-    requestModel.autoGenerated = false;
+    requestModel!.requestStart = OfferDurationWidgetState.starttimestamp;
+    requestModel!.requestEnd = OfferDurationWidgetState.endtimestamp;
+    requestModel!.autoGenerated = false;
 
-    requestModel.isRecurring = false;
-    if (_formKey.currentState.validate()) {
+    requestModel!.isRecurring = false;
+    if (_formKey.currentState!.validate()) {
       // validate request start and end date
 
-      if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
+      if (requestModel!.requestStart == 0 || requestModel!.requestEnd == 0) {
         showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
         return;
       }
@@ -284,30 +293,30 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
             dialogTitle: S.of(context).validation_error_end_date_greater);
         return;
       }
-      requestModel.approvedUsers = [];
-      requestModel.participantDetails = {};
+      requestModel!.approvedUsers = [];
+      requestModel!.participantDetails = {};
 
-      requestModel.participantDetails[widget.offer.email] = AcceptorModel(
-        communityId: widget.offer.communityId,
+      requestModel!.participantDetails![widget.offer!.email] = AcceptorModel(
+        communityId: widget.offer!.communityId,
         communityName: '',
-        memberEmail: widget.offer.email,
-        memberName: widget.offer.fullName,
-        memberPhotoUrl: widget.offer.photoUrlImage ?? defaultUserImageURL,
-        timebankId: widget.offer.timebankId,
+        memberEmail: widget.offer!.email,
+        memberName: widget.offer!.fullName,
+        memberPhotoUrl: widget.offer!.photoUrlImage ?? defaultUserImageURL,
+        timebankId: widget.offer!.timebankId,
       ).toMap();
 
-      switch (requestModel.requestMode) {
+      switch (requestModel!.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
           var myDetails = SevaCore.of(context).loggedInUser;
-          this.requestModel.fullName = myDetails.fullname;
-          this.requestModel.photoUrl = myDetails.photoURL;
+          this.requestModel!.fullName = myDetails.fullname;
+          this.requestModel!.photoUrl = myDetails.photoURL;
           CreditResult onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
-            email: SevaCore.of(context).loggedInUser.email,
-            credits:
-                widget.offer.individualOfferDataModel.minimumCredits.toDouble(),
-            userId: myDetails.sevaUserID,
-            communityId: timebankModel.communityId,
+            email: SevaCore.of(context).loggedInUser.email!,
+            credits: widget.offer!.individualOfferDataModel!.minimumCredits
+                .toDouble(),
+            userId: myDetails.sevaUserID!,
+            communityId: timebankModel!.communityId,
           );
           if (!onBalanceCheckResult.hasSuffiientCredits) {
             showInsufficientBalance();
@@ -316,72 +325,71 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           break;
 
         case RequestMode.TIMEBANK_REQUEST:
-          requestModel.fullName = timebankModel.name;
-          requestModel.photoUrl = timebankModel.photoUrl;
+          requestModel!.fullName = timebankModel!.name;
+          requestModel!.photoUrl = timebankModel!.photoUrl;
           break;
       }
 
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       String timestampString = timestamp.toString();
-      requestModel.id = '${requestModel.email}*$timestampString';
-      requestModel.parent_request_id = null;
+      requestModel!.id = '${requestModel!.email}*$timestampString';
+      requestModel!.parent_request_id = null;
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
       );
-      requestModel.timebanksPosted = [timebankModel.id];
-      requestModel.communityId =
+      requestModel!.timebanksPosted = [timebankModel!.id];
+      requestModel!.communityId =
           SevaCore.of(context).loggedInUser.currentCommunity;
-      requestModel.softDelete = false;
-      requestModel.postTimestamp = timestamp;
-      requestModel.accepted = false;
-      requestModel.acceptors = [];
-      requestModel.invitedUsers = [];
-      requestModel.recommendedMemberIdsForRequest = [];
-      requestModel.categories = [];
-      requestModel.address = selectedAddress;
+      requestModel!.softDelete = false;
+      requestModel!.postTimestamp = timestamp;
+      requestModel!.accepted = false;
+      requestModel!.acceptors = [];
+      requestModel!.invitedUsers = [];
+      requestModel!.recommendedMemberIdsForRequest = [];
+      requestModel!.categories = [];
+      requestModel!.address = selectedAddress;
 
-      requestModel.location = location;
-      requestModel.root_timebank_id = FlavorConfig.values.timebankId;
-      requestModel.softDelete = false;
-      requestModel.creatorName = SevaCore.of(context).loggedInUser.fullname;
-      requestModel.isFromOfferRequest = true;
+      requestModel!.location = location;
+      requestModel!.root_timebank_id = FlavorConfig.values.timebankId;
+      requestModel!.softDelete = false;
+      requestModel!.creatorName = SevaCore.of(context).loggedInUser.fullname;
+      requestModel!.isFromOfferRequest = true;
 
-      requestModel.numberOfApprovals = 1;
-      requestModel.minimumCredits =
-          widget.offer.individualOfferDataModel.minimumCredits ?? 0;
-      requestModel.maxCredits = 0;
+      requestModel!.numberOfApprovals = 1;
+      requestModel!.minimumCredits =
+          widget.offer!.individualOfferDataModel!.minimumCredits ?? 0;
+      requestModel!.maxCredits = 0;
       logger.i('========= send notifiction');
       linearProgressForCreatingRequest();
 
-      await FirestoreManager.createRequest(requestModel: requestModel);
+      await FirestoreManager.createRequest(requestModel: requestModel!);
       //create invitation if its from offer only for cash and goods
       try {
         await sendNotification(
-          offerModel: widget.offer,
-          timebankModel: timebankModel,
-          currentCommunity: widget.offer.communityId,
-          requestModel: requestModel,
-          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-          targetUserId: widget.offer.sevaUserId,
-          targetUserEmail: widget.offer.email,
+          offerModel: widget!.offer!,
+          timebankModel: timebankModel!,
+          currentCommunity: widget.offer!.communityId!,
+          requestModel: requestModel!,
+          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID!,
+          targetUserId: widget.offer!.sevaUserId!,
+          targetUserEmail: widget.offer!.email!,
         );
       } on Exception catch (exception) {
         //Log to crashlytics
-
       }
-      Navigator.pop(dialogContext);
+      Navigator.pop(dialogContext!);
       Navigator.pop(context);
     }
   }
 
   Map<String, Object> getOfferAcceptorDocument({
-    TimebankModel timebankModel,
-    String offerId,
-    String notifictionId,
+    TimebankModel? timebankModel,
+    String? offerId,
+    String? notifictionId,
   }) {
     var status = 'REQUESTED';
 
-    var timebankId = timebankModel.id;
+    var timebankId = timebankModel!.id;
     var communityId = SevaCore.of(context).loggedInUser.currentCommunity;
 
     var fullName = SevaCore.of(context).loggedInUser.fullname;
@@ -391,23 +399,23 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     var acceptorBio = SevaCore.of(context).loggedInUser.bio;
 
     return {
-      'requestId': requestModel.id,
-      'requestStartDate': requestModel.requestStart,
-      'requestEndDate': requestModel.requestEnd,
-      'requestTitle': requestModel.title,
+      'requestId': requestModel!.id!,
+      'requestStartDate': requestModel!.requestStart!,
+      'requestEndDate': requestModel!.requestEnd!,
+      'requestTitle': requestModel!.title!,
       'status': status,
-      'offerId': offerId,
+      'offerId': offerId!,
       'timebankId': timebankId,
-      'acceptorNotificationId': notifictionId,
+      'acceptorNotificationId': notifictionId!,
       'id': notifictionId,
-      'communityId': communityId,
-      'mode': requestModel.requestMode.toString(),
+      'communityId': communityId!,
+      'mode': requestModel!.requestMode.toString(),
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'participantDetails': {
-        'fullname': requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+        'fullname': requestModel!.requestMode == RequestMode.PERSONAL_REQUEST
             ? fullName
             : timebankModel.name,
-        'photourl': requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+        'photourl': requestModel!.requestMode == RequestMode.PERSONAL_REQUEST
             ? photoURL
             : timebankModel.photoUrl,
         'email': acceptorEmail,
@@ -432,11 +440,11 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           return AlertDialog(
             title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -464,12 +472,12 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         });
   }
 
-  void showDialogForTitle({String dialogTitle}) async {
+  void showDialogForTitle({String? dialogTitle}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(dialogTitle),
+            title: Text(dialogTitle!),
             actions: <Widget>[
               CustomTextButton(
                 shape: StadiumBorder(),
@@ -492,33 +500,32 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
   Future<List<String>> _writeToDB() async {
     List<String> resultVar = [];
-    await FirestoreManager.createRequest(requestModel: requestModel);
+    await FirestoreManager.createRequest(requestModel: requestModel!);
     //create invitation if its from offer only for cash and goods
     try {
       await sendNotification(
-          offerModel: widget.offer,
-          timebankModel: timebankModel,
-          currentCommunity: widget.offer.communityId,
-          requestModel: requestModel,
-          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-          targetUserId: widget.offer.sevaUserId,
-          targetUserEmail: widget.offer.email);
+          offerModel: widget.offer!,
+          timebankModel: timebankModel!,
+          currentCommunity: widget.offer!.communityId!,
+          requestModel: requestModel!,
+          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID!,
+          targetUserId: widget.offer!.sevaUserId!,
+          targetUserEmail: widget.offer!.email!);
     } on Exception catch (exception) {
       //Log to crashlytics
-
     }
-    resultVar.add(requestModel.id);
+    resultVar.add(requestModel!.id!);
     return resultVar;
   }
 
-  Future<void> sendNotification({
-    RequestModel requestModel,
-    String currentCommunity,
-    String sevaUserID,
-    String targetUserId,
-    String targetUserEmail,
-    TimebankModel timebankModel,
-    OfferModel offerModel,
+  Future<bool> sendNotification({
+    RequestModel? requestModel,
+    String? currentCommunity,
+    String? sevaUserID,
+    String? targetUserId,
+    String? targetUserEmail,
+    TimebankModel? timebankModel,
+    OfferModel? offerModel,
   }) async {
     var notificationId = utils.Utils.getUuid();
     WriteBatch batchWrite = CollectionRef.batch;
@@ -530,13 +537,13 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
     var offerAcceptorDocument = getOfferAcceptorDocument(
       timebankModel: timebankModel,
-      offerId: widget.offer.id,
+      offerId: widget.offer!.id,
       notifictionId: notificationId,
     );
 
     NotificationsModel notification = NotificationsModel(
       id: notificationId,
-      timebankId: offerModel.timebankId,
+      timebankId: offerModel!.timebankId,
       data: offerAcceptorDocument,
       isRead: false,
       type: NotificationType.OfferRequestInvite,
@@ -546,7 +553,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       isTimebankNotification: false,
     );
 
-    batchWrite.update(CollectionRef.requests.doc(requestModel.id), {
+    batchWrite.update(CollectionRef.requests.doc(requestModel!.id), {
       'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
     });
     batchWrite.set(
@@ -559,7 +566,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
     batchWrite.set(
         CollectionRef.offers
-            .doc(widget.offer.id)
+            .doc(widget.offer!.id)
             .collection('offerAcceptors')
             .doc(notificationId),
         offerAcceptorDocument);

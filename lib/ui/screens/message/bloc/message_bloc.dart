@@ -35,50 +35,70 @@ class MessageBloc extends BlocBase {
   ) async {
     ChatModelSync chatModelSync = ChatModelSync();
     ChatsRepository.getPersonalChats(
-            userId: userModel.sevaUserID, communityId: communityId)
+            userId: userModel.sevaUserID ?? '', communityId: communityId)
         .listen((data) {
       List<ChatModel> chats = [];
       List<FrequentContactsModel> frequentContacts = [];
       int unreadCount = 0;
       data.forEach((chat) {
-        log(chat.id + '====timestamp ===> ${chat.timestamp}');
-        String senderId = chat.participants.firstWhere(
-          (id) => id != userModel.sevaUserID,
-          orElse: () => null,
-        );
+        log('${chat.id ?? ''}====timestamp ===> ${chat.timestamp}');
+        String? senderId = chat.participants != null
+            ? chat.participants!.firstWhere(
+                (id) => id != userModel.sevaUserID,
+                orElse: () => '',
+              )
+            : '';
         log("===> sender id :$senderId");
-        if ((senderId != null || chat.isGroupMessage)) {
-          if (isMemberBlocked(userModel, senderId) ||
-              (chat.deletedBy.containsKey(userModel.sevaUserID) &&
-                  chat.deletedBy[userModel.sevaUserID] >
-                      (chat.timestamp ?? 0)) ||
-              (chat.lastMessage == '' || chat.lastMessage == null) &&
-                  !chat.isGroupMessage) {
-            if (chat.isGroupMessage) {
-              if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
-                  chat.unreadStatus[userModel.sevaUserID] > 0) {
+        bool isGroup = chat.isGroupMessage ?? false;
+        if ((senderId != '' || isGroup)) {
+          bool isBlocked = isMemberBlocked(userModel, senderId);
+          bool isDeleted = (chat.deletedBy != null &&
+              chat.deletedBy!.containsKey(userModel.sevaUserID) &&
+              (chat.deletedBy![userModel.sevaUserID] ?? 0) >
+                  (chat.timestamp ?? 0));
+          bool noMessage =
+              ((chat.lastMessage == '' || chat.lastMessage == null) &&
+                  !(chat.isGroupMessage ?? false));
+          if (isBlocked || isDeleted || noMessage) {
+            if (isGroup) {
+              if ((chat.unreadStatus != null &&
+                  chat.unreadStatus!.containsKey(userModel.sevaUserID) &&
+                  (chat.unreadStatus![userModel.sevaUserID] ?? 0) > 0)) {
                 unreadCount++;
               }
               chats.add(chat);
             }
             log("Blocked or no message");
           } else {
-            if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
-                chat.unreadStatus[userModel.sevaUserID] > 0) {
+            if ((chat.unreadStatus != null &&
+                chat.unreadStatus!.containsKey(userModel.sevaUserID) &&
+                (chat.unreadStatus![userModel.sevaUserID] ?? 0) > 0)) {
               unreadCount++;
             }
             if (frequentContacts.length < 5) {
               FrequentContactsModel fc;
-              if (chat.isGroupMessage) {
+              if (isGroup) {
                 fc = FrequentContactsModel(
-                    chat, null, chat.isGroupMessage, chat.isTimebankMessage);
+                    chat,
+                    chat.participantInfo != null &&
+                            chat.participantInfo!.isNotEmpty
+                        ? chat.participantInfo!.first
+                        : ParticipantInfo(
+                            id: '',
+                            name: ''), // Provide a default ParticipantInfo
+                    isGroup,
+                    chat.isTimebankMessage ?? false);
               } else {
                 fc = FrequentContactsModel(
-                    null,
-                    chat.participantInfo.firstWhere(
-                        (ParticipantInfo info) => info.id == senderId),
-                    chat.isGroupMessage,
-                    chat.isTimebankMessage);
+                    chat,
+                    chat.participantInfo != null
+                        ? chat.participantInfo!.firstWhere(
+                            (ParticipantInfo info) => info.id == senderId,
+                            orElse: () => ParticipantInfo(id: '', name: ''),
+                          )
+                        : ParticipantInfo(id: '', name: ''),
+                    isGroup,
+                    chat.isTimebankMessage ?? false);
               }
               frequentContacts.add(fc);
             }
@@ -145,10 +165,10 @@ class AdminMessageWrapperModel {
   final DateTime timestamp;
 
   AdminMessageWrapperModel({
-    this.id,
-    this.timestamp,
-    this.photoUrl,
-    this.name,
-    this.newMessageCount,
+    required this.id,
+    required this.timestamp,
+    required this.photoUrl,
+    required this.name,
+    required this.newMessageCount,
   });
 }

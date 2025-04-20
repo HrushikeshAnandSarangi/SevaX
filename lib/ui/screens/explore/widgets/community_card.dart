@@ -3,17 +3,17 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class CommunityCard extends StatelessWidget {
-  const CommunityCard(
-      {Key key,
-      this.name,
-      this.memberCount,
-      this.imageUrl,
-      this.buttonLabel,
-      this.buttonColor,
-      this.textColor,
-      this.onbuttonPress,
-      this.memberIds})
-      : super(key: key);
+  const CommunityCard({
+    Key? key,
+    required this.name,
+    required this.memberCount,
+    required this.imageUrl,
+    required this.buttonLabel,
+    required this.buttonColor,
+    required this.textColor,
+    required this.onbuttonPress,
+    required this.memberIds,
+  });
 
   final String name;
   final String memberCount;
@@ -87,6 +87,9 @@ class CommunityCard extends StatelessWidget {
           Spacer(),
           CustomElevatedButton(
             elevation: 0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               buttonLabel,
               style: TextStyle(

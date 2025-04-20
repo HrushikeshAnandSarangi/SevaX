@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -11,31 +10,29 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class LendingParticipantCard extends StatelessWidget {
-  final Padding padding;
+  final EdgeInsetsGeometry? padding;
   final double radius;
-  final String imageUrl;
+  final String? imageUrl;
   final String name;
   final int acceptTime;
-  final double rating;
-  final Function onMessageTapped;
-  final Function onTap;
-  final Function onImageTap;
+  final double? rating;
+  final Function? onMessageTapped;
+  final Function? onTap;
+  final VoidCallback? onImageTap;
   final Widget buttonsContainer;
 
   const LendingParticipantCard(
-      {Key key,
+      {Key? key,
       this.padding,
       this.radius = 8,
       this.imageUrl,
-      this.name,
-      this.acceptTime,
+      required this.name,
+      required this.acceptTime,
       this.onMessageTapped,
       this.onTap,
       this.rating,
       this.onImageTap,
-      this.buttonsContainer = const SizedBox()})
-      : assert(name != null, acceptTime != null),
-        super(key: key);
+      this.buttonsContainer = const SizedBox()});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -58,7 +55,7 @@ class LendingParticipantCard extends StatelessWidget {
                         imageUrl ?? defaultUserImageURL,
                         size: 30,
                         fit: BoxFit.cover,
-                        onTap: onImageTap,
+                        onTap: onImageTap ?? () {},
                       ),
                     ),
                   ),
@@ -88,16 +85,18 @@ class LendingParticipantCard extends StatelessWidget {
                         acceptTime != null
                             ? DateFormat(
                                     'MMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs
-                                            .getString('language_code'))
+                                    Locale(AppConfig.prefs!
+                                                .getString('language_code') ??
+                                            'en')
                                         .toLanguageTag())
                                 .format(
                                 getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       acceptTime),
                                   timezoneAbb: SevaCore.of(context)
-                                      .loggedInUser
-                                      .timezone,
+                                          .loggedInUser
+                                          .timezone ??
+                                      'UTC',
                                 ),
                               )
                             : S.of(context).error_loading_data,
@@ -130,27 +129,26 @@ class LendingParticipantCard extends StatelessWidget {
 }
 
 class RequestParticipantCard extends StatelessWidget {
-  final Padding padding;
+  final EdgeInsetsGeometry? padding;
   final double radius;
-  final String imageUrl;
+  final String? imageUrl;
   final String name;
-  final String bio;
+  final String? bio;
   final VoidCallback onTap;
   final Color buttonColor;
   final String buttonTitle;
 
   const RequestParticipantCard({
-    Key key,
+    Key? key,
     this.padding,
     this.radius = 8,
     this.imageUrl,
-    this.name,
+    required this.name,
     this.bio,
-    this.onTap,
-    this.buttonColor,
-    this.buttonTitle,
-  })  : assert(name != null),
-        super(key: key);
+    required this.onTap,
+    required this.buttonColor,
+    required this.buttonTitle,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -208,6 +206,12 @@ class RequestParticipantCard extends StatelessWidget {
                           height: 30,
                           child: CustomElevatedButton(
                             color: buttonColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            elevation: 2,
+                            textColor: Colors.white,
                             child: Text(
                               buttonTitle,
                               style: TextStyle(
@@ -234,7 +238,7 @@ class RequestParticipantCard extends StatelessWidget {
                   aspectRatio: 1,
                   child: imageUrl != null
                       ? CustomNetworkImage(
-                          imageUrl,
+                          imageUrl ?? defaultUserImageURL,
                           fit: BoxFit.cover,
                         )
                       : CustomAvatar(

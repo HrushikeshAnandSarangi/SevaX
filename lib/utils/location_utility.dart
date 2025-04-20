@@ -4,42 +4,38 @@ import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationUtility {
-  Future<String> getFormattedAddress(double latitude, double longitude) async {
-    List<Placemark> placemarkList;
+  Future<String?> getFormattedAddress(double latitude, double longitude) async {
     try {
-      
-      placemarkList = await placemarkFromCoordinates(
-        latitude,
-        longitude,
-      );
-    } on PlatformException catch (error) {
-      if (error.code == 'ERROR_GEOCODING_INVALID_COORDINATES') {
-        log('getFormattedAdress: ${error.message}');
-        return null;
+      final placemarkList = await placemarkFromCoordinates(latitude, longitude);
+      if (placemarkList.isNotEmpty) {
+        final placemark = placemarkList.first;
+        return _getAddress(placemark);
       }
       return null;
+    } on PlatformException catch (error) {
+      if (error.code == 'ERROR_GEOCODING_INVALID_COORDINATES') {
+        log('getFormattedAddress: ${error.message}');
+      }
+      return null;
+    } catch (e) {
+      log('Error getting address: $e');
+      return null;
     }
-    if (placemarkList != null && placemarkList.isNotEmpty) {
-      Placemark placemark = placemarkList.first;
-      return _getAddress(placemark);
-    }
-    return null;
   }
 
   String _getAddress(Placemark placemark) {
-    String address = '';
-    if (placemark.name != null && placemark.name.isNotEmpty) {
-      address += placemark.name;
+    final addressComponents = <String>[];
+
+    void addComponent(String? component) {
+      if (component != null && component.isNotEmpty) {
+        addressComponents.add(component);
+      }
     }
-    if (placemark.locality != null && placemark.locality.isNotEmpty) {
-      if (address.isNotEmpty) address += ', ';
-      address += placemark.locality;
-    }
-    if (placemark.administrativeArea != null &&
-        placemark.administrativeArea.isNotEmpty) {
-      if (address.isNotEmpty) address += ', ';
-      address += placemark.administrativeArea;
-    }
-    return address;
+
+    addComponent(placemark.name);
+    addComponent(placemark.locality);
+    addComponent(placemark.administrativeArea);
+
+    return addressComponents.join(', ');
   }
 }

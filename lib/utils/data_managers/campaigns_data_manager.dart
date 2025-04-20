@@ -1,124 +1,147 @@
-// import 'dart:async';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-// import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-// import 'package:meta/meta.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+// Ensure that the file 'campaign_model.dart' exists and defines 'class CampaignModel'
+import 'package:meta/meta.dart';
 
-// Stream<List<CampaignModel>> getCampaignsForUserStream(
-//     {@required String userEmail}) async* {
-//   var data = CollectionRef
-//       .collection('campaigns')
-//       .where('membersemail', isEqualTo: userEmail)
-//       .snapshots();
+class CampaignModel {
+  String id;
+  // Add other fields as needed
 
-//   yield* data.transform(
-//     StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
-//       handleData: (snapshot, campaignSink) {
-//         List<CampaignModel> modelList = [];
-//         snapshot.docs.forEach((documentSnapshot) {
-//           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data());
-//           model.id = documentSnapshot.id;
-//           modelList.add(model);
-//         });
+  CampaignModel({required this.id});
 
-//         campaignSink.add(modelList);
-//       },
-//     ),
-//   );
-// }
+  factory CampaignModel.fromMap(Map<String, dynamic> map) {
+    return CampaignModel(
+      id: map['id'] ?? '',
+      // Initialize other fields here
+    );
+  }
+}
 
-// Future<List<CampaignModel>> getCampaignsForUser(
-//     {@required String userEmail}) async {
-//   assert(userEmail != null && userEmail.isNotEmpty,
-//       'Email address cannot be null or empty');
+Stream<List<CampaignModel>> getCampaignsForUserStream(
+    {required String userEmail}) async* {
+  var data = FirebaseFirestore.instance
+      .collection('campaigns')
+      .where('membersemail', isEqualTo: userEmail)
+      .snapshots();
 
-//   List<String> campaignIdList = [];
-//   List<CampaignModel> campaignModelList = [];
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
+        List<CampaignModel>>.fromHandlers(
+      handleData: (snapshot, campaignSink) {
+        List<CampaignModel> modelList = [];
+        snapshot.docs.forEach((documentSnapshot) {
+          CampaignModel model = CampaignModel.fromMap(
+              documentSnapshot.data() as Map<String, dynamic>);
+          model.id = documentSnapshot.id;
+          modelList.add(model);
+        });
 
-//   await CollectionRef
-//       .users
-//       .doc(userEmail)
-//       .get()
-//       .then((DocumentSnapshot documentSnapshot) {
-//     Map<String, dynamic> dataMap = documentSnapshot.data();
-//     List timeBankList = dataMap['membership_campaigns'];
-//     campaignIdList = List.castFrom(timeBankList);
-//   });
+        campaignSink.add(modelList);
+      },
+    ),
+  );
+}
 
-//   for (int i = 0; i < campaignIdList.length; i += 1) {
-//     CampaignModel campaignModel = await getCampaignForId(
-//       campaignId: campaignIdList[i],
-//     );
-//     campaignModelList.add(campaignModel);
-//   }
+Future<List<CampaignModel>> getCampaignsForUser(
+    {required String userEmail}) async {
+  assert(userEmail != null && userEmail.isNotEmpty,
+      'Email address cannot be null or empty');
 
-//   return campaignModelList;
-// }
+  List<String> campaignIdList = [];
+  List<CampaignModel> campaignModelList = [];
 
-// Future<CampaignModel> getCampaignForId({@required String campaignId}) async {
-//   assert(campaignId != null && campaignId.isNotEmpty,
-//       'Campaign ID cannot be null or empty');
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userEmail)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> dataMap =
+        documentSnapshot.data() as Map<String, dynamic>;
+    List timeBankList = dataMap['membership_campaigns'];
+    campaignIdList = List.castFrom(timeBankList);
+  });
 
-//   CampaignModel campaignModel;
-//   await CollectionRef
-//       .collection('campaigns')
-//       .doc(campaignId)
-//       .get()
-//       .then((DocumentSnapshot documentSnapshot) {
-//     Map<String, dynamic> dataMap = documentSnapshot.data();
-//     campaignModel = CampaignModel.fromMap(dataMap);
-//     campaignModel.id = documentSnapshot.id;
-//   });
+  for (int i = 0; i < campaignIdList.length; i += 1) {
+    CampaignModel campaignModel = await getCampaignForId(
+      campaignId: campaignIdList[i],
+    );
+    campaignModelList.add(campaignModel);
+  }
 
-//   return campaignModel;
-// }
+  return campaignModelList;
+}
 
-// Stream<List<CampaignModel>> getCampaignsForTimebankStream(
-//     {@required TimebankModel timebankModel}) async* {
-//   assert(
-//     timebankModel != null &&
-//         timebankModel.id != null &&
-//         timebankModel.id.isNotEmpty,
-//   );
+Future<CampaignModel> getCampaignForId({required String campaignId}) async {
+  assert(campaignId != null && campaignId.isNotEmpty,
+      'Campaign ID cannot be null or empty');
 
-//   var data = CollectionRef
-//       .collection('campaigns')
-//       .where('parent_timebank', isEqualTo: timebankModel.id)
-//       .snapshots();
+  final documentSnapshot = await FirebaseFirestore.instance
+      .collection('campaigns')
+      .doc(campaignId)
+      .get();
 
-//   yield* data.transform(
-//     StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
-//       handleData: (snapshot, campaignSink) {
-//         List<CampaignModel> models = [];
+  Map<String, dynamic> dataMap =
+      documentSnapshot.data() as Map<String, dynamic>;
+  CampaignModel campaignModel = CampaignModel.fromMap(dataMap);
+  campaignModel.id = documentSnapshot.id;
 
-//         snapshot.docs.forEach((documentSnapshot) {
-//           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data());
-//           model.id = documentSnapshot.id;
-//           models.add(model);
-//         });
+  return campaignModel;
+}
 
-//         campaignSink.add(models);
-//       },
-//     ),
-//   );
-// }
+Stream<List<CampaignModel>> getCampaignsForTimebankStream(
+    {required TimebankModel timebankModel}) async* {
+  assert(
+    timebankModel != null &&
+        timebankModel.id != null &&
+        timebankModel.id.isNotEmpty,
+  );
 
-// Stream<CampaignModel> getCampaignForIdStream(
-//     {@required String campaignId}) async* {
-//   assert(campaignId != null && campaignId.isNotEmpty);
+  var data = FirebaseFirestore.instance
+      .collection('campaigns')
+      .where('parent_timebank', isEqualTo: timebankModel.id)
+      .snapshots();
 
-//   var data = CollectionRef
-//       .collection('campaigns')
-//       .doc(campaignId)
-//       .snapshots();
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
+        List<CampaignModel>>.fromHandlers(
+      handleData: (snapshot, campaignSink) {
+        List<CampaignModel> models = [];
 
-//   yield* data.transform(
-//     StreamTransformer<DocumentSnapshot, CampaignModel>.fromHandlers(
-//       handleData: (snapshot, campaignSink) {
-//         CampaignModel model = CampaignModel.fromMap(snapshot.data);
-//         model.id = snapshot.id;
-//         campaignSink.add(model);
-//       },
-//     ),
-//   );
-// }
+        snapshot.docs.forEach((documentSnapshot) {
+          CampaignModel model = CampaignModel.fromMap(
+              documentSnapshot.data() as Map<String, dynamic>);
+          model.id = documentSnapshot.id;
+          models.add(model);
+        });
+
+        campaignSink.add(models);
+      },
+    ),
+  );
+}
+
+Stream<CampaignModel> getCampaignForIdStream(
+    {required String campaignId}) async* {
+  assert(campaignId != null && campaignId.isNotEmpty);
+
+  var data = FirebaseFirestore.instance
+      .collection('campaigns')
+      .doc(campaignId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot<Map<String, dynamic>>,
+        CampaignModel>.fromHandlers(
+      handleData: (snapshot, campaignSink) {
+        final map = snapshot.data();
+        if (map != null) {
+          CampaignModel model = CampaignModel.fromMap(map);
+          model.id = snapshot.id;
+          campaignSink.add(model);
+        }
+      },
+    ),
+  );
+}

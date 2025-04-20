@@ -6,13 +6,13 @@ class SearchSegmentBloc {
   List<SearchResultModel> searchResultsFromUserInput = [];
   List<String> selectedMembersForShare = [];
 
-  List<UserModel> listOfMembersInTimebank;
+  late List<UserModel> listOfMembersInTimebank;
   var searchResults = BehaviorSubject<List<SearchResultModel>>();
   Stream<List<SearchResultModel>> get searchResultsStream =>
       searchResults.stream;
 
-  void init({List<UserModel> listOfMembersInTimebank}) {
-    this.listOfMembersInTimebank = listOfMembersInTimebank ?? [];
+  void init({required List<UserModel> listOfMembersInTimebank}) {
+    this.listOfMembersInTimebank = listOfMembersInTimebank;
     searchResultsFromUserInput = _getAllMembers();
     searchResults.add(searchResultsFromUserInput);
   }
@@ -38,7 +38,8 @@ class SearchSegmentBloc {
     if (listOfMembersInTimebank == null) listOfMembersInTimebank = [];
     listOfMembersInTimebank.forEach((element) {
       if (element != null &&
-          element.fullname.toLowerCase().contains(searchTerm.toLowerCase())) {
+          element.fullname?.toLowerCase().contains(searchTerm.toLowerCase()) ==
+              true) {
         searchResultsFromUserInput.add(SearchResultModel(
           isSelected: selectedMembersForShare.contains(element.sevaUserID),
           userModel: element,
@@ -69,7 +70,7 @@ class SearchSegmentBloc {
             SearchResultModel(
               userModel: element.userModel,
               isSelected: selectedMembersForShare
-                  .contains(element.userModel.sevaUserID),
+                  .contains(element.userModel?.sevaUserID),
             ),
           );
       },

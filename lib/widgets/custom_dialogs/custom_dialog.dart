@@ -7,58 +7,57 @@ class CustomDialogs {
     BuildContext context,
     String title,
   ) async {
-    return showDialog(
-          context: context,
-          builder: (_context) => AlertDialog(
-            title: Text(title),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15,
-                ),
-                child: CustomTextButton(
-                  shape: StadiumBorder(),
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  color: Colors.grey,
-                  onPressed: () {
-                    Navigator.of(_context).pop(false);
-                  },
-                  child: Text(
-                    S.of(context).no,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Europa',
-                    ),
-                  ),
+    return showDialog<bool>(
+      context: context,
+      builder: (_context) => AlertDialog(
+        title: Text(title),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 15,
+            ),
+            child: CustomTextButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.of(_context).pop(false);
+              },
+              child: Text(
+                S.of(context).no,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontFamily: 'Europa',
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15,
-                  right: 15,
-                ),
-                child: CustomTextButton(
-                  shape: StadiumBorder(),
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    Navigator.of(_context).pop(true);
-                  },
-                  child: Text(
-                    S.of(context).yes,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Europa',
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ) ??
-        false;
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 15,
+              right: 15,
+            ),
+            child: CustomTextButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).colorScheme.secondary,
+              onPressed: () {
+                Navigator.of(_context).pop(true);
+              },
+              child: Text(
+                S.of(context).yes,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontFamily: 'Europa',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
   /// return true when close button is pressed
@@ -66,29 +65,28 @@ class CustomDialogs {
     BuildContext context,
     String title,
   ) async {
-    return showDialog(
-          context: context,
-          builder: (_context) => AlertDialog(
-            title: Text(title),
-            actions: [
-              CustomTextButton(
-                shape: StadiumBorder(),
-                color: Theme.of(context).accentColor,
-                onPressed: () {
-                  Navigator.of(_context).pop(true);
-                },
-                child: Text(
-                  S.of(context).close,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Europa',
-                    fontSize: 16,
-                  ),
-                ),
+    return showDialog<bool>(
+      context: context,
+      builder: (_context) => AlertDialog(
+        title: Text(title),
+        actions: [
+          CustomTextButton(
+            shape: StadiumBorder(),
+            color: Theme.of(context).colorScheme.secondary,
+            onPressed: () {
+              Navigator.of(_context).pop(true);
+            },
+            child: Text(
+              S.of(context).close,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Europa',
+                fontSize: 16,
               ),
-            ],
+            ),
           ),
-        ) ??
-        false;
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 }

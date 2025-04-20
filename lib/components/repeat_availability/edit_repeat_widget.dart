@@ -6,14 +6,14 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class A {
-  int a;
-  String b;
+  int? a;
+  String? b;
 }
 
 class EditRepeatWidget<T> extends StatefulWidget {
   final T recurringModel;
 
-  EditRepeatWidget({this.recurringModel});
+  EditRepeatWidget({required this.recurringModel});
 
   @override
   EditRepeatWidgetState createState() => EditRepeatWidgetState();
@@ -45,12 +45,12 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
     '10'
   ];
 
-  static List<bool> _selected;
+  static List<bool> _selected = List.generate(7, (index) => false);
   static List<int> recurringDays = [];
   static DateTime selectedDate = DateTime.now();
   static int endType = 0;
   static String after = "";
-  static bool isRecurring;
+  static bool? isRecurring;
 
   @override
   void initState() {
@@ -64,21 +64,21 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
   }
 
   void initialValue({
-    bool recurring,
-    List<int> recurringDays,
-    End end,
+    bool? recurring,
+    List<int>? recurringDays,
+    End? end,
   }) {
     isRecurring = recurring;
     _selected = List.generate(
-        dayNameList.length, (i) => recurringDays.contains(i) ? true : false);
+        dayNameList.length, (i) => recurringDays?.contains(i) ?? false);
     _selectOnAfter();
 
-    endType = end.endType == "on" ? 0 : 1;
-    selectedDate = end.endType == "on"
-        ? DateTime.fromMillisecondsSinceEpoch(end.on)
+    endType = end?.endType == "on" ? 0 : 1;
+    selectedDate = end?.endType == "on"
+        ? DateTime.fromMillisecondsSinceEpoch(end!.on)
         : DateTime.now();
 
-    after = end.endType == "on" ? "1" : end.after.toString();
+    after = end?.endType == "on" ? "1" : end?.after?.toString() ?? "1";
   }
 
   bool viewVisible = false;
@@ -86,9 +86,9 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
 
   static String selectedDays = '';
 
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      endType = value;
+      endType = value ?? 0;
     });
   }
 
@@ -136,22 +136,23 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
   DateFormat dateFormat = DateFormat.yMMMd();
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2015, 1),
         lastDate: DateTime(2101),
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
               primaryColor: Colors.purple, //Head background
-              accentColor: Colors.purple, //selection color
-              colorScheme:
-                  ColorScheme.light(primary: Theme.of(context).primaryColor),
+              colorScheme: ColorScheme.light(
+                primary: Theme.of(context).primaryColor,
+                secondary: Colors.purple, //selection color
+              ),
               buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
               //dialogBackgroundColor: Colors.white,//Background color
             ),
-            child: child,
+            child: child!,
           );
         });
     if (picked != null && picked != selectedDate)
@@ -183,7 +184,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                         color: Colors.black,
                       )),
                   Visibility(
-                    visible: isRecurring,
+                    visible: isRecurring ?? false,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                       child: Container(
@@ -358,9 +359,9 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                   child: DropdownButton(
                                     value: after,
                                     onChanged: endType == 1
-                                        ? (Value) {
+                                        ? (String? Value) {
                                             setState(() {
-                                              after = Value;
+                                              after = Value ?? after;
                                             });
                                           }
                                         : null,

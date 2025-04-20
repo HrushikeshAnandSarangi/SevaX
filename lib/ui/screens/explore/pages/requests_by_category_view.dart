@@ -34,9 +34,9 @@ class RequestsByCategoryView extends StatefulWidget {
   final bool isUserSignedIn;
 
   const RequestsByCategoryView({
-    Key key,
-    @required this.model,
-    @required this.isUserSignedIn,
+    Key? key,
+    required this.model,
+    required this.isUserSignedIn,
   }) : super(key: key);
 
   @override
@@ -44,12 +44,13 @@ class RequestsByCategoryView extends StatefulWidget {
 }
 
 class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
-  Future<List<RequestModel>> requests;
+  Future<List<RequestModel>>? requests;
 
   @override
   void initState() {
-    requests = ElasticSearchApi.getRequestsByCategory(widget.model.typeId);
-    log('type id: ' + widget.model.typeId);
+    requests =
+        ElasticSearchApi.getRequestsByCategory(widget.model.typeId ?? '');
+    log('type id: ' + (widget.model.typeId ?? ''));
     super.initState();
   }
 
@@ -69,7 +70,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return WidgetWrapper(
-                  categoryTitle: widget.model.title_en,
+                  categoryTitle: widget.model.title_en!,
                   page: 'Request Category',
                   isUserSignedIn: widget.isUserSignedIn,
                   children: [
@@ -84,9 +85,9 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                   ],
                 );
               }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
+              if (snapshot.data == null || (snapshot.data as List).isEmpty) {
                 return WidgetWrapper(
-                  categoryTitle: widget.model.title_en,
+                  categoryTitle: widget.model.title_en!,
                   page: 'Request Category',
                   isUserSignedIn: widget.isUserSignedIn,
                   children: [
@@ -100,22 +101,23 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
               }
 
               return WidgetWrapper(
-                categoryTitle: widget.model.title_en,
+                categoryTitle: widget.model.title_en!,
                 page: 'Request Category',
                 isUserSignedIn: widget.isUserSignedIn,
                 children: [
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data.length,
+                    itemCount: (snapshot.data as List).length,
                     itemBuilder: (context, index) {
-                      var request = snapshot.data[index];
+                      var request =
+                          (snapshot.data as List<RequestModel>)[index];
                       // var date = DateTime.fromMillisecondsSinceEpoch(
                       //     request.requestStart);
                       return widget.isUserSignedIn
-                          ? FutureBuilder<TimebankModel>(
+                          ? FutureBuilder<TimebankModel?>(
                               future: getTimeBankForId(
-                                  timebankId: request.timebankId),
+                                  timebankId: request.timebankId ?? ''),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -134,10 +136,10 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                                 .loggedInUser
                                                 .sevaUserID ||
                                         isAccessAvailable(
-                                            snapshot.data,
+                                            snapshot.data!,
                                             SevaCore.of(context)
                                                 .loggedInUser
-                                                .sevaUserID)) {
+                                                .sevaUserID!)) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -145,7 +147,10 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                             bloc: BlocProvider.of<
                                                 HomeDashBoardBloc>(context),
                                             child: RequestTabHolder(
-                                              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                              communityModel: BlocProvider.of<
+                                                          HomeDashBoardBloc>(
+                                                      context)!
+                                                  .selectedCommunityModel,
                                               isAdmin: true,
                                             ),
                                           ),
@@ -175,8 +180,10 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                   description: request.description,
                                   location: request.address,
                                   communityName: request.fullName ?? '',
-                                  date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
-                                  time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
+                                  date: DateFormat('d MMMM, y').format(context
+                                      .getDateTime(request.requestStart!)),
+                                  time: DateFormat.jm().format(context
+                                      .getDateTime(request.requestStart!)),
                                   memberList: MemberAvatarListWithCount(
                                     userIds: request.approvedUsers,
                                   ),
@@ -194,8 +201,10 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                               description: request.description,
                               location: request.address,
                               communityName: request.fullName ?? '',
-                              date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
-                              time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
+                              date: DateFormat('d MMMM, y').format(
+                                  context.getDateTime(request.requestStart!)),
+                              time: DateFormat.jm().format(
+                                  context.getDateTime(request.requestStart!)),
                               memberList: MemberAvatarListWithCount(
                                 userIds: request.approvedUsers,
                               ),
@@ -216,13 +225,13 @@ class WidgetWrapper extends StatelessWidget {
   final List<Widget> children;
   final String page;
   final String categoryTitle;
-  final bool isUserSignedIn;
+  final bool? isUserSignedIn;
 
   const WidgetWrapper(
-      {Key key,
-      this.children,
-      @required this.page,
-      @required this.categoryTitle,
+      {Key? key,
+      required this.children,
+      required this.page,
+      required this.categoryTitle,
       this.isUserSignedIn})
       : super(key: key);
 
@@ -231,7 +240,7 @@ class WidgetWrapper extends StatelessWidget {
     return Column(
       children: [
         HideWidget(
-          hide: isUserSignedIn,
+          hide: isUserSignedIn!,
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -272,6 +281,7 @@ class WidgetWrapper extends StatelessWidget {
               // ),
             ),
           ),
+          secondChild: SizedBox.shrink(),
         ),
         ...children
       ],

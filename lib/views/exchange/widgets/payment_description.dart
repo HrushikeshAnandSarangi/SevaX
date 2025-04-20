@@ -5,7 +5,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_utils.dart';
 
 class PaymentDescription extends StatefulWidget {
-  final RequestModel requestModel;
+  final RequestModel? requestModel;
 
   const PaymentDescription({this.requestModel});
 
@@ -41,77 +41,91 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_ach,
           value: RequestPaymentType.ACH,
-          groupvalue: widget.requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel?.cashModel?.paymentType,
           onChanged: (value) {
-            widget.requestModel.cashModel.paymentType = value;
-            setState(() => {});
+            if (widget.requestModel?.cashModel != null) {
+              widget.requestModel!.cashModel?.paymentType = value;
+              setState(() {});
+            }
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_paypal,
           value: RequestPaymentType.PAYPAL,
-          groupvalue: widget.requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel?.cashModel?.paymentType,
           onChanged: (value) {
-            widget.requestModel.cashModel.paymentType = value;
-            setState(() => {});
+            if (widget.requestModel?.cashModel != null) {
+              widget.requestModel!.cashModel?.paymentType = value;
+              setState(() {});
+            }
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: 'Swift',
           value: RequestPaymentType.SWIFT,
-          groupvalue: widget.requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel?.cashModel?.paymentType,
           onChanged: (value) {
-            widget.requestModel.cashModel.paymentType = value;
-            setState(() => {});
+            if (widget.requestModel?.cashModel != null) {
+              widget.requestModel!.cashModel?.paymentType = value;
+              setState(() {});
+            }
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: 'Venmo',
           value: RequestPaymentType.VENMO,
-          groupvalue: widget.requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel?.cashModel?.paymentType,
           onChanged: (value) {
-            widget.requestModel.cashModel.paymentType = value;
-            setState(() => {});
+            if (widget.requestModel?.cashModel != null) {
+              widget.requestModel!.cashModel?.paymentType = value;
+              setState(() {});
+            }
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_zellepay,
           value: RequestPaymentType.ZELLEPAY,
-          groupvalue: widget.requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel?.cashModel?.paymentType,
           onChanged: (value) {
-            widget.requestModel.cashModel.paymentType = value;
-            setState(() => {});
+            if (widget.requestModel?.cashModel != null) {
+              widget.requestModel!.cashModel?.paymentType = value;
+              setState(() {});
+            }
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).other_text,
           value: RequestPaymentType.OTHER,
-          groupvalue: widget.requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel?.cashModel?.paymentType,
           onChanged: (value) {
-            widget.requestModel.cashModel.paymentType = value;
-            setState(() => {});
+            if (widget.requestModel?.cashModel != null) {
+              widget.requestModel!.cashModel?.paymentType = value;
+              setState(() {});
+            }
           },
         ),
-        widget.requestModel.cashModel.paymentType == RequestPaymentType.ACH
-            ? RequestPaymentACH()
-            : widget.requestModel.cashModel.paymentType ==
-                    RequestPaymentType.PAYPAL
-                ? RequestPaymentPaypal()
-                : widget.requestModel.cashModel.paymentType ==
-                        RequestPaymentType.VENMO
-                    ? RequestPaymentVenmo()
-                    : widget.requestModel.cashModel.paymentType ==
-                            RequestPaymentType.SWIFT
-                        ? RequestPaymentSwift()
-                        : widget.requestModel.cashModel.paymentType ==
-                                RequestPaymentType.OTHER
-                            ? OtherDetailsWidget()
-                            : RequestPaymentZellePay(),
+        if (widget.requestModel?.cashModel != null) _buildPaymentTypeWidget(),
       ],
     );
   }
 
-  Widget RequestPaymentDescriptionData(RequestModel requestModel) {}
+  Widget _buildPaymentTypeWidget() {
+    switch (widget.requestModel!.cashModel?.paymentType) {
+      case RequestPaymentType.ACH:
+        return RequestPaymentACH();
+      case RequestPaymentType.PAYPAL:
+        return RequestPaymentPaypal();
+      case RequestPaymentType.VENMO:
+        return RequestPaymentVenmo();
+      case RequestPaymentType.SWIFT:
+        return RequestPaymentSwift();
+      case RequestPaymentType.OTHER:
+        return OtherDetailsWidget();
+      case RequestPaymentType.ZELLEPAY:
+      default:
+        return RequestPaymentZellePay();
+    }
+  }
 
   Widget RequestPaymentACH() {
     return Column(
@@ -130,7 +144,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue:
-                widget.requestModel.cashModel?.achdetails?.bank_name ?? '',
+                widget.requestModel?.cashModel?.achdetails?.bank_name ?? '',
             onChanged: (value) {
               requestUtils.updateExitWithConfirmationValue(context, 3, value);
             },
@@ -138,14 +152,15 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
-              if (value.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.bank_name = value;
+              } else if (value.isNotEmpty &&
+                  widget.requestModel?.cashModel?.achdetails != null) {
+                widget.requestModel!.cashModel?.achdetails?.bank_name = value;
+                return null;
               } else {
                 return S.of(context).enter_valid_bank_name;
               }
-              return null;
             },
           ),
           SizedBox(height: 20),
@@ -161,7 +176,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue:
-                widget.requestModel.cashModel?.achdetails?.bank_address ?? '',
+                widget.requestModel?.cashModel?.achdetails?.bank_address ?? '',
             onChanged: (value) {
               requestUtils.updateExitWithConfirmationValue(context, 4, value);
             },
@@ -169,14 +184,16 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
-              if (value.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.bank_address = value;
+              } else if (value.isNotEmpty &&
+                  widget.requestModel?.cashModel?.achdetails != null) {
+                widget.requestModel!.cashModel?.achdetails?.bank_address =
+                    value;
+                return null;
               } else {
                 return S.of(context).enter_valid_bank_address;
               }
-              return null;
             },
           ),
           SizedBox(height: 20),
@@ -193,7 +210,8 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             maxLength: 30,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue:
-                widget.requestModel.cashModel?.achdetails?.routing_number ?? '',
+                widget.requestModel?.cashModel?.achdetails?.routing_number ??
+                    '',
             onChanged: (value) {
               requestUtils.updateExitWithConfirmationValue(context, 5, value);
             },
@@ -201,14 +219,16 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
-              if (value.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.routing_number = value;
+              } else if (value.isNotEmpty &&
+                  widget.requestModel?.cashModel?.achdetails != null) {
+                widget.requestModel!.cashModel?.achdetails?.routing_number =
+                    value;
+                return null;
               } else {
                 return S.of(context).enter_valid_routing_number;
               }
-              return null;
             },
           ),
           SizedBox(height: 20),
@@ -224,7 +244,8 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           TextFormField(
             maxLength: 30,
             initialValue:
-                widget.requestModel.cashModel?.achdetails?.account_number ?? '',
+                widget.requestModel?.cashModel?.achdetails?.account_number ??
+                    '',
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               requestUtils.updateExitWithConfirmationValue(context, 6, value);
@@ -233,14 +254,16 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
-              if (value.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.account_number = value;
+              } else if (value.isNotEmpty &&
+                  widget.requestModel?.cashModel?.achdetails != null) {
+                widget.requestModel!.cashModel?.achdetails?.account_number =
+                    value;
+                return null;
               } else {
                 return S.of(context).enter_valid_account_number;
               }
-              return null;
             },
           )
         ]);
@@ -252,7 +275,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         children: <Widget>[
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel?.zelleId ?? '',
+            initialValue: widget.requestModel?.cashModel?.zelleId ?? '',
             onChanged: (value) {
               requestUtils.updateExitWithConfirmationValue(context, 7, value);
             },
@@ -266,11 +289,16 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              widget.requestModel.cashModel.zelleId = value;
+              if (widget.requestModel?.cashModel != null && value != null) {
+                widget.requestModel!.cashModel?.zelleId = value;
+              }
             },
             validator: (value) {
-              widget.requestModel.cashModel.zelleId = value;
-              return _validateEmailAndPhone(value);
+              if (value != null && widget.requestModel?.cashModel != null) {
+                widget.requestModel!.cashModel?.zelleId = value;
+                return _validateEmailAndPhone(value);
+              }
+              return S.of(context).validation_error_general_text;
             },
           )
         ]);
@@ -280,11 +308,13 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
-  String _validateEmailAndPhone(String value) {
-    RegExp regExp = RegExp(mobilePattern);
-    if (value.isEmpty) {
+  String? _validateEmailAndPhone(String? value) {
+    if (value == null || value.isEmpty) {
       return S.of(context).validation_error_general_text;
-    } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
+    }
+
+    RegExp regExp = RegExp(mobilePattern);
+    if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
       return null;
     } else {
       return S.of(context).enter_valid_link;
@@ -306,19 +336,24 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
               hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: requestUtils.hintTextStyle,
             ),
-            initialValue: widget.requestModel.cashModel?.paypalId ?? '',
+            initialValue: widget.requestModel?.cashModel?.paypalId ?? '',
             keyboardType: TextInputType.emailAddress,
             maxLines: 1,
             onSaved: (value) {
-              widget.requestModel.cashModel.paypalId = value;
+              if (widget.requestModel?.cashModel != null && value != null) {
+                widget.requestModel!.cashModel?.paypalId = value;
+              }
             },
             validator: (value) {
-              RegExp regExp = RegExp(mobilePattern);
-              if (value.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (emailPattern.hasMatch(value) ||
-                  regExp.hasMatch(value)) {
-                widget.requestModel.cashModel.paypalId = value;
+              }
+
+              RegExp regExp = RegExp(mobilePattern);
+              if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
+                if (widget.requestModel?.cashModel != null) {
+                  widget.requestModel!.cashModel?.paypalId = value;
+                }
                 return null;
               } else {
                 return S.of(context).enter_valid_link;
@@ -334,8 +369,10 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         children: <Widget>[
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel?.venmoId ?? '',
-            onChanged: (value) {},
+            initialValue: widget.requestModel?.cashModel?.venmoId ?? '',
+            onChanged: (value) {
+              requestUtils.updateExitWithConfirmationValue(context, 9, value);
+            },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
@@ -345,15 +382,18 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.emailAddress,
             maxLines: 1,
             onSaved: (value) {
-              widget.requestModel.cashModel.venmoId = value;
+              if (widget.requestModel?.cashModel != null && value != null) {
+                widget.requestModel!.cashModel?.venmoId = value;
+              }
             },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else {
-                widget.requestModel.cashModel.venmoId = value;
+              } else if (widget.requestModel?.cashModel != null) {
+                widget.requestModel!.cashModel?.venmoId = value;
                 return null;
               }
+              return null;
             },
           )
         ]);
@@ -365,7 +405,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         children: <Widget>[
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel?.swiftId ?? '',
+            initialValue: widget.requestModel?.cashModel?.swiftId ?? '',
             onChanged: (value) {
               requestUtils.updateExitWithConfirmationValue(context, 7, value);
             },
@@ -379,17 +419,20 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             maxLines: 1,
             maxLength: 11,
             onSaved: (value) {
-              widget.requestModel.cashModel.swiftId = value;
+              if (widget.requestModel?.cashModel != null && value != null) {
+                widget.requestModel!.cashModel?.swiftId = value;
+              }
             },
             validator: (value) {
-              if (value.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return 'ID cannot be empty';
               } else if (value.length < 8) {
                 return 'Enter valid Swift ID';
-              } else {
-                widget.requestModel.cashModel.swiftId = value;
+              } else if (widget.requestModel?.cashModel != null) {
+                widget.requestModel!.cashModel?.swiftId = value;
                 return null;
               }
+              return null;
             },
           )
         ]);
@@ -409,8 +452,10 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel?.others ?? '',
-            onChanged: (value) {},
+            initialValue: widget.requestModel?.cashModel?.others ?? '',
+            onChanged: (value) {
+              requestUtils.updateExitWithConfirmationValue(context, 10, value);
+            },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
@@ -420,18 +465,22 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              widget.requestModel.cashModel.others = value;
+              if (widget.requestModel?.cashModel != null && value != null) {
+                widget.requestModel!.cashModel?.others = value;
+              }
             },
             validator: (value) {
-              if (value.isEmpty || value == null) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               }
-              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+              if (value.isNotEmpty &&
+                  profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
-              } else {
-                widget.requestModel.cashModel.others = value;
+              } else if (widget.requestModel?.cashModel != null) {
+                widget.requestModel!.cashModel?.others = value;
                 return null;
               }
+              return null;
             },
           ),
           SizedBox(
@@ -447,13 +496,15 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel?.other_details ?? '',
+            initialValue: widget.requestModel?.cashModel?.other_details ?? '',
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.multiline,
             minLines: 5,
             maxLines: null,
             onSaved: (value) {
-              widget.requestModel.cashModel.other_details = value;
+              if (widget.requestModel?.cashModel != null && value != null) {
+                widget.requestModel!.cashModel?.other_details = value;
+              }
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
@@ -461,25 +512,27 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
               hintStyle: requestUtils.hintTextStyle,
             ),
             validator: (value) {
-              if (value.isEmpty || value == null) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               }
-              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+              if (value.isNotEmpty &&
+                  profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
-              } else {
-                widget.requestModel.cashModel.other_details = value;
+              } else if (widget.requestModel?.cashModel != null) {
+                widget.requestModel!.cashModel?.other_details = value;
                 return null;
               }
+              return null;
             },
           ),
         ]);
   }
 
   Widget _optionRadioButton<T>({
-    String title,
-    T value,
-    T groupvalue,
-    Function onChanged,
+    required String title,
+    required T value,
+    required T? groupvalue,
+    required Function onChanged,
     bool isEnabled = true,
   }) {
     return ListTile(
@@ -489,7 +542,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       leading: Radio<T>(
         value: value,
         groupValue: groupvalue,
-        onChanged: (isEnabled ?? true) ? onChanged : null,
+        onChanged: (isEnabled) ? (T? val) => onChanged(val) : null,
       ),
     );
   }

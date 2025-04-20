@@ -15,15 +15,15 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class CommunityByCategoryView extends StatefulWidget {
   final CommunityCategoryModel model;
   final bool isFromNearby;
-  final GeoPoint geoPoint;
+  final GeoPoint? geoPoint;
   final bool isUserSignedIn;
 
   const CommunityByCategoryView({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
     this.isFromNearby = false,
     this.geoPoint,
-    @required this.isUserSignedIn,
+    required this.isUserSignedIn,
   }) : super(key: key);
   @override
   _CommunityByCategoryViewState createState() =>
@@ -31,8 +31,8 @@ class CommunityByCategoryView extends StatefulWidget {
 }
 
 class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
-  Future<List<CommunityModel>> communities;
-  FindCommunitiesBloc _bloc;
+  Future<List<CommunityModel>>? communities;
+  FindCommunitiesBloc? _bloc;
 
   @override
   void initState() {
@@ -55,8 +55,8 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
       child: widget.isFromNearby
           ? StreamBuilder(
               stream: widget.isUserSignedIn
-                  ? _bloc.nearyByCommunities
-                  : Searches.getNearBYCommunities(geoPoint: widget.geoPoint),
+                  ? _bloc!.nearyByCommunities!
+                  : Searches.getNearBYCommunities(geoPoint: widget.geoPoint!),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Container(
@@ -69,7 +69,8 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                     ),
                   );
                 }
-                if (snapshot.data == null || snapshot.data.isEmpty) {
+                if (snapshot.data == null ||
+                    (snapshot.data as List<CommunityModel>).isEmpty) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 2,
                     child: Padding(
@@ -81,7 +82,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                 }
 
                 return communitiesWidget(
-                  snapshot.data,
+                  snapshot.data as List<CommunityModel>,
                   widget.isUserSignedIn,
                 );
               },
@@ -100,7 +101,8 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                     ),
                   );
                 }
-                if (snapshot.data == null || snapshot.data.isEmpty) {
+                if (snapshot.data == null ||
+                    ((snapshot.data as List<CommunityModel>).isEmpty)) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 2,
                     child: Padding(
@@ -112,7 +114,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                 }
 
                 return communitiesWidget(
-                  snapshot.data,
+                  snapshot.data as List<CommunityModel>,
                   widget.isUserSignedIn,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -138,7 +140,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
 
 Widget communitiesWidget(
     List<CommunityModel> communityList, bool isUserSignedIn,
-    {Widget child}) {
+    {Widget? child}) {
   return Column(
     children: [
       child ?? Container(),

@@ -22,7 +22,7 @@ class HomePageBaseBloc extends BlocBase
   final _timebanks = BehaviorSubject<List<TimebankModel>>();
   final _exploreGroupsDataStream = BehaviorSubject<ExploreGroupDataHolder>();
   final _currentTimebank = BehaviorSubject<TimebankModel>();
-  TimebankModel _oldValue;
+  TimebankModel? _oldValue;
 
   bool isInCommunity = true;
   Stream<List<CommunityModel>> get communitiesOfUser => _communities.stream;
@@ -50,8 +50,9 @@ class HomePageBaseBloc extends BlocBase
 
   void switchToPreviousTimebank() {
     if (_oldValue != null) {
-      AppConfig.timebankConfigurations = _oldValue.timebankConfigurations;
-      _currentTimebank.sink.add(_oldValue);
+      AppConfig.timebankConfigurations =
+          _oldValue?.timebankConfigurations ?? AppConfig.timebankConfigurations;
+      _currentTimebank.sink.add(_oldValue!);
     }
   }
 
@@ -85,13 +86,13 @@ class HomePageBaseBloc extends BlocBase
 
   void init(UserModel user) {
     logger.wtf("homepage base bloc init");
-    getAllTimebanksOfCommunity(user.currentCommunity).listen((event) {
+    getAllTimebanksOfCommunity(user.currentCommunity ?? '').listen((event) {
       event.sort(
         (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
       );
       _timebanks.add(event);
     });
-    getAllCommunitiesOfUser(user.sevaUserID).listen((event) {
+    getAllCommunitiesOfUser(user.sevaUserID ?? '').listen((event) {
       event.sort(
         (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
       );
@@ -99,8 +100,8 @@ class HomePageBaseBloc extends BlocBase
     });
 
     getExploreGroupsDataStream(
-      communityId: user.currentCommunity,
-      userId: user.sevaUserID,
+      communityId: user.currentCommunity ?? '',
+      userId: user.sevaUserID ?? '',
     ).listen((event) {
       _exploreGroupsDataStream.add(event);
     });
@@ -123,12 +124,12 @@ class HomePageBaseBloc extends BlocBase
 
   CombineLatestStream<dynamic, ExploreGroupDataHolder>
       getExploreGroupsDataStream({
-    String communityId,
-    String userId,
+    String? communityId,
+    String? userId,
   }) {
     return CombineLatestStream.combine2(
       _timebanks.stream,
-      getJoinRequestsCretedByUserStream(userID: userId),
+      getJoinRequestsCretedByUserStream(userID: userId ?? ''),
       (
         List<TimebankModel> listOfSubTimebanks,
         List<JoinRequestModel> listOfJoinRequestsMade,
@@ -143,7 +144,7 @@ class HomePageBaseBloc extends BlocBase
   TimebankModel primaryTimebankModel() {
     return _timebanks.value.firstWhere(
       (model) => model.parentTimebankId == FlavorConfig.values.timebankId,
-      orElse: () => null,
+      orElse: () => throw Exception('No primary timebank found'),
     );
   }
 
@@ -154,7 +155,7 @@ class HomePageBaseBloc extends BlocBase
   TimebankModel timebankModel(String timebankId) {
     return _timebanks.value.firstWhere(
       (model) => model.id == timebankId,
-      orElse: () => null,
+      orElse: () => throw Exception('No timebank found with id $timebankId'),
     );
   }
 
@@ -176,13 +177,13 @@ class HomePageBaseBloc extends BlocBase
   TimebankModel getTimebankModelFromCurrentCommunity(String timebankId) {
     return _timebanks.value.firstWhere(
       (model) => model.id == timebankId,
-      orElse: () => null,
+      orElse: () => throw Exception('No timebank found with id $timebankId'),
     );
   }
 
   List<UserModel> getMembersProfilePicturesArray({
-    @required String timebankId,
-    @required MembersBloc membersBloc,
+    required String timebankId,
+    required MembersBloc membersBloc,
   }) {
     _timebanks.value.forEach((element) {
       logger.i(element.id);
@@ -190,13 +191,13 @@ class HomePageBaseBloc extends BlocBase
     List<UserModel> profilePictures = [];
     var timebankModel = _timebanks.value.firstWhere(
       (model) => model.id == timebankId,
-      orElse: () => null,
+      orElse: () => throw Exception('No timebank found with id $timebankId'),
     );
 
     timebankModel.members.forEach((element) {
       if (membersBloc.getMemberFromLocalData(userId: element) != null) {
         profilePictures
-            .add(membersBloc.getMemberFromLocalData(userId: element));
+            .add(membersBloc.getMemberFromLocalData(userId: element)!);
       }
     });
     return profilePictures;
@@ -218,11 +219,11 @@ class HomePageBaseBloc extends BlocBase
     }
   }
 
-  //returns null if community is not initialized
+  //throws exception if community is not initialized
   CommunityModel communtiyModel(String communityId) {
-    return _communities.value?.firstWhere(
+    return _communities.value.firstWhere(
       (element) => element.id == communityId,
-      orElse: () => null,
+      orElse: () => throw Exception('No community found with id $communityId'),
     );
   }
 
@@ -250,8 +251,8 @@ class HomePageBaseBloc extends BlocBase
   List<TimebankModel> filterGroupsOfUserViaSearch(
       {
 //      List<TimebankModel> timebanks,
-      @required String userId,
-      @required String searchText}) {
+      required String userId,
+      required String searchText}) {
     return List<TimebankModel>.from(_timebanks.value.where(
       (element) =>
           element.members.contains(userId) &&
@@ -271,5 +272,8 @@ class HomePageBaseBloc extends BlocBase
 class ExploreGroupDataHolder {
   final List<TimebankModel> listOfSubTimebanks;
   final List<JoinRequestModel> joinRequestsMade;
-  ExploreGroupDataHolder({this.joinRequestsMade, this.listOfSubTimebanks});
+  ExploreGroupDataHolder({
+    required this.joinRequestsMade,
+    required this.listOfSubTimebanks,
+  });
 }

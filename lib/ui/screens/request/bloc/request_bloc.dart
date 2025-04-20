@@ -24,8 +24,8 @@ class RequestBloc {
       if (filter.isFilterSelected) {
         for (var model in models) {
           if (filter.timeRequest && model.requestType == RequestType.TIME) {
-            if(!model.isFromOfferRequest)
-            requestLists.addRequest(userId, model);
+            if (!model.isFromOfferRequest)
+              requestLists.addRequest(userId, model);
             continue;
           }
           if (filter.cashRequest && model.requestType == RequestType.CASH) {
@@ -59,8 +59,7 @@ class RequestBloc {
         }
       } else {
         models.forEach((model) {
-          if(!model.isFromOfferRequest)
-          requestLists.addRequest(userId, model);
+          if (!model.isFromOfferRequest) requestLists.addRequest(userId, model);
         });
       }
       return requestLists;

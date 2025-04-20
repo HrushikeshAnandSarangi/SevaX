@@ -10,9 +10,9 @@ class LendingItemModel {
     this.estimatedValue,
     this.itemImages,
   });
-  String itemName;
-  int estimatedValue;
-  List<String> itemImages;
+  String? itemName;
+  int? estimatedValue;
+  List<String>? itemImages;
 
   factory LendingItemModel.fromJson(String str) =>
       LendingItemModel.fromMap(json.decode(str));
@@ -30,10 +30,8 @@ class LendingItemModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "itemName": itemName == null ? null : itemName,
-        "estimatedValue": estimatedValue == null ? null : estimatedValue,
-        "itemImages": itemImages == null
-            ? null
-            : List<dynamic>.from(itemImages.map((x) => x)),
+        "itemName": itemName,
+        "estimatedValue": estimatedValue,
+        "itemImages": itemImages?.map((x) => x).toList(),
       };
 }

@@ -1,15 +1,17 @@
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart'
+    show RemoteConfig;
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -27,9 +29,8 @@ import 'package:sevaexchange/widgets/customise_community/theme_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> fetchRemoteConfig() async {
-  AppConfig.remoteConfig = await RemoteConfig.instance;
-  await AppConfig.remoteConfig.fetch(expiration: Duration.zero);
-  await AppConfig.remoteConfig.activateFetched();
+  AppConfig.remoteConfig = await FirebaseRemoteConfig.instance;
+  await AppConfig.remoteConfig?.fetchAndActivate();
 }
 
 Future<void> initApp(Flavor flavor) async {
@@ -81,7 +82,7 @@ class MainApplication extends StatelessWidget {
   final AppLanguage appLanguage = AppLanguage()..fetchLocale();
   final AppTimeZone appTimeZone = AppTimeZone()..fetchTimezone();
 
-  MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
+  MainApplication({Key? key, this.skipToHomePage = false}) : super(key: key);
   final UserBloc userBloc = UserBloc();
 
   @override
@@ -89,25 +90,25 @@ class MainApplication extends StatelessWidget {
     log('Lang ${appLanguage.appLocal.languageCode}');
     return MultiProvider(
       providers: [
-        Provider(
+        Provider<MembersBloc>(
           create: (context) => MembersBloc(),
-          dispose: (_, b) => b.dispose(),
+          dispose: (_, MembersBloc b) => b.dispose(),
         ),
         Provider(
           create: (context) => HomePageBaseBloc(),
-          dispose: (_, b) => b.dispose(),
+          dispose: (_, HomePageBaseBloc? b) => b?.dispose(),
         ),
         Provider(
           create: (context) => userBloc,
-          dispose: (_, b) => b.dispose(),
+          dispose: (_, UserBloc? b) => b?.dispose(),
         ),
         Provider(
           create: (context) => HomePageBaseBloc(),
-          dispose: (_, b) => b.dispose(),
+          dispose: (_, HomePageBaseBloc? b) => b?.dispose(),
         ),
         Provider(
           create: (context) => ThemeBloc(),
-          dispose: (_, b) => b.dispose(),
+          dispose: (_, ThemeBloc? b) => b?.dispose(),
         ),
         // StreamProvider<UserModel>.value(
         //   initialData: null,
@@ -137,7 +138,7 @@ class MainApplication extends StatelessWidget {
                             GlobalCupertinoLocalizations.delegate,
                           ],
                           debugShowCheckedModeBanner: false,
-                          theme: FlavorConfig.values.theme.copyWith(
+                          theme: FlavorConfig.values.theme!.copyWith(
                               primaryColor: Color(0x0FF766FE0),
                               buttonTheme: ButtonThemeData(
                                   buttonColor: Color(0x0FF766FE0))),

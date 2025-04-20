@@ -7,21 +7,22 @@ import 'package:sevaexchange/ui/screens/request/pages/donation_accepted_page.dar
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
 import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart'
+    as request_page;
 
 class RequestTabHolder extends StatelessWidget {
   final bool isAdmin;
   final CommunityModel communityModel;
 
-  RequestTabHolder({this.isAdmin, this.communityModel});
+  RequestTabHolder({required this.isAdmin, required this.communityModel});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: timeBankBloc.timebankController,
       builder: (context, AsyncSnapshot<TimebankController> snapshot) {
-        if (snapshot.data != null && snapshot.data.selectedrequest != null) {
-          var requestModel = snapshot.data.selectedrequest;
-          TimebankModel timebank = snapshot.data.selectedtimebank;
+        if (snapshot.data != null && snapshot.data!.selectedrequest != null) {
+          var requestModel = snapshot.data!.selectedrequest;
+          TimebankModel timebank = snapshot.data!.selectedtimebank;
           List<String> titles = [
             S.of(context).about,
             S.of(context).search,
@@ -66,7 +67,7 @@ class RequestTabHolder extends StatelessWidget {
                       child: TabBarView(
                         children: <Widget>[
                           Container(
-                            child: RequestDetailsAboutPage(
+                            child: request_page.RequestDetailsAboutPage(
                               requestItem: requestModel,
                               timebankModel: timebank,
                               isAdmin: true,

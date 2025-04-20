@@ -4,7 +4,7 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 class CameraIcon extends StatelessWidget {
   final double radius;
 
-  const CameraIcon({Key key, @required this.radius})
+  const CameraIcon({Key? key, required this.radius})
       : assert(radius != null),
         super(key: key);
   @override

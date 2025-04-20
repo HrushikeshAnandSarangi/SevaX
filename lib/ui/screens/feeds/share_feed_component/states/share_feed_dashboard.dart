@@ -11,14 +11,14 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ShareDashboard extends StatelessWidget {
-  final NewsModel feedToShare;
-  final PageController pageController;
-  final SearchSegmentBloc searchSegmentBloc;
-  final BuildContext dialogContextReference;
-  final UserModel loggedInUser;
+  final NewsModel? feedToShare;
+  final PageController? pageController;
+  final SearchSegmentBloc? searchSegmentBloc;
+  final BuildContext? dialogContextReference;
+  final UserModel? loggedInUser;
 
   const ShareDashboard({
-    Key key,
+    Key? key,
     this.pageController,
     this.feedToShare,
     this.searchSegmentBloc,
@@ -28,9 +28,10 @@ class ShareDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var associatedImage = feedToShare.imageScraped != null && feedToShare.imageScraped != 'NoData'
-        ? feedToShare.imageScraped
-        : feedToShare.newsImageUrl;
+    var associatedImage = feedToShare?.imageScraped != null &&
+            feedToShare?.imageScraped != 'NoData'
+        ? feedToShare?.imageScraped
+        : feedToShare?.newsImageUrl;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 25),
@@ -43,7 +44,7 @@ class ShareDashboard extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  pageController.animateToPage(
+                  pageController?.animateToPage(
                     1,
                     duration: Duration(milliseconds: 300),
                     curve: Curves.linear,
@@ -71,7 +72,9 @@ class ShareDashboard extends StatelessWidget {
               ),
               CustomCloseButton(
                 onCleared: () {
-                  Navigator.pop(dialogContextReference);
+                  if (dialogContextReference != null) {
+                    Navigator.pop(dialogContextReference!);
+                  }
                 },
               )
             ],
@@ -92,19 +95,19 @@ class ShareDashboard extends StatelessWidget {
                         height: 45,
                         width: 45,
                         child: ProfileImage(
-                          image: feedToShare.userPhotoURL,
-                          tag: feedToShare.fullName,
+                          image: feedToShare?.userPhotoURL ?? '',
+                          tag: feedToShare?.fullName ?? 'Unknown',
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width/2,
+                        width: MediaQuery.of(context).size.width / 2,
                         margin: EdgeInsets.only(left: 5),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              feedToShare.fullName ?? '',
+                              feedToShare?.fullName ?? '',
                               style: TextStyle(
                                 color: HexColor('#4A4A4A'),
                                 fontWeight: FontWeight.bold,
@@ -120,7 +123,7 @@ class ShareDashboard extends StatelessWidget {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    feedToShare.placeAddress ?? '',
+                                    feedToShare?.placeAddress ?? '',
                                     // 'California',
                                     style: TextStyle(
                                       color: HexColor('#9B9B9B'),
@@ -138,7 +141,7 @@ class ShareDashboard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  feedToShare.title ?? feedToShare.subheading,
+                  feedToShare?.title ?? feedToShare?.subheading ?? '',
                   style: TextStyle(
                     color: HexColor('#9B9B9B'),
                     fontSize: 14,
@@ -168,25 +171,33 @@ class ShareDashboard extends StatelessWidget {
             child: CustomTextButton(
               color: Theme.of(context).primaryColor,
               onPressed: () async {
-                var listOfSelectedMembers = searchSegmentBloc.getSelectedUsersForShare();
+                if (searchSegmentBloc == null) return;
+                var listOfSelectedMembers =
+                    searchSegmentBloc!.getSelectedUsersForShare();
                 if (listOfSelectedMembers.length > 0) {
-                  pageController.animateToPage(
+                  pageController?.animateToPage(
                     0,
                     duration: Duration(milliseconds: 300),
                     curve: Curves.linear,
                   );
-                  await ShareMessageManager().assembleMembersDataForSharingFeed(
-                    communityId: loggedInUser.currentCommunity,
-                    sender: loggedInUser,
-                    selectedMembers: listOfSelectedMembers,
-                    messageContent: feedToShare.id,
-                  );
+                  if (loggedInUser?.currentCommunity != null &&
+                      feedToShare?.id != null) {
+                    await ShareMessageManager()
+                        .assembleMembersDataForSharingFeed(
+                      communityId: loggedInUser!.currentCommunity!,
+                      sender: loggedInUser!,
+                      selectedMembers: listOfSelectedMembers,
+                      messageContent: feedToShare!.id!,
+                    );
 
-                  Future.delayed(const Duration(milliseconds: 1000), () {
-                    Navigator.pop(dialogContextReference);
-                  });
+                    Future.delayed(const Duration(milliseconds: 1000), () {
+                      if (dialogContextReference != null) {
+                        Navigator.pop(dialogContextReference!);
+                      }
+                    });
+                  }
                 } else {
-                  pageController.animateToPage(
+                  pageController?.animateToPage(
                     1,
                     duration: Duration(milliseconds: 300),
                     curve: Curves.linear,

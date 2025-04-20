@@ -6,9 +6,9 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 /// Use the other constructors to customize the profanity list.
 class ProfanityDetector {
   static Widget getProanityAdvisory({
-    String suggestion,
-    SuggestionMode suggestionMode,
-    BuildContext context,
+    required String suggestion,
+    required SuggestionMode suggestionMode,
+    required BuildContext context,
   }) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -1675,7 +1675,7 @@ class ProfanityDetector {
   ///Returns a censored version of the [inputString], with asterisk (*) pattern as default.
   ///
   ///If [replaceWith] is provided, replaces all profane words to that [replaceWith] string.
-  String censorString(String inputString, {String replaceWith}) {
+  String censorString(String inputString, {String? replaceWith}) {
     List<String> inputStringSoup = inputString.split(' ');
     this.wordsToFilterList.forEach((word) {
       if (replaceWith == null) {

@@ -23,7 +23,8 @@ class UserRepository {
     if (query.docs.length == 0) {
       throw Exception("No user Found");
     }
-    return UserModel.fromMap(query.docs[0].data(), 'user_api');
+    return UserModel.fromMap(
+        query.docs[0].data() as Map<String, dynamic>, 'user_api');
   }
 
   static Future<String> fetchUserEmailById(String userId) async {
@@ -32,19 +33,19 @@ class UserRepository {
     if (query.docs.length == 0) {
       throw Exception("No user Found");
     }
-    return query.docs[0].data()["email"];
+    return (query.docs[0].data() as Map<String, dynamic>)["email"];
   }
 
 //Block a member
   static Future<void> blockUser({
-    String loggedInUserEmail,
-    String userId,
-    String blockedUserId,
-    String blockedUserEmail,
+    String? loggedInUserEmail,
+    String? userId,
+    String? blockedUserId,
+    String? blockedUserEmail,
   }) async {
     String userToBeBlockedEmail;
     userToBeBlockedEmail = blockedUserEmail ??
-        await UserRepository.fetchUserEmailById(blockedUserId);
+        await UserRepository.fetchUserEmailById(blockedUserId!);
     WriteBatch batch = CollectionRef.batch;
     batch.set(
       ref.doc(userToBeBlockedEmail),
@@ -65,14 +66,14 @@ class UserRepository {
   }
 
   static Future<void> unblockUser({
-    String loggedInUserEmail,
-    String userId,
-    String unblockedUserId,
-    String unblockedUserEmail,
+    String? loggedInUserEmail,
+    String? userId,
+    String? unblockedUserId,
+    String? unblockedUserEmail,
   }) async {
     String userToBeBlockedEmail;
     userToBeBlockedEmail = unblockedUserEmail ??
-        await UserRepository.fetchUserEmailById(unblockedUserId);
+        await UserRepository.fetchUserEmailById(unblockedUserId!);
     WriteBatch batch = CollectionRef.batch;
     batch.set(
       ref.doc(userToBeBlockedEmail),
@@ -96,10 +97,10 @@ class UserRepository {
       String communityId, String userId) async {
     List<ParticipantInfo> members = [];
     bool isAdmin = false;
-    TimebankModel timebankModel;
+    TimebankModel? timebankModel;
     if (communityId == FlavorConfig.values.timebankId) {
       timebankModel = await getTimeBankForId(timebankId: communityId);
-      isAdmin = isAccessAvailable(timebankModel, userId);
+      isAdmin = isAccessAvailable(timebankModel!, userId);
     }
 
     QuerySnapshot querySnapshot = await ref
@@ -108,20 +109,23 @@ class UserRepository {
         .get();
 
     querySnapshot.docs.forEach((DocumentSnapshot document) {
-      var user = UserModel.fromMap(document.data(), 'user chat repo');
+      var user = UserModel.fromMap(
+          document.data() as Map<String, dynamic>, 'user chat repo');
       if (!isMemberBlocked(user, userId)) {
         if (timebankModel != null && !isAdmin) {
-          if (isAccessAvailable(timebankModel, document.data()["sevauserid"]))
+          var data = document.data() as Map<String, dynamic>;
+          if (isAccessAvailable(timebankModel, data["sevauserid"]))
             members.add(ParticipantInfo(
-              id: document.data()["sevauserid"],
-              name: document.data()["fullname"],
-              photoUrl: document.data()["photourl"],
+              id: data["sevauserid"],
+              name: data["fullname"],
+              photoUrl: data["photourl"],
             ));
         } else {
+          var data = document.data() as Map<String, dynamic>;
           members.add(ParticipantInfo(
-            id: document.data()["sevauserid"],
-            name: document.data()["fullname"],
-            photoUrl: document.data()["photourl"],
+            id: data["sevauserid"],
+            name: data["fullname"],
+            photoUrl: data["photourl"],
           ));
         }
       }
@@ -135,7 +139,8 @@ class UserRepository {
     yield* data.transform(
       StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
         handleData: (snapshot, sink) {
-          sink.add(UserModel.fromMap(snapshot.data(), 'User Repository'));
+          sink.add(UserModel.fromMap(
+              snapshot.data() as Map<String, dynamic>, 'User Repository'));
         },
         handleError: (error, _, sink) => sink.addError(error),
       ),
@@ -155,7 +160,8 @@ class UserRepository {
           List<UserModel> _users = [];
           data.docs.forEach((element) {
             try {
-              _users.add(UserModel.fromMap(element.data(), 'User Repository'));
+              _users.add(UserModel.fromMap(
+                  element.data() as Map<String, dynamic>, 'User Repository'));
             } catch (e) {
               logger.e(e);
               sink.addError('Something went wrong ${e.toString()}');
@@ -169,10 +175,10 @@ class UserRepository {
 
   static Future<UserModel> fetchUserByEmail(String email) async {
     DocumentSnapshot doc = await ref.doc(email).get();
-    if (doc?.data != null) {
+    if (doc.data() == null) {
       throw Exception("No user Found");
     }
-    return UserModel.fromMap(doc.data(), 'user_api');
+    return UserModel.fromMap(doc.data() as Map<String, dynamic>, 'user_api');
   }
 
   static Future<void> changeUserCommunity(
@@ -225,7 +231,7 @@ class UserRepository {
             : "/removeMemberFromGroup?sevauserid=$userId&groupId=$timebankId");
 
     var res = await http
-        .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+        .get(Uri.parse(urlLink), headers: {"Accept": "application/json"});
     var data = json.decode(res.body);
     return data;
   }

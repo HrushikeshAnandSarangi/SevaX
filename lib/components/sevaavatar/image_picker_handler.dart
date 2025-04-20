@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'
+    show StaggeredGrid, StaggeredGridTile;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -15,28 +16,30 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class ImagePickerHandler {
-  ImagePickerDialog imagePicker;
-  AnimationController _controller;
-  ImagePickerListener _listener;
-  bool isCover;
+  late ImagePickerDialog imagePicker;
+  final AnimationController _controller;
+  final ImagePickerListener _listener;
+  final bool isCover;
 
   ImagePickerHandler(this._listener, this._controller, this.isCover);
 
   void openCamera(BuildContext context) async {
     imagePicker.dismissDialog(context);
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    cropImage(pickedFile.path);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      cropImage(pickedFile.path);
+    }
   }
 
   void openGallery(BuildContext context) async {
     imagePicker.dismissDialog(context);
     final picker = ImagePicker();
-    final pickedFile =
-    await picker.getImage(source: ImageSource.gallery).then((value) {
-      log('open gallery image ${value.path}');
-      cropImage(value.path);
-    });
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      log('open gallery image ${pickedFile.path}');
+      cropImage(pickedFile.path);
+    }
   }
 
 //  void openStockImages(context) async {
@@ -93,7 +96,8 @@ class ImagePickerHandler {
     log('event cover cropImage path ${path}');
 
     File croppedFile;
-    ImageCropper().cropImage(
+    ImageCropper()
+        .cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
         ratioX: isCover ? 3 / 1 : 1.0,
@@ -101,9 +105,10 @@ class ImagePickerHandler {
       ),
       maxWidth: isCover ? 620 : 200,
       maxHeight: isCover ? 150 : 200,
-    ).then((value) {
+    )
+        .then((value) {
       if (value != null) {
-        croppedFile = value;
+        croppedFile = File(value.path);
         log('event cover cropedImage path ${croppedFile.path}');
         _listener.userImage(croppedFile, '');
       }
@@ -127,12 +132,12 @@ class SearchStockImages extends StatefulWidget {
   // final bool showBackBtn;
   final Color themeColor;
   final ValueChanged onChanged;
-
   SearchStockImages({
     // @required this.keepOnBackPress,
     // @required this.showBackBtn,
     // @required this.isFromHome,
-    this.onChanged, @required this.themeColor,
+    required this.onChanged,
+    required this.themeColor,
   });
 
   @override
@@ -143,7 +148,7 @@ class SearchStockImages extends StatefulWidget {
 
 class SearchStockImagesViewState extends State<SearchStockImages>
     with TickerProviderStateMixin {
-  num catSelected = -1;
+  int catSelected = -1;
 
   @override
   void initState() {
@@ -166,9 +171,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
         elevation: 0.5,
         automaticallyImplyLeading: true,
         title: Text(
-          S
-              .of(context)
-              .gallery,
+          S.of(context).gallery,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -196,10 +199,10 @@ class SearchStockImagesViewState extends State<SearchStockImages>
                     ),
                     this.catSelected > -1
                         ? Icon(
-                      Icons.arrow_forward_ios,
-                      color: HexColor('#F5A623'),
-                      size: 20,
-                    )
+                            Icons.arrow_forward_ios,
+                            color: HexColor('#F5A623'),
+                            size: 20,
+                          )
                         : Container(),
                     Text(
                       this.catSelected > -1
@@ -224,7 +227,8 @@ class SearchStockImagesViewState extends State<SearchStockImages>
 }
 
 class StockImageListingView extends StatelessWidget {
-  const StockImageListingView(this.onCatSelected, this.catSelected, this.onChanged);
+  const StockImageListingView(
+      this.onCatSelected, this.catSelected, this.onChanged);
 
   final ValueChanged onChanged;
   final int catSelected;
@@ -232,7 +236,7 @@ class StockImageListingView extends StatelessWidget {
 
   staggeredtilesView(childs, bool isimages) {
     List<Widget> categoriesList = [];
-    List<StaggeredTile> staggeredtiles = [];
+    List<StaggeredGridTile> staggeredtiles = [];
     for (var i = 0; i < childs.length; i++) {
       categoriesList.add(_Tile(
           childs[i]['image'],
@@ -242,19 +246,26 @@ class StockImageListingView extends StatelessWidget {
               ? (index) => {this.onChanged(childs[i]['image'])}
               : this.onCatSelected));
       staggeredtiles.add(
-        StaggeredTile.fit(
-          childs[i]['fit'],
+        StaggeredGridTile.fit(
+          crossAxisCellCount: childs[i]['fit'],
+          child: Container(),
         ),
       );
     }
-    return StaggeredGridView.count(
+    return Padding(
       padding: EdgeInsets.all(4),
-      primary: false,
-      crossAxisCount: 4,
-      mainAxisSpacing: 1.0,
-      crossAxisSpacing: 1.0,
-      children: categoriesList,
-      staggeredTiles: staggeredtiles,
+      child: StaggeredGrid.count(
+        crossAxisCount: 4,
+        mainAxisSpacing: 1.0,
+        crossAxisSpacing: 1.0,
+        children: List.generate(
+          categoriesList.length,
+          (index) => StaggeredGridTile.fit(
+            crossAxisCellCount: childs[index]['fit'],
+            child: categoriesList[index],
+          ),
+        ),
+      ),
     );
   }
 
@@ -292,9 +303,9 @@ class _Tile extends StatelessWidget {
           SizedBox(height: 2),
           title != null
               ? Text(
-            title,
-            style: const TextStyle(color: Colors.grey),
-          )
+                  title,
+                  style: const TextStyle(color: Colors.grey),
+                )
               : Container(),
         ],
       ),

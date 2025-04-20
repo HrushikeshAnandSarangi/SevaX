@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -12,20 +12,21 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 //Fetch location
 Future<String> getLocation(GeoFirePoint location) async {
   String address = await LocationUtility().getFormattedAddress(
-    location.latitude,
-    location.longitude,
-  );
+        location.latitude,
+        location.longitude,
+      ) ??
+      'Unknown location';
   return address;
 }
 
-bool isPrimaryTimebank({@required String parentTimebankId}) {
+bool isPrimaryTimebank({required String parentTimebankId}) {
   return parentTimebankId != null &&
       parentTimebankId == FlavorConfig.values.timebankId;
 }
 
 handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
     FeedbackType type, results, RequestModel model, UserModel user,
-    {OfferModel offerModel, String borrowerEmail}) async {
+    {OfferModel? offerModel, String? borrowerEmail}) async {
   /* Here are the questions that should be asked (replacing the current ones)
     How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely
 
@@ -87,7 +88,7 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   if (type == FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE) {
     var temp = results['ratings'];
     logger.e('RESULTS:' + results.toString());
-    await CollectionRef.users.doc(model.selectedInstructor.email).set({
+    await CollectionRef.users.doc(model.selectedInstructor!.email).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
@@ -98,7 +99,7 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   if (type == FeedbackType.FOR_BORROW_REQUEST_BORROWER) {
     var temp = results['ratings'];
     logger.d('FOR_BORROW_REQUEST_BORROWER RESULTS:' + results.toString());
-    await CollectionRef.users.doc(model.approvedUsers.first).set({
+    await CollectionRef.users.doc(model.approvedUsers!.first).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
@@ -132,7 +133,7 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   }
   if (type == FeedbackType.FEEDBACK_FOR_LENDER_FROM_BORROWER) {
     var temp = results['ratings'];
-    await CollectionRef.users.doc(offerModel.email).set({
+    await CollectionRef.users.doc(offerModel!.email).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
@@ -144,13 +145,16 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
 }
 
 void navigateToWebView({
-  BuildContext context,
-  AboutMode aboutMode,
+  BuildContext? context,
+  AboutMode? aboutMode,
 }) {
+  if (context == null || aboutMode == null) {
+    return;
+  }
   Navigator.push(
-    context,
+    context!,
     MaterialPageRoute(
-      builder: (context) => SevaWebView(aboutMode),
+      builder: (context) => SevaWebView(aboutMode!),
     ),
   );
 }

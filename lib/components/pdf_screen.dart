@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart'
+    show PDFView, PDFViewerScaffold;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:share_extend/share_extend.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,12 +14,16 @@ class PDFScreen extends StatelessWidget {
   bool isDownloadable = true;
   String pdfUrl = '';
   PDFScreen(
-      {this.pathPDF, this.docName, this.isFromFeeds, this.pdfUrl, this.isDownloadable = true});
+      {required this.pathPDF,
+      required this.docName,
+      required this.isFromFeeds,
+      required this.pdfUrl,
+      this.isDownloadable = true});
 
   @override
   Widget build(BuildContext context) {
     log('isDownloadable: ' + isDownloadable.toString());
-    return PDFViewerScaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(
             docName ?? "Document",
@@ -44,6 +49,8 @@ class PDFScreen extends StatelessWidget {
                 : Container(),
           ],
         ),
-        path: pathPDF);
+        body: PDFView(
+          filePath: pathPDF,
+        ));
   }
 }

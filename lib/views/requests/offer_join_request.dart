@@ -26,15 +26,15 @@ class OfferJoinRequestDialog extends StatefulWidget {
   final TimeOfferParticipantsModel timeOfferParticipantsModel;
 
   OfferJoinRequestDialog({
-    this.timeBankId,
-    this.notificationId,
-    this.userModel,
-    this.offerId,
-    this.requestId,
-    this.timeOfferParticipantsModel,
-    this.requestStartDate,
-    this.requestEndDate,
-    this.requestTitle,
+    required this.timeBankId,
+    required this.notificationId,
+    required this.userModel,
+    required this.offerId,
+    required this.requestId,
+    required this.timeOfferParticipantsModel,
+    required this.requestStartDate,
+    required this.requestEndDate,
+    required this.requestTitle,
   });
 
   @override
@@ -44,12 +44,13 @@ class OfferJoinRequestDialog extends StatefulWidget {
 class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
   _OfferJoinRequestDialogState();
 
-  BuildContext progressContext;
+  late BuildContext progressContext;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0))),
       content: Form(
         //key: _formKey,
         child: Column(
@@ -60,9 +61,9 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    widget.timeOfferParticipantsModel.participantDetails.photourl ??
-                        defaultUserImageURL),
+                backgroundImage: NetworkImage(widget.timeOfferParticipantsModel
+                        .participantDetails.photourl ??
+                    defaultUserImageURL),
               ),
             ),
             Padding(
@@ -71,7 +72,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.timeOfferParticipantsModel.participantDetails.fullname,
+                widget.timeOfferParticipantsModel.participantDetails.fullname!,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -82,14 +83,13 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
               height: 70,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child:  Text(
-                    widget.timeOfferParticipantsModel.participantDetails.bio ??
-                        "${S.of(context).bio} ${S.of(context).name_not_updated_text}",
-                     textAlign: TextAlign.justify, 
-                     maxLines: 3,
-                     overflow: TextOverflow.ellipsis,
-                  ),
-                
+                child: Text(
+                  widget.timeOfferParticipantsModel.participantDetails.bio ??
+                      "${S.of(context).bio} ${S.of(context).name_not_updated_text}",
+                  textAlign: TextAlign.justify,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             // Padding(
@@ -104,7 +104,10 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
             //   ),
             // ),
             Center(
-              child: Text(S.of(context).accept_offer_invitation_confirmation_to_do_tasks,
+              child: Text(
+                  S
+                      .of(context)
+                      .accept_offer_invitation_confirmation_to_do_tasks,
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -120,9 +123,17 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                   width: double.infinity,
                   child: CustomElevatedButton(
                     color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    elevation: 2.0,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).accept,
-                      style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
                       //Once approvedp
@@ -131,7 +142,8 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                           .doc(widget.userModel.currentCommunity)
                           .get()
                           .then((value) {
-                        communityModel = CommunityModel(value.data());
+                        communityModel = CommunityModel(
+                            value.data() as Map<String, dynamic>);
                         setState(() {});
                       });
                       AcceptorModel acceptorModel = AcceptorModel(
@@ -142,7 +154,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                         memberEmail: widget.userModel.email,
                         timebankId: communityModel.primary_timebank,
                       );
-        
+
                       approveInvitationForVolunteerRequest(
                           allowedCalender: false,
                           offerId: widget.offerId,
@@ -150,7 +162,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                           notificationId: widget.notificationId,
                           user: widget.userModel,
                           acceptorModel: acceptorModel);
-        
+
                       Navigator.of(context).pop();
                     },
                   ),
@@ -161,10 +173,18 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                 Container(
                   width: double.infinity,
                   child: CustomElevatedButton(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                    elevation: 2.0,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).decline,
-                      style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
                       declineInvitationbRequest(
@@ -173,7 +193,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                         userModel: widget.userModel,
                         offerId: widget.offerId,
                       );
-        
+
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
                       }
@@ -200,51 +220,59 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
 
   void declineInvitationbRequest({
-    String notificationId,
-    UserModel userModel,
-    String requestId,
-    String offerId,
+    String? notificationId,
+    UserModel? userModel,
+    String? requestId,
+    String? offerId,
   }) {
     rejectInviteRequestForOffer(
-      requestId: requestId,
-      rejectedUserId: userModel.sevaUserID,
-      notificationId: notificationId,
+      requestId: requestId!,
+      rejectedUserId: userModel!.sevaUserID!,
+      notificationId: notificationId!,
     );
 
-    CollectionRef.offers.doc(offerId).collection('offerAcceptors').doc(notificationId).update({
+    CollectionRef.offers
+        .doc(offerId)
+        .collection('offerAcceptors')
+        .doc(notificationId)
+        .update({
       'status': 'REJECTED',
     });
-    FirestoreManager.readUserNotification(notificationId, userModel.email);
+    FirestoreManager.readUserNotification(notificationId, userModel.email!);
   }
 
   void approveInvitationForVolunteerRequest({
-    String requestId,
-    String offerId,
-    String notificationId,
-    UserModel user,
-    bool allowedCalender,
-    AcceptorModel acceptorModel,
+    required String requestId,
+    required String offerId,
+    required String notificationId,
+    required UserModel user,
+    required bool allowedCalender,
+    required AcceptorModel acceptorModel,
   }) {
     acceptOfferInvite(
       requestId: requestId,
-      acceptedUserEmail: user.email,
-      acceptedUserId: user.sevaUserID,
+      acceptedUserEmail: user.email!,
+      acceptedUserId: user.sevaUserID!,
       notificationId: notificationId,
       allowedCalender: allowedCalender,
       acceptorModel: acceptorModel,
     );
     //Update accetor document
-    CollectionRef.offers.doc(offerId).collection('offerAcceptors').doc(notificationId).update({
+    CollectionRef.offers
+        .doc(offerId)
+        .collection('offerAcceptors')
+        .doc(notificationId)
+        .update({
       'status': 'ACCEPTED',
     });
 
@@ -252,7 +280,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       'individualOfferDataModel.isAccepted': true,
     });
 
-    FirestoreManager.readUserNotification(notificationId, user.email);
+    FirestoreManager.readUserNotification(notificationId, user.email!);
   }
 
   Widget _getCloseButton(BuildContext context) {

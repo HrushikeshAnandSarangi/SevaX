@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
@@ -19,13 +19,15 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class ImageUrlView extends StatefulWidget {
   final Function(String link) onLinkCreated;
   final bool isCover;
   final Color themeColor;
 
-  ImageUrlView({this.onLinkCreated, this.isCover,@required this.themeColor});
+  ImageUrlView(
+      {required this.onLinkCreated,
+      required this.isCover,
+      required this.themeColor});
 
   @override
   _ImageUrlViewState createState() => _ImageUrlViewState();
@@ -36,10 +38,10 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   List<String> imageUrls = [];
   String urlError = '';
   String imageUrl = '';
-  ProfanityImageModel profanityImageModel;
-  ProfanityStatusModel profanityStatusModel;
+  late ProfanityImageModel profanityImageModel;
+  late ProfanityStatusModel profanityStatusModel;
   bool _saving = false;
-  BuildContext loaderDialogContext;
+  late BuildContext loaderDialogContext;
 
   _ImageUrlViewState();
 
@@ -139,7 +141,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                         (_) {
                           imageUrlTextController.clear();
                           imageUrls.clear();
-                          imageUrl = null;
+                          imageUrl = '';
                           setState(() {});
                         },
                       );
@@ -194,7 +196,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
 //          .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
 
     if (regExp.hasMatch(textContent)) {
-      String match = regExp.stringMatch(textContent);
+      String match = regExp.stringMatch(textContent) ?? '';
       setState(() {
         this.urlError = '';
         this._saving = true;
@@ -203,7 +205,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     } else {}
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({required String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     logger.i("model ${profanityImageModel.toString()}");
@@ -223,9 +225,9 @@ class _ImageUrlViewState extends State<ImageUrlView> {
       setState(() {
         this._saving = false;
       });
-      if (profanityStatusModel.isProfane) {
+      if (profanityStatusModel?.isProfane ?? false) {
         showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
+                context: context, content: profanityStatusModel?.category ?? '')
             .then((status) {
           imageUrlTextController.clear();
           imageUrls.clear();
@@ -251,9 +253,10 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     }
   }
 
-  Future cropImage(String path) async {
-    File croppedFile;
-    await ImageCropper().cropImage(
+  Future<File?> cropImage(String path) async {
+    File? croppedFile;
+    await ImageCropper()
+        .cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
         ratioX: 1.0,
@@ -261,13 +264,16 @@ class _ImageUrlViewState extends State<ImageUrlView> {
       ),
       maxWidth: widget.isCover ? 620 : 200,
       maxHeight: widget.isCover ? 150 : 200,
-    ).then((value) async {
+    )
+        .then((value) async {
       if (value != null) {
-        croppedFile = value;
-        await _uploadImage(croppedFile, context).then((value) {
-          imageUrls.add(value);
-          setState(() {});
-        });
+        croppedFile = File(value.path);
+        if (croppedFile != null) {
+          await _uploadImage(croppedFile as File, context).then((value) {
+            imageUrls.add(value);
+            setState(() {});
+          });
+        }
         log('Successfully uploaded image');
       } else {
         log('Failed to upload image');
@@ -285,11 +291,11 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           return AlertDialog(
             title: Text(S.of(context).loading),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -314,7 +320,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               textColor: Colors.white,
               child: Text(S.of(context).close),
               onPressed: () {
@@ -330,9 +336,10 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   Future<String> _uploadImage(File _image, BuildContext context) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    User user = await _firebaseAuth.currentUser;
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('User not authenticated');
     Reference ref = FirebaseStorage.instance.ref().child('cover_photo').child(
-        user.email +
+        user.email! +
             '_' +
             timestampString +
             '.jpg'); //need to pass timebank name here for reference?

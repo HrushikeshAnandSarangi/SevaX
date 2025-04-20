@@ -6,7 +6,8 @@ class CommunityCategoryModel {
   final String logo;
   final Map<String, String> data;
 
-  CommunityCategoryModel({this.id, this.logo, this.data});
+  CommunityCategoryModel(
+      {required this.id, required this.logo, required this.data});
 
   factory CommunityCategoryModel.fromMap(Map<String, dynamic> map) =>
       CommunityCategoryModel(
@@ -17,6 +18,6 @@ class CommunityCategoryModel {
 
   String getCategoryName(BuildContext context) {
     var key = S.of(context).localeName;
-    return data.containsKey(key) ? data[key] : data['en'];
+    return data.containsKey(key) ? data[key] ?? '' : data['en'] ?? '';
   }
 }

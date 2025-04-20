@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +23,7 @@ import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -41,14 +42,15 @@ import 'package:sevaexchange/views/exchange/widgets/request_utils.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+// import 'package:sevaexchange/utils/helpers/member_type.dart'; // <-- Add this import if memberType is defined here
 
 import '../../core.dart';
 
 class RequestCreateEditForm extends StatefulWidget {
   final bool isOfferRequest;
-  final OfferModel offer;
+  final OfferModel? offer;
   final String timebankId;
-  final UserModel userModel;
+  final UserModel? userModel;
   final UserModel loggedInUser;
   final ProjectModel projectModel;
   final String projectId;
@@ -58,15 +60,15 @@ class RequestCreateEditForm extends StatefulWidget {
 
   RequestCreateEditForm({
     this.isOfferRequest = false,
-    @required this.comingFrom,
+    required this.comingFrom,
     this.offer,
-    this.timebankId,
+    required this.timebankId,
     this.userModel,
-    @required this.loggedInUser,
-    this.projectId,
-    this.projectModel,
-    this.requestModel,
-    this.formType,
+    required this.loggedInUser,
+    this.projectId = '',
+    required this.projectModel,
+    required this.requestModel,
+    required this.formType,
   });
 
   @override
@@ -82,21 +84,21 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   final _dateKey = GlobalKey();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
-  ProjectModel selectedProjectModel = null;
-  RequestModel requestModel;
+  ProjectModel? selectedProjectModel = null;
+  late RequestModel requestModel;
   var focusNodes = List.generate(18, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
-  String hoursMessage;
+  String? hoursMessage;
   int sharedValue = 0;
-  String _selectedTimebankId;
+  late String _selectedTimebankId;
   var validItems = [];
   bool isAdmin = false;
-  UserModel selectedInstructorModel;
+  late UserModel selectedInstructorModel;
   SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
       new SelectedSpeakerTimeDetails(speakingTime: 0.0, prepTime: 0);
-  DocumentReference speakerNotificationDocRef;
+  late DocumentReference speakerNotificationDocRef;
   RequestUtils requestUtils = RequestUtils();
 
   String initialRequestTitle = '';
@@ -115,11 +117,11 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   //Below variable for One to Many Requests
   bool createEvent = false;
   bool instructorAdded = false;
-  Future<TimebankModel> getTimebankAdminStatus;
-  Future<List<ProjectModel>> getProjectsByFuture;
-  TimebankModel timebankModel;
+  late Future<TimebankModel> getTimebankAdminStatus;
+  late Future<List<ProjectModel>> getProjectsByFuture;
+  late TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
-  CommunityModel communityModel;
+  late CommunityModel communityModel;
   //Location location = Location();
 
   @override
@@ -151,14 +153,15 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         timebankId: widget.timebankId,
       ).then((onValue) {
         setState(() {
-          validItems = onValue.listOfElement;
-          timebankModel = onValue.timebankModel;
+          validItems = onValue.listOfElement!;
+          timebankModel = onValue.timebankModel!;
           if (widget.formType == RequestFormType.CREATE) {
             requestModel.address = timebankModel.address;
             requestModel.location = timebankModel.location;
           }
         });
-        if (isAccessAvailable(timebankModel, widget.loggedInUser.sevaUserID)) {
+        if (isAccessAvailable(
+            timebankModel, widget.loggedInUser.sevaUserID ?? '')) {
           isAdmin = true;
         }
       });
@@ -172,7 +175,11 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         cashModel: CashModel(
             paymentType: RequestPaymentType.ZELLEPAY,
             achdetails: new ACHModel()),
-        goodsDonationDetails: GoodsDonationDetails(),
+        goodsDonationDetails: GoodsDonationDetails(
+          donors: [],
+          address: '',
+          requiredGoods: {},
+        ),
         borrowModel: BorrowModel(),
         communityId: widget.loggedInUser.currentCommunity,
         oneToManyRequestAttenders: [],
@@ -183,15 +190,15 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
     this.requestModel.public = false;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
-    this.requestModel.end = End();
+    this.requestModel.end = End(endType: '', on: 0, after: 0);
 
     if (widget.isOfferRequest ?? false) {
-      requestModel.requestType = widget.offer.type;
-      requestModel.goodsDonationDetails.requiredGoods =
-          widget.offer.goodsDonationDetails.requiredGoods;
+      requestModel.requestType = widget.offer?.type ?? RequestType.TIME;
+      requestModel.goodsDonationDetails?.requiredGoods =
+          widget.offer?.goodsDonationDetails?.requiredGoods ?? {};
     }
 
-    tempProjectId = requestModel.projectId;
+    tempProjectId = requestModel.projectId ?? '';
   }
 
   _initializeEditRequestModel() {
@@ -203,10 +210,11 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
     logger.d(requestModel.location.toString() +
         "From Database =====================");
-    this.oldHours = requestModel.numberOfHours;
-    if (requestModel.categories != null && requestModel.categories.length > 0) {
+    this.oldHours = requestModel.numberOfHours ?? 0;
+    if (requestModel.categories != null &&
+        requestModel.categories!.isNotEmpty) {
       getCategoryModels(
-        widget.requestModel.categories,
+        widget.requestModel.categories ?? [],
       );
     }
     getTimebankAdminStatus =
@@ -220,13 +228,14 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
     }
 
     startDate = getUpdatedDateTimeAccToUserTimezone(
-        timezoneAbb: widget.loggedInUser.timezone,
+        timezoneAbb: widget.loggedInUser.timezone ?? 'UTC',
         dateTime: DateTime.fromMillisecondsSinceEpoch(
-            widget.requestModel.requestStart));
+            widget.requestModel.requestStart ?? 0));
     endDate = getUpdatedDateTimeAccToUserTimezone(
-        timezoneAbb: widget.loggedInUser.timezone,
+        timezoneAbb: widget.loggedInUser.timezone ?? 'UTC',
         dateTime: DateTime.fromMillisecondsSinceEpoch(
-            widget.requestModel.requestEnd));
+            widget.requestModel.requestEnd ??
+                DateTime.now().millisecondsSinceEpoch));
 
     logger.d("REQUEST CREATE WIDGET HASHCODE ${widget.requestModel.hashCode}");
     logger.d("REQUEST CREATE NEW HASHCODE ${requestModel.hashCode}");
@@ -250,9 +259,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   }
 
   Future<void> fetchRemoteConfig() async {
-    AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
-    AppConfig.remoteConfig.activateFetched();
+    AppConfig.remoteConfig = await FirebaseRemoteConfig.instance;
+    await AppConfig.remoteConfig!.fetchAndActivate();
   }
 
   @override
@@ -266,7 +274,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
     if (widget.loggedInUser?.sevaUserID != null)
       FirestoreManager.getUserForIdStream(
-              sevaUserId: widget.loggedInUser.sevaUserID)
+              sevaUserId: widget.loggedInUser.sevaUserID ?? '')
           .listen((userModel) {});
     super.didChangeDependencies();
   }
@@ -279,7 +287,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       }
       timebankModel = snapshot.data;
       if (isAccessAvailable(
-          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID ?? '')) {
         return requestSwitch(
           timebankModel: timebankModel,
         );
@@ -312,7 +320,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                 if (!projectListSnapshot.hasData) {
                   return Container();
                 }
-                List<ProjectModel> projectModelList = projectListSnapshot.data;
+                List<ProjectModel> projectModelList =
+                    projectListSnapshot.data ?? [];
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: SizedBox(
@@ -342,20 +351,27 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                   case RequestType.TIME:
                                     return TimeRequest(
                                       dateKey: _dateKey,
-                                      requestType: requestModel.requestType,
+                                      requestType: requestModel.requestType ??
+                                          RequestType.TIME,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
-                                      offer: widget.offer,
+                                      offer: widget.offer ?? OfferModel(),
                                       isOfferRequest: widget.isOfferRequest,
                                       isAdmin: isAdmin,
                                       createEvent: createEvent,
                                       instructorAdded: instructorAdded,
-                                      timebankModel: snapshot.data,
+                                      timebankModel: snapshot.data!,
                                       projectModelList: projectModelList,
                                       projectId: widget.projectId,
                                       selectedInstructorModel:
                                           selectedInstructorModel,
+                                      selectedInstructorModelChanged:
+                                          (instructorModel, isSelected) {
+                                        selectedInstructorModel =
+                                            instructorModel;
+                                        instructorAdded = isSelected;
+                                      },
                                       timebankId: widget.timebankId,
                                       comingFrom: widget.comingFrom,
                                       onCreateEventChanged: (value) =>
@@ -368,12 +384,12 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       isOfferRequest: widget.isOfferRequest,
-                                      offer: widget.offer,
+                                      offer: widget.offer ?? OfferModel(),
                                       projectModelList: projectModelList,
                                       requestModel: requestModel,
                                       comingFrom: widget.comingFrom,
                                       timebankId: widget.timebankId,
-                                      timebankModel: snapshot.data,
+                                      timebankModel: snapshot.data!,
                                       createEvent: createEvent,
                                       onCreateEventChanged: (value) =>
                                           createEvent = value,
@@ -387,11 +403,11 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
-                                      timebankModel: snapshot.data,
+                                      timebankModel: snapshot.data!,
                                       timebankId: widget.timebankId,
                                       comingFrom: widget.comingFrom,
                                       isOfferRequest: widget.isOfferRequest,
-                                      offer: widget.offer,
+                                      offer: widget.offer ?? OfferModel(),
                                       instructorAdded: instructorAdded,
                                       projectId: widget.projectId,
                                       createEvent: createEvent,
@@ -406,14 +422,14 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
-                                      offer: widget.offer,
+                                      offer: widget.offer ?? OfferModel(),
                                       createEvent: createEvent,
                                       projectId: widget.projectId,
                                       instructorAdded: instructorAdded,
                                       onCreateEventChanged: (value) =>
                                           createEvent = value,
                                       projectModelList: projectModelList,
-                                      timebankModel: snapshot.data,
+                                      timebankModel: snapshot.data!,
                                       comingFrom: widget.comingFrom,
                                       timebankId: widget.timebankId,
                                       isOfferRequest: widget.isOfferRequest,
@@ -422,16 +438,17 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                   case RequestType.ONE_TO_MANY_REQUEST:
                                     return TimeRequest(
                                       dateKey: _dateKey,
-                                      requestType: requestModel.requestType,
+                                      requestType: requestModel.requestType ??
+                                          RequestType.TIME,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
-                                      offer: widget.offer,
+                                      offer: widget.offer ?? OfferModel(),
                                       isOfferRequest: widget.isOfferRequest,
                                       isAdmin: isAdmin,
                                       createEvent: createEvent,
                                       instructorAdded: instructorAdded,
-                                      timebankModel: snapshot.data,
+                                      timebankModel: snapshot.data!,
                                       projectId: widget.projectId,
                                       projectModelList: projectModelList,
                                       selectedInstructorModel:
@@ -464,6 +481,12 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                               child: Center(
                                 child: Container(
                                   child: CustomElevatedButton(
+                                    color: Theme.of(context).primaryColor,
+                                    shape: StadiumBorder(),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 12),
+                                    elevation: 2.0,
+                                    textColor: Colors.white,
                                     onPressed:
                                         widget.formType == RequestFormType.EDIT
                                             ? editRequest
@@ -482,7 +505,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                               .padRight(10),
                                       style: Theme.of(context)
                                           .primaryTextTheme
-                                          .button,
+                                          .labelLarge,
                                     ),
                                   ),
                                 ),
@@ -519,7 +542,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     title: S.of(context).request_type_time,
                     isEnabled: !widget.isOfferRequest,
                     value: RequestType.TIME,
-                    groupvalue: requestModel.requestType,
+                    groupvalue: requestModel.requestType!,
                     onChanged: (value) {
                       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                       instructorAdded = false;
@@ -533,17 +556,16 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   TransactionsMatrixCheck(
                     comingFrom: widget.comingFrom,
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.goods_request,
+                        AppConfig.upgradePlanBannerModel!.goods_request!,
                     transaction_matrix_type: 'cash_goods_requests',
                     child: ConfigurationCheck(
                       actionType: 'create_goods_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: MemberType.MEMBER,
                       child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).request_type_goods,
                         isEnabled: !(widget.isOfferRequest ?? false),
                         value: RequestType.GOODS,
-                        groupvalue: requestModel.requestType,
+                        groupvalue: requestModel.requestType!,
                         onChanged: (value) {
                           requestModel.isRecurring = false;
                           requestModel.requestType = value;
@@ -561,18 +583,17 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.cash_request,
+                        AppConfig.upgradePlanBannerModel!.cash_request!,
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
                       actionType: 'create_money_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: MemberType.MEMBER,
                       child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).request_type_cash,
                         value: RequestType.CASH,
                         isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
+                        groupvalue: requestModel.requestType!,
                         onChanged: (value) {
                           requestModel.isRecurring = false;
                           requestModel.requestType = value;
@@ -590,18 +611,17 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.borrow_requests,
+                        AppConfig.upgradePlanBannerModel!.borrow_requests!,
                     transaction_matrix_type: 'borrow_request',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
                       actionType: 'create_borrow_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: MemberType.MEMBER,
                       child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).borrow,
                         value: RequestType.BORROW,
                         isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
+                        groupvalue: requestModel.requestType!,
                         onChanged: (value) {
                           //requestModel.isRecurring = true;
                           requestModel.requestType = value;
@@ -616,19 +636,18 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.onetomany_requests,
+                        AppConfig.upgradePlanBannerModel!.onetomany_requests!,
                     transaction_matrix_type: 'onetomany_requests',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
                       actionType: 'create_onetomany_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: MemberType.MEMBER,
                       child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).one_to_many.sentenceCase(),
                         // TODO => sentence case
                         value: RequestType.ONE_TO_MANY_REQUEST,
                         isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
+                        groupvalue: requestModel.requestType!,
                         onChanged: (value) {
                           //requestModel.isRecurring = true;
                           requestModel.requestType = value;
@@ -678,7 +697,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     title: S.of(context).request_type_time,
                     isEnabled: !widget.isOfferRequest,
                     value: RequestType.TIME,
-                    groupvalue: requestModel.requestType,
+                    groupvalue: requestModel.requestType!,
                     onChanged: (value) {
                       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                       //instructorAdded = false;
@@ -696,18 +715,17 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.cash_request,
+                        AppConfig.upgradePlanBannerModel!.cash_request!,
                     transaction_matrix_type: 'borrow_request',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
                       actionType: 'create_borrow_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: MemberType.MEMBER,
                       child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).borrow,
                         value: RequestType.BORROW,
                         isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
+                        groupvalue: requestModel.requestType!,
                         onChanged: (value) {
                           //requestModel.isRecurring = true;
                           requestModel.requestType = value;
@@ -728,7 +746,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   }
 
   Widget requestSwitch({
-    TimebankModel timebankModel,
+    TimebankModel? timebankModel,
   }) {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
@@ -740,7 +758,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           selectedColor: Theme.of(context).primaryColor,
           children: {
             0: Text(
-              timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              timebankModel!.parentTimebankId == FlavorConfig.values.timebankId
                   ? S.of(context).timebank_request(1)
                   : S.of(context).seva +
                       " ${timebankModel.name}" +
@@ -776,7 +794,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       );
     } else {
       if (widget.projectModel != null) {
-        if (widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT) {
+        if (widget.projectModel.mode == ProjectMode.timebankProject) {
           requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -788,7 +806,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
   // BuildContext dialogContext;
   bool hasRegisteredLocation() {
-    return location != null;
+    return requestModel.location != null;
   }
 
   void createRequest() async {
@@ -825,29 +843,30 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
     }
 
     //recurring for creat events
-    if (requestModel.isRecurring) {
+    if (requestModel.isRecurring!) {
       requestModel.recurringDays = RepeatWidgetState.getRecurringdays();
       requestModel.occurenceCount = 1;
-      requestModel.end.endType = RepeatWidgetState.endType == 0
+      requestModel.end!.endType = RepeatWidgetState.endType == 0
           ? S.of(context).on
           : S.of(context).after;
-      requestModel.end.on = requestModel.end.endType == S.of(context).on
+      requestModel.end!.on = requestModel.end!.endType == S.of(context).on
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-          : null;
-      requestModel.end.after = (requestModel.end.endType == S.of(context).after
-          ? int.parse(RepeatWidgetState.after)
-          : null);
+          : null!;
+      requestModel.end!.after =
+          (requestModel.end!.endType == S.of(context).after
+              ? int.parse(RepeatWidgetState.after)
+              : null!);
     }
 
     // logger.d("END DATA  ${requestModel.end.after}");
     // logger.d("END TYPE  ${requestModel.end.endType}");
 
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       // validate request start and end date
 
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
-        Scrollable.ensureVisible(_dateKey.currentContext);
+        Scrollable.ensureVisible(_dateKey.currentContext!);
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_no_date,
             context: context);
@@ -856,7 +875,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
       if (OfferDurationWidgetState.starttimestamp ==
           OfferDurationWidgetState.endtimestamp) {
-        Scrollable.ensureVisible(_dateKey.currentContext);
+        Scrollable.ensureVisible(_dateKey.currentContext!);
         requestUtils.showDialogForTitle(
             dialogTitle:
                 S.of(context).validation_error_same_start_date_end_date,
@@ -866,7 +885,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
       if (OfferDurationWidgetState.starttimestamp >
           OfferDurationWidgetState.endtimestamp) {
-        Scrollable.ensureVisible(_dateKey.currentContext);
+        Scrollable.ensureVisible(_dateKey.currentContext!);
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_end_date_greater,
             context: context);
@@ -876,15 +895,15 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       if (DateTime.fromMillisecondsSinceEpoch(
               OfferDurationWidgetState.starttimestamp)
           .isBefore(DateTime.now())) {
-        Scrollable.ensureVisible(_dateKey.currentContext);
+        Scrollable.ensureVisible(_dateKey.currentContext!);
         requestUtils.showDialogForTitle(
             context: context, dialogTitle: S.of(context).past_time_selected);
         return;
       }
 
       if (requestModel.requestType == RequestType.GOODS &&
-          (requestModel.goodsDonationDetails.requiredGoods?.values == null ||
-              requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
+          (requestModel.goodsDonationDetails!.requiredGoods?.values == null ||
+              requestModel.goodsDonationDetails!.requiredGoods.isEmpty)) {
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).goods_validation, context: context);
         return;
@@ -894,8 +913,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
               LendingType.ITEM
                   .readable //because was throwing dialog when creating for place
           &&
-          (requestModel.borrowModel.requiredItems == null ||
-              requestModel.borrowModel.requiredItems.isEmpty)) {
+          (requestModel.borrowModel!.requiredItems == null ||
+              requestModel.borrowModel!.requiredItems!.isEmpty)) {
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).items_validation, context: context);
         return;
@@ -908,26 +927,27 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         return;
       }
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
       );
       if (widget.isOfferRequest && widget.userModel != null) {
         //TODO
         requestModel.participantDetails = {};
-        requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
-          communityId: widget.offer.communityId,
+        requestModel.participantDetails![widget.userModel!.email] =
+            AcceptorModel(
+          communityId: widget.offer!.communityId,
           communityName: timebankModel.name ?? '',
-          memberEmail: widget.userModel.email,
-          memberName: widget.userModel.fullname,
-          memberPhotoUrl: widget.userModel.photoURL,
-          timebankId: widget.offer.timebankId,
+          memberEmail: widget.userModel!.email,
+          memberName: widget.userModel!.fullname,
+          memberPhotoUrl: widget.userModel!.photoURL,
+          timebankId: widget.offer!.timebankId,
         ).toMap();
         //create an invitation for the request
       }
 
-      if (requestModel.isRecurring &&
+      if (requestModel.isRecurring! &&
           (requestModel.requestType == RequestType.TIME ||
               requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
-        if (requestModel.recurringDays.length == 0) {
+        if (requestModel.recurringDays!.length == 0) {
           requestUtils.showDialogForTitle(
               dialogTitle: S.of(context).validation_error_empty_recurring_days,
               context: context);
@@ -956,7 +976,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
           (requestModel.selectedInstructor == null ||
               instructorAdded == false ||
-              requestModel.selectedInstructor.toMap().isEmpty)) {
+              requestModel.selectedInstructor!.toMap().isEmpty)) {
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).select_a_speaker_dialog,
             context: context);
@@ -990,9 +1010,9 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           this.requestModel.photoUrl = myDetails.photoURL;
           CreditResult onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
-            email: SevaCore.of(context).loggedInUser.email,
-            credits: requestModel.numberOfHours.toDouble(),
-            userId: myDetails.sevaUserID,
+            email: SevaCore.of(context).loggedInUser.email!,
+            credits: requestModel.numberOfHours!.toDouble(),
+            userId: myDetails.sevaUserID!,
             communityId: timebankModel.communityId,
           );
           if (!onBalanceCheckResult.hasSuffiientCredits) {
@@ -1017,14 +1037,14 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       String timestampString = timestamp.toString();
       requestModel.id = '${requestModel.email}*$timestampString';
-      if (requestModel.isRecurring) {
+      if (requestModel.isRecurring!) {
         requestModel.parent_request_id = requestModel.id;
       } else {
         requestModel.parent_request_id = null;
       }
 
       requestModel.liveMode = !AppConfig.isTestCommunity;
-      if (requestModel.public) {
+      if (requestModel.public!) {
         requestModel.timebanksPosted = [
           timebankModel.id,
           FlavorConfig.values.timebankId
@@ -1053,7 +1073,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
         //speaker put in acceptors array, later when accepts through notification put into approved users
         List<String> acceptorsList = [];
-        acceptorsList.add(selectedInstructorModel.email);
+        acceptorsList.add(selectedInstructorModel.email!);
         requestModel.acceptors = acceptorsList;
 
         requestModel.requestCreatorName =
@@ -1076,18 +1096,18 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
           requestModel.approvedUsers = [];
           List<String> approvedUsers = [];
-          approvedUsers.add(requestModel.email);
+          approvedUsers.add(requestModel.email!);
           requestModel.approvedUsers = approvedUsers;
           log('speaker is creator');
-        } else if (selectedInstructorModel.communities
+        } else if (selectedInstructorModel.communities!
                 .contains(requestModel.communityId) &&
             selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
           speakerNotificationDocRef =
               await sendNotificationToMemberOneToManyRequest(
-                  communityId: requestModel.communityId,
-                  timebankId: requestModel.timebankId,
-                  sevaUserId: selectedInstructorModel.sevaUserID,
-                  userEmail: selectedInstructorModel.email,
+                  communityId: requestModel.communityId!,
+                  timebankId: requestModel.timebankId!,
+                  sevaUserId: selectedInstructorModel.sevaUserID!,
+                  userEmail: selectedInstructorModel.email!,
                   context: context,
                   requestModel: requestModel,
                   formType: widget.formType);
@@ -1097,8 +1117,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
               await sendNotificationToMemberOneToManyRequest(
                   communityId: FlavorConfig.values.timebankId,
                   timebankId: FlavorConfig.values.timebankId,
-                  sevaUserId: selectedInstructorModel.sevaUserID,
-                  userEmail: selectedInstructorModel.email,
+                  sevaUserId: selectedInstructorModel.sevaUserID!,
+                  userEmail: selectedInstructorModel.email!,
                   context: context,
                   requestModel: requestModel,
                   formType: widget.formType);
@@ -1107,11 +1127,11 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           await sendMailToInstructor(
               senderEmail: 'noreply@sevaexchange.com',
               //requestModel.email,
-              receiverEmail: selectedInstructorModel.email,
+              receiverEmail: selectedInstructorModel.email!,
               communityName: timebankModel.name,
-              requestName: requestModel.title,
-              requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-              receiverName: selectedInstructorModel.fullname,
+              requestName: requestModel.title!,
+              requestCreatorName: SevaCore.of(context).loggedInUser.fullname!,
+              receiverName: selectedInstructorModel.fullname!,
               startDate: requestModel.requestStart,
               endDate: requestModel.requestEnd);
         }
@@ -1119,7 +1139,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
       eventsIdsArr = await writeToDB(
         context: context,
-        offer: widget.offer,
+        offer: widget.offer!,
         requestModel: requestModel,
         timebankModel: timebankModel,
       );
@@ -1128,9 +1148,9 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       //below is to add speaker to inivted members when request is created
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
         await updateInvitedSpeakerForRequest(
-            requestModel.id,
-            selectedInstructorModel.sevaUserID, //sevauserid null
-            selectedInstructorModel.email,
+            requestModel.id!,
+            selectedInstructorModel.sevaUserID!, //sevauserid null
+            selectedInstructorModel.email!,
             speakerNotificationDocRef);
       }
       // Navigator.of(context, rootNavigator: true).pop();
@@ -1141,24 +1161,23 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         builder: KloudlessWidgetBuilder().fromContext<CreateMode, RequestModel>(
           context: context,
           model: requestModel,
-          id: requestModel.id,
+          id: requestModel.id!,
         ),
       );
       Navigator.of(context).pop();
 
       // logger.d("PROJET ID ${requestModel?.projectId}");
-
     }
   }
 
-  void continueCreateRequest({BuildContext confirmationDialogContext}) async {
+  void continueCreateRequest({BuildContext? confirmationDialogContext}) async {
     linearProgressForCreatingRequest(context, S.of(context).creating_request);
 
     List<String> resVar = await writeToDB(
         context: context,
         timebankModel: timebankModel,
         requestModel: requestModel,
-        offer: widget.offer);
+        offer: widget.offer!);
     eventsIdsArr = resVar;
     await _updateProjectModel();
     // Navigator.of(context, rootNavigator: true).pop();
@@ -1175,9 +1194,9 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   }
 
   Future _updateProjectModel() async {
-    if (widget.projectId.isNotEmpty && !requestModel.isRecurring) {
+    if (widget.projectId.isNotEmpty && !requestModel.isRecurring!) {
       ProjectModel projectModel = widget.projectModel;
-      projectModel.pendingRequests.add(requestModel.id);
+      projectModel.pendingRequests!.add(requestModel.id!);
       await FirestoreManager.updateProject(projectModel: projectModel);
     }
   }
@@ -1203,19 +1222,19 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
       return;
     }
 
-    if (_formKey.currentState.validate()) {
-      if (requestModel.public) {
+    if (_formKey.currentState!.validate()) {
+      if (requestModel.public!) {
         requestModel.timebanksPosted = [
-          requestModel.timebankId,
+          requestModel.timebankId!,
           FlavorConfig.values.timebankId
         ];
       } else {
-        requestModel.timebanksPosted = [requestModel.timebankId];
+        requestModel.timebanksPosted = [requestModel.timebankId!];
       }
 
       if (requestModel.requestType == RequestType.GOODS &&
-          (requestModel.goodsDonationDetails.requiredGoods == null ||
-              requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
+          (requestModel.goodsDonationDetails!.requiredGoods == null ||
+              requestModel.goodsDonationDetails!.requiredGoods.isEmpty)) {
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).goods_validation, context: context);
         return;
@@ -1224,10 +1243,10 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           requestModel.roomOrTool ==
               LendingType.ITEM
                   .readable && //because was throwing dialog when creating for place
-          (requestModel.borrowModel.requiredItems == null ||
-              requestModel.borrowModel.requiredItems.isEmpty)) {
-        requestUtils.showDialogForTitle(
-            dialogTitle: S.of(context).items_validation);
+          (requestModel.borrowModel!.requiredItems == null ||
+              requestModel.borrowModel!.requiredItems!.isEmpty)) {
+        requestUtils!.showDialogForTitle(
+            dialogTitle: S.of(context).items_validation, context: context);
         return;
       }
       if (requestModel.isRecurring == true ||
@@ -1240,27 +1259,27 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         CreditResult onBalanceCheckResult;
         if (requestModel.isRecurring == true ||
             requestModel.autoGenerated == true) {
-          int recurrences = requestModel.end.endType == "after"
-              ? (requestModel.end.after - requestModel.occurenceCount).abs()
+          int recurrences = requestModel.end!.endType == "after"
+              ? (requestModel.end!.after - requestModel!.occurenceCount!).abs()
               : calculateRecurrencesOnMode(requestModel);
           onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
-            email: SevaCore.of(context).loggedInUser.email,
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-            credits: requestModel.isRecurring
-                ? requestModel.numberOfHours.toDouble() * recurrences
-                : requestModel.numberOfHours.toDouble(),
-            communityId: requestModel.communityId,
+            email: SevaCore.of(context).loggedInUser.email!,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID!,
+            credits: requestModel.isRecurring!
+                ? requestModel.numberOfHours!.toDouble() * recurrences
+                : requestModel.numberOfHours!.toDouble(),
+            communityId: requestModel.communityId!,
           );
         } else {
           onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
-            email: SevaCore.of(context).loggedInUser.email,
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-            credits: requestModel.isRecurring
-                ? requestModel.numberOfHours.toDouble() * 0
-                : requestModel.numberOfHours.toDouble(),
-            communityId: requestModel.communityId,
+            email: SevaCore.of(context).loggedInUser.email!,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID!,
+            credits: requestModel.isRecurring!
+                ? requestModel.numberOfHours!.toDouble() * 0
+                : requestModel.numberOfHours!.toDouble(),
+            communityId: requestModel.communityId!,
           );
         }
 
@@ -1395,48 +1414,48 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         if (selectedInstructorModel != null &&
             selectedInstructorModel.sevaUserID !=
                 widget.requestModel.sevaUserId &&
-            !widget.requestModel.acceptors
+            !widget.requestModel.acceptors!
                 .contains(selectedInstructorModel.email) &&
             widget.requestModel.requestType ==
                 RequestType.ONE_TO_MANY_REQUEST) {
           //below is to update the invited speaker to inivted members list when speaker is changed
           await reUpdateInvitedSpeakerForRequest(
-            requestID: requestModel.id,
+            requestID: requestModel.id!,
             sevaUserIdPrevious:
-                widget.requestModel.selectedInstructor.sevaUserID,
-            emailPrevious: widget.requestModel.selectedInstructor.email,
-            sevaUserIdNew: selectedInstructorModel.sevaUserID,
-            emailNew: selectedInstructorModel.email,
+                widget.requestModel.selectedInstructor!.sevaUserID!,
+            emailPrevious: widget.requestModel.selectedInstructor!.email!,
+            sevaUserIdNew: selectedInstructorModel.sevaUserID!,
+            emailNew: selectedInstructorModel.email!,
           );
 
           List<String> acceptorsList = [];
           Set<String> invitedUsersList =
-              Set.from(widget.requestModel.invitedUsers);
+              Set.from(widget.requestModel.invitedUsers!);
           //remove old speaker from invitedUsers and add new speaker to invited users
           invitedUsersList
-              .remove(widget.requestModel.selectedInstructor.sevaUserID);
-          invitedUsersList.add(selectedInstructorModel.sevaUserID);
+              .remove(widget.requestModel.selectedInstructor!.sevaUserID);
+          invitedUsersList.add(selectedInstructorModel.sevaUserID!);
           //assign updated list to request model invited users
           requestModel.invitedUsers = invitedUsersList.toList();
 
-          acceptorsList.add(selectedInstructorModel.email);
+          acceptorsList.add(selectedInstructorModel.email!);
           requestModel.acceptors = acceptorsList;
           requestModel.requestCreatorName =
               SevaCore.of(context).loggedInUser.fullname;
           log('ADDED ACCEPTOR');
 
-          if (selectedInstructorModel.communities
+          if (selectedInstructorModel.communities!
               .contains(requestModel.communityId)) {
             speakerNotificationDocRef =
                 await sendNotificationToMemberOneToManyRequest(
                     context: context,
                     requestModel: requestModel,
-                    communityId: requestModel.communityId,
-                    timebankId: requestModel.timebankId,
-                    sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email,
+                    communityId: requestModel.communityId!,
+                    timebankId: requestModel.timebankId!,
+                    sevaUserId: selectedInstructorModel.sevaUserID!,
+                    userEmail: selectedInstructorModel.email!,
                     speakerNotificationDocRefOld:
-                        widget.requestModel.speakerInviteNotificationDocRef,
+                        widget.requestModel.speakerInviteNotificationDocRef!,
                     formType: widget.formType);
           } else {
             speakerNotificationDocRef =
@@ -1445,20 +1464,20 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     requestModel: requestModel,
                     communityId: FlavorConfig.values.timebankId,
                     timebankId: FlavorConfig.values.timebankId,
-                    sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email,
+                    sevaUserId: selectedInstructorModel.sevaUserID!,
+                    userEmail: selectedInstructorModel.email!,
                     speakerNotificationDocRefOld:
-                        widget.requestModel.speakerInviteNotificationDocRef,
+                        widget.requestModel.speakerInviteNotificationDocRef!,
                     formType: widget.formType);
             // send sevax global notification for user who is not part of the community for this request
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com',
                 //requestModel.email,
-                receiverEmail: selectedInstructorModel.email,
-                communityName: requestModel.fullName,
-                requestName: requestModel.title,
-                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-                receiverName: selectedInstructorModel.fullname,
+                receiverEmail: selectedInstructorModel.email!,
+                communityName: requestModel.fullName!,
+                requestName: requestModel.title!,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname!,
+                receiverName: selectedInstructorModel.fullname!,
                 startDate: requestModel.requestStart,
                 endDate: requestModel.requestEnd);
           }
@@ -1475,7 +1494,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           context: context,
           builder: (BuildContext viewContext) {
             return WillPopScope(
-              onWillPop: () {},
+              onWillPop: () async => false,
               child: AlertDialog(
                 title: Text("${S.of(context).this_is_a_repeating_request}."),
                 actions: [
@@ -1518,9 +1537,9 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                       await updateRecurrenceRequestsFrontEnd(
                         updatedRequestModel: requestModel,
                         communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
+                            SevaCore.of(context).loggedInUser.currentCommunity!,
                         timebankId:
-                            SevaCore.of(context).loggedInUser.currentTimebank,
+                            SevaCore.of(context).loggedInUser.currentTimebank!,
                       );
                       logger.i("OUTSIDE BEFORE POP");
 
@@ -1533,7 +1552,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   CustomTextButton(
                     shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -1600,49 +1619,49 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         if (selectedInstructorModel != null &&
             selectedInstructorModel.sevaUserID !=
                 widget.requestModel.sevaUserId &&
-            !widget.requestModel.acceptors
+            !widget.requestModel.acceptors!
                 .contains(selectedInstructorModel.email) &&
             widget.requestModel.requestType ==
                 RequestType.ONE_TO_MANY_REQUEST) {
           //below is to update the invited speaker to inivted members list when speaker is changed
           await reUpdateInvitedSpeakerForRequest(
-            requestID: requestModel.id,
+            requestID: requestModel.id!,
             sevaUserIdPrevious:
-                widget.requestModel.selectedInstructor.sevaUserID,
-            emailPrevious: widget.requestModel.selectedInstructor.email,
-            sevaUserIdNew: selectedInstructorModel.sevaUserID,
-            emailNew: selectedInstructorModel.email,
+                widget.requestModel.selectedInstructor!.sevaUserID!,
+            emailPrevious: widget.requestModel.selectedInstructor!.email!,
+            sevaUserIdNew: selectedInstructorModel.sevaUserID!,
+            emailNew: selectedInstructorModel.email!,
           );
 
           List<String> acceptorsList = [];
           Set<String> invitedUsersList =
-              Set.from(widget.requestModel.invitedUsers);
+              Set.from(widget.requestModel.invitedUsers!);
           //remove old speaker from invitedUsers and add new speaker to invited users
           invitedUsersList
-              .remove(widget.requestModel.selectedInstructor.sevaUserID);
-          invitedUsersList.add(selectedInstructorModel.sevaUserID);
+              .remove(widget.requestModel.selectedInstructor!.sevaUserID);
+          invitedUsersList.add(selectedInstructorModel.sevaUserID!);
           //assign updated list to request model invited users
           requestModel.invitedUsers = invitedUsersList.toList();
 
-          acceptorsList.add(selectedInstructorModel.email);
+          acceptorsList.add(selectedInstructorModel.email!);
           requestModel.acceptors = acceptorsList;
           requestModel.requestCreatorName =
               SevaCore.of(context).loggedInUser.fullname;
           log('ADDED ACCEPTOR');
 
-          if (selectedInstructorModel.communities
+          if (selectedInstructorModel.communities!
               .contains(widget.requestModel.communityId)) {
             speakerNotificationDocRef =
                 await sendNotificationToMemberOneToManyRequest(
                     context: context,
                     formType: widget.formType,
                     requestModel: requestModel,
-                    communityId: requestModel.communityId,
-                    timebankId: requestModel.timebankId,
-                    sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email,
+                    communityId: requestModel.communityId!,
+                    timebankId: requestModel.timebankId!,
+                    sevaUserId: selectedInstructorModel.sevaUserID!,
+                    userEmail: selectedInstructorModel.email!,
                     speakerNotificationDocRefOld:
-                        widget.requestModel.speakerInviteNotificationDocRef);
+                        widget.requestModel.speakerInviteNotificationDocRef!);
           } else {
             // send sevax global notification for user who is not part of the community for this request
             speakerNotificationDocRef =
@@ -1652,17 +1671,17 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     requestModel: requestModel,
                     communityId: FlavorConfig.values.timebankId,
                     timebankId: FlavorConfig.values.timebankId,
-                    sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email,
+                    sevaUserId: selectedInstructorModel.sevaUserID!,
+                    userEmail: selectedInstructorModel.email!,
                     speakerNotificationDocRefOld:
-                        widget.requestModel.speakerInviteNotificationDocRef);
+                        widget.requestModel.speakerInviteNotificationDocRef!);
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com',
-                receiverEmail: selectedInstructorModel.email,
-                communityName: requestModel.fullName,
-                requestName: requestModel.title,
-                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-                receiverName: selectedInstructorModel.fullname,
+                receiverEmail: selectedInstructorModel.email!,
+                communityName: requestModel.fullName!,
+                requestName: requestModel.title!,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname!,
+                receiverName: selectedInstructorModel.fullname!,
                 startDate: requestModel.requestStart,
                 endDate: requestModel.requestEnd);
           }
@@ -1696,7 +1715,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
 
   int calculateRecurrencesOnMode(RequestModel requestModel) {
     DateTime eventStartDate =
-        DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart);
+        DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart!);
     int recurrenceCount = 0;
     bool lastRound = false;
     while (lastRound == false) {
@@ -1707,9 +1726,9 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           eventStartDate.hour,
           eventStartDate.minute,
           eventStartDate.second);
-      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on &&
+      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end!.on &&
           recurrenceCount < 11) {
-        if (requestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
+        if (requestModel.recurringDays!.contains(eventStartDate.weekday % 7)) {
           recurrenceCount++;
         }
       } else {

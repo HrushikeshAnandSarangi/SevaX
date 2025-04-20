@@ -12,18 +12,19 @@ class BlockedMembersBloc {
     UserRepository.getBlockedMembers(userId).listen((QuerySnapshot event) {
       List<UserModel> blockedMembers = [];
       event.docs.forEach((DocumentSnapshot element) {
-        blockedMembers
-            .add(UserModel.fromMap(element.data(), 'blocked_members_bloc'));
+        blockedMembers.add(UserModel.fromMap(
+            (element.data() ?? {}) as Map<String, dynamic>,
+            'blocked_members_bloc'));
       });
       _blockedMembers.add(blockedMembers);
     });
   }
 
   Future<void> unblockMember({
-    String loggedInUserEmail,
-    String userId,
-    String unblockedUserId,
-    String unblockedUserEmail,
+    required String loggedInUserEmail,
+    required String userId,
+    required String unblockedUserId,
+    required String unblockedUserEmail,
   }) async {
     return UserRepository.unblockUser(
       loggedInUserEmail: loggedInUserEmail,

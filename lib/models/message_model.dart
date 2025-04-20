@@ -1,11 +1,11 @@
 class MessageModel {
-  String id;
-  String message;
-  String fromId;
-  String toId;
-  MessageType type;
-  String data;
-  int timestamp;
+  String? id;
+  String? message;
+  String? fromId;
+  String? toId;
+  MessageType? type;
+  String? data;
+  int? timestamp;
 
   MessageModel({
     this.message,

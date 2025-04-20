@@ -193,7 +193,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                   shape:
                                                                       new RoundedRectangleBorder(
                                                                     borderRadius:
-                                                                        new BorderRadius.circular(
+                                                                        new BorderRadius
+                                                                            .circular(
                                                                             30.0),
                                                                   ),
                                                                 ),
@@ -374,7 +375,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                   shape:
                                                                       new RoundedRectangleBorder(
                                                                     borderRadius:
-                                                                        new BorderRadius.circular(
+                                                                        new BorderRadius
+                                                                            .circular(
                                                                             30.0),
                                                                   ),
                                                                 ),

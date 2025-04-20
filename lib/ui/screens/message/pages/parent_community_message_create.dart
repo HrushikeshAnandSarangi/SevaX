@@ -17,20 +17,20 @@ class CommunityMessageCreate extends StatefulWidget {
   final bool isEditing;
   final ParentCommunityMessageBloc bloc;
   final Function(List<String> selectedTimebanks) onSelected;
-  const CommunityMessageCreate(
-      {Key key,
-      this.primaryTimebankId,
-      this.isEditing,
-      this.bloc,
-      this.onSelected})
-      : super(key: key);
+  const CommunityMessageCreate({
+    Key? key,
+    required this.primaryTimebankId,
+    required this.isEditing,
+    required this.bloc,
+    required this.onSelected,
+  }) : super(key: key);
 
   @override
   _CommunityMessageCreateState createState() => _CommunityMessageCreateState();
 }
 
 class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
-  ParentCommunityMessageBloc bloc;
+  late ParentCommunityMessageBloc bloc;
   List<String> selectedList = [];
   @override
   void initState() {
@@ -100,6 +100,8 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
                             MaterialPageRoute(
                               builder: (context) => CreateCommunityMessage(
                                 bloc: bloc,
+                                chatModel:
+                                    ChatModel(), // Provide a valid ChatModel instance here
                               ),
                             ),
                           );

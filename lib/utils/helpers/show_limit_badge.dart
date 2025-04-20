@@ -88,16 +88,16 @@ enum ViewerRole {
 
 class TransactionLimitCheck extends StatelessWidget {
   final String timebankId;
-  final Widget child;
+  final Widget? child;
   final bool isSoftDeleteRequested;
   final ComingFrom comingFrom;
 
   TransactionLimitCheck({
-    Key key,
+    Key? key,
     this.child,
-    @required this.isSoftDeleteRequested,
-    @required this.comingFrom,
-    @required this.timebankId,
+    required this.isSoftDeleteRequested,
+    required this.comingFrom,
+    required this.timebankId,
   });
 
   ViewerRole initViewerRole(UserDataBloc _userBloc) {
@@ -116,7 +116,7 @@ class TransactionLimitCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
     return StreamBuilder(
-      stream: _userBloc.comunityStream,
+      stream: _userBloc!.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         ViewerRole viewRole = initViewerRole(_userBloc);
         bool isBillingFailed = !(_userBloc.community.payment != null &&
@@ -196,8 +196,10 @@ class TransactionLimitCheck extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(width: 10),
-              FlatButton(
-                color: Theme.of(context).accentColor,
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                ),
                 child: Text(
                   S.of(context).close,
                   style: TextStyle(color: Colors.white),
@@ -288,20 +290,20 @@ class SevaPlansBillingConfig {
 }
 
 String getRoleAssociatedMessage({
-  ViewerRole viewRole,
-  String forCreator,
-  String forAdmin,
-  String forMember,
+  ViewerRole? viewRole,
+  String? forCreator,
+  String? forAdmin,
+  String? forMember,
 }) {
   switch (viewRole) {
     case ViewerRole.ADMIN:
-      return forAdmin;
+      return forAdmin!;
 
     case ViewerRole.CREATOR:
-      return forCreator;
+      return forCreator!;
 
     case ViewerRole.MEMBER:
-      return forMember;
+      return forMember!;
 
     default:
       return "";
@@ -309,10 +311,10 @@ String getRoleAssociatedMessage({
 }
 
 String getMessage({
-  BuildContext context,
-  ViewerRole viewRole,
-  bool isBillingFailed,
-  bool isSoftDeleteRequested,
+  BuildContext? context,
+  ViewerRole? viewRole,
+  bool? isBillingFailed,
+  bool? isSoftDeleteRequested,
   // bool isUpdatingPlan,
   // bool exaustedLimit,
 }) {
@@ -340,17 +342,17 @@ String getMessage({
       viewRole: viewRole,
       forAdmin: "Billing Failed, please contact owner. ",
       forCreator: "Billing Failed, please visit web.sevaxapp.com to configure.",
-      forMember: S.of(context).limit_badge_contact_admin,
+      forMember: S.of(context!).limit_badge_contact_admin,
     );
   }
-  if (isSoftDeleteRequested) {
+  if (isSoftDeleteRequested!) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,
-      forAdmin: S.of(context).limit_badge_delete_in_progress,
+      forAdmin: S.of(context!).limit_badge_delete_in_progress,
       forCreator: S.of(context).limit_badge_delete_in_progress,
       forMember: S.of(context).limit_badge_contact_admin,
     );
   }
 
-  return S.of(context).general_stream_error;
+  return S.of(context!).general_stream_error;
 }

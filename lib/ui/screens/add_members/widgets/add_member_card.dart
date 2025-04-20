@@ -9,11 +9,11 @@ class AddMemberCard extends StatefulWidget {
   final String fullName;
   final HashSet selectedMembers;
   const AddMemberCard({
-    Key key,
-    this.userId,
-    this.photoUrl,
-    this.fullName,
-    this.selectedMembers,
+    Key? key,
+    required this.userId,
+    required this.photoUrl,
+    required this.fullName,
+    required this.selectedMembers,
   }) : super(key: key);
   @override
   _AddMemberCardState createState() => _AddMemberCardState();

@@ -23,7 +23,8 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart'
+    as request_page;
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,13 +40,13 @@ enum ComingToRecurringFrom {
 
 class RecurringListing extends StatefulWidget {
   final RequestModel requestModel;
-  final TimebankModel timebankModel;
-  final OfferModel offerModel;
-  final ComingFrom comingFrom;
+  final TimebankModel? timebankModel;
+  final OfferModel? offerModel;
+  final ComingFrom? comingFrom;
 
   RecurringListing({
-    Key key,
-    @required this.requestModel,
+    Key? key,
+    required this.requestModel,
     this.timebankModel,
     this.offerModel,
     @required this.comingFrom,
@@ -56,15 +57,15 @@ class RecurringListing extends StatefulWidget {
 }
 
 class _RecurringListingState extends State<RecurringListing> {
-  TimebankModel timebankModel = null;
-  CommunityModel communityModel;
+  TimebankModel? timebankModel = null;
+  CommunityModel? communityModel;
 
   void initState() {
     super.initState();
     if (widget.timebankModel == null) {
       getTimebankForId(widget.offerModel == null
           ? widget.requestModel.timebankId
-          : widget.offerModel.timebankId);
+          : widget.offerModel?.timebankId);
     } else {
       timebankModel = widget.timebankModel;
     }
@@ -73,13 +74,14 @@ class _RecurringListingState extends State<RecurringListing> {
   Future<void> getTimebankForId(timebankId) async {
     DocumentSnapshot timebankDoc =
         await CollectionRef.timebank.doc(timebankId).get();
-    timebankModel = TimebankModel.fromMap(timebankDoc.data());
+    timebankModel =
+        TimebankModel.fromMap(timebankDoc.data() as Map<String, dynamic>);
   }
 
   Future<CommunityModel> getCommunityForId(communityId) async {
     DocumentSnapshot communityDoc =
         await CollectionRef.communities.doc(communityId).get();
-    return CommunityModel(communityDoc.data());
+    return CommunityModel(communityDoc.data() as Map<String, dynamic>);
   }
 
   @override
@@ -94,7 +96,7 @@ class _RecurringListingState extends State<RecurringListing> {
           ),
           body: FutureBuilder<CommunityModel>(
               future: getCommunityForId(
-                  SevaCore.of(context).loggedInUser.currentCommunity),
+                  SevaCore.of(context).loggedInUser.currentCommunity ?? ''),
               builder: (context, commSnapshot) {
                 if (!commSnapshot.hasData) {
                   return LoadingIndicator();
@@ -104,7 +106,8 @@ class _RecurringListingState extends State<RecurringListing> {
                   child: StreamBuilder(
                       stream: RecurringListDataManager
                           .getRecurringRequestListStream(
-                        parentRequestId: widget.requestModel.parent_request_id,
+                        parentRequestId:
+                            widget.requestModel.parent_request_id ?? '',
                       ),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data != null) {
@@ -112,9 +115,9 @@ class _RecurringListingState extends State<RecurringListing> {
 
                           return RecurringList(
                             requestModelList,
-                            null,
-                            timebankModel,
-                            communityModel,
+                            [],
+                            timebankModel!,
+                            communityModel!,
                           );
                         } else {
                           return Center(child: LoadingIndicator());
@@ -132,7 +135,7 @@ class _RecurringListingState extends State<RecurringListing> {
           ),
           body: FutureBuilder<CommunityModel>(
               future: getCommunityForId(
-                  SevaCore.of(context).loggedInUser.currentCommunity),
+                  SevaCore.of(context).loggedInUser.currentCommunity ?? ''),
               builder: (context, commSnapshot) {
                 if (!commSnapshot.hasData) {
                   return LoadingIndicator();
@@ -142,14 +145,20 @@ class _RecurringListingState extends State<RecurringListing> {
                   child: StreamBuilder(
                       stream:
                           RecurringListDataManager.getRecurringofferListStream(
-                        parentOfferId: widget.offerModel.parent_offer_id,
+                        parentOfferId: widget.offerModel!.parent_offer_id!,
                       ),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data != null) {
                           List<OfferModel> offerModelList = snapshot.data;
 
-                          return RecurringList(null, offerModelList,
-                              timebankModel, communityModel);
+                          if (communityModel == null) {
+                            return Center(child: LoadingIndicator());
+                          }
+                          if (timebankModel == null) {
+                            return Center(child: LoadingIndicator());
+                          }
+                          return RecurringList([], offerModelList,
+                              timebankModel!, communityModel!);
                         } else {
                           return Center(child: LoadingIndicator());
                         }
@@ -226,7 +235,7 @@ class _RecurringListState extends State<RecurringList> {
                               placeholder: 'lib/assets/images/profile.png',
                               image: widget.requestmodel[index].photoUrl == null
                                   ? defaultUserImageURL
-                                  : widget.requestmodel[index].photoUrl,
+                                  : widget.requestmodel[index].photoUrl!,
                             ),
                           ),
                         ),
@@ -237,18 +246,18 @@ class _RecurringListState extends State<RecurringList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                widget.requestmodel[index].title,
+                                widget.requestmodel[index].title ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.subtitle1,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.7,
                                 child: Text(
-                                  widget.requestmodel[index].description,
+                                  widget.requestmodel[index].description ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle2,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ),
                               SizedBox(height: 8),
@@ -257,14 +266,16 @@ class _RecurringListState extends State<RecurringList> {
                                 children: <Widget>[
                                   Text(
                                     getTimeFormattedString(widget
-                                        .requestmodel[index].requestStart),
+                                            .requestmodel[index].requestStart ??
+                                        0),
                                   ),
                                   SizedBox(width: 2),
                                   Icon(Icons.arrow_forward, size: 14),
                                   SizedBox(width: 4),
                                   Text(
                                     getTimeFormattedString(
-                                        widget.requestmodel[index].requestEnd),
+                                        widget.requestmodel[index].requestEnd ??
+                                            0),
                                   ),
                                 ],
                               ),
@@ -281,7 +292,7 @@ class _RecurringListState extends State<RecurringList> {
             return Offstage(
               offstage: isOfferVisible(
                 widget.offerModel[index],
-                SevaCore.of(context).loggedInUser.sevaUserID,
+                SevaCore.of(context).loggedInUser.sevaUserID!,
               ),
               child: Card(
                 elevation: 2,
@@ -303,7 +314,9 @@ class _RecurringListState extends State<RecurringList> {
                             children: <Widget>[
                               Text(
                                 getOfferTitle(
-                                    offerDataModel: widget.offerModel[index]),
+                                        offerDataModel:
+                                            widget.offerModel[index]) ??
+                                    '',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
@@ -315,16 +328,22 @@ class _RecurringListState extends State<RecurringList> {
                               ),
                               Text(
                                 getOfferDescription(
-                                    offerDataModel: widget.offerModel[index]),
-                                style: Theme.of(context).textTheme.subtitle2,
+                                        offerDataModel:
+                                            widget.offerModel[index]) ??
+                                    '',
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               getOfferMetaData(
                                   context: context,
                                   startDate: widget.offerModel[index]
-                                      ?.groupOfferDataModel?.startDate,
-                                  offerType: widget.offerModel[index].offerType,
-                                  selectedAddress:
-                                      widget.offerModel[index].selectedAdrress),
+                                          .groupOfferDataModel?.startDate ??
+                                      0,
+                                  offerType:
+                                      widget.offerModel[index].offerType ??
+                                          OfferType.INDIVIDUAL_OFFER,
+                                  selectedAddress: widget
+                                          .offerModel[index].selectedAdrress ??
+                                      ''),
                               Offstage(
                                 offstage: widget.offerModel[index].email ==
                                     SevaCore.of(context).loggedInUser.email,
@@ -347,7 +366,7 @@ class _RecurringListState extends State<RecurringList> {
                                                 widget.offerModel[index],
                                                 SevaCore.of(context)
                                                     .loggedInUser
-                                                    .sevaUserID) ??
+                                                    .sevaUserID!) ??
                                             '',
                                         style: TextStyle(
                                           color: Colors.white,
@@ -399,10 +418,10 @@ class _RecurringListState extends State<RecurringList> {
   }
 
   Widget getOfferMetaData(
-      {BuildContext context,
-      int startDate,
-      OfferType offerType,
-      String selectedAddress}) {
+      {required BuildContext context,
+      required int startDate,
+      required OfferType offerType,
+      required String selectedAddress}) {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: Row(
@@ -414,7 +433,7 @@ class _RecurringListState extends State<RecurringList> {
               ? getStatsIcon(
                   label: getFormatedTimeFromTimeStamp(
                     timeStamp: startDate,
-                    timeZone: SevaCore.of(context).loggedInUser.timezone,
+                    timeZone: SevaCore.of(context).loggedInUser.timezone!,
                   ),
                   icon: Icons.calendar_today)
               : Offstage(),
@@ -422,7 +441,7 @@ class _RecurringListState extends State<RecurringList> {
               ? getStatsIcon(
                   label: getFormatedTimeFromTimeStamp(
                     timeStamp: startDate,
-                    timeZone: SevaCore.of(context).loggedInUser.timezone,
+                    timeZone: SevaCore.of(context).loggedInUser.timezone!,
                     format: "h:mm a",
                   ),
                   icon: Icons.access_time)
@@ -437,7 +456,7 @@ class _RecurringListState extends State<RecurringList> {
     );
   }
 
-  Widget getStatsIcon({String label, IconData icon}) {
+  Widget getStatsIcon({required String label, required IconData icon}) {
     return Row(
       children: <Widget>[
         Icon(
@@ -460,11 +479,11 @@ class _RecurringListState extends State<RecurringList> {
   }
 
   void editRequest(
-      {RequestModel model, TimebankModel timebankModel, communityModel}) {
+      {RequestModel? model, TimebankModel? timebankModel, communityModel}) {
     timeBankBloc.setSelectedRequest(model);
-    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+    if (model!.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
         isAccessAvailable(
-            timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+            timebankModel!, SevaCore.of(context).loggedInUser.sevaUserID!)) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -481,7 +500,7 @@ class _RecurringListState extends State<RecurringList> {
         MaterialPageRoute(
           builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
-            child: RequestDetailsAboutPage(
+            child: request_page.RequestDetailsAboutPage(
               requestItem: model,
               timebankModel: timebankModel,
               isAdmin: false,
@@ -524,7 +543,7 @@ class _RecurringListState extends State<RecurringList> {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel!.calendar_sync!,
                         transaction_matrix_type: "calendar_sync",
                         child: GestureDetector(
                           child: CircleAvatar(
@@ -548,7 +567,7 @@ class _RecurringListState extends State<RecurringList> {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel!.calendar_sync!,
                         transaction_matrix_type: "calendar_sync",
                         child: GestureDetector(
                           child: CircleAvatar(
@@ -572,7 +591,7 @@ class _RecurringListState extends State<RecurringList> {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel!.calendar_sync!,
                         transaction_matrix_type: "calendar_sync",
                         child: GestureDetector(
                           child: CircleAvatar(
@@ -601,8 +620,8 @@ class _RecurringListState extends State<RecurringList> {
                     CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor),
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
@@ -617,7 +636,7 @@ class _RecurringListState extends State<RecurringList> {
   }
 
   String getTimeFormattedString(int timeInMilliseconds) {
-    String timezoneAbb = SevaCore.of(context).loggedInUser.timezone;
+    String timezoneAbb = SevaCore.of(context).loggedInUser.timezone!;
     DateFormat dateFormat =
         DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);

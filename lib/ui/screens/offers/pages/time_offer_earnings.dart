@@ -17,7 +17,8 @@ class TimeOfferEarnings extends StatelessWidget {
   final OfferModel offerModel;
   final TimebankModel timebankModel;
 
-  const TimeOfferEarnings({Key key, this.offerModel, this.timebankModel}) : super(key: key);
+  const TimeOfferEarnings({Key key, this.offerModel, this.timebankModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,27 +71,32 @@ class TimeOfferEarnings extends StatelessWidget {
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return MemberCardWithSingleAction(
-                              name: snapshot.data[index].participantDetails.fullname,
+                              name: snapshot
+                                  .data[index].participantDetails.fullname,
                               timestamp: DateFormat.MMMd().format(
                                 DateTime.fromMillisecondsSinceEpoch(
                                   snapshot.data[index].timestamp,
                                 ),
                               ),
                               onImageTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
                                   return ProfileViewer(
                                     timebankId: timebankModel.id,
                                     entityName: timebankModel.name,
                                     isFromTimebank: isPrimaryTimebank(
-                                        parentTimebankId: timebankModel.parentTimebankId),
-                                    userEmail: snapshot.data[index].participantDetails.email,
+                                        parentTimebankId:
+                                            timebankModel.parentTimebankId),
+                                    userEmail: snapshot
+                                        .data[index].participantDetails.email,
                                   );
                                 }));
                               },
                               onMessagePressed: () {},
                               action: () {},
                               status: snapshot.data[index].status.readable,
-                              photoUrl: snapshot.data[index].participantDetails.photourl,
+                              photoUrl: snapshot
+                                  .data[index].participantDetails.photourl,
                               buttonColor: Colors.green,
                             );
                           },

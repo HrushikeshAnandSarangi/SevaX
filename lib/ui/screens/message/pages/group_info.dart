@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -25,7 +25,8 @@ class GroupInfoPage extends StatefulWidget {
   final ChatModel chatModel;
   final TimebankModel timebankModel;
 
-  GroupInfoPage({Key key, this.chatModel, this.timebankModel}) : super(key: key);
+  GroupInfoPage({Key key, this.chatModel, this.timebankModel})
+      : super(key: key);
 
   @override
   _GroupInfoState createState() => _GroupInfoState();
@@ -41,7 +42,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
   void initState() {
     chatModel = widget.chatModel;
     _bloc.onGroupNameChanged(chatModel.groupDetails.name);
-    _bloc.addCurrentParticipants(List<String>.from(chatModel.participants.map((x) => x)));
+    _bloc.addCurrentParticipants(
+        List<String>.from(chatModel.participants.map((x) => x)));
     _bloc.addParticipants(
       chatModel.participantInfo
           .where(
@@ -62,8 +64,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
   BuildContext dialogContext;
   @override
   Widget build(BuildContext context) {
-    final bool isAdmin =
-        chatModel.groupDetails.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID);
+    final bool isAdmin = chatModel.groupDetails.admins
+        .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -97,8 +99,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                   },
                 );
                 _bloc
-                    .editGroupDetails(
-                        widget.chatModel.id, context, SevaCore.of(context).loggedInUser)
+                    .editGroupDetails(widget.chatModel.id, context,
+                        SevaCore.of(context).loggedInUser)
                     .then(
                   (value) {
                     if (value) {
@@ -132,7 +134,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                       return AbsorbPointer(
                         absorbing: !isAdmin,
                         child: ImagePickerWidget(
-                            child: snapshot.data == null && chatModel.groupDetails.imageUrl == null
+                            child: snapshot.data == null &&
+                                    chatModel.groupDetails.imageUrl == null
                                 ? CameraIcon(radius: 35)
                                 : Container(
                                     width: 70,
@@ -146,10 +149,13 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                     child: ClipOval(
                                       child: snapshot.data != null
                                           ? snapshot.data.stockImageUrl != null
-                                              ? Image.network(snapshot.data.stockImageUrl)
-                                              : snapshot.data.selectedImage != null
+                                              ? Image.network(
+                                                  snapshot.data.stockImageUrl)
+                                              : snapshot.data.selectedImage !=
+                                                      null
                                                   ? Image.file(
-                                                      snapshot.data.selectedImage,
+                                                      snapshot
+                                                          .data.selectedImage,
                                                       fit: BoxFit.cover,
                                                     )
                                                   : CameraIcon(radius: 35)
@@ -161,8 +167,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                   ),
                             onStockImageChanged: (String stockImageUrl) {
                               if (stockImageUrl != null) {
-                                _bloc.onImageChanged(
-                                    MessageRoomImageModel(stockImageUrl: stockImageUrl));
+                                _bloc.onImageChanged(MessageRoomImageModel(
+                                    stockImageUrl: stockImageUrl));
                               }
                             },
                             onChanged: (file) {
@@ -196,7 +202,9 @@ class _GroupInfoState extends State<GroupInfoPage> {
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              errorText: snapshot.error.toString().contains('profanity')
+                              errorText: snapshot.error
+                                      .toString()
+                                      .contains('profanity')
                                   ? S.of(context).profanity_text_alert
                                   : snapshot.error,
                               hintText: S.of(context).messaging_room_name,
@@ -230,7 +238,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
             Offstage(
               offstage: !isAdmin,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context)
@@ -239,7 +248,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                         builder: (context) => CreateNewChatPage(
                           isSelectionEnabled: true,
                           selectedMembers: List.generate(
-                              _bloc.participantsList.length, (i) => _bloc.participantsList[i].id)
+                              _bloc.participantsList.length,
+                              (i) => _bloc.participantsList[i].id)
                             ..remove(
                               SevaCore.of(context).loggedInUser.sevaUserID,
                             ),
@@ -254,9 +264,15 @@ class _GroupInfoState extends State<GroupInfoPage> {
                             participantInfo
                               ..add(
                                 ParticipantInfo(
-                                  id: SevaCore.of(context).loggedInUser.sevaUserID,
-                                  name: SevaCore.of(context).loggedInUser.fullname,
-                                  photoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                                  id: SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID,
+                                  name: SevaCore.of(context)
+                                      .loggedInUser
+                                      .fullname,
+                                  photoUrl: SevaCore.of(context)
+                                      .loggedInUser
+                                      .photoURL,
                                   type: ChatType.TYPE_MULTI_USER_MESSAGING,
                                 ),
                               ),
@@ -338,20 +354,23 @@ class _GroupInfoState extends State<GroupInfoPage> {
     if (file == null) {
       progressDialog.hide();
     }
-    String imageUrl =
-        file != null ? await StorageRepository.uploadFile("multiUserMessagingLogo", file) : null;
+    String imageUrl = file != null
+        ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
+        : null;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
     if (profanityImageModel == null) {
       progressDialog.hide();
 
       showFailedLoadImage(context: context).then((value) {});
     } else {
-      profanityStatusModel = await getProfanityStatus(profanityImageModel: profanityImageModel);
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
 
       if (profanityStatusModel.isProfane) {
         progressDialog.hide();
 
-        showProfanityImageAlert(context: context, content: profanityStatusModel.category)
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
             deleteFireBaseImage(imageUrl: imageUrl).then((value) {

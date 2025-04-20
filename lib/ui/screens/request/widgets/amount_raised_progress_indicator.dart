@@ -34,7 +34,8 @@ class AmountRaisedProgressIndicator extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: LinearProgressIndicator(
-               backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.5),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     Theme.of(context).primaryColor,
                   ),

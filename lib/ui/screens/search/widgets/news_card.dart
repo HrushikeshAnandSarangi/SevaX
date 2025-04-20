@@ -92,8 +92,7 @@ class NewsCard extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(top: 5),
                           child: Linkify(
-                              text: title != null &&
-                                      title != "NoData"
+                              text: title != null && title != "NoData"
                                   ? title.trim()
                                   : S.of(context).title,
                               onOpen: (url) async {

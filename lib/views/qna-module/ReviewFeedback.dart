@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 enum FeedbackType {
   FOR_REQUEST_VOLUNTEER,
@@ -28,7 +28,7 @@ enum FeedbackType {
 
 class ReviewFeedback extends StatefulWidget {
   // final bool forVolunteer;
-  final FeedbackType feedbackType;
+  final FeedbackType? feedbackType;
   // final RequestModel requestModel;
 
   ReviewFeedback({
@@ -49,7 +49,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   num questionIndex = 0;
   num totalScore = 0;
   TextEditingController myCommentsController = TextEditingController();
-  FocusNode commentsFocusNode  = FocusNode();
+  FocusNode commentsFocusNode = FocusNode();
   final _debouncer = Debouncer(milliseconds: 500);
   final _debouncerIng = Debouncer(milliseconds: 1500);
   bool isLoading = false;
@@ -64,7 +64,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   //   });
   // }
 
-  DeviceModel deviceModel = DeviceModel();
+  DeviceModel deviceModel =
+      DeviceModel(osName: '', platform: '', version: '', model: '');
   final profanityDetector = ProfanityDetector();
 
   @override
@@ -118,14 +119,14 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           },
         ),
       ),
-      body: questionIndex < getQuestions(widget.feedbackType).length
+      body: questionIndex < getQuestions(widget.feedbackType!).length
           ? getFeebackQuestions()
           : getTextFeedback(context),
     );
   }
 
   List<Map<String, Object>> getQuestions(FeedbackType type) {
-    String languageCode = AppConfig.prefs.getString('language_code');
+    String languageCode = AppConfig.prefs!.getString('language_code')!;
 
     switch (type) {
       case FeedbackType.FOR_REQUEST_CREATOR:
@@ -371,14 +372,14 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               Container(
                 margin: EdgeInsets.only(top: 20, bottom: 0),
                 child: Text((questionIndex + 1).toString() +
-                    ' / ${getQuestions(widget.feedbackType).length}'),
+                    ' / ${getQuestions(widget.feedbackType!).length}'),
               ),
               Container(
                 margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
                 alignment: Alignment.center,
                 child: Text(
-                  getQuestions(widget.feedbackType)[questionIndex]
-                      [FeedbackConstants.FEEDBACK_TITLE],
+                  getQuestions(widget.feedbackType!)[questionIndex.toInt()]
+                      [FeedbackConstants.FEEDBACK_TITLE] as String,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -410,6 +411,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         child: CustomElevatedButton(
           shape: StadiumBorder(),
           color: Theme.of(context).primaryColor,
+          padding: EdgeInsets.all(12),
+          elevation: 2.0,
+          textColor: Colors.white,
           child: Text(
             answerModel[FeedbackConstants.ANSWER_TEXT],
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -447,9 +451,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   Widget StarRating() {
-    return SmoothStarRating(
+    return RatingBar.builder(
         allowHalfRating: true,
-        onRated: (v) {
+        onRatingUpdate: (v) {
           this.ratings[this.questionIndex.toString()] = v;
           setState(() {
             ratings = ratings;
@@ -463,16 +467,15 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                     })
               });
         },
-        starCount: 5,
-        rating: this.ratings[this.questionIndex.toString()] != null
+        itemCount: 5,
+        initialRating: this.ratings[this.questionIndex.toString()] != null
             ? this.ratings[this.questionIndex.toString()]
             : 0,
-        size: 40.0,
-        filledIconData: Icons.star,
-        halfFilledIconData: Icons.star_half,
-        color: Colors.yellow,
-        borderColor: Colors.yellow,
-        spacing: 0.0);
+        itemSize: 40.0,
+        itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ));
   }
 
   Widget getTextFeedback(BuildContext context) {
@@ -513,42 +516,41 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 keyboardType: TextInputType.multiline,
                 maxLines: 5,
               ),
-              SizedBox(height: 15),
-              Container(
-                width: double.infinity,
-                child: CustomElevatedButton(
-                  shape: StadiumBorder(),
-                  color: Theme.of(context).primaryColor,
-                  child: Text(
-                    S.of(context).submit,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if ((FlavorConfig.appFlavor == Flavor.APP ||
-                          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-                        myCommentsController.text.isEmpty
-                            ? _validate = true
-                            : _validate = false;
-                        if (profanityDetector
-                            .isProfaneString(myCommentsController.text)) {
-                          setState(() {
-                            _profane = true;
-                          });
-                        } else {
-                          setState(() {
-                            _profane = false;
-                          });
-                        }
-                      }
-                    });
-
-                    if (!_validate && !_profane) {
-                      finishState(context);
-                    }
-                  },
+              CustomElevatedButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).primaryColor,
+                padding: EdgeInsets.all(12),
+                elevation: 2.0,
+                textColor: Colors.white,
+                child: Text(
+                  S.of(context).submit,
+                  style: TextStyle(color: Colors.white),
                 ),
-              )
+                onPressed: () {
+                  setState(() {
+                    if ((FlavorConfig.appFlavor == Flavor.APP ||
+                        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+                      myCommentsController.text.isEmpty
+                          ? _validate = true
+                          : _validate = false;
+                      if (profanityDetector
+                          .isProfaneString(myCommentsController.text)) {
+                        setState(() {
+                          _profane = true;
+                        });
+                      } else {
+                        setState(() {
+                          _profane = false;
+                        });
+                      }
+                    }
+                  });
+
+                  if (!_validate && !_profane) {
+                    finishState(context);
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -558,9 +560,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 }
 
 class Debouncer {
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
+  final int? milliseconds;
+  VoidCallback? action;
+  late Timer _timer;
 
   Debouncer({this.milliseconds});
 
@@ -569,6 +571,6 @@ class Debouncer {
       _timer.cancel();
     }
 
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
+    _timer = Timer(Duration(milliseconds: milliseconds!), action);
   }
 }

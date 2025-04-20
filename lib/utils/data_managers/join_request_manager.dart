@@ -9,14 +9,14 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 import 'new_chat_manager.dart';
 
-Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
+Future<void> updateJoinRequest({required JoinRequestModel model}) async {
   Query query = CollectionRef.joinRequests
       .where('entity_id', isEqualTo: model.entityId)
       .where('user_id', isEqualTo: model.userId);
   QuerySnapshot snapshot = await query.get();
   DocumentSnapshot document = snapshot.docs != null && snapshot.docs.length > 0
       ? snapshot.docs.first
-      : null;
+      : null!;
   if (document != null)
     return await CollectionRef.joinRequests
         .doc(document.id)
@@ -29,7 +29,7 @@ Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
 }
 
 Future<void> createJoinRequestForNewMember(
-    {@required JoinRequestModel model}) async {
+    {required JoinRequestModel model}) async {
   //create a join request for timebank
   return await CollectionRef.joinRequests
       .doc(model.id)
@@ -37,7 +37,7 @@ Future<void> createJoinRequestForNewMember(
 }
 
 Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
-  @required String timebankID,
+  required String timebankID,
 }) async {
   Query query = CollectionRef.joinRequests
       .where('entity_type', isEqualTo: 'Timebank')
@@ -49,7 +49,8 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
   }
   List<JoinRequestModel> requestList = [];
   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-    var model = JoinRequestModel.fromMap(documentSnapshot.data());
+    var model = JoinRequestModel.fromMap(
+        documentSnapshot.data() as Map<String, dynamic>);
     requestList.add(model);
   });
   return requestList;
@@ -57,7 +58,7 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
 
 ////to get all the user requests
 Future<List<JoinRequestModel>> getFutureUserRequest({
-  @required String userID,
+  required String userID,
 }) async {
   Query query = CollectionRef.joinRequests
       //  .where('entity_id',isEqualTo: primaryTimebank)
@@ -68,7 +69,8 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
   }
   List<JoinRequestModel> requestList = [];
   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-    var model = JoinRequestModel.fromMap(documentSnapshot.data());
+    var model = JoinRequestModel.fromMap(
+        documentSnapshot.data() as Map<String, dynamic>);
 
     if (model.userId == userID) {
       requestList.add(model);
@@ -79,7 +81,7 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
 
 ////to get only timebankrequest for the user  --umesh
 Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
-    {@required String userID, String primaryTimebank}) async {
+    {required String userID, String? primaryTimebank}) async {
   Query query = CollectionRef.joinRequests
       .where('entity_id', isEqualTo: primaryTimebank)
       .where('user_id', isEqualTo: userID);
@@ -89,7 +91,8 @@ Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
   }
   List<JoinRequestModel> requestList = [];
   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-    var model = JoinRequestModel.fromMap(documentSnapshot.data());
+    var model = JoinRequestModel.fromMap(
+        documentSnapshot.data() as Map<String, dynamic>);
 
     if (model.userId == userID) {
       requestList.add(model);
@@ -99,7 +102,7 @@ Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
 }
 
 Stream<List<JoinRequestModel>> getTimebankJoinRequest({
-  @required String timebankID,
+  required String timebankID,
 }) async* {
   var data = CollectionRef.joinRequests
       .where('entity_type', isEqualTo: 'Timebank')
@@ -113,8 +116,8 @@ Stream<List<JoinRequestModel>> getTimebankJoinRequest({
         List<JoinRequestModel> joinrequestList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            JoinRequestModel model =
-                JoinRequestModel.fromMap(documentSnapshot.data());
+            JoinRequestModel model = JoinRequestModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             if (model.accepted == null) joinrequestList.add(model);
           },
         );
@@ -126,7 +129,7 @@ Stream<List<JoinRequestModel>> getTimebankJoinRequest({
 
 //Get chats for a user
 Stream<List<UserModel>> getRequestDetailsStream({
-  @required String requestId,
+  required String requestId,
 }) async* {
   var data = CollectionRef.requests.doc(requestId).snapshots();
 
@@ -138,8 +141,9 @@ Stream<List<UserModel>> getRequestDetailsStream({
         userModelList.clear();
 
         // snapshot.da
-        RequestModel model = RequestModel.fromMap(snapshot.data());
-        model.acceptors.forEach((member) {
+        RequestModel model =
+            RequestModel.fromMap(snapshot.data() as Map<String, dynamic>);
+        model.acceptors!.forEach((member) {
           futures.add(getUserInfo(member));
         });
         await Future.wait(futures).then((onValue) {

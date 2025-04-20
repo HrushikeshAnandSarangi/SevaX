@@ -34,9 +34,8 @@ class CustomChip extends StatelessWidget {
         label: Text(
           label,
           style: TextStyle(
-              color: isSelected
-                  ? Colors.white
-                  : Theme.of(context).primaryColor),
+              color:
+                  isSelected ? Colors.white : Theme.of(context).primaryColor),
         ),
         side: BorderSide(
           color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300],

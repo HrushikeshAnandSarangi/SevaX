@@ -23,13 +23,13 @@ import '../../flavor_config.dart';
 import '../core.dart';
 
 class AdminPersonalRequests extends StatefulWidget {
-  final String timebankId;
-  final UserModel userModel;
-  final bool isTimebankRequest;
-  final bool showAppBar;
+  final String? timebankId;
+  final UserModel? userModel;
+  final bool? isTimebankRequest;
+  final bool? showAppBar;
 
   AdminPersonalRequests({
-    Key key,
+    Key? key,
     this.timebankId,
     this.isTimebankRequest,
     this.userModel,
@@ -42,7 +42,7 @@ class AdminPersonalRequests extends StatefulWidget {
 }
 
 class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
-  TimebankModel timebankModel;
+  TimebankModel? timebankModel;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }
 
   Future<void> getTimebank() async {
-    FirestoreManager.getTimeBankForId(timebankId: widget.timebankId)
+    FirestoreManager.getTimeBankForId(timebankId: widget.timebankId!)
         .then((onValue) {
       setState(() {
         timebankModel = onValue;
@@ -61,7 +61,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar
+      appBar: widget.showAppBar!
           ? AppBar(
               title: Text(
                 S.of(context).existing_requests,
@@ -72,7 +72,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
       body: timebankModel != null
           ? StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getPersonalRequestListStream(
-                  sevauserid: SevaCore.of(context).loggedInUser.sevaUserID),
+                  sevauserid: SevaCore.of(context).loggedInUser.sevaUserID!),
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
@@ -83,7 +83,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     return LoadingIndicator();
                   default:
                     List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
+                        requestListSnapshot.data!;
                     requestModelList = filterRequests(
                         context: context, requestModelList: requestModelList);
                     requestModelList = filterBlockedRequestsContent(
@@ -98,7 +98,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     var consolidatedList =
                         GroupRequestCommons.groupAndConsolidateRequests(
                             requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
+                            SevaCore.of(context).loggedInUser.sevaUserID!);
                     return formatListFrom(consolidatedList: consolidatedList);
                 }
               },
@@ -108,18 +108,18 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }
 
   List<RequestModel> filterBlockedRequestsContent({
-    List<RequestModel> requestModelList,
-    BuildContext context,
+    required BuildContext context,
+    required List<RequestModel> requestModelList,
   }) {
     List<RequestModel> filteredList = [];
 
     requestModelList.forEach((request) => SevaCore.of(context)
                 .loggedInUser
-                .blockedMembers
+                .blockedMembers!
                 .contains(request.sevaUserId) ||
             SevaCore.of(context)
                 .loggedInUser
-                .blockedBy
+                .blockedBy!
                 .contains(request.sevaUserId)
         ? S.of(context).filtering_blocked_content
         : filteredList.add(request));
@@ -128,27 +128,27 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }
 
   List<RequestModel> filterRequests({
-    List<RequestModel> requestModelList,
-    BuildContext context,
+    List<RequestModel>? requestModelList,
+    BuildContext? context,
   }) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach((request) =>
-        request.requestEnd > DateTime.now().millisecondsSinceEpoch
+    requestModelList!.forEach((request) =>
+        request.requestEnd! > DateTime.now().millisecondsSinceEpoch
             ? filteredList.add(request)
-            : S.of(context).filtering_past_requests_content);
+            : S.of(context!).filtering_past_requests_content);
 
     return filteredList;
   }
 
   Widget formatListFrom(
-      {List<RequestModelList> consolidatedList,
-      String loggedintimezone,
-      String userEmail}) {
+      {List<RequestModelList>? consolidatedList,
+      String? loggedintimezone,
+      String? userEmail}) {
     return Container(
         child: ListView.builder(
       shrinkWrap: true,
-      itemCount: consolidatedList.length + 1,
+      itemCount: consolidatedList!.length + 1,
       itemBuilder: (context, index) {
         if (index >= consolidatedList.length) {
           return Container(
@@ -158,8 +158,8 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
         }
         return getRequestView(
           consolidatedList[index],
-          loggedintimezone,
-          userEmail,
+          loggedintimezone!,
+          userEmail!,
         );
       },
     ));
@@ -169,7 +169,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
       RequestModelList model, String loggedintimezone, String userEmail) {
     switch (model.getType()) {
       case RequestModelList.TITLE:
-        var isMyContent = (model as GroupTitle).groupTitle.contains("My");
+        var isMyContent = (model as GroupTitle).groupTitle!.contains("My");
 
         return Container(
           height: !isMyContent ? 18 : 0,
@@ -179,7 +179,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 groupKey: (model as GroupTitle).groupTitle,
                 context: context,
                 isGroup: isPrimaryTimebank(
-                    parentTimebankId: timebankModel.parentTimebankId)),
+                    parentTimebankId: timebankModel!.parentTimebankId)),
           ),
         );
 
@@ -196,7 +196,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }
 
   Widget getRequestListViewHolder(
-      {RequestModel model, String loggedintimezone, String userEmail}) {
+      {RequestModel? model, String? loggedintimezone, String? userEmail}) {
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -205,9 +205,9 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
         elevation: 2,
         child: InkWell(
           onTap: () {
-            if (model.acceptors.contains(widget.userModel.email) ||
-                model.approvedUsers.contains(widget.userModel.email) ||
-                model.invitedUsers.contains(widget.userModel.sevaUserID)) {
+            if (model!.acceptors!.contains(widget.userModel!.email) ||
+                model!.approvedUsers!.contains(widget.userModel!.email) ||
+                model.invitedUsers!.contains(widget.userModel!.sevaUserID)) {
               showDialog(
                 context: context,
                 builder: (BuildContext viewContextS) {
@@ -215,7 +215,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   return AlertDialog(
                     title: Text(S.of(context).already_exists),
                     content: Text(
-                        '${widget.userModel.fullname} ${S.of(context).already_added}'),
+                        '${widget.userModel!.fullname} ${S.of(context).already_added}'),
                     actions: <Widget>[
                       CustomTextButton(
                         child: Text(
@@ -240,11 +240,11 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   return AlertDialog(
                     title: Text(S.of(context).add_to_request),
                     content: Text(
-                        '${S.of(context).are_you_sure} add ${widget.userModel.fullname} to ${S.of(context).request}'),
+                        '${S.of(context).are_you_sure} add ${widget.userModel!.fullname} to ${S.of(context).request}'),
                     actions: <Widget>[
                       CustomTextButton(
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         textColor: FlavorConfig.values.buttonTextColor,
                         child: Text(
                           S.of(context).add,
@@ -255,19 +255,19 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         onPressed: () async {
                           await timeBankBloc.updateInvitedUsersForRequest(
                               model.id,
-                              widget.userModel.sevaUserID,
-                              widget.userModel.email);
+                              widget.userModel!.sevaUserID!,
+                              widget.userModel!.email!);
 
                           //showProgressDialog(context);
                           sendNotification(
                             requestModel: model,
-                            userModel: widget.userModel,
-                            timebankModel: timebankModel,
-                            currentCommunity: SevaCore.of(context)
+                            userModel: widget.userModel!,
+                            timebankModel: timebankModel!,
+                            currentCommunity: SevaCore.of(context)!
                                 .loggedInUser
-                                .currentCommunity,
+                                .currentCommunity!,
                             sevaUserID:
-                                SevaCore.of(context).loggedInUser.sevaUserID,
+                                SevaCore.of(context).loggedInUser.sevaUserID!,
                           );
                           Navigator.of(viewContext).pop();
                           Navigator.of(context).pop();
@@ -300,9 +300,9 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     child: FadeInImage.assetNetwork(
                       placeholder: defaultUserImageURL,
                       //  placeholder: 'lib/assets/images/profile.png',
-                      image: model.photoUrl == null
+                      image: model!.photoUrl == null
                           ? defaultUserImageURL
-                          : model.photoUrl,
+                          : model.photoUrl!,
                     ),
                   ),
                 ),
@@ -313,18 +313,18 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        model.title,
+                        model.title!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
-                          model.description,
+                          model.description!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -333,14 +333,14 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         children: <Widget>[
                           Text(
                             getTimeFormattedString(
-                                model.requestStart, loggedintimezone),
+                                model.requestStart!, loggedintimezone!),
                           ),
                           SizedBox(width: 2),
                           Icon(Icons.arrow_forward, size: 14),
                           SizedBox(width: 4),
                           Text(
                             getTimeFormattedString(
-                              model.requestEnd,
+                              model.requestEnd!,
                               loggedintimezone,
                             ),
                           ),
@@ -350,8 +350,8 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          model.acceptors.contains(userEmail) ||
-                                  model.approvedUsers.contains(userEmail)
+                          model.acceptors!.contains(userEmail) ||
+                                  model.approvedUsers!.contains(userEmail)
                               ?
 //                          || model.invitedUsers.contains(userEmail) ?
                               Container(
@@ -415,11 +415,11 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }
 
   Future<void> sendNotification({
-    RequestModel requestModel,
-    UserModel userModel,
-    String currentCommunity,
-    String sevaUserID,
-    TimebankModel timebankModel,
+    RequestModel? requestModel,
+    UserModel? userModel,
+    String? currentCommunity,
+    String? sevaUserID,
+    TimebankModel? timebankModel,
   }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
       requestModel: requestModel,
@@ -434,7 +434,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
         type: NotificationType.RequestInvite,
         communityId: currentCommunity,
         senderUserId: sevaUserID,
-        targetUserId: userModel.sevaUserID);
+        targetUserId: userModel!.sevaUserID);
 
     await CollectionRef.users
         .doc(userModel.email)

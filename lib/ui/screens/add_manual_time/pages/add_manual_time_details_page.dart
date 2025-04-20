@@ -15,12 +15,12 @@ class AddMnualTimeDetailsPage extends StatefulWidget {
   final String communityName;
 
   const AddMnualTimeDetailsPage({
-    Key key,
-    @required this.typeId,
-    @required this.type,
-    @required this.userType,
-    @required this.timebankId,
-    @required this.communityName,
+    Key? key,
+    required this.typeId,
+    required this.type,
+    required this.userType,
+    required this.timebankId,
+    required this.communityName,
   }) : super(key: key);
   @override
   _AddMnualTimeDetailsPageState createState() =>
@@ -151,7 +151,11 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                                     return DropdownMenuItem(
                                         child: Text(value), value: value);
                                   }).toList(),
-                                  onChanged: _bloc.onMinutesChanged,
+                                  onChanged: (String? newValue) {
+                                    if (newValue != null) {
+                                      _bloc.onMinutesChanged(newValue);
+                                    }
+                                  },
                                 );
                               },
                             ),
@@ -179,9 +183,15 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
             ),
             SizedBox(height: 20),
             CustomElevatedButton(
+              color: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              elevation: 2.0,
+              textColor: Colors.white,
               child: Text(S.of(context).manual_time_button_text),
               onPressed: isLoading
-                  ? null
+                  ? () {}
                   : () {
                       try {
                         changeLoadingState(true);

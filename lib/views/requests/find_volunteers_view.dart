@@ -19,9 +19,9 @@ import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class FindVolunteersView extends StatefulWidget {
-  final String timebankId;
-  final RequestModel requestModel;
-  final String sevaUserId;
+  final String? timebankId;
+  final RequestModel? requestModel;
+  final String? sevaUserId;
 
   FindVolunteersView({this.timebankId, this.requestModel, this.sevaUserId});
 
@@ -48,13 +48,13 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FirestoreManager.getAllTimebankIdStream(
-        timebankId: widget.timebankId,
+        timebankId: widget.timebankId!,
       ).then((onValue) {
         setState(() {
-          validItems = onValue.listOfElement;
-          timebankModel.model = onValue.timebankModel;
+          validItems = onValue.listOfElement!;
+          timebankModel.model = onValue.timebankModel!;
         });
-        if (isAccessAvailable(timebankModel.model, widget.sevaUserId)) {
+        if (isAccessAvailable(timebankModel.model, widget.sevaUserId!)) {
           isAdmin = true;
         }
       });
@@ -134,12 +134,12 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
           Expanded(
             child: UserResultViewElastic(
                 searchTextController,
-                widget.timebankId,
+                widget.timebankId!,
                 validItems,
-                widget.requestModel.id,
+                widget.requestModel!.id!,
                 timebankModel.model,
                 users,
-                widget.sevaUserId),
+                widget.sevaUserId!),
           ),
         ],
       ),
@@ -180,9 +180,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
   bool isAdmin = false;
-  RequestModel requestModel;
+  RequestModel? requestModel;
   bool isBookMarked = false;
-  UserModel loggedinUser;
+  UserModel? loggedinUser;
 
   @override
   void initState() {
@@ -197,7 +197,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         .doc(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data());
+      requestModel =
+          RequestModel.fromMap(reqModel.data() as Map<String, dynamic>);
       try {
         setState(() {});
       } on Exception catch (error) {
@@ -244,10 +245,10 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             );
           }
 
-          List<UserModel> userList = snapshot.data;
+          List<UserModel> userList = snapshot.data!;
           userList.removeWhere((user) =>
               user.sevaUserID == widget.sevaUserId ||
-              user.sevaUserID == requestModel.sevaUserId);
+              user.sevaUserID == requestModel!.sevaUserId);
 
           if (userList.length == 0) {
             return getEmptyWidget(S.of(context).no_user_found);
@@ -257,25 +258,27 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             itemBuilder: (context, index) {
               UserModel user = userList[index];
 
-              List<String> timeBankIds =
-                  snapshot.data[index].favoriteByTimeBank ?? [];
+              List<String> timeBankIds = (snapshot.data != null
+                      ? snapshot.data![index].favoriteByTimeBank
+                      : []) ??
+                  [];
               List<String> memberId = user.favoriteByMember ?? [];
 
               return RequestCardWidget(
                 userModel: user,
-                requestModel: requestModel,
+                requestModel: requestModel!,
                 timebankModel: widget.timebankModel,
                 isAdmin: isAdmin,
                 refresh: refresh,
-                currentCommunity: loggedinUser.currentCommunity,
-                loggedUserId: loggedinUser.sevaUserID,
+                currentCommunity: loggedinUser!.currentCommunity!,
+                loggedUserId: loggedinUser!.sevaUserID!,
                 isFavorite: isAdmin
-                    ? timeBankIds.contains(requestModel.timebankId)
+                    ? timeBankIds.contains(requestModel!.timebankId!)
                     : memberId.contains(widget.sevaUserId),
                 reqStatus: getRequestUserStatus(
-                    requestModel: requestModel,
-                    userId: user.sevaUserID,
-                    email: user.email,
+                    requestModel: requestModel!,
+                    userId: user.sevaUserID!,
+                    email: user.email!,
                     context: context),
               );
             },
@@ -288,7 +291,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   Widget recommendedUsers() {
     return StreamBuilder<List<UserModel>>(
       stream: FirestoreManager.getRecommendedUsersStream(
-        requestId: requestModel?.id,
+        requestId: requestModel!.id!,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -304,7 +307,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           );
         }
 
-        List<UserModel> userList = snapshot.data;
+        List<UserModel> userList = snapshot.data!;
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
 
         if (userList.length == 0) {
@@ -328,25 +331,27 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
                 itemCount: userList.length,
                 itemBuilder: (context, index) {
                   UserModel user = userList[index];
-                  List<String> timeBankIds =
-                      snapshot.data[index].favoriteByTimeBank ?? [];
+                  List<String> timeBankIds = (snapshot.data != null
+                          ? snapshot.data![index].favoriteByTimeBank
+                          : []) ??
+                      [];
                   List<String> memberId = user.favoriteByMember ?? [];
 
                   return RequestCardWidget(
                     userModel: user,
-                    requestModel: requestModel,
+                    requestModel: requestModel!,
                     timebankModel: widget.timebankModel,
                     isAdmin: isAdmin,
                     refresh: refresh,
-                    currentCommunity: loggedinUser.currentCommunity,
-                    loggedUserId: loggedinUser.sevaUserID,
+                    currentCommunity: loggedinUser!.currentCommunity!,
+                    loggedUserId: loggedinUser!.sevaUserID!,
                     isFavorite: isAdmin
-                        ? timeBankIds.contains(requestModel.timebankId)
+                        ? timeBankIds.contains(requestModel!.timebankId!)
                         : memberId.contains(widget.sevaUserId),
                     reqStatus: getRequestUserStatus(
-                        requestModel: requestModel,
-                        userId: user.sevaUserID,
-                        email: user.email,
+                        requestModel: requestModel!,
+                        userId: user.sevaUserID!,
+                        email: user.email!,
                         context: context),
                   );
                 },
@@ -363,7 +368,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         .doc(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data());
+      requestModel =
+          RequestModel.fromMap(reqModel.data() as Map<String, dynamic>);
       try {
         setState(() {
           buildWidget();

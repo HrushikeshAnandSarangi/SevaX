@@ -35,7 +35,8 @@ class AddUpdateItemBloc extends BlocBase {
 
   Function(String value) get onPlaceNameChanged => _itemName.sink.add;
 
-  Function(String value) get onEstimatedValueChanged => _estimated_value.sink.add;
+  Function(String value) get onEstimatedValueChanged =>
+      _estimated_value.sink.add;
 
   Function(List<String> value) get onItemImageAdded => _item_images.sink.add;
 
@@ -76,7 +77,8 @@ class AddUpdateItemBloc extends BlocBase {
     LendingModel lendingModel = model;
     if (!validateForm()) {
       lendingModel.lendingItemModel.itemName = _itemName.value;
-      lendingModel.lendingItemModel.estimatedValue = int.parse(_estimated_value.value);
+      lendingModel.lendingItemModel.estimatedValue =
+          int.parse(_estimated_value.value);
       lendingModel.lendingItemModel.itemImages = _item_images.value.toList();
 
       LendingOffersRepo.updateNewLendingItem(model: lendingModel).then((_) {

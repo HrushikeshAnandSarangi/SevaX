@@ -3,13 +3,13 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
@@ -31,6 +31,9 @@ import 'package:sevaexchange/ui/screens/communities/widgets/community_category_s
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
 import 'package:sevaexchange/ui/screens/sponsors/widgets/get_user_verified.dart';
+
+// Import the correct BannerDetails class from the models folder
+import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart'; // Ensure this import is used for BannerDetails.
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -50,15 +53,17 @@ import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import '../switch_timebank.dart';
 
+// Removed duplicate BannerDetails class to avoid conflicts.
+// Use the BannerDetails class from the models folder instead.
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
   final bool isFromFind;
   final bool isCreateTimebank;
 
   CreateEditCommunityView({
-    @required this.timebankId,
-    this.isFromFind,
-    this.isCreateTimebank,
+    required this.timebankId,
+    required this.isFromFind,
+    required this.isCreateTimebank,
   });
 
   @override
@@ -101,8 +106,11 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   final bool isFromFind;
   final bool isCreateTimebank;
 
-  CreateEditCommunityViewForm(
-      {@required this.timebankId, this.isFromFind, this.isCreateTimebank});
+  CreateEditCommunityViewForm({
+    required this.timebankId,
+    required this.isFromFind,
+    required this.isCreateTimebank,
+  });
 
   @override
   CreateEditCommunityViewFormState createState() {
@@ -139,13 +147,13 @@ class CreateEditCommunityViewFormState
   bool isBillingDetailsProvided = false;
 
   bool protectedVal = false;
-  GeoFirePoint location;
+  late GeoFirePoint location;
   String selectedAddress = '';
   String selectedTimebank = '';
   String _billingDetailsError = '';
   String communityImageError = '';
   String enteredName = '';
-  User firebaseUser;
+  late User firebaseUser;
 
   var scollContainer = ScrollController();
 
@@ -153,8 +161,8 @@ class CreateEditCommunityViewFormState
 
   var scrollIsOpen = false;
   var communityFound = false;
-  List<FocusNode> focusNodes;
-  String errTxt = null;
+  late List<FocusNode> focusNodes;
+  String? errTxt = null;
   int totalMembersCount = 0;
 
   final _textUpdates = StreamController<String>();
@@ -229,7 +237,7 @@ class CreateEditCommunityViewFormState
   Future<void> checkTestCommunityStatus() async {
     Future.delayed(Duration(milliseconds: 200), () {
       FirestoreManager.checkTestCommunityStatus(
-              creatorId: SevaCore.of(context).loggedInUser.sevaUserID)
+              creatorId: SevaCore.of(context).loggedInUser.sevaUserID ?? '')
           .then((onValue) {
         setState(() {
           canTestCommunity = onValue;
@@ -241,7 +249,8 @@ class CreateEditCommunityViewFormState
   void getModelData() async {
     Future.delayed(Duration.zero, () {
       FirestoreManager.getCommunityDetailsByCommunityId(
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity)
+              communityId:
+                  SevaCore.of(context).loggedInUser.currentCommunity ?? '')
           .then((onValue) {
         communityModel = onValue;
         communitynName = communityModel.name;
@@ -253,8 +262,9 @@ class CreateEditCommunityViewFormState
       });
     });
 
-    timebankModel =
-        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    timebankModel = await FirestoreManager.getTimeBankForId(
+            timebankId: widget.timebankId) ??
+        TimebankModel({});
     selectedAddress = timebankModel.address;
     location = timebankModel.location;
 
@@ -262,20 +272,21 @@ class CreateEditCommunityViewFormState
         timebankModel.associatedParentTimebankId != null &&
         timebankModel.associatedParentTimebankId.isNotEmpty) {
       parentTimebank = await FirestoreManager.getTimeBankForId(
-        timebankId: timebankModel.associatedParentTimebankId,
-      );
+            timebankId: timebankModel.associatedParentTimebankId,
+          ) ??
+          TimebankModel({});
       selectedTimebank = parentTimebank.name;
     }
 
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity!);
     setState(() {});
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
-  BuildContext parentContext;
+  late BuildContext parentContext;
   var aboutFocus = FocusNode();
-  Map onActivityResult;
+  Map onActivityResult = {};
   ScrollController _controller = ScrollController();
 
   @override
@@ -300,14 +311,14 @@ class CreateEditCommunityViewFormState
   }
 
   Widget get createSevaX {
-    var colums = StreamBuilder(
+    var colums = StreamBuilder<dynamic>(
         stream: createEditCommunityBloc.createEditCommunity,
-        builder: (_, snapshot) {
+        builder: (_, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.data != null) {
             if (selectedAddress != null) {
               if ((selectedAddress.length > 0 &&
-                      snapshot.data.timebank.address.length == 0) ||
-                  (snapshot.data.timebank.address != selectedAddress)) {
+                      snapshot.data?.timebank?.address?.length == 0) ||
+                  (snapshot.data?.timebank?.address != selectedAddress)) {
                 snapshot.data.timebank
                     .updateValueByKey('address', selectedAddress);
                 createEditCommunityBloc.onChange(snapshot.data);
@@ -411,26 +422,34 @@ class CreateEditCommunityViewFormState
                           onSaved: (value) {
                             enteredName =
                                 // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
-                                value.trim();
+                                value?.trim() ?? '';
                           },
                           // onSaved: (value) => enteredName = value,
                           validator: (value) {
-                            if (value.trim().isEmpty || value == '') {
+                            if (value?.trim().isEmpty ?? true || value == '') {
                               return S.of(context).timebank_name_error;
                             } else if (communityFound) {
                               return S.of(context).timebank_name_exists_error;
-                            } else if (profanityDetector
-                                .isProfaneString(value)) {
+                            } else if (value != null &&
+                                profanityDetector
+                                    .isProfaneString(value ?? '')) {
                               return S.of(context).profanity_text_alert;
-                            } else if (value.substring(0, 1).contains('_') &&
+                            } else if (value?.substring(0, 1)?.contains('_') ==
+                                    true &&
                                 !AppConfig.testingEmails.contains(
                                     SevaCore.of(context).loggedInUser.email)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
-                              enteredName =
-                                  value.replaceAll("[^a-zA-Z0-9]", "").trim();
-                              snapshot.data.community.updateValueByKey('name',
-                                  value.replaceAll("[^a-zA-Z0-9]", "").trim());
+                              enteredName = value
+                                      ?.replaceAll("[^a-zA-Z0-9]", "")
+                                      ?.trim() ??
+                                  '';
+                              snapshot.data.community.updateValueByKey(
+                                  'name',
+                                  value
+                                          ?.replaceAll("[^a-zA-Z0-9]", "")
+                                          ?.trim() ??
+                                      '');
                               createEditCommunityBloc.onChange(snapshot.data);
                             }
 
@@ -454,14 +473,14 @@ class CreateEditCommunityViewFormState
                           //  initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
                             updateExitWithConfirmationValue(context, 2, value);
-                            timebankModel.missionStatement = value;
-                            communityModel.about = value;
+                            timebankModel.missionStatement = value ?? '';
+                            communityModel.about = value ?? '';
                           },
                           validator: (value) {
-                            if (value.trim().isEmpty) {
+                            if (value?.trim().isEmpty ?? true) {
                               return S.of(context).timebank_tell_more;
                             } else if (profanityDetector
-                                .isProfaneString(value)) {
+                                .isProfaneString(value!)) {
                               return S.of(context).profanity_text_alert;
                             } else {
                               snapshot.data.community
@@ -470,8 +489,8 @@ class CreateEditCommunityViewFormState
                               snapshot.data.timebank
                                   .updateValueByKey('missionStatement', value);
                               createEditCommunityBloc.onChange(snapshot.data);
-                              timebankModel.missionStatement = value;
-                              communityModel.about = value;
+                              timebankModel.missionStatement = value ?? '';
+                              communityModel.about = value ?? '';
                               return null;
                             }
                           },
@@ -631,12 +650,14 @@ class CreateEditCommunityViewFormState
                                   value: widget.isCreateTimebank
                                       ? snapshot.data.timebank.protected
                                       : timebankModel.protected,
-                                  onChanged: (bool value) {
-                                    timebankModel.protected = value;
-                                    snapshot.data.timebank
-                                        .updateValueByKey('protected', value);
-                                    createEditCommunityBloc
-                                        .onChange(snapshot.data);
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      timebankModel.protected = value ?? false;
+                                      snapshot.data.timebank.updateValueByKey(
+                                          'protected', value ?? false);
+                                      createEditCommunityBloc
+                                          .onChange(snapshot.data);
+                                    });
                                   },
                                 ),
                               ],
@@ -657,12 +678,12 @@ class CreateEditCommunityViewFormState
                                       ? snapshot
                                           .data.timebank.preventAccedentalDelete
                                       : timebankModel.preventAccedentalDelete,
-                                  onChanged: (bool value) {
+                                  onChanged: (bool? value) {
                                     timebankModel.preventAccedentalDelete =
-                                        value;
+                                        value ?? false;
                                     snapshot.data.timebank.updateValueByKey(
                                       'preventAccedentalDelete',
-                                      value,
+                                      value ?? false,
                                     );
                                     createEditCommunityBloc
                                         .onChange(snapshot.data);
@@ -694,7 +715,7 @@ class CreateEditCommunityViewFormState
                                   Divider(),
                                   Checkbox(
                                     value: testCommunity,
-                                    onChanged: (bool value) {
+                                    onChanged: (bool? value) {
                                       if (!canTestCommunity) {
                                         if (!testCommunity) {
                                           _showSanBoxdvisory(
@@ -736,7 +757,8 @@ class CreateEditCommunityViewFormState
                                             }
                                           });
                                         } else {
-                                          communityModel.payment = null;
+                                          communityModel.payment =
+                                              <String, dynamic>{};
                                           snapshot.data.community
                                               .updateValueByKey(
                                             'testCommunity',
@@ -764,10 +786,12 @@ class CreateEditCommunityViewFormState
                         ),
                         HideWidget(
                           hide: widget.isCreateTimebank,
+                          secondChild: Container(),
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Community,
-                            upgradeDetails: AppConfig
-                                .upgradePlanBannerModel.community_sponsors,
+                            upgradeDetails: AppConfig.upgradePlanBannerModel!
+                                    .community_sponsors as BannerDetails? ??
+                                BannerDetails(),
                             transaction_matrix_type: 'community_sponsors',
                             child: SponsorsWidget(
                               textColor: Theme.of(context).primaryColor,
@@ -778,7 +802,7 @@ class CreateEditCommunityViewFormState
                               isAdminVerified: GetUserVerified.verify(
                                 userId: SevaCore.of(context)
                                     .loggedInUser
-                                    .sevaUserID,
+                                    .sevaUserID!,
                                 creatorId: timebankModel.creatorId,
                                 admins: timebankModel.admins,
                                 organizers: timebankModel.organizers,
@@ -994,12 +1018,13 @@ class CreateEditCommunityViewFormState
                         Offstage(
                           offstage: widget.isCreateTimebank,
                           child: TransactionsMatrixCheck(
-                            comingFrom: ComingFrom.Community,
                             upgradeDetails: AppConfig
-                                .upgradePlanBannerModel.parent_timebanks,
+                                    .upgradePlanBannerModel!.parent_timebanks ??
+                                BannerDetails(),
                             transaction_matrix_type: "parent_timebanks",
                             child: Center(
                               child: ParentTimebankPickerWidget(
+                                key: GlobalKey(),
                                 selectedTimebank: this.selectedTimebank,
                                 onChanged: (CommunityModel selectedTimebank) {
                                   setState(() {
@@ -1091,6 +1116,11 @@ class CreateEditCommunityViewFormState
                           child: Container(
                             alignment: Alignment.center,
                             child: CustomElevatedButton(
+                              color: Theme.of(context).primaryColor,
+                              shape: StadiumBorder(),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              elevation: 2.0,
                               onPressed: () async {
                                 var connResult =
                                     await Connectivity().checkConnectivity();
@@ -1101,8 +1131,9 @@ class CreateEditCommunityViewFormState
                                           Text(S.of(context).check_internet),
                                       action: SnackBarAction(
                                         label: S.of(context).dismiss,
-                                        onPressed: () => Scaffold.of(context)
-                                            .hideCurrentSnackBar(),
+                                        onPressed: () =>
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
@@ -1119,7 +1150,8 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-                                  if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
@@ -1240,7 +1272,7 @@ class CreateEditCommunityViewFormState
                                         UserModel user =
                                             SevaCore.of(context).loggedInUser;
                                         //TODO reset
-                                        _formKey.currentState.reset();
+                                        _formKey.currentState?.reset();
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
                                           MaterialPageRoute(
@@ -1261,7 +1293,8 @@ class CreateEditCommunityViewFormState
                                     }
                                   }
                                 } else {
-                                  if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
                                     if (!hasRegisteredLocation()) {
                                       showDialogForSuccess(
                                           dialogTitle: S
@@ -1282,16 +1315,16 @@ class CreateEditCommunityViewFormState
 
                                     if (globals.timebankAvatarURL != null) {
                                       communityModel.logo_url =
-                                          globals.timebankAvatarURL;
+                                          globals.timebankAvatarURL ?? '';
                                       timebankModel.photoUrl =
-                                          globals.timebankAvatarURL;
+                                          globals.timebankAvatarURL ?? '';
                                     }
 
                                     if (globals.timebankCoverURL != null) {
                                       communityModel.cover_url =
-                                          globals.timebankCoverURL;
+                                          globals.timebankCoverURL ?? '';
                                       timebankModel.cover_url =
-                                          globals.timebankCoverURL;
+                                          globals.timebankCoverURL ?? '';
                                       setState(() {});
                                     }
 
@@ -1325,7 +1358,7 @@ class CreateEditCommunityViewFormState
                                       Navigator.pop(dialogContext);
                                     }
                                     //TODO reset
-                                    _formKey.currentState.reset();
+                                    _formKey.currentState?.reset();
                                     if (widget.isFromFind) {
                                       Navigator.of(context).pop();
                                     } else {
@@ -1342,7 +1375,6 @@ class CreateEditCommunityViewFormState
                                   }
                                 }
                               },
-                              shape: StadiumBorder(),
                               child: Text(
                                 widget.isCreateTimebank
                                     ? S.of(context).create_timebank
@@ -1379,8 +1411,8 @@ class CreateEditCommunityViewFormState
   }
 
   getInfoWidget({
-    GlobalKey infoKey,
-    InfoType type,
+    required GlobalKey infoKey,
+    required InfoType type,
   }) {
     return IconButton(
       key: infoKey,
@@ -1391,7 +1423,8 @@ class CreateEditCommunityViewFormState
         width: 16,
       ),
       onPressed: () {
-        RenderBox renderBox = infoKey.currentContext.findRenderObject();
+        RenderBox renderBox =
+            infoKey.currentContext?.findRenderObject() as RenderBox;
         Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
         showDialogFromInfoWindow(
           context: context,
@@ -1403,46 +1436,50 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future<bool> _showSanBoxdvisory({String title, String description}) {
-    return showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext _context) {
-              return AlertDialog(
-                title: Text(title),
-                content: Text(description),
-                actions: <Widget>[
-                  CustomTextButton(
-                    color: HexColor("#d2d2d2"),
-                    textColor: Colors.white,
-                    child: Text(
-                      S.of(context).no,
-                      style: TextStyle(fontSize: dialogButtonSize),
-                    ),
-                    onPressed: () {
-                      Navigator.of(_context).pop(false);
-                    },
+  Future<bool> _showSanBoxdvisory(
+      {required String title, required String description}) async {
+    final result = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext _context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(description),
+            actions: <Widget>[
+              CustomTextButton(
+                color: HexColor("#d2d2d2"),
+                textColor: Colors.white,
+                child: Text(
+                  S.of(context).no,
+                  style: TextStyle(fontSize: dialogButtonSize),
+                ),
+                onPressed: () {
+                  Navigator.of(_context).pop(false);
+                },
+              ),
+              CustomElevatedButton(
+                elevation: BorderSide.strokeAlignCenter,
+                padding: EdgeInsets.all(10),
+                shape: StadiumBorder(),
+                color: Theme.of(context).colorScheme.secondary,
+                textColor: FlavorConfig.values.buttonTextColor,
+                child: Text(
+                  S.of(context).yes,
+                  style: TextStyle(
+                    fontSize: dialogButtonSize,
                   ),
-                  CustomElevatedButton(
-                    color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
-                    child: Text(
-                      S.of(context).yes,
-                      style: TextStyle(
-                        fontSize: dialogButtonSize,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(_context).pop(true);
-                    },
-                  ),
-                ],
-              );
-            }) ??
-        false;
+                ),
+                onPressed: () {
+                  Navigator.of(_context).pop(true);
+                },
+              ),
+            ],
+          );
+        });
+    return result ?? false;
   }
 
-  BuildContext dialogContext;
+  late BuildContext dialogContext;
 
   bool hasRegisteredLocation() {
     return location != null;
@@ -1658,7 +1695,7 @@ class CreateEditCommunityViewFormState
         ));
   }
 
-  static InputDecoration getInputDecoration({String fieldTitle}) {
+  static InputDecoration getInputDecoration({required String fieldTitle}) {
     return InputDecoration(
       errorMaxLines: 2,
 
@@ -1702,9 +1739,9 @@ class CreateEditCommunityViewFormState
               ? '${controller.community.billing_address.state}'
               : '',*/
           validator: (value) {
-            return value.isEmpty
+            return value?.isEmpty ?? true
                 ? S.of(context).validation_error_required_fields
-                : (profanityDetector.isProfaneString(value))
+                : (profanityDetector.isProfaneString(value ?? ''))
                     ? S.of(context).profanity_text_alert
                     : null;
           },
@@ -1739,9 +1776,9 @@ class CreateEditCommunityViewFormState
               ? '${controller.community.billing_address.city}'
               : '',*/
           validator: (value) {
-            return value.isEmpty
+            return value?.isEmpty ?? true
                 ? S.of(context).validation_error_required_fields
-                : (profanityDetector.isProfaneString(value))
+                : (profanityDetector.isProfaneString(value ?? ''))
                     ? S.of(context).profanity_text_alert
                     : null;
           },
@@ -1773,9 +1810,9 @@ class CreateEditCommunityViewFormState
               ? '${controller.community.billing_address.pincode.toString()}'
               : '',*/
           validator: (value) {
-            return value.isEmpty
+            return value?.isEmpty ?? true
                 ? S.of(context).validation_error_required_fields
-                : (profanityDetector.isProfaneString(value))
+                : (profanityDetector.isProfaneString(value ?? ''))
                     ? S.of(context).profanity_text_alert
                     : null;
           },
@@ -1812,7 +1849,7 @@ class CreateEditCommunityViewFormState
                   ? controller.community.billing_address.additionalnotes
                   : '',
           validator: (value) {
-            return (profanityDetector.isProfaneString(value))
+            return (value != null && profanityDetector.isProfaneString(value))
                 ? S.of(context).profanity_text_alert
                 : null;
           },
@@ -1846,9 +1883,9 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           validator: (value) {
-            return value.isEmpty
+            return value?.isEmpty ?? true
                 ? S.of(context).validation_error_required_fields
-                : (profanityDetector.isProfaneString(value))
+                : (profanityDetector.isProfaneString(value ?? ''))
                     ? S.of(context).profanity_text_alert
                     : null;
           },
@@ -1882,7 +1919,7 @@ class CreateEditCommunityViewFormState
               createEditCommunityBloc.onChange(controller);
             },
             validator: (value) {
-              return (profanityDetector.isProfaneString(value))
+              return (value != null && profanityDetector.isProfaneString(value))
                   ? S.of(context).profanity_text_alert
                   : null;
             },
@@ -1908,7 +1945,7 @@ class CreateEditCommunityViewFormState
             // scrollToBottom();
           },
           validator: (value) {
-            return (profanityDetector.isProfaneString(value))
+            return (value != null && profanityDetector.isProfaneString(value))
                 ? S.of(context).profanity_text_alert
                 : null;
           },
@@ -1953,9 +1990,9 @@ class CreateEditCommunityViewFormState
                 ? '${controller.community.billing_address.country}'
                 : '',*/
           validator: (value) {
-            return value.isEmpty
+            return value?.isEmpty ?? true
                 ? S.of(context).validation_error_required_fields
-                : (profanityDetector.isProfaneString(value))
+                : (profanityDetector.isProfaneString(value ?? ''))
                     ? S.of(context).profanity_text_alert
                     : null;
           },
@@ -1972,17 +2009,22 @@ class CreateEditCommunityViewFormState
       return Padding(
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: CustomElevatedButton(
+          color: Theme.of(context).primaryColor,
+          shape: StadiumBorder(),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          elevation: 2.0,
+          textColor: Colors.white,
           child: Text(
             S.of(context).continue_text,
-            style: Theme.of(context).primaryTextTheme.button,
+            style: Theme.of(context).primaryTextTheme.labelLarge,
           ),
           onPressed: () {
             FocusScope.of(context).requestFocus(FocusNode());
-            if (_billingInformationKey.currentState.validate()) {
+            if (_billingInformationKey.currentState?.validate() ?? false) {
               if (controller.community.billing_address.country == null) {
                 scrollToTop();
               } else {
-                _billingInformationKey.currentState.save();
+                _billingInformationKey.currentState?.save();
                 isBillingDetailsProvided = true;
                 Navigator.pop(context);
               }
@@ -2048,7 +2090,7 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  void showDialogForSuccess({String dialogTitle, bool err}) {
+  void showDialogForSuccess({required String dialogTitle, bool? err}) {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {

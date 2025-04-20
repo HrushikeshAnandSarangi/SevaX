@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
@@ -54,26 +54,26 @@ class TabarView extends StatefulWidget {
 
   final TimebankModel timebankModel;
 
-  TabarView({this.timebankModel, this.userModel});
+  TabarView({required this.timebankModel, required this.userModel});
 
   @override
   _TabarViewState createState() => _TabarViewState();
 }
 
 class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
-  TimebankModel timebankModel;
-  TabController controller;
+  TimebankModel? timebankModel;
+  TabController? controller;
 
   @override
   void initState() {
     timebankModel = widget.timebankModel;
     AppConfig.helpIconContextMember = HelpContextMemberType.groups;
     AppConfig.timebankConfigurations =
-        widget.timebankModel.timebankConfigurations ?? getConfigurationModel();
+        widget.timebankModel.timebankConfigurations;
 
     var tempRole = determineUserRoleInAbout(
-      sevaUserId: widget.userModel.sevaUserID,
-      timeBankModel: timebankModel,
+      sevaUserId: widget.userModel.sevaUserID!,
+      timeBankModel: timebankModel!,
     );
     switch (tempRole) {
       case AboutUserRole.ADMIN:
@@ -100,11 +100,11 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return getUserRole(
       determineUserRoleInAbout(
-        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        timeBankModel: timebankModel,
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!,
+        timeBankModel: timebankModel!,
       ),
       context,
-      timebankModel,
+      timebankModel!,
       widget.timebankModel.id,
       this,
     );
@@ -123,7 +123,7 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
           context,
           timebankModel,
           timebankId,
-          controller,
+          controller!,
         );
 
       case AboutUserRole.JOINED_USER:
@@ -131,7 +131,7 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
           context,
           timebankModel,
           timebankId,
-          controller,
+          controller!,
         );
 
       case AboutUserRole.NORMAL_USER:
@@ -139,7 +139,7 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
           context,
           timebankModel,
           timebankId,
-          controller,
+          controller!,
         );
 
       default:
@@ -147,7 +147,7 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
           context,
           timebankModel,
           timebankId,
-          controller,
+          controller!,
         );
     }
   }
@@ -240,6 +240,7 @@ Widget createAdminTabBar(
               DiscussionList(
                 timebankModel: timebankModel,
                 timebankId: timebankId,
+                loggedInUser: SevaCore.of(context).loggedInUser.sevaUserID!,
               ),
               TimeBankProjectsView(
                 timebankId: timebankId,
@@ -255,8 +256,8 @@ Widget createAdminTabBar(
               ),
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
-                email: SevaCore.of(context).loggedInUser.email,
-                userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                email: SevaCore.of(context).loggedInUser.email ?? '',
+                userId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
               ),
               MembersPage(
                 timebankId: timebankModel.id,
@@ -391,6 +392,7 @@ Widget createJoinedUserTabBar(
               DiscussionList(
                 timebankModel: timebankModel,
                 timebankId: timebankId,
+                loggedInUser: SevaCore.of(context).loggedInUser.sevaUserID!,
               ),
               TimeBankProjectsView(
                 timebankId: timebankId,
@@ -406,8 +408,8 @@ Widget createJoinedUserTabBar(
               ),
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
-                email: SevaCore.of(context).loggedInUser.email,
-                userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                email: SevaCore.of(context).loggedInUser.email ?? '',
+                userId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
               ),
               // AcceptedOffers(
               //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -483,8 +485,8 @@ Widget createNormalUserTabBar(
               children: [
                 TimeBankAboutView.of(
                   timebankModel: timebankModel,
-                  email: SevaCore.of(context).loggedInUser.email,
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  email: SevaCore.of(context).loggedInUser.email ?? '',
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
                 ),
                 MembersPage(
                   timebankId: timebankModel.id,
@@ -497,8 +499,8 @@ Widget createNormalUserTabBar(
 }
 
 AboutUserRole determineUserRoleInAbout(
-    {String sevaUserId, TimebankModel timeBankModel}) {
-  if (isAccessAvailable(timeBankModel, sevaUserId)) {
+    {String? sevaUserId, TimebankModel? timeBankModel}) {
+  if (isAccessAvailable(timeBankModel!, sevaUserId!)) {
     return AboutUserRole.ADMIN;
   } else if (timeBankModel.members.contains(sevaUserId)) {
     return AboutUserRole.JOINED_USER;
@@ -512,7 +514,10 @@ class DiscussionList extends StatefulWidget {
   final String timebankId;
   final TimebankModel timebankModel;
 
-  DiscussionList({this.timebankId, this.loggedInUser, this.timebankModel});
+  DiscussionList(
+      {required this.timebankId,
+      required this.loggedInUser,
+      required this.timebankModel});
 
   @override
   DiscussionListState createState() {
@@ -521,17 +526,17 @@ class DiscussionList extends StatefulWidget {
 }
 
 class DiscussionListState extends State<DiscussionList> {
-  String timebankName;
+  String? timebankName;
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
   String pinnedNewsId = '';
   bool isPinned = false;
-  NewsModel pinnedNewsModel;
-  StreamController<List<NewsModel>> newsStream;
+  NewsModel? pinnedNewsModel;
+  StreamController<List<NewsModel>>? newsStream;
   List<String> sortOrderArr = ["Latest", "Likes"];
   String sortOrderVal = "Latest";
-  SearchSegmentBloc searchSegmentBloc;
+  SearchSegmentBloc? searchSegmentBloc;
   List<UserModel> membersInTimebank = [];
 
   @override
@@ -541,7 +546,7 @@ class DiscussionListState extends State<DiscussionList> {
     FirestoreManager.getNewsStream(
       timebankID: widget.timebankId,
     ).listen((event) {
-      newsStream.add(event);
+      newsStream!.add(event);
     });
 
     super.initState();
@@ -578,7 +583,7 @@ class DiscussionListState extends State<DiscussionList> {
                   value: sortOrderVal,
                   onChanged: (val) {
                     if (val != sortOrderVal) {
-                      sortOrderVal = val;
+                      sortOrderVal = val!;
                       setState(() {});
                     }
                   },
@@ -611,13 +616,12 @@ class DiscussionListState extends State<DiscussionList> {
         ),
         ConfigurationCheck(
           actionType: 'create_feeds',
-          role: memberType(widget.timebankModel,
-              SevaCore.of(context).loggedInUser.sevaUserID),
+          role: MemberType.CREATOR,
           child: InkWell(
             onTap: () {
               if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
                   !isAccessAvailable(widget.timebankModel,
-                      SevaCore.of(context).loggedInUser.sevaUserID)) {
+                      SevaCore.of(context).loggedInUser.sevaUserID!)) {
                 showAdminAccessMessage(context: context);
               } else {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -663,7 +667,7 @@ class DiscussionListState extends State<DiscussionList> {
           ),
         ),
         StreamBuilder<List<NewsModel>>(
-          stream: newsStream.stream,
+          stream: newsStream!.stream,
           builder: (context, snapshot) {
             // logger.i("Stream Updated==================================<<" +
             //     DateTime.now().toString());
@@ -679,14 +683,15 @@ class DiscussionListState extends State<DiscussionList> {
                 child: LoadingIndicator(),
               );
 
-            List<NewsModel> newsList = snapshot.data;
+            List<NewsModel> newsList = snapshot.data ?? [];
 
             if (sortOrderVal.toLowerCase() ==
                 SortOrderClass.LIKES.toLowerCase()) {
-              newsList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
-            } else {
               newsList
-                  .sort((a, b) => b.postTimestamp.compareTo(a.postTimestamp));
+                  .sort((a, b) => b.likes!.length.compareTo(a.likes!.length));
+            } else {
+              newsList.sort((a, b) =>
+                  (b.postTimestamp ?? 0).compareTo(a.postTimestamp ?? 0));
             }
             newsList = filterBlockedContent(newsList, context);
             newsList = filterPinnedNews(newsList, context);
@@ -709,15 +714,16 @@ class DiscussionListState extends State<DiscussionList> {
               return EmptyWidget(
                 title: S.of(context).no_posts_title,
                 sub_title: S.of(context).no_posts_description,
+                titleFontSize: 18, // Provide an appropriate font size
               );
             }
 
             return Expanded(
               child: ListView(
                 children: <Widget>[
-                  isPinned
+                  isPinned && pinnedNewsModel != null
                       ? newFeedsCard(
-                          news: pinnedNewsModel,
+                          news: pinnedNewsModel!,
                           isFromMessage: false,
                         )
                       : Offstage(),
@@ -735,7 +741,8 @@ class DiscussionListState extends State<DiscussionList> {
                         );
                       }
 
-                      if (newsList.elementAt(index).reports.length > 2) {
+                      if ((newsList.elementAt(index).reports != null &&
+                          (newsList.elementAt(index).reports!.length > 2))) {
                         return Offstage();
                       } else {
                         if (index == 0) {
@@ -767,7 +774,7 @@ class DiscussionListState extends State<DiscussionList> {
     filteredNewsList = newsList;
     isPinned = false;
     filteredNewsList.forEach((newsModel) {
-      if (newsModel.isPinned) {
+      if (newsModel.isPinned == true) {
         //  filteredNewsList.remove(newsModel);
         //  filteredNewsList.insert(0, newsModel);
 
@@ -791,11 +798,11 @@ class DiscussionListState extends State<DiscussionList> {
     newsList.forEach((news) {
       SevaCore.of(context)
                   .loggedInUser
-                  .blockedMembers
+                  .blockedMembers!
                   .contains(news.sevaUserId) ||
               SevaCore.of(context)
                   .loggedInUser
-                  .blockedBy
+                  .blockedBy!
                   .contains(news.sevaUserId)
           ? logger.i("Removed blocked content")
           : filteredNewsList.add(news);
@@ -806,12 +813,12 @@ class DiscussionListState extends State<DiscussionList> {
   void openPdfViewer(String documentUrl, String documentName) {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
-    progressDialog.show();
+    progressDialog!.show();
     createFileOfPdfUrl(documentUrl, documentName).then((f) {
-      progressDialog.hide();
+      progressDialog!.hide();
 
       Navigator.push(
         context,
@@ -820,17 +827,18 @@ class DiscussionListState extends State<DiscussionList> {
                   docName: documentName,
                   pathPDF: f.path,
                   isFromFeeds: true,
+                  pdfUrl: documentUrl,
                 )),
       );
     });
   }
 
-  Widget newFeedsCard({NewsModel news, bool isFromMessage}) {
-    String loggedinemail = SevaCore.of(context).loggedInUser.email;
-    var feedAddress = getLocation(news.placeAddress ?? '');
+  Widget newFeedsCard({NewsModel? news, bool? isFromMessage}) {
+    String loggedinemail = SevaCore.of(context).loggedInUser.email!;
+    var feedAddress = getLocation(news!.placeAddress ?? '');
 
     return InkWell(
-      key: ValueKey(news.id),
+      key: ValueKey(news!.id),
       onTap: () {
         Navigator.push(
           context,
@@ -886,9 +894,11 @@ class DiscussionListState extends State<DiscussionList> {
                                   Text(
                                     timeAgo.format(
                                         DateTime.fromMillisecondsSinceEpoch(
-                                            news.postTimestamp),
-                                        locale: Locale(AppConfig.prefs
-                                                .getString('language_code'))
+                                            news!.postTimestamp!),
+                                        locale: Locale(AppConfig.prefs!
+                                                    .getString(
+                                                        'language_code') ??
+                                                'en')
                                             .toLanguageTag()),
                                     style: TextStyle(color: Colors.grey),
                                   ),
@@ -908,9 +918,9 @@ class DiscussionListState extends State<DiscussionList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     UserProfileImage(
-                      photoUrl: news.userPhotoURL,
-                      email: news.email,
-                      userId: news.sevaUserId,
+                      photoUrl: news.userPhotoURL!,
+                      email: news.email!,
+                      userId: news.sevaUserId!,
                       height: 40,
                       width: 40,
                       timebankModel: widget.timebankModel,
@@ -925,7 +935,7 @@ class DiscussionListState extends State<DiscussionList> {
                           ),
                           Text(
                             news.fullName != null && news.fullName != ""
-                                ? news.fullName.trim()
+                                ? news.fullName!.trim()
                                 : S.of(context).user_name_not_availble,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 7,
@@ -962,7 +972,7 @@ class DiscussionListState extends State<DiscussionList> {
                             child: Umeshify(
                               text: news.subheading != null &&
                                       news.subheading != ""
-                                  ? news.subheading.trim()
+                                  ? news.subheading!.trim()
                                   : '',
                               onOpen: (url) async {
                                 if (await canLaunch(url)) {
@@ -979,7 +989,7 @@ class DiscussionListState extends State<DiscussionList> {
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
                               text: news.title != null && news.title != "NoData"
-                                  ? news.title.trim()
+                                  ? news.title!.trim()
                                   : '',
                               onOpen: (url) async {
                                 if (await canLaunch(url)) {
@@ -994,7 +1004,7 @@ class DiscussionListState extends State<DiscussionList> {
                       ),
                     ),
                     isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID)
+                            SevaCore.of(context).loggedInUser.sevaUserID!)
                         ? getOptionButtons(
                             Padding(
                               padding: EdgeInsets.symmetric(
@@ -1004,14 +1014,14 @@ class DiscussionListState extends State<DiscussionList> {
                                 width: 20,
                                 child: Image.asset(
                                   'lib/assets/images/pin.png',
-                                  color: news.isPinned
+                                  color: news!.isPinned!
                                       ? Colors.green
                                       : Colors.black,
                                 ),
                               ),
                             ),
                             () {
-                              news.isPinned
+                              news.isPinned!
                                   ? unPinFeed(newsModel: news)
                                   : pinNews(
                                       newsModel: news,
@@ -1027,13 +1037,13 @@ class DiscussionListState extends State<DiscussionList> {
               news.newsImageUrl == null
                   ? news.imageScraped == null || news.imageScraped == "NoData"
                       ? Offstage()
-                      : getImageView(news.id, news.imageScraped)
-                  : getImageView(news.id, news.newsImageUrl),
+                      : getImageView(news.id!, news.imageScraped!)
+                  : getImageView(news.id!, news.newsImageUrl!),
 
               //feed options
               Padding(
                 padding: const EdgeInsets.only(bottom: 0.0, top: 4, right: 15),
-                child: !isFromMessage
+                child: !isFromMessage!
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -1047,17 +1057,18 @@ class DiscussionListState extends State<DiscussionList> {
                                           horizontal: 6, vertical: 2),
                                       child: Icon(
                                         Icons.flag,
-                                        color: news.reports.contains(
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .sevaUserID)
+                                        color: news.reports != null &&
+                                                news.reports!.contains(
+                                                    SevaCore.of(context)
+                                                        .loggedInUser
+                                                        .sevaUserID)
                                             ? Colors.red
                                             : Colors.black,
                                         size: 20,
                                       ),
                                     ),
                                     () {
-                                      if (news.reports.contains(
+                                      if (news.reports!.contains(
                                           SevaCore.of(context)
                                               .loggedInUser
                                               .sevaUserID)) {
@@ -1116,7 +1127,8 @@ class DiscussionListState extends State<DiscussionList> {
                                                 ),
                                                 CustomTextButton(
                                                   color: Theme.of(context)
-                                                      .accentColor,
+                                                      .colorScheme
+                                                      .secondary,
                                                   textColor: Colors.white,
                                                   child: Text(
                                                     S.of(context).report_feed,
@@ -1126,13 +1138,13 @@ class DiscussionListState extends State<DiscussionList> {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    if (news.reports.contains(
+                                                    if (news.reports!.contains(
                                                         SevaCore.of(context)
                                                             .loggedInUser
                                                             .sevaUserID)) {
                                                     } else {
                                                       if (news
-                                                          .reports.isEmpty) {
+                                                          .reports!.isEmpty) {
                                                         news.reports = [];
                                                       }
                                                       CollectionRef.feeds
@@ -1168,16 +1180,16 @@ class DiscussionListState extends State<DiscussionList> {
                           getOptionButtons(
                             Row(
                               children: <Widget>[
-                                Text('${news.likes.length}',
+                                Text('${news.likes!.length}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     )),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: Center(
-                                    child: news.likes != null &&
-                                            news.likes.contains(loggedinemail)
+                                  child: getOptionButtons(
+                                    news.likes != null &&
+                                            news.likes!.contains(loggedinemail)
                                         ? Icon(
                                             Icons.favorite,
                                             size: 24,
@@ -1188,13 +1200,26 @@ class DiscussionListState extends State<DiscussionList> {
                                             size: 24,
                                             color: Color(0xFFec444b),
                                           ),
+                                    () {
+                                      Set<String> likesList =
+                                          Set.from(news.likes ?? []);
+                                      news.likes != null &&
+                                              news.likes!
+                                                  .contains(loggedinemail)
+                                          ? likesList.remove(loggedinemail)
+                                          : likesList.add(loggedinemail);
+                                      news.likes = likesList.toList();
+                                      FirestoreManager.updateNews(
+                                          newsObject: news);
+                                    },
                                   ),
                                 ),
                                 Padding(
                                     padding: EdgeInsets.only(left: 20),
                                     child: Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text('${news.comments.length}',
+                                        child: Text(
+                                            '${news.comments?.length ?? 0}',
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -1208,8 +1233,8 @@ class DiscussionListState extends State<DiscussionList> {
                                           bloc: BlocProvider.of<
                                               HomeDashBoardBloc>(context),
                                           child: NewsCardView(
-                                            newsModel: news,
                                             isFocused: false,
+                                            newsModel: news,
                                             timebankModel: widget.timebankModel,
                                           ),
                                         ),
@@ -1230,9 +1255,10 @@ class DiscussionListState extends State<DiscussionList> {
                               ],
                             ),
                             () {
-                              Set<String> likesList = Set.from(news.likes);
+                              Set<String> likesList =
+                                  Set.from(news.likes ?? []);
                               news.likes != null &&
-                                      news.likes.contains(loggedinemail)
+                                      news.likes!.contains(loggedinemail)
                                   ? likesList.remove(loggedinemail)
                                   : likesList.add(loggedinemail);
                               news.likes = likesList.toList();
@@ -1260,21 +1286,21 @@ class DiscussionListState extends State<DiscussionList> {
       currentTimebankModel = _homePageBaseBloc
           .getTimebankModelFromCurrentCommunity(widget.timebankId);
 
-      if (currentTimebankModel != null)
-        currentTimebankModel.members.forEach(
-          (element) {
-            membersInTimebank.add(
-              _membersBloc.getMemberFromLocalData(
-                userId: element,
-              ),
-            );
-          },
-        );
+      currentTimebankModel.members.forEach(
+        (element) {
+          final user = _membersBloc.getMemberFromLocalData(
+            userId: element,
+          );
+          if (user != null) {
+            membersInTimebank.add(user);
+          }
+        },
+      );
 
       searchSegmentBloc = SearchSegmentBloc();
-      searchSegmentBloc.init(listOfMembersInTimebank: membersInTimebank);
+      searchSegmentBloc?.init(listOfMembersInTimebank: membersInTimebank);
     }
-    return searchSegmentBloc;
+    return searchSegmentBloc!;
   }
 
   Widget getImageView(String newsId, String urlToLoad) {
@@ -1311,12 +1337,12 @@ class DiscussionListState extends State<DiscussionList> {
     );
   }
 
-  Widget document({String newsDocumentUrl, String newsDocumentName}) {
+  Widget document({String? newsDocumentUrl, String? newsDocumentName}) {
     return newsDocumentUrl == null
         ? Offstage()
         : GestureDetector(
             onTap: () {
-              openPdfViewer(newsDocumentUrl, newsDocumentName);
+              openPdfViewer(newsDocumentUrl, newsDocumentName!);
             },
             child: Container(
               height: 30,
@@ -1378,31 +1404,27 @@ class DiscussionListState extends State<DiscussionList> {
 //    );
   }
 
-  String getLocation(String location) {
-    if (location != null) {
-      List<String> l = location.split(',');
-      l = l.reversed.toList();
-      if (l.length >= 2) {
-        return "${l[1]},${l[0]}";
-      } else if (l.length >= 1) {
-        return "${l[0]}";
-      } else {
-        return null;
-      }
+  String? getLocation(String location) {
+    List<String> l = location.split(',');
+    l = l.reversed.toList();
+    if (l.length >= 2) {
+      return "${l[1]},${l[0]}";
+    } else if (l.length >= 1) {
+      return "${l[0]}";
     } else {
       return null;
     }
   }
 
-  void pinNews({NewsModel newsModel}) async {
+  void pinNews({required NewsModel newsModel}) async {
     if (pinnedNewsModel != null && isPinned == true) {
-      unPinFeed(newsModel: pinnedNewsModel);
+      unPinFeed(newsModel: pinnedNewsModel!);
     }
     newsModel.isPinned = true;
     await FirestoreManager.updateNews(newsObject: newsModel);
   }
 
-  void unPinFeed({NewsModel newsModel}) async {
+  void unPinFeed({required NewsModel newsModel}) async {
     newsModel.isPinned = false;
     await FirestoreManager.updateNews(newsObject: newsModel);
 

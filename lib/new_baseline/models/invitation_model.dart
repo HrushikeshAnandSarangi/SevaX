@@ -6,14 +6,14 @@ class InvitationViaLink {
   final String communityId;
   final String timebankId;
   final String timebankTitle;
-  String invitationLink;
+  late String invitationLink;
 
   InvitationViaLink.createInvitation({
-    this.senderEmail,
-    this.inviteeEmail,
-    this.communityId,
-    this.timebankId,
-    this.timebankTitle,
+    required this.senderEmail,
+    required this.inviteeEmail,
+    required this.communityId,
+    required this.timebankId,
+    required this.timebankTitle,
   });
 
   InvitationViaLink setInvitationLink(String invitationLink) {

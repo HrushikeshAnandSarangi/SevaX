@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -18,51 +18,56 @@ import '../spell_check_manager.dart';
 typedef StringListCallback = void Function(List<String> skills);
 
 class InterestViewNew extends StatefulWidget {
-  final UserModel userModel;
+  final UserModel? userModel;
   final VoidCallback onSkipped;
-  final VoidCallback onBacked;
-  final VoidCallback onPrevious;
+  final VoidCallback? onBacked;
+  final VoidCallback? onPrevious;
 
-  final StringListCallback onSelectedInterests;
-  final bool automaticallyImplyLeading;
-  final bool isFromProfile;
-  final String languageCode;
+  final StringListCallback? onSelectedInterests;
+  final bool? automaticallyImplyLeading;
+  final bool? isFromProfile;
+  final String? languageCode;
 
   InterestViewNew(
-      {@required this.onSelectedInterests,
-      @required this.onSkipped,
+      {required this.onSelectedInterests,
+      required this.onSkipped,
       this.onBacked,
       this.userModel,
       this.automaticallyImplyLeading,
       this.isFromProfile,
       this.onPrevious,
-      @required this.languageCode});
+      required this.languageCode});
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
 }
 
 class _InterestViewNewState extends State<InterestViewNew> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
   bool isDataLoaded = false;
-  bool hasPellError;
+  late bool hasPellError;
 
   @override
   void initState() {
     hasPellError = false;
     CollectionRef.interests.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
-        if (data.data().containsKey(widget.languageCode)) {
-          interests[data.id] = data[widget.languageCode];
+        if (data.data() != null &&
+            (data.data() as Map<String, dynamic>)
+                .containsKey(widget.languageCode)) {
+          interests[data.id] =
+              (data.data() as Map<String, dynamic>)[widget.languageCode];
         }
       });
 
-      if (widget.userModel.interests != null && widget.userModel.interests.length > 0) {
-        widget.userModel.interests.forEach((id) {
+      if (widget.userModel != null &&
+          widget.userModel!.interests != null &&
+          widget.userModel!.interests!.length > 0) {
+        widget.userModel!.interests!.forEach((id) {
           _selectedInterests[id] = interests[id];
         });
       }
@@ -82,8 +87,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        automaticallyImplyLeading: widget.automaticallyImplyLeading,
-        leading: widget.automaticallyImplyLeading
+        automaticallyImplyLeading: widget.automaticallyImplyLeading!,
+        leading: widget.automaticallyImplyLeading!
             ? null
             : BackButton(
                 onPressed: widget.onBacked,
@@ -112,54 +117,54 @@ class _InterestViewNewState extends State<InterestViewNew> {
             SizedBox(height: 20),
 
             TypeAheadField<SuggestedItem>(
-              suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              suggestionsController: SuggestionsController(),
               errorBuilder: (context, err) {
                 return Text(S.of(context).error_occured);
               },
               debounceDuration: Duration(milliseconds: 300),
-              textFieldConfiguration: TextFieldConfiguration(
-                style: hasPellError
-                    ? TextStyle(
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.red,
-                        decorationStyle: TextDecorationStyle.wavy,
-                        decorationThickness: 3,
-                      )
-                    : TextStyle(),
-                controller: _textEditingController,
-                decoration: InputDecoration(
-                  hintText: S.of(context).search,
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  suffixIcon: InkWell(
-                    splashColor: Colors.transparent,
-                    child: Icon(
-                      Icons.clear,
+              builder: (context, textFieldController, focusNode) {
+                return TextField(
+                  style: hasPellError
+                      ? TextStyle(
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.red,
+                          decorationStyle: TextDecorationStyle.wavy,
+                          decorationThickness: 3,
+                        )
+                      : TextStyle(),
+                  controller: _textEditingController,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    hintText: S.of(context).search,
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                    prefixIcon: Icon(
+                      Icons.search,
                       color: Colors.grey,
                     ),
-                    onTap: () {
-                      _textEditingController.clear();
-                      controller.close();
-                    },
+                    suffixIcon: InkWell(
+                      splashColor: Colors.transparent,
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {
+                        _textEditingController.clear();
+                        controller.close();
+                      },
+                    ),
                   ),
-                ),
-              ),
-              suggestionsBoxController: controller,
+                );
+              },
               suggestionsCallback: (pattern) async {
                 List<SuggestedItem> dataCopy = [];
                 interests.forEach(
@@ -167,19 +172,24 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     ..suggestionMode = SuggestionMode.FROM_DB
                     ..suggesttionTitle = v),
                 );
-                dataCopy.retainWhere((s) => s.suggesttionTitle.toLowerCase().contains(pattern.toLowerCase()));
+                dataCopy.retainWhere((s) => s.suggesttionTitle
+                    .toLowerCase()
+                    .contains(pattern.toLowerCase()));
 
-                if (pattern.length > 2 && !dataCopy.contains(SuggestedItem()..suggesttionTitle = pattern)) {
+                if (pattern.length > 2 &&
+                    !dataCopy.contains(
+                        SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
-                      await SpellCheckManager.evaluateSpellingFor(pattern, language: widget.languageCode);
-                  if (spellCheckResult.hasErros) {
+                      await SpellCheckManager.evaluateSpellingFor(pattern,
+                          language: widget.languageCode);
+                  if (spellCheckResult.hasErros!) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
                       ..suggesttionTitle = pattern);
                   } else if (spellCheckResult.correctSpelling != pattern) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.SUGGESTED
-                      ..suggesttionTitle = spellCheckResult.correctSpelling);
+                      ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -207,7 +217,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     );
 
                   case SuggestionMode.SUGGESTED:
-                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.SUGGESTED,
@@ -216,13 +227,14 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
-                      language: widget.languageCode,
+                      language: widget.languageCode!,
                       suggestionMode: suggestedItem.suggestionMode,
                       showLoader: true,
                     );
 
                   case SuggestionMode.USER_DEFINED:
-                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.USER_DEFINED,
@@ -232,7 +244,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
-                      language: widget.languageCode,
+                      language: widget.languageCode!,
                       suggestionMode: suggestedItem.suggestionMode,
                       showLoader: false,
                     );
@@ -241,15 +253,16 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     return Container();
                 }
               },
-              noItemsFoundBuilder: (context) {
+              emptyBuilder: (context) {
                 return searchUserDefinedEntity(
                   keyword: _textEditingController.text,
-                  language: widget.languageCode,
+                  language: widget.languageCode!,
                   showLoader: false,
                 );
               },
-              onSuggestionSelected: (SuggestedItem suggestion) {
-                if (ProfanityDetector().isProfaneString(suggestion.suggesttionTitle)) {
+              onSelected: (SuggestedItem suggestion) {
+                if (ProfanityDetector()
+                    .isProfaneString(suggestion.suggesttionTitle)) {
                   return;
                 }
 
@@ -258,7 +271,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     var interestId = Uuid().generateV4();
                     SkillsAndInterestBloc.addInterestToDb(
                       interestId: interestId,
-                      interestLanguage: widget.languageCode,
+                      interestLanguage: widget.languageCode!,
                       interestTitle: suggestion.suggesttionTitle,
                     );
                     interests[interestId] = suggestion.suggesttionTitle;
@@ -268,7 +281,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     var interestId = Uuid().generateV4();
                     SkillsAndInterestBloc.addInterestToDb(
                         interestId: interestId,
-                        interestLanguage: widget.languageCode,
+                        interestLanguage: widget.languageCode!,
                         interestTitle: suggestion.suggesttionTitle);
                     interests[interestId] = suggestion.suggesttionTitle;
                     break;
@@ -279,16 +292,18 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 _textEditingController.clear();
                 // controller.close();
 
-                if (!_selectedInterests.containsValue(suggestion.suggesttionTitle)) {
+                if (!_selectedInterests
+                    .containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
-                  String id = interests.keys.firstWhere((k) => interests[k] == suggestion.suggesttionTitle);
+                  String id = interests.keys.firstWhere(
+                      (k) => interests[k] == suggestion.suggesttionTitle);
                   _selectedInterests[id] = suggestion.suggesttionTitle;
                   setState(() {});
                 }
               },
             ),
             SizedBox(height: 20),
-            widget.isFromProfile && !isDataLoaded
+            widget.isFromProfile! && !isDataLoaded
                 ? getLoading
                 : Expanded(
                     child: ListView(
@@ -304,7 +319,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
                                     ? CustomChip(
                                         title: value,
                                         onDelete: () {
-                                          String id = interests.keys.firstWhere((k) => interests[k] == value);
+                                          String id = interests.keys.firstWhere(
+                                              (k) => interests[k] == value);
                                           _selectedInterests.remove(id);
                                           setState(() {});
                                         },
@@ -320,6 +336,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
             SizedBox(
               width: 134,
               child: CustomElevatedButton(
+                color: Theme.of(context).primaryColor,
+                shape: StadiumBorder(),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                elevation: 2.0,
+                textColor: Colors.white,
                 onPressed: () async {
                   var connResult = await Connectivity().checkConnectivity();
                   if (connResult == ConnectivityResult.none) {
@@ -328,7 +349,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
                         content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
                           label: S.of(context).dismiss,
-                          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                          onPressed: () => ScaffoldMessenger.of(context)
+                              .hideCurrentSnackBar(),
                         ),
                       ),
                     );
@@ -336,23 +358,27 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   }
                   List<String> selectedID = [];
                   _selectedInterests.forEach((id, value) => selectedID.add(id));
-                  widget.onSelectedInterests(selectedID);
+                  widget.onSelectedInterests!(selectedID);
                 },
                 child: Text(
-                  widget.isFromProfile ? S.of(context).update : S.of(context).next,
-                  style: Theme.of(context).primaryTextTheme.button,
+                  widget.isFromProfile!
+                      ? S.of(context).update
+                      : S.of(context).next,
+                  style: Theme.of(context).primaryTextTheme.labelLarge,
                 ),
               ),
             ),
             CustomTextButton(
               shape: StadiumBorder(),
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               onPressed: () {
                 widget.onSkipped();
               },
               child: Text(
-                AppConfig.prefs.getBool(AppConfig.skip_interest) == null ? S.of(context).skip : S.of(context).cancel,
+                AppConfig.prefs!.getBool(AppConfig.skip_interest) == null
+                    ? S.of(context).skip
+                    : S.of(context).cancel,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -366,10 +392,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    required String keyword,
+    required String language,
+    SuggestionMode? suggestionMode,
+    required bool showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
@@ -381,7 +407,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
           return showLoader
               ? getLoading
               : LinearProgressIndicator(
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.5),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     Theme.of(context).primaryColor,
                   ),
@@ -389,7 +416,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
         }
 
         return getSuggestionLayout(
-            suggestion: keyword, suggestionMode: suggestionMode, add: S.of(context).add + ' ', context: context);
+            suggestion: keyword,
+            suggestionMode: suggestionMode,
+            add: S.of(context).add + ' ',
+            context: context);
       },
     );
   }
@@ -403,10 +433,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
 }
 
 Padding getSuggestionLayout({
-  String suggestion,
-  String add,
-  SuggestionMode suggestionMode,
-  BuildContext context,
+  required String suggestion,
+  required String add,
+  required SuggestionMode? suggestionMode,
+  required BuildContext context,
 }) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
@@ -450,7 +480,9 @@ Padding getSuggestionLayout({
                     ),
                   ),
                   Text(
-                    suggestionMode == SuggestionMode.SUGGESTED ? S.of(context).suggested : S.of(context).you_entered,
+                    suggestionMode == SuggestionMode.SUGGESTED
+                        ? S.of(context).suggested
+                        : S.of(context).you_entered,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -470,9 +502,9 @@ Padding getSuggestionLayout({
 
 class SkillsAndInterestBloc {
   static Future<void> addInterestToDb({
-    String interestId,
-    String interestTitle,
-    String interestLanguage,
+    required String interestId,
+    required String interestTitle,
+    required String interestLanguage,
   }) async {
     await CollectionRef.interests.doc(interestId).set(
       {
@@ -485,9 +517,9 @@ class SkillsAndInterestBloc {
   }
 
   static Future<void> addSkillToDb({
-    String skillId,
-    String skillTitle,
-    String skillLanguage,
+    required String skillId,
+    required String skillTitle,
+    required String skillLanguage,
   }) async {
     await CollectionRef.skills.doc(skillId).set(
       {
@@ -501,11 +533,15 @@ class SkillsAndInterestBloc {
 }
 
 class SuggestedItem {
-  String suggesttionTitle;
-  SuggestionMode suggestionMode;
+  late String suggesttionTitle;
+  late SuggestionMode suggestionMode;
 
   @override
-  bool operator ==(Object other) => other is SuggestedItem && other.suggesttionTitle == this.suggesttionTitle;
+  bool operator ==(Object other) =>
+      other is SuggestedItem && other.suggesttionTitle == this.suggesttionTitle;
+
+  @override
+  int get hashCode => suggesttionTitle.hashCode;
 }
 
 enum SuggestionMode {

@@ -16,17 +16,22 @@ class MonthsListing extends StatefulWidget {
   final String planId;
   final CommunityModel communityModel;
 
-  MonthsListing.of({this.communityId, this.planId, this.communityModel});
+  const MonthsListing.of({
+    required this.communityId,
+    required this.planId,
+    required this.communityModel,
+    Key? key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _MonthsListingState();
   }
 }
 
 class _MonthsListingState extends State<MonthsListing> {
   String communityId = "";
-  CommunityModel communityModel = null;
+  late CommunityModel communityModel;
   String planId = "";
   List<String> monthsArr = [
     "January",
@@ -180,7 +185,8 @@ class _MonthsListingState extends State<MonthsListing> {
                       color: Colors.black87)),
             );
           }
-          List<Map<String, dynamic>> transactionsMonthsList = snapshot.data;
+          List<Map<String, dynamic>> transactionsMonthsList =
+              snapshot.data as List<Map<String, dynamic>>;
           if (transactionsMonthsList == null) {
             return Center(
               child: Text(S.of(context).no_record_transactions_yet,
@@ -225,7 +231,7 @@ class _MonthsListingState extends State<MonthsListing> {
                   if (transactionTypes.containsKey(k)) {
                     if (k != "billedquota") {
                       if (transactionTypes[k]["billable"] == true) {
-                        sum += v;
+                        sum += (v as int);
                       }
                     }
                   }

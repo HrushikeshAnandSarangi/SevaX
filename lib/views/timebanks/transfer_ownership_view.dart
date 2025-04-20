@@ -26,27 +26,27 @@ class TransferOwnerShipView extends StatefulWidget {
   final String memberEmail;
 
   TransferOwnerShipView(
-      {this.timebankId,
-      this.responseData,
-      this.isComingFromExit,
-      this.memberName,
-      this.memberSevaUserId,
-      this.memberPhotUrl,
-      this.memberEmail});
+      {required this.timebankId,
+      required this.responseData,
+      required this.isComingFromExit,
+      required this.memberName,
+      required this.memberSevaUserId,
+      required this.memberPhotUrl,
+      required this.memberEmail});
 
   @override
   _TransferOwnerShipViewState createState() => _TransferOwnerShipViewState();
 }
 
 class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
   TextEditingController _textEditingController = TextEditingController();
   List<String> groupMembersList = [];
   var ownerGroupsArr;
-  UserModel selectedNewOwner = null;
+  UserModel selectedNewOwner = null!;
   List<String> allItems = [];
-  List<String> admins, coordinators, members;
-  TimebankModel tbmodel;
+  List<String>? admins, coordinators, members;
+  TimebankModel? tbmodel;
   List<Future> futures = [];
   @override
   void initState() {
@@ -65,9 +65,9 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         admins = onValue.admins;
         coordinators = onValue.coordinators;
         members = onValue.members;
-        allItems.addAll(admins);
-        allItems.addAll(coordinators);
-        allItems.addAll(members);
+        allItems.addAll(admins!);
+        allItems.addAll(coordinators!);
+        allItems.addAll(members!);
         groupMembersList = allItems;
         logger.d(groupMembersList);
       });
@@ -152,7 +152,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               ),
               selectedNewOwner == null
                   ? Container()
-                  : ListTile(title: Text(selectedNewOwner.fullname)),
+                  : ListTile(title: Text(selectedNewOwner.fullname!)),
               SizedBox(
                 height: 15,
               ),
@@ -164,6 +164,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     );
   }
 
+  LayerLink _layerLink = LayerLink();
   Widget optionButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -185,7 +186,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   : S.of(context).remove,
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
-          textColor:Theme.of(context).primaryColor,
+          textColor: Theme.of(context).primaryColor,
           onPressed: () async {
             if (selectedNewOwner == null) {
               // print("reporter timebank creator id is ${tbmodel.creatorId}");
@@ -194,11 +195,11 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   futures.add(
                     CollectionRef.timebank.doc(group['id']).update(
                       {
-                        "creator_id": tbmodel.creatorId,
-                        "email_id": tbmodel.emailId,
+                        "creator_id": tbmodel!.creatorId,
+                        "email_id": tbmodel!.emailId,
                         "organizers":
-                            FieldValue.arrayUnion([tbmodel.creatorId]),
-                        "members": FieldValue.arrayUnion([tbmodel.creatorId]),
+                            FieldValue.arrayUnion([tbmodel!.creatorId]),
+                        "members": FieldValue.arrayUnion([tbmodel!.creatorId]),
                       },
                     ),
                   );
@@ -206,7 +207,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               );
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
-                  sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
+                  sevauserid: widget.memberSevaUserId, timebankId: tbmodel!.id);
               // var responseObj2 = await storeRemoveMemberLog(
               //     timebankId: tbmodel.id,
               //     communityId: tbmodel.communityId,
@@ -221,7 +222,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SwitchTimebank(),
+                      builder: (context) => SwitchTimebank(content: ''),
                     ),
                   );
                 } else {
@@ -251,7 +252,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               });
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
-                  sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
+                  sevauserid: widget.memberSevaUserId, timebankId: tbmodel!.id);
               //  print("===response data of removal is${responseObj.toString()}===");
               if (responseObj['deletable'] == true) {
                 //   print("else block---done transferring and removing the user from timebank");
@@ -279,93 +280,76 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   }
 
   Widget searchUser() {
-    return TypeAheadField<UserModel>(
-      suggestionsBoxDecoration: SuggestionsBoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: _textEditingController,
-        decoration: InputDecoration(
-          hintText: S.of(context).search,
-          filled: true,
-          fillColor: Colors.grey[300],
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(25.7),
-          ),
-          enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.circular(25.7)),
-          contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.grey,
-          ),
-          suffixIcon: InkWell(
-            splashColor: Colors.transparent,
-            child: Icon(
-              Icons.clear,
-              color: Colors.grey,
-              // color: _textEditingController.text.length > 1
-              //     ? Colors.black
-              //     : Colors.grey,
-            ),
-            onTap: () {
-              _textEditingController.clear();
-              controller.close();
-            },
-          ),
-        ),
-      ),
-      suggestionsBoxController: controller,
-      suggestionsCallback: (pattern) async {
-//        List<String> dataCopy = [];
-//        // interests.forEach((k, v) => dataCopy.add(v));
-//        print(dataCopy);
-//        dataCopy.retainWhere(
-//            (s) => s.toLowerCase().contains(pattern.toLowerCase()));
-//        //  return await Future.value(dataCopy);
-
-        return await SearchManager.searchForUserWithTimebankIdFuture(
-            queryString: pattern, validItems: groupMembersList);
-      },
-      itemBuilder: (context, suggestion) {
-        // print("suggest ${suggestion}");
-        return suggestion.sevaUserID != widget.memberSevaUserId
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  suggestion.fullname,
-                  style: TextStyle(
-                    fontSize: 16,
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: TypeAheadField<UserModel>(
+        suggestionsCallback: (pattern) async {
+          return await SearchManager.searchForUserWithTimebankIdFuture(
+              queryString: pattern, validItems: groupMembersList);
+        },
+        itemBuilder: (context, suggestion) {
+          return suggestion.sevaUserID != widget.memberSevaUserId
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    suggestion.fullname!,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
+                )
+              : const Offstage();
+        },
+        onSelected: (suggestion) {
+          setState(() {
+            selectedNewOwner = suggestion;
+          });
+          _textEditingController.clear();
+        },
+        emptyBuilder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              S.of(context).no_user_found,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          );
+        },
+        builder: (context, textFieldController, focusNode) {
+          return TextField(
+            controller: _textEditingController,
+            focusNode: focusNode,
+            decoration: InputDecoration(
+              hintText: S.of(context).search,
+              filled: true,
+              fillColor: Colors.grey[300],
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(25.7),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(25.7),
+              ),
+              contentPadding: const EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+              prefixIcon: const Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
+              suffixIcon: InkWell(
+                splashColor: Colors.transparent,
+                child: const Icon(
+                  Icons.clear,
+                  color: Colors.grey,
                 ),
-              )
-            : Offstage();
-      },
-      noItemsFoundBuilder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            S.of(context).no_user_found,
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        );
-      },
-      onSuggestionSelected: (suggestion) {
-        setState(() {
-          selectedNewOwner = suggestion;
-        });
-        _textEditingController.clear();
-
-//        if (!_selectedInterests.containsValue(suggestion)) {
-//          controller.close();
-//          String id = interests.keys
-//              .firstWhere((k) => interests[k] == suggestion);
-//          _selectedInterests[id] = suggestion;
-//          setState(() {});
-//        }
-      },
+                onTap: () {
+                  _textEditingController.clear();
+                },
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -375,7 +359,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       child: ListTile(
         leading: Image.asset(
           'lib/assets/images/info.png',
-          color:Theme.of(context).primaryColor,
+          color: Theme.of(context).primaryColor,
           height: 30,
           width: 30,
         ),
@@ -438,26 +422,26 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   }
 
   void sendNotificationToAdmin({
-    String communityId,
+    String? communityId,
   }) async {
     UserExitModel userExitModel = UserExitModel(
         userPhotoUrl: widget.memberPhotUrl,
-        timebank: tbmodel.name,
+        timebank: tbmodel!.name,
         reason: globals.userExitReason ?? "",
         userName: widget.memberName);
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
-        timebankId: tbmodel.id,
+        timebankId: tbmodel!.id,
         data: userExitModel.toMap(),
         isRead: false,
         type: NotificationType.TypeMemberExitTimebank,
-        communityId: tbmodel.communityId,
+        communityId: tbmodel!.communityId,
         senderUserId: widget.memberSevaUserId,
-        targetUserId: tbmodel.creatorId);
+        targetUserId: tbmodel!.creatorId);
 
     await CollectionRef.timebank
-        .doc(tbmodel.id)
+        .doc(tbmodel!.id)
         .collection("notifications")
         .doc(notification.id)
         .set((notification..isTimebankNotification = true).toMap());

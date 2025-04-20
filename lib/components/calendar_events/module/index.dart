@@ -19,10 +19,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
   syncCalendar({
-    KloudlessWidgetBuilder builder,
-    @required BuildContext context,
+    required KloudlessWidgetBuilder builder,
+    required BuildContext context,
   }) {
-    return builder.attendeeDetails.calendar.defined
+    return (builder?.attendeeDetails?.calendar?.defined ?? false)
         ? _existingMember(
             context,
             builder: builder,
@@ -35,7 +35,7 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
 
   Future<dynamic> _newMember(
     BuildContext context, {
-    @required KloudlessWidgetBuilder builder,
+    required KloudlessWidgetBuilder builder,
   }) {
     return showDialog(
       context: context,
@@ -53,7 +53,7 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
 
   Future<dynamic> _existingMember(
     BuildContext context, {
-    @required KloudlessWidgetBuilder builder,
+    @required KloudlessWidgetBuilder? builder,
   }) {
     return showDialog(
       context: context,
@@ -71,7 +71,7 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
               onNavigationStart: () {
                 Navigator.of(_).pop();
               },
-              upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+              upgradeDetails: AppConfig.upgradePlanBannerModel!.calendar_sync!,
               transaction_matrix_type: "calendar_sync",
               child: GestureDetector(
                 child: ElevatedButton(
@@ -90,23 +90,24 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
     );
   }
 
-  void addEventToExistingCalendar(KloudlessWidgetBuilder builder) async {
+  void addEventToExistingCalendar(KloudlessWidgetBuilder? builder) async {
+    if (builder == null) return;
     CollectionReference collectionReferenece;
     KloudlessCalendarEvent canendarEvent;
     switch (T) {
       case ProjectModel:
         collectionReferenece = CollectionRef.projects;
 
-        ProjectModel model = builder.stateOfCalendarCallback.model;
+        ProjectModel model = builder.stateOfCalendarCallback!.model;
         //hit the create event API from calandar
         canendarEvent = KloudlessCalendarEvent(
           eventTitle: model.name,
           eventDescription: model.description,
           eventLocation: model.address ?? 'Location not added',
-          eventStart: DateTime.fromMillisecondsSinceEpoch(model.startTime)
+          eventStart: DateTime.fromMillisecondsSinceEpoch(model.startTime ?? 0)
               .toIso8601String(),
           eventEnd: DateTime.fromMillisecondsSinceEpoch(
-            model.endTime,
+            model.endTime ?? 0,
           ).toIso8601String(),
         );
 
@@ -115,16 +116,16 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
       case OfferModel:
         collectionReferenece = CollectionRef.offers;
 
-        OfferModel model = builder.stateOfCalendarCallback.model;
+        OfferModel model = builder.stateOfCalendarCallback!.model;
         canendarEvent = KloudlessCalendarEvent(
-          eventTitle: model.groupOfferDataModel.classTitle,
-          eventDescription: model.groupOfferDataModel.classDescription,
+          eventTitle: model.groupOfferDataModel?.classTitle ?? 'Untitled Event',
+          eventDescription: model.groupOfferDataModel?.classDescription,
           eventLocation: model.selectedAdrress ?? 'Location not added',
           eventStart: DateTime.fromMillisecondsSinceEpoch(
-                  model.groupOfferDataModel.startDate)
+                  model.groupOfferDataModel?.startDate ?? 0)
               .toIso8601String(),
           eventEnd: DateTime.fromMillisecondsSinceEpoch(
-                  model.groupOfferDataModel.endDate)
+                  model.groupOfferDataModel?.endDate ?? 0)
               .toIso8601String(),
         );
 
@@ -133,14 +134,15 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
       case RequestModel:
         collectionReferenece = CollectionRef.requests;
 
-        RequestModel model = builder.stateOfCalendarCallback.model;
+        RequestModel model = builder.stateOfCalendarCallback!.model;
         canendarEvent = KloudlessCalendarEvent(
           eventTitle: model.title,
           eventDescription: model.description,
           eventLocation: model.address ?? 'Location not added',
-          eventStart: DateTime.fromMillisecondsSinceEpoch(model.requestStart)
-              .toIso8601String(),
-          eventEnd: DateTime.fromMillisecondsSinceEpoch(model.requestEnd)
+          eventStart:
+              DateTime.fromMillisecondsSinceEpoch(model.requestStart ?? 0)
+                  .toIso8601String(),
+          eventEnd: DateTime.fromMillisecondsSinceEpoch(model.requestEnd ?? 0)
               .toIso8601String(),
         );
         break;
@@ -153,17 +155,18 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
     switch (M) {
       case CreateMode:
         await CalendarAPIRepo.createEventInCalendar(
-          calendarAccountId: builder.attendeeDetails.calendar.calendarAccId,
-          calendarId: builder.attendeeDetails.calendar.calendarId,
+          calendarAccountId:
+              builder.attendeeDetails?.calendar?.calendarAccId ?? 0,
+          calendarId: builder.attendeeDetails?.calendar?.calendarId ?? '',
           event: canendarEvent,
         ).then((eventId) {
           if (eventId != null) {
             logger.d("Event Successfully created");
             collectionReferenece
-                .doc(builder.stateOfCalendarCallback.model.id)
+                .doc(builder.stateOfCalendarCallback?.model.id)
                 .update({
                   "eventMetaData": EventMetaData(
-                    calendar: builder.attendeeDetails.calendar,
+                    calendar: builder.attendeeDetails?.calendar,
                     eventId: eventId,
                   ).toMap(),
                 })
@@ -181,10 +184,10 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
 
       case ApplyMode:
         await CalendarAPIRepo.updateAttendiesInCalendarEvent(
-          eventMetaData: builder.stateOfCalendarCallback.model.eventMetaData
+          eventMetaData: builder.stateOfCalendarCallback?.model.eventMetaData
               as EventMetaData,
           event: canendarEvent,
-          attendeDetails: builder.attendeeDetails,
+          attendeDetails: builder.attendeeDetails!,
         )
             .then((value) => logger.i(
                   "updateAttendiesInCalendarEvent Completed without any errors",
@@ -201,8 +204,8 @@ class NewCalendarRegisteration extends StatelessWidget {
   final BuildContext dialogContext;
 
   NewCalendarRegisteration({
-    this.builder,
-    this.dialogContext,
+    required this.builder,
+    required this.dialogContext,
   });
 
   @override
@@ -244,7 +247,7 @@ class NewCalendarRegisteration extends StatelessWidget {
           CustomTextButton(
             shape: StadiumBorder(),
             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-            color:  Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColor,
             child: Text(
               S.of(context).skip_for_now,
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
@@ -267,11 +270,11 @@ class CalendarListAdapter extends StatelessWidget {
   final String url;
 
   CalendarListAdapter({
-    this.onNavigationStart,
-    this.typeId,
-    this.title,
-    this.builder,
-    this.url,
+    required this.onNavigationStart,
+    required this.typeId,
+    required this.title,
+    required this.builder,
+    required this.url,
   });
 
   @override
@@ -280,7 +283,7 @@ class CalendarListAdapter extends StatelessWidget {
       leading: Image.asset(url),
       title: TransactionsMatrixCheck(
         onNavigationStart: onNavigationStart,
-        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+        upgradeDetails: AppConfig.upgradePlanBannerModel!.calendar_sync!,
         transaction_matrix_type: "calendar_sync",
         child: GestureDetector(
           child: Text(title),
@@ -291,7 +294,7 @@ class CalendarListAdapter extends StatelessWidget {
               logger.d("Failed to launch");
             }
             String authURL =
-                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=${typeId}&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toJson()}";
+                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=${typeId}&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback?.toJson()}";
             //LAUNCH URL
             canLaunch(Uri.parse(authURL).toString()).then((value) {
               if (value) {

@@ -5,27 +5,28 @@
 import 'dart:convert';
 
 class LendingPlaceModel {
-  LendingPlaceModel(
-      {this.placeName,
-      this.noOfGuests,
-      this.noOfRooms,
-      this.noOfBathRooms,
-      this.commonSpace,
-      this.houseRules,
-      this.estimatedValue,
-      this.houseImages,
-      this.amenities,
-      this.contactInformation});
-  String placeName;
-  int noOfGuests;
-  int noOfRooms;
-  int noOfBathRooms;
-  String commonSpace;
-  String houseRules;
+  LendingPlaceModel({
+    required this.placeName,
+    required this.noOfGuests,
+    required this.noOfRooms,
+    required this.noOfBathRooms,
+    required this.commonSpace,
+    required this.houseRules,
+    this.estimatedValue = 0,
+    required this.houseImages,
+    required this.amenities,
+    required this.contactInformation,
+  });
+  String? placeName;
+  int? noOfGuests;
+  int? noOfRooms;
+  int? noOfBathRooms;
+  String? commonSpace;
+  String? houseRules;
   int estimatedValue;
-  List<String> houseImages;
-  Map<String, dynamic> amenities;
-  String contactInformation;
+  List<String>? houseImages;
+  Map<String, dynamic>? amenities;
+  String? contactInformation;
 
   factory LendingPlaceModel.fromJson(String str) =>
       LendingPlaceModel.fromMap(json.decode(str));
@@ -64,7 +65,7 @@ class LendingPlaceModel {
         "estimatedValue": estimatedValue == null ? 0 : estimatedValue,
         "house_images": houseImages == null
             ? null
-            : List<dynamic>.from(houseImages.map((x) => x)),
+            : List<dynamic>.from(houseImages?.map((x) => x) ?? []),
         "amenities": amenities == null ? null : amenities,
         "contactInformation":
             contactInformation == null ? null : contactInformation,

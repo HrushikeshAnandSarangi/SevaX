@@ -7,16 +7,18 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-mixin CommunityRepository {
-  static CollectionReference _ref = CollectionRef.communities;
-  static CollectionReference _categoriesRef = CollectionRef.communityCategories;
+class CommunityRepository {
+  static final CollectionReference _ref = CollectionRef.communities;
+  static final CollectionReference _categoriesRef =
+      CollectionRef.communityCategories;
 
   static Future<List<CommunityCategoryModel>> getCommunityCategories() async {
     var result = await _categoriesRef.get();
     List<CommunityCategoryModel> models = [];
-    result.docs.forEach((document) {
-      models.add(CommunityCategoryModel.fromMap(document.data()));
-    });
+    for (var document in result.docs) {
+      models.add(CommunityCategoryModel.fromMap(
+          document.data() as Map<String, dynamic>));
+    }
     return models;
   }
 
@@ -28,10 +30,11 @@ mixin CommunityRepository {
           List<CommunityModel> _communities = [];
 
           try {
-            data.docs.forEach((element) {
-              var community = CommunityModel(element.data());
+            for (var element in data.docs) {
+              var community =
+                  CommunityModel(element.data() as Map<String, dynamic>);
               _communities.add(community);
-            });
+            }
             sink.add(_communities);
           } catch (e) {
             logger.e(e);
@@ -39,16 +42,18 @@ mixin CommunityRepository {
           }
         },
         handleError: (error, stackTrace, sink) {
-          logger.e(error, stackTrace);
-          sink.add(error);
+          logger.e(error.toString(), error: error, stackTrace: stackTrace);
+          sink.addError(error);
         },
       ),
     );
   }
 
-  static Future<CommunityModel> getCommunity(String communityId) async {
+  static Future<CommunityModel?> getCommunity(String communityId) async {
     var result = await _ref.doc(communityId).get();
-    return result.exists ? CommunityModel(result.data()) : null;
+    return result.exists
+        ? CommunityModel(result.data() as Map<String, dynamic>)
+        : null;
   }
 
   static Stream<List<CommunityModel>> getFeatureCommunities() async* {
@@ -59,10 +64,10 @@ mixin CommunityRepository {
         .snapshots();
 
     yield* data.map<List<CommunityModel>>((event) {
-      List<CommunityModel> models = [];
-      event.docs.forEach((element) {
-        models.add(CommunityModel(element.data()));
-      });
+      var models = <CommunityModel>[];
+      for (var element in event.docs) {
+        models.add(CommunityModel(element.data() as Map<String, dynamic>));
+      }
       return models;
     });
   }
@@ -75,14 +80,15 @@ mixin CommunityRepository {
         .get();
 
     List<CommunityModel> models = [];
-    data.docs.forEach((element) {
-      CommunityModel model = CommunityModel(element.data());
+    for (var element in data.docs) {
+      CommunityModel model =
+          CommunityModel(element.data() as Map<String, dynamic>);
       if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
         if (model.testCommunity) models.add(model);
       } else {
         models.add(model);
       }
-    });
+    }
     return models;
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ExploreFeaturedCard extends StatelessWidget {
   const ExploreFeaturedCard({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.communityName,
     this.textStyle,
@@ -12,10 +12,10 @@ class ExploreFeaturedCard extends StatelessWidget {
     //this.padding,
   }) : super(key: key);
 
-  final VoidCallback onTap;
-  final String imageUrl;
-  final String communityName;
-  final TextStyle textStyle;
+  final VoidCallback? onTap;
+  final String? imageUrl;
+  final String? communityName;
+  final TextStyle? textStyle;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -34,14 +34,14 @@ class ExploreFeaturedCard extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 2 / 3,
                   child: Image.network(
-                    imageUrl,
+                    imageUrl ?? '',
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               const SizedBox(height: 5),
               Text(
-                communityName,
+                communityName ?? '',
                 style: textStyle ??
                     const TextStyle(
                       fontSize: 15,

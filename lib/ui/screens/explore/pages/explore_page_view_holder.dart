@@ -8,15 +8,15 @@ class ExplorePageViewHolder extends StatelessWidget {
   final bool hideHeader;
   final bool hideFooter;
   final bool hideSearchBar;
-  final String appBarTitle;
-  final ValueChanged<String> onSearchChanged;
-  final EdgeInsets childPadding;
-  final TextEditingController controller;
-  final ScrollController scrollController;
+  final String? appBarTitle;
+  final ValueChanged<String>? onSearchChanged;
+  final EdgeInsets? childPadding;
+  final TextEditingController? controller;
+  final ScrollController? scrollController;
 
   const ExplorePageViewHolder({
-    Key key,
-    this.child,
+    Key? key,
+    required this.child,
     this.hideSearchBar = false,
     this.hideHeader = false,
     this.hideFooter = false,
@@ -25,15 +25,15 @@ class ExplorePageViewHolder extends StatelessWidget {
     this.controller,
     this.appBarTitle,
     this.scrollController,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarTitle != null && hideHeader
+      appBar: hideHeader && appBarTitle != null
           ? AppBar(
               title: Text(
-                appBarTitle,
-                style: TextStyle(fontSize: 18),
+                appBarTitle!,
+                style: const TextStyle(fontSize: 18),
               ),
             )
           : null,
@@ -49,12 +49,12 @@ class ExplorePageViewHolder extends StatelessWidget {
                 hideSearchBar: hideSearchBar,
                 controller: controller,
               ),
-              secondChild:
-                  appBarTitle == null ? Container(height: 30) : Container(),
+              secondChild: Container(height: 30),
             ),
             HideWidget(
               hide: !hideHeader,
               child: SizedBox(height: 12),
+              secondChild: const SizedBox.shrink(),
             ),
             Padding(
               padding:
@@ -64,7 +64,9 @@ class ExplorePageViewHolder extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            SevaExploreFooter(footerColor: hideFooter,),
+            SevaExploreFooter(
+              footerColor: hideFooter,
+            ),
           ],
         ),
       ),

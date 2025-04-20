@@ -1,7 +1,7 @@
 class ReportedMemberNotificationModel {
-  String reportedUserId;
-  String reportedUserImage;
-  String reportedUserName;
+  String? reportedUserId;
+  String? reportedUserImage;
+  String? reportedUserName;
 
   ReportedMemberNotificationModel({
     this.reportedUserId,

@@ -8,7 +8,7 @@ final RegExp linkRegExp =
 class TextLink extends StatelessWidget {
   final String text;
 
-  const TextLink({Key key, this.text}) : super(key: key);
+  const TextLink({Key? key, required this.text}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     String modified = text;

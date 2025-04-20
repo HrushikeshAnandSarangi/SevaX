@@ -7,10 +7,10 @@ class NotificationWidgetSwitch extends StatefulWidget {
   final String title;
   final Function onPressed;
   NotificationWidgetSwitch({
-    Key key,
-    this.isTurnedOn,
-    this.title,
-    this.onPressed,
+    Key? key,
+    required this.isTurnedOn,
+    required this.title,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -18,10 +18,10 @@ class NotificationWidgetSwitch extends StatefulWidget {
       _NotificationWidgetSwitchState();
 
   static void updateNotificationFormAdmin({
-    String timebankId,
-    String adminSevaUserId,
-    String notificationType,
-    bool status,
+    required String timebankId,
+    required String adminSevaUserId,
+    required String notificationType,
+    required bool status,
   }) {
     CollectionRef.timebank.doc(timebankId).update(
       {
@@ -31,9 +31,9 @@ class NotificationWidgetSwitch extends StatefulWidget {
   }
 
   static void updatePersonalNotifications({
-    String userEmail,
-    String notificationType,
-    bool status,
+    required String userEmail,
+    required String notificationType,
+    required bool status,
   }) {
     CollectionRef.users.doc(userEmail).update(
       {
@@ -44,7 +44,7 @@ class NotificationWidgetSwitch extends StatefulWidget {
 }
 
 class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
-  bool switchStatus;
+  late bool switchStatus;
 
   @override
   void initState() {

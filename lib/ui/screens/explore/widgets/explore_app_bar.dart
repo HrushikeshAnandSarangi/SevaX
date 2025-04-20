@@ -7,12 +7,16 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExplorePageAppBar extends PreferredSize {
-  final ValueChanged<String> onSearchChanged;
+  final ValueChanged<String>? onSearchChanged;
   final bool hideSearchBar;
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   ExplorePageAppBar(
-      {this.controller, this.hideSearchBar = false, this.onSearchChanged});
+      {this.controller, this.hideSearchBar = false, this.onSearchChanged})
+      : super(
+          child: Container(),
+          preferredSize: Size.fromHeight(210),
+        );
 
   @override
   Size get preferredSize => Size.fromHeight(210);
@@ -69,6 +73,7 @@ class ExplorePageAppBar extends PreferredSize {
             ),
             HideWidget(
               hide: hideSearchBar,
+              secondChild: const SizedBox(),
               child: Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),

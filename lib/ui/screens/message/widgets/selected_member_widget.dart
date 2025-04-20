@@ -12,12 +12,18 @@ class SelectedMemberWidget extends StatelessWidget {
   final bool isEditable;
 
   const SelectedMemberWidget(
-      {Key key, this.timebankModel, this.info, this.onRemovePressed, this.isEditable = true})
+      {Key key,
+      this.timebankModel,
+      this.info,
+      this.onRemovePressed,
+      this.isEditable = true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return (info == null ||
-            (timebankModel != null ? !timebankModel.members.contains(info.id) : false))
+            (timebankModel != null
+                ? !timebankModel.members.contains(info.id)
+                : false))
         ? Container(
             width: 0,
             height: 0,
@@ -57,7 +63,8 @@ class SelectedMemberWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(info.name == null ? '' : info.name, textAlign: TextAlign.center),
+                Text(info.name == null ? '' : info.name,
+                    textAlign: TextAlign.center),
               ],
             ),
           );

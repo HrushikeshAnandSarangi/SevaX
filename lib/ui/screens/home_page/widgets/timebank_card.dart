@@ -17,7 +17,8 @@ class TimeBankCard extends StatelessWidget {
   final TimebankModel timebank;
   final UserDataBloc user;
 
-  TimeBankCard({Key key, this.timebank, this.user}) : super(key: key);
+  TimeBankCard({Key? key, required this.timebank, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

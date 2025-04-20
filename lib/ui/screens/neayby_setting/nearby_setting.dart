@@ -18,7 +18,9 @@ class NearbySettingsWidget extends StatefulWidget {
 
   static int evaluatemaxRadiusForMember(NearBySettings nearBySettings) {
     const int DEFAULT_RADIUS_IN_MILES = 10;
-    if (nearBySettings != null && nearBySettings.radius != null && nearBySettings.isMiles != null) {
+    if (nearBySettings != null &&
+        nearBySettings.radius != null &&
+        nearBySettings.isMiles != null) {
       if (nearBySettings.isMiles) {
         var kmEq = (nearBySettings.radius * 1.6093).toInt();
         return kmEq;
@@ -31,15 +33,17 @@ class NearbySettingsWidget extends StatefulWidget {
 
   static int isInMiles(NearBySettings nearBySettings) {
     if (nearBySettings != null && nearBySettings.isMiles != null) {
-      return nearBySettings.isMiles ? NearbySettingBloc.MILES_SELECTION : NearbySettingBloc.KILOMETERS_SELECTION;
+      return nearBySettings.isMiles
+          ? NearbySettingBloc.MILES_SELECTION
+          : NearbySettingBloc.KILOMETERS_SELECTION;
     }
     return 1;
   }
 }
 
 class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
-  double rating;
-  int selectedRadio;
+  double? rating;
+  int? selectedRadio;
   final _debouncer = Debouncer(milliseconds: 700);
   static const double minKM = 3;
   static const double maxKM = 160;
@@ -55,8 +59,12 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
         ..radius = 10;
     }
 
-    selectedRadio = NearbySettingsWidget.isInMiles(widget.loggedInUser?.nearBySettings);
-    rating = NearbySettingBloc.valueForSeekBar(widget.loggedInUser?.nearBySettings, selectedRadio).toDouble();
+    selectedRadio =
+        NearbySettingsWidget.isInMiles(widget.loggedInUser.nearBySettings!);
+    rating = NearbySettingBloc.valueForSeekBar(
+            widget.loggedInUser.nearBySettings!,
+            selectedRadio ?? NearbySettingBloc.MILES_SELECTION)
+        .toDouble();
   }
 
   @override
@@ -65,13 +73,14 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {
-            double value = rating;
+            double value = rating ?? 0.0;
             bool isKm = NearbySettingBloc.KILOMETERS_SELECTION == selectedRadio;
 
             // if (isKm) {
             //   value = value / 1.609;
             // }
-            Navigator.of(context).pop(ExploreDistanceModel(rating.toInt(), isKm ? DistancType.km : DistancType.mi));
+            Navigator.of(context).pop(ExploreDistanceModel(
+                (rating ?? 0).toInt(), isKm ? DistancType.km : DistancType.mi));
           },
         ),
         title: Text(
@@ -109,18 +118,23 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             Container(
               width: MediaQuery.of(context).size.height,
               child: CupertinoSlider(
-                min: selectedRadio == NearbySettingBloc.MILES_SELECTION ? minMi : minKM,
-                max: selectedRadio == NearbySettingBloc.MILES_SELECTION ? maxMi : maxKM,
+                min: selectedRadio == NearbySettingBloc.MILES_SELECTION
+                    ? minMi
+                    : minKM,
+                max: selectedRadio == NearbySettingBloc.MILES_SELECTION
+                    ? maxMi
+                    : maxKM,
                 // divisions:
                 //     selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
                 thumbColor: Theme.of(context).primaryColor,
                 activeColor: Theme.of(context).primaryColor,
-                value: rating,
+                value: rating ?? 0.0,
                 onChanged: (newRating) {
-                  if (widget.loggedInUser != null) {
-                    _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
-                        email: widget.loggedInUser?.email, radius: newRating.toInt(), selectedRadioVal: selectedRadio));
-                  }
+                  _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
+                      email: widget.loggedInUser.email!,
+                      radius: newRating.toInt(),
+                      selectedRadioVal:
+                          selectedRadio ?? NearbySettingBloc.MILES_SELECTION));
                   setState(() => rating = newRating);
                 },
               ),
@@ -134,13 +148,11 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                     value: NearbySettingBloc.MILES_SELECTION,
                     groupValue: selectedRadio,
                     onChanged: (val) async {
-                      setSelectedRadio(val);
-                      if (widget.loggedInUser != null) {
-                        await NearbySettingBloc.isMiles(
-                          email: widget.loggedInUser.email,
-                          val: true,
-                        );
-                      }
+                      setSelectedRadio(val as int);
+                      await NearbySettingBloc.isMiles(
+                        email: widget.loggedInUser.email!,
+                        val: true,
+                      );
                     },
                   ),
                 ),
@@ -153,13 +165,11 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                     value: NearbySettingBloc.KILOMETERS_SELECTION,
                     groupValue: selectedRadio,
                     onChanged: (val) async {
-                      setSelectedRadio(val);
-                      if (widget.loggedInUser != null) {
-                        await NearbySettingBloc.isMiles(
-                          email: widget.loggedInUser.email,
-                          val: false,
-                        );
-                      }
+                      setSelectedRadio(val as int);
+                      await NearbySettingBloc.isMiles(
+                        email: widget.loggedInUser.email!,
+                        val: false,
+                      );
                     },
                   ),
                 ),
@@ -175,7 +185,8 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   }
 
   String appendDistanceUnit() {
-    return " " + (selectedRadio == NearbySettingBloc.MILES_SELECTION ? 'M' : 'Kms');
+    return " " +
+        (selectedRadio == NearbySettingBloc.MILES_SELECTION ? 'M' : 'Kms');
   }
 
   Container titleAndSubTitle() {
@@ -194,10 +205,12 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(12.0), color: Theme.of(context).accentColor),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Theme.of(context).colorScheme.secondary),
                 child: Text(
-                  double.parse((rating).toStringAsFixed(2)).toString() + appendDistanceUnit(),
+                  double.parse((rating ?? 0.0).toStringAsFixed(2)).toString() +
+                      appendDistanceUnit(),
                   style: TextStyle(color: Colors.white),
                 ),
               )
@@ -220,7 +233,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
 
   void setSelectedRadio(int value) {
     if (value == NearbySettingBloc.MILES_SELECTION) {
-      rating = rating / 1.6;
+      rating = (rating ?? 0) / 1.6;
       //// rating = rating >= minMi && rating <= maxMi ? rating : minMi;
       // rating = rating >= minMi && rating <= maxMi
       //     ? rating
@@ -228,7 +241,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
       //         ? minMi
       //         : maxMi;
     } else if (value == NearbySettingBloc.KILOMETERS_SELECTION) {
-      rating = rating * 1.6;
+      rating = (rating ?? 0) * 1.6;
       //// rating = rating >= minKM && rating <= maxKM ? rating : minKM;
       // rating = rating >= minKM && rating <= maxKM
       //     ? rating
@@ -236,12 +249,11 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
       //         ? minKM
       //         : maxKM;
     }
-    if (widget.loggedInUser != null) {
-      NearbySettingBloc.udpateNearbyRadius(
-        email: widget.loggedInUser.email,
-        radius: rating.toInt(),
-      );
-    }
+    NearbySettingBloc.udpateNearbyRadius(
+      email: widget.loggedInUser.email!,
+      radius: (rating ?? 0).toInt(),
+      selectedRadioVal: value,
+    );
 
     setState(() {
       selectedRadio = value;
@@ -257,7 +269,7 @@ class NearbySettingBloc {
 
   static final _debouncer = Debouncer(milliseconds: 800);
 
-  static isMiles({String email, bool val}) async {
+  static isMiles({required String email, required bool val}) async {
     _debouncer.run(() async {
       await CollectionRef.users.doc(email).update({
         'nearbySettings.isMiles': val,
@@ -266,16 +278,23 @@ class NearbySettingBloc {
   }
 
   static int valueForSeekBar(NearBySettings nearBySettings, int distanceUnit) {
-    if (nearBySettings != null && nearBySettings.radius != null && nearBySettings.isMiles != null) {
+    if (nearBySettings.radius != null && nearBySettings.isMiles != null) {
       return nearBySettings.radius.toInt();
     }
-    return distanceUnit == MILES_SELECTION ? DEFAULT_RADIUS_IN_MILES : DEFAULT_RADIUS_IN_KILOMETERS;
+    return distanceUnit == MILES_SELECTION
+        ? DEFAULT_RADIUS_IN_MILES
+        : DEFAULT_RADIUS_IN_KILOMETERS;
   }
 
-  static udpateNearbyRadius({String email, int radius, int selectedRadioVal}) async {
+  static udpateNearbyRadius({
+    required String email,
+    required int radius,
+    required int selectedRadioVal,
+  }) async {
     await CollectionRef.users.doc(email).update({
       'nearbySettings.radius': radius,
-      'nearbySettings.isMiles': selectedRadioVal == NearbySettingBloc.MILES_SELECTION ? true : false,
+      'nearbySettings.isMiles':
+          selectedRadioVal == NearbySettingBloc.MILES_SELECTION ? true : false,
     });
   }
 }

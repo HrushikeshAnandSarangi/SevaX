@@ -4,37 +4,40 @@ class CustomDropdownView extends StatefulWidget {
   final Widget defaultWidget;
   final List<Widget> listWidgetItem;
   final Function(bool isDropdownOpened) onTapDropdown;
-  final BoxDecoration decorationDropdown;
-  final double elevationShadow;
-  final bool isNeedCloseDropdown;
-  final LayerLink layerLink;
+  final BoxDecoration? decorationDropdown;
+  final double? elevationShadow;
+  final bool? isNeedCloseDropdown;
+  final LayerLink? layerLink;
 
-  CustomDropdownView(
-      {Key key,
-        @required this.defaultWidget,
-        @required this.onTapDropdown,
-        this.decorationDropdown,
-        this.elevationShadow,
-        this.isNeedCloseDropdown,
-        @required this.listWidgetItem,
-        this.layerLink})
-      : super(key: key);
+  const CustomDropdownView({
+    Key? key,
+    required this.defaultWidget,
+    required this.onTapDropdown,
+    this.decorationDropdown,
+    this.elevationShadow,
+    this.isNeedCloseDropdown,
+    required this.listWidgetItem,
+    this.layerLink,
+  }) : super(key: key);
 
   @override
-  CustomDropdownViewState createState() => CustomDropdownViewState();
+  State<CustomDropdownView> createState() => CustomDropdownViewState();
 }
 
 class CustomDropdownViewState extends State<CustomDropdownView> {
-  double height, width, xPosition, yPosition;
-  OverlayEntry floatingDropdown;
+  late double height;
+  late double width;
+  late double xPosition;
+  late double yPosition;
+  late OverlayEntry floatingDropdown;
   bool isDropdownOpened = false;
-  LabeledGlobalKey privateKey = LabeledGlobalKey("");
+  final LabeledGlobalKey privateKey = LabeledGlobalKey("");
 
   void findDropdownData() {
-    RenderBox renderBox = privateKey.currentContext?.findRenderObject() as RenderBox;
-    if (renderBox == null) return;
+    RenderBox renderBox =
+        privateKey.currentContext?.findRenderObject() as RenderBox;
     height = renderBox.size.height;
-    width = renderBox.size.width * 2;
+    width = renderBox.size.width;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     xPosition = offset.dx;
     yPosition = offset.dy;
@@ -44,10 +47,9 @@ class CustomDropdownViewState extends State<CustomDropdownView> {
     return OverlayEntry(builder: (context) {
       return Positioned(
         left: xPosition,
-        width: width,
-        top: (yPosition ?? 0.0) + (height ?? 0),
+        top: yPosition + height,
         child: CompositedTransformFollower(
-          link: widget.layerLink,
+          link: widget.layerLink ?? LayerLink(),
           showWhenUnlinked: false,
           child: DropdownDialog(
             decorationDropdown: widget.decorationDropdown,
@@ -60,12 +62,11 @@ class CustomDropdownViewState extends State<CustomDropdownView> {
   }
 
   void closeDropdown() {
-    floatingDropdown?.remove();
+    floatingDropdown.remove();
     setState(() {
       isDropdownOpened = false;
       widget.onTapDropdown(false);
     });
-    {}
   }
 
   @override
@@ -82,34 +83,34 @@ class CustomDropdownViewState extends State<CustomDropdownView> {
           setState(() {
             findDropdownData();
             floatingDropdown = _createFloatingDropdown();
-            Overlay.of(context)?.insert(floatingDropdown);
+            Overlay.of(context).insert(floatingDropdown);
             isDropdownOpened = true;
             widget.onTapDropdown(true);
           });
         }
       },
-      child: widget.defaultWidget ?? Container(),
+      child: widget.defaultWidget,
     );
   }
 }
 
 class DropdownDialog extends StatelessWidget {
-  final BoxDecoration decorationDropdown;
-  final double elevationShadow;
+  final BoxDecoration? decorationDropdown;
+  final double? elevationShadow;
   final List<Widget> listWidgetItem;
 
-  DropdownDialog({
-    Key key,
+  const DropdownDialog({
+    Key? key,
     this.decorationDropdown,
     this.elevationShadow,
-    this.listWidgetItem,
+    required this.listWidgetItem,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Material(
@@ -119,7 +120,7 @@ class DropdownDialog extends StatelessWidget {
                 BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                 ),
-            child: Column(children: listWidgetItem ?? []),
+            child: Column(children: listWidgetItem),
           ),
         ),
       ],

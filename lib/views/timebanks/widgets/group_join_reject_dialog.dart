@@ -9,11 +9,11 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class GroupJoinRejectDialogView extends StatefulWidget {
-  final GroupInviteUserModel groupInviteUserModel;
-  final String timeBankId;
-  final String notificationId;
-  final UserModel userModel;
-  final String invitationId;
+  final GroupInviteUserModel? groupInviteUserModel;
+  final String? timeBankId;
+  final String? notificationId;
+  final UserModel? userModel;
+  final String? invitationId;
 
   GroupJoinRejectDialogView(
       {this.groupInviteUserModel,
@@ -28,7 +28,7 @@ class GroupJoinRejectDialogView extends StatefulWidget {
 }
 
 class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
-  BuildContext progressContext;
+  BuildContext? progressContext;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    widget.groupInviteUserModel.timebankImage ??
+                    widget.groupInviteUserModel?.timebankImage ??
                         defaultUserImageURL),
               ),
             ),
@@ -65,16 +65,14 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Text(
-                widget.groupInviteUserModel.timebankName ??
-                   S.of(context).timebank_not_updated
-              ),
+              child: Text(widget.groupInviteUserModel?.timebankName ??
+                  S.of(context).timebank_not_updated),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.groupInviteUserModel.aboutTimebank ??
-                   S.of(context).description_not_updated,
+                widget.groupInviteUserModel?.aboutTimebank ??
+                    S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -82,7 +80,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "${S.of(context).by_accepting_group_join} ${widget.groupInviteUserModel.timebankName}.",
+                  "${S.of(context).by_accepting_group_join} ${widget.groupInviteUserModel?.timebankName}.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -97,6 +95,11 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                 Container(
                   width: double.infinity,
                   child: CustomElevatedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    elevation: 2.0,
+                    textColor: Colors.white,
                     color: Theme.of(context).primaryColor,
                     child: Text(
                       S.of(context).accept,
@@ -106,7 +109,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                     onPressed: () {
                       addMemberToGroup().commit();
                       if (progressContext != null) {
-                        Navigator.pop(progressContext);
+                        Navigator.pop(progressContext!);
                       }
 
                       Navigator.of(context).pop();
@@ -115,11 +118,13 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(4.0),
-                ),
-                Container(
-                  width: double.infinity,
                   child: CustomElevatedButton(
-                    color: Theme.of(context).accentColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    elevation: 2.0,
+                    textColor: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Text(
                       S.of(context).decline,
                       style:
@@ -127,11 +132,11 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                     ),
                     onPressed: () async {
                       await declineInvitationRequest(
-                          userEmail: widget.userModel.email,
+                          userEmail: widget.userModel!.email!,
                           notificationId: widget.notificationId);
 
                       if (progressContext != null) {
-                        Navigator.pop(progressContext);
+                        Navigator.pop(progressContext!);
                       }
                       Navigator.of(context).pop();
                     },
@@ -148,15 +153,15 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
   WriteBatch addMemberToGroup() {
     WriteBatch batch = CollectionRef.batch;
     var timebankRef =
-        CollectionRef.timebank.doc(widget.groupInviteUserModel.groupId);
+        CollectionRef.timebank.doc(widget.groupInviteUserModel?.groupId);
 
     var userNotificationReference = CollectionRef.users
-        .doc(widget.userModel.email)
+        .doc(widget.userModel!.email)
         .collection("notifications")
         .doc(widget.notificationId);
 
     batch.update(timebankRef, {
-      'members': FieldValue.arrayUnion([widget.userModel.sevaUserID]),
+      'members': FieldValue.arrayUnion([widget.userModel!.sevaUserID]),
     });
     batch.update(userNotificationReference, {'isRead': true});
     return batch;
@@ -171,27 +176,24 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
 
-  void declineInvitationRequest({
-    String notificationId,
-    String userEmail,
-    String invitationId,
+  Future<void> declineInvitationRequest({
+    String? notificationId,
+    required String userEmail,
+    String? invitationId,
   }) async {
     QuerySnapshot invitationSnap = await CollectionRef.invitations
         .where('data.notificationId', isEqualTo: widget.notificationId)
         .get();
-    String invitationId;
-    invitationSnap.docs.forEach((doc) {
-      invitationId = doc.id;
-    });
+    String invitationId = invitationSnap.docs.first.id;
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     await CollectionRef.invitations

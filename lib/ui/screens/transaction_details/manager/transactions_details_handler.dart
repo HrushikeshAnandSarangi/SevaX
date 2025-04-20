@@ -4,14 +4,13 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 String getTimelineLabel(
-    String tag,
-    BuildContext context,
-    RequestType requestType) {
+    String tag, BuildContext context, RequestType requestType) {
   logger.i(tag, 'tag 1');
   String finalLabel = '';
 
   //convert string tag to timeline tag type
-  TimelineTransactionTags convertedtTag = getConvertedTimelineTransactionTagsType(tag);
+  TimelineTransactionTags convertedtTag =
+      getConvertedTimelineTransactionTagsType(tag);
 
   logger.e('Initial LABEL 1: ' + tag);
 
@@ -26,8 +25,8 @@ String getTimelineLabel(
 //
 // Fetch Label Functions for Each type of request
 //
-getTimelineLabelForRequests(
-    TimelineTransactionTags tag, BuildContext context, RequestType requestType) {
+getTimelineLabelForRequests(TimelineTransactionTags tag, BuildContext context,
+    RequestType requestType) {
   switch (tag) {
     case TimelineTransactionTags.APPLIED_REQUEST:
       return S.of(context).time_applied_request_tag;
@@ -92,7 +91,9 @@ getTimelineLabelForRequests(
     case TimelineTransactionTags.DEBITED_FOR_ONE_TO_MANY_OFFER:
       return S.of(context).time_debited_for_one_to_many_offer_tag;
     case TimelineTransactionTags.OFFER_CERATOR_CREDITED_FOR_ONE_TO_MANY_OFFER:
-      return S.of(context).time_offer_creator_credited_for_one_to_many_offer_tag;
+      return S
+          .of(context)
+          .time_offer_creator_credited_for_one_to_many_offer_tag;
     case TimelineTransactionTags.TIMEBANK_DEBITED_FOR_ONE_TO_MANY_OFFER:
       return S.of(context).timebank_debited_for_one_to_many_offer_tag;
     case TimelineTransactionTags.TIMEBANK_CREDITED_FOR_ONE_TO_MANY_OFFER:
@@ -218,7 +219,8 @@ extension TransactionTagsLabel on TimelineTransactionTags {
   }
 }
 
-TimelineTransactionTags getConvertedTimelineTransactionTagsType(String stringTag) {
+TimelineTransactionTags getConvertedTimelineTransactionTagsType(
+    String stringTag) {
   switch (stringTag) {
     case 'APPLIED_REQUEST':
       return TimelineTransactionTags.APPLIED_REQUEST;
@@ -279,7 +281,8 @@ TimelineTransactionTags getConvertedTimelineTransactionTagsType(String stringTag
     case 'DEBITED_FOR_ONE_TO_MANY_OFFER':
       return TimelineTransactionTags.DEBITED_FOR_ONE_TO_MANY_OFFER;
     case 'OFFER_CERATOR_CREDITED_FOR_ONE_TO_MANY_OFFER':
-      return TimelineTransactionTags.OFFER_CERATOR_CREDITED_FOR_ONE_TO_MANY_OFFER;
+      return TimelineTransactionTags
+          .OFFER_CERATOR_CREDITED_FOR_ONE_TO_MANY_OFFER;
     case 'TIMEBANK_DEBITED_FOR_ONE_TO_MANY_OFFER':
       return TimelineTransactionTags.TIMEBANK_DEBITED_FOR_ONE_TO_MANY_OFFER;
     case 'TIMEBANK_CREDITED_FOR_ONE_TO_MANY_OFFER':
@@ -328,7 +331,9 @@ String getTransactionTypeLabel(
 getTransactionTypeFinalLabel(TransactionTypeTags tag, BuildContext context) {
   switch (tag) {
     case TransactionTypeTags.ADMIN_DONATE_TOUSER:
-      return S.of(context).ADMIN_DONATE_TOUSER_tag; // ADD .replace and check if community or group
+      return S
+          .of(context)
+          .ADMIN_DONATE_TOUSER_tag; // ADD .replace and check if community or group
       break;
 
     case TransactionTypeTags.MANNUAL_TIME:

@@ -4,76 +4,75 @@ UpgradePlanBannerModel upgradePlanBannerModelFromJson(String str) =>
     UpgradePlanBannerModel.fromJson(json.decode(str));
 
 class UpgradePlanBannerModel {
-  UpgradePlanBannerModel({
-    this.pin_feeds,
-    this.multi_lang,
-    this.single_member_messaging,
-    this.recurring_schedules,
-    this.email_notifications,
-    this.push_notifications,
-    this.stock_images,
-    this.user_defined_skills_interests,
-    this.images_msgs_propriety,
-    this.onetomany_offers,
-    this.calendar_sync,
-    this.multi_member_messaging,
-    this.project_templates,
-    this.invoice_generation,
-    this.analytics_generation,
-    this.upload_cv,
-    this.csv_import_users,
-    this.private_groups,
-    this.parent_timebanks,
-    this.cash_donation,
-    this.goods_donation,
-    this.admins_child_timebanks_messaging,
-    this.cash_request,
-    this.goods_request,
-    this.sponsored_groups,
-    this.add_manual_time,
-    this.onetomany_requests,
-    this.borrow_requests,
-    this.multiple_super_admins,
-    this.public_to_sevax_global,
-    this.community_sponsors,
-    this.admin_role_customization,
-    this.cash_goods_offers,
-    this.lending_offers
-  });
-  BannerDetails pin_feeds;
-  BannerDetails multi_lang;
-  BannerDetails single_member_messaging;
-  BannerDetails recurring_schedules;
-  BannerDetails email_notifications;
-  BannerDetails push_notifications;
-  BannerDetails stock_images;
-  BannerDetails user_defined_skills_interests;
-  BannerDetails images_msgs_propriety;
-  BannerDetails onetomany_offers;
-  BannerDetails calendar_sync;
-  BannerDetails multi_member_messaging;
-  BannerDetails project_templates;
-  BannerDetails invoice_generation;
-  BannerDetails analytics_generation;
-  BannerDetails upload_cv;
-  BannerDetails csv_import_users;
-  BannerDetails private_groups;
-  BannerDetails parent_timebanks;
-  BannerDetails cash_donation;
-  BannerDetails goods_donation;
-  BannerDetails admins_child_timebanks_messaging;
-  BannerDetails cash_request;
-  BannerDetails goods_request;
-  BannerDetails multiple_super_admins;
-  BannerDetails sponsored_groups;
-  BannerDetails add_manual_time;
-  BannerDetails onetomany_requests;
-  BannerDetails borrow_requests;
-  BannerDetails public_to_sevax_global;
-  BannerDetails community_sponsors;
-  BannerDetails admin_role_customization;
-  BannerDetails cash_goods_offers;
-  BannerDetails lending_offers;
+  UpgradePlanBannerModel(
+      {this.pin_feeds,
+      this.multi_lang,
+      this.single_member_messaging,
+      this.recurring_schedules,
+      this.email_notifications,
+      this.push_notifications,
+      this.stock_images,
+      this.user_defined_skills_interests,
+      this.images_msgs_propriety,
+      this.onetomany_offers,
+      this.calendar_sync,
+      this.multi_member_messaging,
+      this.project_templates,
+      this.invoice_generation,
+      this.analytics_generation,
+      this.upload_cv,
+      this.csv_import_users,
+      this.private_groups,
+      this.parent_timebanks,
+      this.cash_donation,
+      this.goods_donation,
+      this.admins_child_timebanks_messaging,
+      this.cash_request,
+      this.goods_request,
+      this.sponsored_groups,
+      this.add_manual_time,
+      this.onetomany_requests,
+      this.borrow_requests,
+      this.multiple_super_admins,
+      this.public_to_sevax_global,
+      this.community_sponsors,
+      this.admin_role_customization,
+      this.cash_goods_offers,
+      this.lending_offers});
+  BannerDetails? pin_feeds;
+  BannerDetails? multi_lang;
+  BannerDetails? single_member_messaging;
+  BannerDetails? recurring_schedules;
+  BannerDetails? email_notifications;
+  BannerDetails? push_notifications;
+  BannerDetails? stock_images;
+  BannerDetails? user_defined_skills_interests;
+  BannerDetails? images_msgs_propriety;
+  BannerDetails? onetomany_offers;
+  BannerDetails? calendar_sync;
+  BannerDetails? multi_member_messaging;
+  BannerDetails? project_templates;
+  BannerDetails? invoice_generation;
+  BannerDetails? analytics_generation;
+  BannerDetails? upload_cv;
+  BannerDetails? csv_import_users;
+  BannerDetails? private_groups;
+  BannerDetails? parent_timebanks;
+  BannerDetails? cash_donation;
+  BannerDetails? goods_donation;
+  BannerDetails? admins_child_timebanks_messaging;
+  BannerDetails? cash_request;
+  BannerDetails? goods_request;
+  BannerDetails? multiple_super_admins;
+  BannerDetails? sponsored_groups;
+  BannerDetails? add_manual_time;
+  BannerDetails? onetomany_requests;
+  BannerDetails? borrow_requests;
+  BannerDetails? public_to_sevax_global;
+  BannerDetails? community_sponsors;
+  BannerDetails? admin_role_customization;
+  BannerDetails? cash_goods_offers;
+  BannerDetails? lending_offers;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
       UpgradePlanBannerModel(
@@ -191,9 +190,9 @@ class BannerDetails {
     this.images,
   });
 
-  String name;
-  String message;
-  List<String> images;
+  String? name;
+  String? message;
+  List<String>? images;
 
   factory BannerDetails.fromJson(Map<String, dynamic> json) => BannerDetails(
         name: json["name"],

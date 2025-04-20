@@ -23,7 +23,7 @@ class Attachment extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-        S.of(context).attachment,
+          S.of(context).attachment,
           style: TextStyle(fontSize: 18),
         ),
       ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ExploreBrowseCard extends StatelessWidget {
   const ExploreBrowseCard({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.title,
     this.style,
@@ -11,10 +11,10 @@ class ExploreBrowseCard extends StatelessWidget {
     //this.padding,
   }) : super(key: key);
 
-  final VoidCallback onTap;
-  final String imageUrl;
-  final String title;
-  final TextStyle style;
+  final VoidCallback? onTap;
+  final String? imageUrl;
+  final String? title;
+  final TextStyle? style;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -39,9 +39,11 @@ class ExploreBrowseCard extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 4 / 3,
                   child: Image.network(
-                    imageUrl,
+                    imageUrl ?? '',
                     height: 40,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const SizedBox(),
                   ),
                 ),
               ),
@@ -49,7 +51,7 @@ class ExploreBrowseCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Text(
-                  title,
+                  title ?? '',
                   style: style ??
                       const TextStyle(
                         fontSize: 14,

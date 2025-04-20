@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -13,18 +13,18 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../location_utility.dart';
 
-Geoflutterfire geos = Geoflutterfire();
-Future<void> createNews({@required NewsModel newsObject}) async {
+// Create GeoFirePoint instances when needed instead of using a global variable
+Future<void> createNews({required NewsModel newsObject}) async {
   await CollectionRef.feeds.doc(newsObject.id).set(newsObject.toMap());
 }
 
-Future<void> updateNews({@required NewsModel newsObject}) async {
+Future<void> updateNews({required NewsModel newsObject}) async {
   await CollectionRef.feeds.doc(newsObject.id).update(
         newsObject.toMap(),
       );
 }
 
-Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
+Stream<List<NewsModel>> getNewsStream({required String timebankID}) async* {
   var data = CollectionRef.feeds
       .where('timebanksposted', arrayContains: timebankID)
       .where('softDelete', isEqualTo: false)
@@ -37,7 +37,8 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
     List<NewsModel> modelList = [];
 
     querySnapshot.docs.forEach((document) {
-      var newsModel = NewsModel.fromMap(document.data());
+      var newsModel =
+          NewsModel.fromMap(document.data() as Map<String, dynamic>);
       modelList.add(newsModel);
     });
 
@@ -133,7 +134,7 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
           handleData: (querySnapshot, newsSink) {
     List<NewsModel> modelList = [];
     querySnapshot.docs.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data()));
+      modelList.add(NewsModel.fromMap(document.data() as Map<String, dynamic>));
     });
     newsSink.add(modelList);
   }));
@@ -175,11 +176,11 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
 //   }));
 // }
 
-Future<NewsModel> getNewsForId(String newsId) async {
-  NewsModel newsModel;
+Future<NewsModel?> getNewsForId(String newsId) async {
+  NewsModel? newsModel;
   await CollectionRef.feeds.doc(newsId).get().then((snapshot) {
     if (snapshot.data == null) return null;
-    newsModel = NewsModel.fromMap(snapshot.data());
+    newsModel = NewsModel.fromMap(snapshot.data() as Map<String, dynamic>);
   });
 
   return newsModel;
@@ -190,10 +191,11 @@ Future deleteNews(NewsModel newsModel) async {
 }
 
 Future _getLocation(double latitude, double longitude) async {
-  String address = await LocationUtility().getFormattedAddress(
-    latitude,
-    longitude,
-  );
+  String address = (await LocationUtility().getFormattedAddress(
+        latitude,
+        longitude,
+      )) ??
+      'Unknown location';
   return address;
 }
 

@@ -12,14 +12,14 @@ class DonationApproveModel {
     this.donationType,
   });
 
-  String donorName;
-  String donorEmail;
-  String donorPhotoUrl;
-  String requestTitle;
-  String requestId;
-  String donationId;
-  String donationDetails;
-  RequestType donationType;
+  String? donorName;
+  String? donorEmail;
+  String? donorPhotoUrl;
+  String? requestTitle;
+  String? requestId;
+  String? donationId;
+  String? donationDetails;
+  RequestType? donationType;
 
   factory DonationApproveModel.fromMap(Map<String, dynamic> json) =>
       DonationApproveModel(
@@ -34,8 +34,8 @@ class DonationApproveModel {
         donationDetails:
             json["donationDetails"] == null ? null : json["donationDetails"],
         donationType: json["donationType"] == null
-            ? null
-            : requestTypeMapper[json["donationType"]],
+            ? RequestType.DONATION
+            : requestTypeMapper[json["donationType"]]!,
       );
 
   Map<String, dynamic> toMap() => {

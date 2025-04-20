@@ -45,12 +45,12 @@ String actionToStringMapper(BuildContext context, Actions action) {
 }
 
 class CustomRaisedButton extends StatelessWidget {
-  final Actions action;
-  final Function onTap;
-  final Debouncer debouncer;
+  final Actions? action;
+  final Function? onTap;
+  final Debouncer? debouncer;
 
   const CustomRaisedButton({
-    Key key,
+    Key? key,
     this.onTap,
     this.action,
     this.debouncer,
@@ -64,14 +64,17 @@ class CustomRaisedButton extends StatelessWidget {
               action == Actions.Promote ||
               action == Actions.MakeOwner ||
               action == Actions.Loan)
-          ? null
-          : Colors.red,
+          ? null!
+          : Colors.red!,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      elevation: 2.0,
+      textColor: Colors.white,
       child: Text(
-        actionToStringMapper(context, action),
+        actionToStringMapper(context, action!),
         style: TextStyle(fontSize: 12),
       ),
       onPressed: () {
-        debouncer.run(() => onTap());
+        debouncer!.run(() => onTap!());
       },
     );
     return Container(
@@ -87,12 +90,12 @@ class CustomRaisedButton extends StatelessWidget {
 // this is good practice
 class InputDonateDialog extends StatefulWidget {
   /// initial selection for the slider
-  final double donateAmount;
-  final double maxAmount;
-  final double creditsNeeded;
+  final double? donateAmount;
+  final double? maxAmount;
+  final double? creditsNeeded;
 
   const InputDonateDialog({
-    Key key,
+    Key? key,
     this.donateAmount,
     this.maxAmount,
     this.creditsNeeded = 0,
@@ -104,7 +107,7 @@ class InputDonateDialog extends StatefulWidget {
 
 class _InputDonateDialogState extends State<InputDonateDialog> {
   /// current selection of the slider
-  double _donateAmount;
+  double? _donateAmount;
   bool donatezeroerror = false;
   final _formKey = GlobalKey<FormState>();
 
@@ -116,7 +119,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    String creditsNeededFinal = widget.creditsNeeded.round().toString();
+    String creditsNeededFinal = widget.creditsNeeded!.round().toString();
 
     return AlertDialog(
       title: Text(S.of(context).loan_seva_credit_to_user),
@@ -126,7 +129,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text('${S.of(context).timebank_seva_credit} ' +
-                widget.maxAmount.toStringAsFixed(2).toString()),
+                widget.maxAmount!.toStringAsFixed(2).toString()),
             TextFormField(
               initialValue: creditsNeededFinal,
               decoration: InputDecoration(
@@ -134,9 +137,9 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
               ),
               keyboardType: TextInputType.number,
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return S.of(context).empty_credit_loan_error;
-                } else if (int.parse(value) > widget.maxAmount) {
+                } else if (int.parse(value) > widget!.maxAmount!) {
                   return S.of(context).insufficient_credits_to_donate;
                 } else if (int.parse(value) == 0) {
                   return S.of(context).loan_zero_credit_error;
@@ -162,14 +165,14 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           textColor: Colors.white,
           child: Text(
             S.of(context).cancel,
-            style: TextStyle( fontSize: dialogButtonSize),
+            style: TextStyle(fontSize: dialogButtonSize),
           ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         CustomTextButton(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           textColor: Colors.white,
           child: Text(
             S.of(context).donate,
@@ -178,7 +181,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             ),
           ),
           onPressed: () {
-            if (_formKey.currentState.validate()) {
+            if (_formKey.currentState!.validate()) {
 //              if (_donateAmount == 0) {
 //                setState(() {
 //                  donatezeroerror = true;
@@ -201,7 +204,8 @@ class InputDonateSuccessDialog extends StatefulWidget {
   /// initial selection for the slider
   final VoidCallback onComplete;
 
-  const InputDonateSuccessDialog({Key key, this.onComplete}) : super(key: key);
+  const InputDonateSuccessDialog({Key? key, required this.onComplete})
+      : super(key: key);
 
   @override
   _InputDonateSuccessDialogState createState() =>
@@ -209,7 +213,7 @@ class InputDonateSuccessDialog extends StatefulWidget {
 }
 
 class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
-  VoidCallback onComplete;
+  VoidCallback? onComplete;
 
   /// current selection of the slider
   @override

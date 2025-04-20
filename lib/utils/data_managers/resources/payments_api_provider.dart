@@ -10,15 +10,20 @@ class PaymentsApiProvider {
 
   Future<bool> addCard(String token, String timebankid, bool isNegotiatedPlan,
       UserModel user, String planName) async {
-    CollectionRef.cards
-        .doc(timebankid)
-        .collection('tokens')
-        .add({'tokenId': token}).then((val) {});
-    CollectionRef.cards.doc(timebankid).set({
-      'email': user.email,
-      'timebankid': timebankid,
-      'currentplan': planName,
-      'isNegotiatedPlan': isNegotiatedPlan
-    }, SetOptions(merge: true));
+    try {
+      await CollectionRef.cards
+          .doc(timebankid)
+          .collection('tokens')
+          .add({'tokenId': token});
+      await CollectionRef.cards.doc(timebankid).set({
+        'email': user.email,
+        'timebankid': timebankid,
+        'currentplan': planName,
+        'isNegotiatedPlan': isNegotiatedPlan
+      }, SetOptions(merge: true));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

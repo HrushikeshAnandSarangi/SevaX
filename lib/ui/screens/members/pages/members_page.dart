@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -30,7 +30,9 @@ class TimebankCombinedWithMembers {
 }
 
 enum MemberType { CREATOR, ADMIN, MEMBER, SUPER_ADMIN }
+
 enum UsersSection { ADMINS, MEMBERS, OWNERS }
+
 enum ActionType { PROMOTE, DEMOTE, REMOVE, DONATE, EXIT }
 
 Map<MemberType, List<ActionType>> actionPermission = {
@@ -60,7 +62,7 @@ Map<MemberType, List<ActionType>> actionPermission = {
 class MembersPage extends StatefulWidget {
   final String timebankId;
 
-  const MembersPage({Key key, this.timebankId}) : super(key: key);
+  const MembersPage({Key? key, required this.timebankId}) : super(key: key);
 
   @override
   _MembersPageState createState() => _MembersPageState();
@@ -80,7 +82,7 @@ class _MembersPageState extends State<MembersPage> {
     final _membersBloc = Provider.of<MembersBloc>(context, listen: false);
     final ProgressDialog _progress = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
       customBody: Container(
         width: 100,
@@ -97,7 +99,8 @@ class _MembersPageState extends State<MembersPage> {
             stream: CombineLatestStream.combine2(
               TimebankRepository.getTimebankStream(widget.timebankId),
               _membersBloc.members,
-              (a, b) => TimebankCombinedWithMembers(a, b),
+              (a, b) => TimebankCombinedWithMembers(
+                  a as TimebankModel, b as List<UserModel>),
             ),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -109,44 +112,48 @@ class _MembersPageState extends State<MembersPage> {
               }
 
               UserModel user = SevaCore.of(context).loggedInUser;
-              bool isAdmin =
-                  isAccessAvailable(snapshot.data.timebank, user.sevaUserID);
+              bool isAdmin = snapshot.data != null
+                  ? (user.sevaUserID != null
+                      ? isAccessAvailable(
+                          snapshot.data!.timebank, user.sevaUserID!)
+                      : false)
+                  : false;
 
               // bool isOwner =
               //     snapshot.data.timebank.creatorId == user.sevaUserID ||
               //         snapshot.data.timebank.organizers
               //             .contains(user.sevaUserID);
 
-              List<UserModel> owners = List.generate(
-                snapshot.data.timebank.organizers.length,
-                (index) => _membersBloc.getMemberFromLocalData(
-                  userId: snapshot.data.timebank.organizers[index],
-                ),
-              );
+              List<UserModel> owners = (snapshot.data?.timebank.organizers ??
+                      [])
+                  .map((id) => _membersBloc.getMemberFromLocalData(userId: id))
+                  .whereType<UserModel>()
+                  .toList();
 
-              List<UserModel> admins = List.generate(
-                snapshot.data.timebank.admins.length,
-                (index) => _membersBloc.getMemberFromLocalData(
-                  userId: snapshot.data.timebank.admins[index],
-                ),
-              );
+              List<UserModel> admins = snapshot.data?.timebank.admins != null
+                  ? snapshot.data!.timebank.admins
+                      .map((id) =>
+                          _membersBloc.getMemberFromLocalData(userId: id))
+                      .whereType<UserModel>()
+                      .toList()
+                  : [];
 
               List<String> memberIds = List<String>.from(
-                snapshot.data.timebank.members.where(
-                  (id) => !isMemberAnAdmin(snapshot.data.timebank, id),
-                ),
+                (snapshot.data?.timebank.members.where(
+                      (id) => !isMemberAnAdmin(snapshot.data!.timebank, id),
+                    ) ??
+                    []) as Iterable,
               );
 
-              List<UserModel> members = List.generate(
-                memberIds.length,
-                (index) => _membersBloc.getMemberFromLocalData(
-                  userId: memberIds[index],
-                ),
-              );
+              List<UserModel> members = memberIds
+                  .map((id) => _membersBloc.getMemberFromLocalData(userId: id))
+                  .whereType<UserModel>()
+                  .toList();
               if (admins != null && admins.length > 0) {
-                admins.removeWhere((element) => snapshot
-                    .data.timebank.organizers
-                    .contains(element.sevaUserID));
+                admins.removeWhere((element) =>
+                    snapshot.data?.timebank.organizers
+                        .contains(element.sevaUserID) ??
+                    false);
               }
               return SingleChildScrollView(
                 child: Column(
@@ -177,29 +184,33 @@ class _MembersPageState extends State<MembersPage> {
                             hide: !isAdmin,
                             child: ReportedMemberNavigatorWidget(
                               isTimebankReport:
-                                  snapshot.data.timebank.parentTimebankId ==
+                                  snapshot.data!.timebank.parentTimebankId ==
                                       FlavorConfig.values.timebankId,
-                              timebankModel: snapshot.data.timebank,
-                              communityId: snapshot.data.timebank.communityId,
+                              timebankModel: snapshot.data!.timebank,
+                              communityId: snapshot.data!.timebank.communityId,
                             ),
+                            secondChild: SizedBox.shrink(),
                           ),
                           SizedBox(height: 8),
-                          owners != null && owners.length > 0
+                          owners.length > 0
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                   ),
                                   child: MemberSectionBuilder(
+                                    key: ValueKey('owners-section'),
                                     section: UsersSection.OWNERS,
                                     members: owners,
-                                    creatorId: snapshot.data.timebank.creatorId,
+                                    creatorId:
+                                        snapshot.data!.timebank.creatorId,
                                     isTimebankSection: true,
                                     type: memberType(
-                                      snapshot.data.timebank,
-                                      user.sevaUserID,
+                                      snapshot.data!.timebank,
+                                      user.sevaUserID ?? "",
                                     ),
-                                    timebank: snapshot.data.timebank,
+                                    timebank: snapshot.data!.timebank,
                                     progress: _progress,
+                                    onMemberExit: () {},
                                   ),
                                 )
                               : Offstage(),
@@ -219,22 +230,25 @@ class _MembersPageState extends State<MembersPage> {
                                 )
                               : Container(),
                           SizedBox(height: 8),
-                          admins != null && admins.length > 0
+                          admins.length > 0
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                   ),
                                   child: MemberSectionBuilder(
+                                    key: ValueKey('admins-section'),
                                     section: UsersSection.ADMINS,
                                     members: admins,
-                                    creatorId: snapshot.data.timebank.creatorId,
+                                    creatorId:
+                                        snapshot.data!.timebank.creatorId,
                                     isTimebankSection: true,
                                     type: memberType(
-                                      snapshot.data.timebank,
-                                      user.sevaUserID,
+                                      snapshot.data!.timebank,
+                                      user.sevaUserID ?? "",
                                     ),
-                                    timebank: snapshot.data.timebank,
+                                    timebank: snapshot.data!.timebank,
                                     progress: _progress,
+                                    onMemberExit: () {},
                                   ),
                                 )
                               : Container(),
@@ -244,14 +258,18 @@ class _MembersPageState extends State<MembersPage> {
                     Divider(thickness: 1),
                     HideWidget(
                       hide: !isAdmin,
-                      child: JoinRequestSectionBuilder(
-                        joinRequestBloc: joinRequestBloc,
-                        timebankModel: snapshot.data.timebank,
-                      ),
+                      child: snapshot.data?.timebank != null
+                          ? JoinRequestSectionBuilder(
+                              joinRequestBloc: joinRequestBloc,
+                              timebankModel: snapshot.data!.timebank,
+                            )
+                          : SizedBox.shrink(),
+                      secondChild: SizedBox.shrink(),
                     ),
                     Visibility(
-                      visible: snapshot.data.timebank.id !=
-                          FlavorConfig.values.timebankId,
+                      visible: snapshot.data?.timebank != null &&
+                          snapshot.data!.timebank.id !=
+                              FlavorConfig.values.timebankId,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -280,23 +298,26 @@ class _MembersPageState extends State<MembersPage> {
                                       ),
                                     ),
                                     onTap: () => _navigateToAddMembers(
-                                      snapshot.data.timebank,
+                                      snapshot.data!.timebank,
                                     ),
                                   ),
+                                  secondChild: SizedBox.shrink(),
                                 ),
                                 SizedBox(width: 16),
                               ],
                             ),
                             SizedBox(height: 20),
                             MemberSectionBuilder(
+                              key: ValueKey('members-section'),
                               section: UsersSection.MEMBERS,
-                              creatorId: snapshot.data.timebank.creatorId,
+                              creatorId:
+                                  snapshot.data?.timebank.creatorId ?? '',
                               members: members,
                               type: memberType(
-                                snapshot.data.timebank,
-                                user.sevaUserID,
+                                snapshot.data!.timebank,
+                                user.sevaUserID ?? '',
                               ),
-                              timebank: snapshot.data.timebank,
+                              timebank: snapshot.data!.timebank,
                               progress: _progress,
                               onMemberExit: () {
                                 Navigator.pushReplacement(
@@ -338,7 +359,8 @@ class _MembersPageState extends State<MembersPage> {
         context,
         MaterialPageRoute(
           builder: (context) => InviteMembersGroup(
-            parenttimebankid: SevaCore.of(context).loggedInUser.currentTimebank,
+            parenttimebankid:
+                SevaCore.of(context).loggedInUser.currentTimebank ?? '',
             timebankModel: model,
           ),
         ),

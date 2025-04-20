@@ -20,14 +20,14 @@ class AppConfig {
     RequestType.BORROW
   ];
 
-  static BillingPlanModel billing;
-  static SharedPreferences prefs;
+  static BillingPlanModel? billing;
+  static SharedPreferences? prefs;
   static List<dynamic> testingEmails = [];
 
-  static int maxTransactionLimit;
-  static int currentTransactionLimit;
+  static int? maxTransactionLimit;
+  static int? currentTransactionLimit;
 
-  static RemoteConfig remoteConfig;
+  static FirebaseRemoteConfig? remoteConfig;
 
   static bool isTransactionAllowed() {
     return maxTransactionLimit != currentTransactionLimit;
@@ -35,24 +35,26 @@ class AppConfig {
 
   //App Info
 //  static String appName;
-  static String appVersion;
-  static int buildNumber;
-  static String packageName;
-  static String loggedInEmail;
+  static String? appVersion;
+  static int? buildNumber;
+  static String? packageName;
+  static String? loggedInEmail;
 
   //Platform checks
-  static bool isWeb;
-  static bool isMobile;
+  static bool? isWeb;
+  static bool? isMobile;
 
   //isTest Community
   static bool isTestCommunity = false;
-  static TimebankConfigurations timebankConfigurations;
+  static TimebankConfigurations? timebankConfigurations;
 
   //plan check data
-  static UpgradePlanBannerModel upgradePlanBannerModel;
-  static HelpContextMemberType helpIconContextMember = HelpContextMemberType.seva_community;
+  static UpgradePlanBannerModel? upgradePlanBannerModel;
+  static HelpContextMemberType helpIconContextMember =
+      HelpContextMemberType.seva_community;
 
-  static HelpContextAdminType helpIconContextAdmin = HelpContextAdminType.seva_community;
+  static HelpContextAdminType helpIconContextAdmin =
+      HelpContextAdminType.seva_community;
 }
 
 class HelpIconContextClass {
@@ -77,7 +79,7 @@ class HelpIconContextClass {
   static String linkBuilder({bool isAdmin = false}) {
     logger.i("is admin $isAdmin");
     return isAdmin
-        ? "${AppConfig.remoteConfig.getString('help_videos_admin')}#${AppConfig.helpIconContextMember.getValue()}"
-        : "${AppConfig.remoteConfig.getString('help_videos_member')}#${AppConfig.helpIconContextMember.getValue()}";
+        ? "${AppConfig.remoteConfig!.getString('help_videos_admin')}#${AppConfig.helpIconContextMember.getValue()}"
+        : "${AppConfig.remoteConfig!.getString('help_videos_member')}#${AppConfig.helpIconContextMember.getValue()}";
   }
 }

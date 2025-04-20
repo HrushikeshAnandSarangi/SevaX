@@ -19,19 +19,18 @@ import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
 
 class ProjectCoverPhoto extends StatefulWidget {
-  final String cover_url;
+  final String? cover_url;
 
-  ProjectCoverPhoto({this.cover_url});
+  const ProjectCoverPhoto({Key? key, this.cover_url}) : super(key: key);
 
+  @override
   _ProjectCoverPhotoState createState() => _ProjectCoverPhotoState();
 }
 
-@override
 class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
     with TickerProviderStateMixin, ImagePickerListener {
-  File _image;
-  AnimationController _controller;
-  ImagePickerHandler imagePicker;
+  late AnimationController _controller;
+  late ImagePickerHandler imagePicker;
   bool _isImageBeingUploaded = false;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
@@ -42,8 +41,9 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
     Reference ref = FirebaseStorage.instance
         .ref()
         .child('projects_avtaar')
-        .child(
-            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+        .child(SevaCore.of(context).loggedInUser.email! +
+            timestampString +
+            '.jpg');
     UploadTask uploadTask = ref.putFile(
       croppedImage,
       SettableMetadata(
@@ -61,7 +61,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
     return imageURL;
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({required String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     this._isImageBeingUploaded = false;
@@ -76,9 +76,9 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
       profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
+      if (profanityStatusModel?.isProfane ?? false) {
         showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
+                context: context, content: profanityStatusModel.category ?? '')
             .then((status) {
           if (status == 'Proceed') {
             deleteFireBaseImage(imageUrl: imageURL).then((value) {
@@ -108,7 +108,6 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
       });
     } else {
       setState(() {
-        this._image = _image;
         this._isImageBeingUploaded = true;
         _uploadImage(_image);
       });
@@ -275,7 +274,8 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
   @override
   addWebImageUrl() {
     // TODO: implement addWebImageUrl
-    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+    if (globals.webImageUrl != null &&
+        globals.webImageUrl?.isNotEmpty == true) {
       globals.projectsCoverURL = globals.webImageUrl;
       setState(() {});
     }

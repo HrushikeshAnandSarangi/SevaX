@@ -9,9 +9,9 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 Future<void> sendFeedbackNotificationsToAttendees(
-    {@required List attendeesList,
-    @required RequestModel requestModel,
-    @required BuildContext context}) async {
+    {required List attendeesList,
+    required RequestModel requestModel,
+    required BuildContext context}) async {
   // ONETOMANY_REQUEST_ATTENDEES_FEEDBACK
 // if(requestModel.oneToManyRequestAttenders)
   WriteBatch batch1 = CollectionRef.batch;

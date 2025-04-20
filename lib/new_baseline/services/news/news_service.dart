@@ -7,14 +7,14 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class NewsService {
   Future<void> updateFeedComments({
-    @required String feedId,
-    @required Comments comment,
+    required String feedId,
+    required Comments comment,
   }) async {
     return await CollectionRef.feeds.doc(feedId).set({"comments": []});
   }
 
   Future<void> updateFeedById({
-    @required NewsModel newsModel,
+    required NewsModel newsModel,
   }) async {
     return await CollectionRef.feeds
         .doc(newsModel.id)
@@ -22,7 +22,7 @@ class NewsService {
   }
 
   Future<void> updateFeed({
-    @required NewsModel newsModel,
+    required NewsModel newsModel,
   }) async {
     return await CollectionRef.feeds
         .doc(newsModel.id)
@@ -30,7 +30,7 @@ class NewsService {
   }
 
   Future<void> updateFeedLikes({
-    @required NewsModel newsModel,
+    required NewsModel newsModel,
   }) async {
     // log.i('updateUser: UserModel: $user');
     return await CollectionRef.feeds
@@ -46,13 +46,10 @@ class NewsService {
         .orderBy('createdAt', descending: true)
         .snapshots();
 
-    yield* data.transform(
-        StreamTransformer<QuerySnapshot, List<Comments>>.fromHandlers(
-            handleData: (querySnapshot, commentSink) {
+    yield* data.transform(StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
+        List<Comments>>.fromHandlers(handleData: (querySnapshot, commentSink) {
       List<Comments> modelList = [];
       querySnapshot.docs.forEach((document) {
-        Comments comment = Comments.fromMap(document.data());
-
         modelList.add(Comments.fromMap(document.data()));
       });
       commentSink.add(modelList);
@@ -72,16 +69,18 @@ class NewsService {
       List<Comments> modelList = [];
 
       querySnapshot.docs.forEach((document) {
-        NewsModel feed = NewsModel.fromMap(document.data());
-        feed.comments.forEach((comment) {
-          modelList.add(Comments.fromMap(document.data()));
+        NewsModel feed =
+            NewsModel.fromMap(document.data() as Map<String, dynamic>);
+        feed.comments?.forEach((comment) {
+          modelList
+              .add(Comments.fromMap(document.data() as Map<String, dynamic>));
         });
       });
       commentSink.add(modelList);
     }));
   }
 
-  Stream<NewsModel> getCommentsByFeedId({@required String id}) async* {
+  Stream<NewsModel> getCommentsByFeedId({required String id}) async* {
     assert(id != null && id.isNotEmpty, "Seva UserId cannot be null or empty");
     var data = CollectionRef.feeds
         .where("id", isEqualTo: id)
@@ -92,8 +91,9 @@ class NewsService {
       StreamTransformer<QuerySnapshot, NewsModel>.fromHandlers(
         handleData: (snapshot, userSink) async {
           if (snapshot.docs.isNotEmpty) {
-            DocumentSnapshot documentSnapshot = snapshot.docs?.first;
-            NewsModel model = NewsModel.fromMap(documentSnapshot.data());
+            QueryDocumentSnapshot documentSnapshot = snapshot.docs.first;
+            NewsModel model = NewsModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             model.id = id;
             userSink.add(model);
           }

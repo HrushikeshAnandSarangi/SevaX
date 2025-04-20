@@ -8,35 +8,36 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ParticipantCard extends StatelessWidget {
-  final Padding padding;
+  final EdgeInsetsGeometry? padding;
   final double radius;
   final String imageUrl;
   final String name;
-  final String bio;
-  final double rating;
-  final Function onMessageTapped;
-  final Function onTap;
-  final Function onImageTap;
+  final String? bio;
+  final double? rating;
+  final VoidCallback? onMessageTapped;
+  final VoidCallback? onTap;
+  final VoidCallback? onImageTap;
   final Widget buttonsContainer;
 
-  const ParticipantCard(
-      {Key key,
-      this.padding,
-      this.radius = 8,
-      this.imageUrl,
-      this.name,
-      this.bio,
-      this.onMessageTapped,
-      this.onTap,
-      this.rating,
-      this.onImageTap,
-      this.buttonsContainer = const SizedBox()})
-      : assert(name != null),
-        super(key: key);
+  const ParticipantCard({
+    Key? key,
+    this.padding,
+    this.radius = 8,
+    required this.imageUrl,
+    required this.name,
+    this.bio,
+    this.onMessageTapped,
+    this.onTap,
+    this.rating,
+    this.onImageTap,
+    this.buttonsContainer = const SizedBox(),
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Stack(
         children: <Widget>[
           Align(
@@ -121,7 +122,7 @@ class ParticipantCard extends StatelessWidget {
                   child: CustomNetworkImage(
                     imageUrl ?? defaultUserImageURL,
                     fit: BoxFit.cover,
-                    onTap: onImageTap,
+                    onTap: onImageTap ?? () {},
                   ),
                 ),
               ),
@@ -134,7 +135,7 @@ class ParticipantCard extends StatelessWidget {
 }
 
 class RequestParticipantCard extends StatelessWidget {
-  final Padding padding;
+  final EdgeInsetsGeometry? padding;
   final double radius;
   final String imageUrl;
   final String name;
@@ -144,17 +145,16 @@ class RequestParticipantCard extends StatelessWidget {
   final String buttonTitle;
 
   const RequestParticipantCard({
-    Key key,
+    Key? key,
     this.padding,
     this.radius = 8,
-    this.imageUrl,
-    this.name,
-    this.bio,
-    this.onTap,
-    this.buttonColor,
-    this.buttonTitle,
-  })  : assert(name != null),
-        super(key: key);
+    required this.imageUrl,
+    required this.name,
+    required this.bio,
+    required this.onTap,
+    required this.buttonColor,
+    required this.buttonTitle,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -212,6 +212,13 @@ class RequestParticipantCard extends StatelessWidget {
                           height: 30,
                           child: CustomElevatedButton(
                             color: buttonColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 2,
+                            textColor: Colors.white,
                             child: Text(
                               buttonTitle,
                               style: TextStyle(

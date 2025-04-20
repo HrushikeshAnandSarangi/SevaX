@@ -17,23 +17,19 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../flavor_config.dart';
 
 class AddToCalendar extends StatefulWidget {
-  @required
   final RequestModel requestModel;
-  @required
+
   final UserModel userModel;
-  @required
   final OfferModel offer;
-  @required
   final bool isOfferRequest;
-  @required
   final List<String> eventsIdsArr;
 
   AddToCalendar(
-      {this.requestModel,
-      this.userModel,
-      this.offer,
-      this.isOfferRequest,
-      this.eventsIdsArr});
+      {required this.requestModel,
+      required this.userModel,
+      required this.offer,
+      required this.isOfferRequest,
+      required this.eventsIdsArr});
 
   @override
   State<StatefulWidget> createState() {
@@ -66,9 +62,9 @@ class AddToCalendarState extends State<AddToCalendar> {
       List<String> acceptorList = widget.isOfferRequest
           ? widget.offer.creatorAllowedCalender == null ||
                   widget.offer.creatorAllowedCalender == false
-              ? [widget.requestModel.email]
-              : [widget.offer.email, widget.requestModel.email]
-          : [widget.requestModel.email];
+              ? [widget.requestModel.email!]
+              : [widget.offer.email!, widget.requestModel.email!]
+          : [widget.requestModel.email!];
       widget.requestModel.allowedCalenderUsers = acceptorList.toList();
       await FirestoreManager.updateRequestsByFields(
           requestIds: widget.eventsIdsArr,
@@ -111,9 +107,9 @@ class AddToCalendarState extends State<AddToCalendar> {
       List<String> acceptorList = widget.isOfferRequest
           ? widget.offer.creatorAllowedCalender == null ||
                   widget.offer.creatorAllowedCalender == false
-              ? [widget.requestModel.email]
-              : [widget.offer.email, widget.requestModel.email]
-          : [widget.requestModel.email];
+              ? [widget.requestModel.email ?? '']
+              : [widget.offer.email ?? '', widget.requestModel.email ?? '']
+          : [widget.requestModel.email!];
       widget.requestModel.allowedCalenderUsers = acceptorList.toList();
       await FirestoreManager.updateRequestsByFields(
           requestIds: widget.eventsIdsArr,
@@ -156,9 +152,9 @@ class AddToCalendarState extends State<AddToCalendar> {
       List<String> acceptorList = widget.isOfferRequest
           ? widget.offer.creatorAllowedCalender == null ||
                   widget.offer.creatorAllowedCalender == false
-              ? [widget.requestModel.email]
-              : [widget.offer.email, widget.requestModel.email]
-          : [widget.requestModel.email];
+              ? [widget.requestModel.email!]
+              : [widget.offer.email!, widget.requestModel.email!]
+          : [widget.requestModel.email!];
       widget.requestModel.allowedCalenderUsers = acceptorList.toList();
       await FirestoreManager.updateRequestsByFields(
           requestIds: widget.eventsIdsArr,
@@ -269,23 +265,23 @@ class AddToCalendarState extends State<AddToCalendar> {
   }
 
   Widget getCalander({
-    Function onPressed,
-    String title,
-    CircleAvatar icon,
+    Function? onPressed,
+    String? title,
+    CircleAvatar? icon,
   }) {
     return TransactionsMatrixCheck(
       comingFrom: ComingFrom.Home,
-      upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+      upgradeDetails: AppConfig.upgradePlanBannerModel!.calendar_sync!,
       transaction_matrix_type: "calender_sync",
       child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Row(
           children: [
-            icon,
+            icon!,
             CustomTextButton(
-              onPressed: () => onPressed(),
+              onPressed: () => onPressed != null ? onPressed() : null,
               child: Text(
-                title,
+                title ?? '',
                 style: TextStyle(
                   color: Colors.black,
                 ),

@@ -1,6 +1,6 @@
 class SelectedSpeakerTimeDetails {
-  int prepTime;
-  double speakingTime;
+  int? prepTime;
+  double? speakingTime;
 
   SelectedSpeakerTimeDetails({
     this.prepTime,

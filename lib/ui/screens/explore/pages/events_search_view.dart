@@ -20,9 +20,9 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import '../../../../l10n/l10n.dart';
 
 class EventsSearchView extends StatelessWidget {
-  final bool isUserSignedIn;
+  final bool? isUserSignedIn;
 
-  const EventsSearchView({Key key, this.isUserSignedIn}) : super(key: key);
+  const EventsSearchView({Key? key, this.isUserSignedIn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,22 +37,24 @@ class EventsSearchView extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
             }
-            if (snapshot.data == null || snapshot.data.isEmpty) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Text(S.of(context).no_search_result_found);
             }
 
             return ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                var event = snapshot.data[index];
+                var event = snapshot.data![index];
                 // var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
-                return isUserSignedIn
-                    ? FutureBuilder<TimebankModel>(
-                        future: getTimeBankForId(timebankId: event.timebankId),
+                return isUserSignedIn!
+                    ? FutureBuilder<TimebankModel?>(
+                        future: getTimeBankForId(
+                            timebankId: event.timebankId ?? ''),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
                           if (snapshot.hasError) {
@@ -70,9 +72,9 @@ class EventsSearchView extends StatelessWidget {
                                       builder: (context) {
                                         return ProjectRequests(
                                           ComingFrom.Projects,
-                                          timebankId: event.timebankId,
+                                          timebankId: event.timebankId!,
                                           projectModel: event,
-                                          timebankModel: snapshot.data,
+                                          timebankModel: snapshot.data!,
                                         );
                                       },
                                     ),
@@ -84,39 +86,45 @@ class EventsSearchView extends StatelessWidget {
                                   );
                                 }
                               },
-                              photoUrl: event.photoUrl ?? defaultProjectImageURL,
+                              photoUrl:
+                                  event.photoUrl ?? defaultProjectImageURL,
                               title: event.name,
                               description: event.description,
                               location: event.address,
                               communityName: event.communityName ?? '',
-                              date: DateFormat('d MMMM, y').format(context.getDateTime(event.startTime)),
-                              time: DateFormat.jm().format(context.getDateTime(event.startTime)),
+                              date: DateFormat('d MMMM, y').format(
+                                  context.getDateTime(event.startTime!)),
+                              time: DateFormat.jm().format(
+                                  context.getDateTime(event.startTime!)),
                               memberList: MemberAvatarListWithCount(
-                                userIds: event.associatedmembers.keys.toList(),
+                                userIds: event.associatedmembers!.keys.toList(),
                               ),
                               tagsToShow: TagBuilder(
-                                isPublic: event.public,
-                                isVirtual: event.virtualProject,
+                                isPublic: event.public!,
+                                isVirtual: event.virtualProject!,
                               ).getTags(context));
                         })
                     : ExploreEventCard(
                         onTap: () {
                           showSignInAlertMessage(
-                              context: context, message: S.of(context).sign_in_alert);
+                              context: context,
+                              message: S.of(context).sign_in_alert);
                         },
                         photoUrl: event.photoUrl ?? defaultProjectImageURL,
                         title: event.name,
                         description: event.description,
                         location: event.address,
                         communityName: event.communityName ?? '',
-                        date: DateFormat('d MMMM, y').format(context.getDateTime(event.startTime)),
-                        time: DateFormat.jm().format(context.getDateTime(event.startTime)),
+                        date: DateFormat('d MMMM, y')
+                            .format(context.getDateTime(event.startTime!)),
+                        time: DateFormat.jm()
+                            .format(context.getDateTime(event.startTime!)),
                         memberList: MemberAvatarListWithCount(
-                          userIds: event.associatedmembers.keys.toList(),
+                          userIds: event.associatedmembers!.keys.toList(),
                         ),
                         tagsToShow: TagBuilder(
-                          isPublic: event.public,
-                          isVirtual: event.virtualProject,
+                          isPublic: event.public!,
+                          isVirtual: event.virtualProject!,
                         ).getTags(context),
                       );
               },

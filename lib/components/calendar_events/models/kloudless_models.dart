@@ -37,8 +37,8 @@ extension ReadableEnvironment on ENVIRONMENT {
 }
 
 class AttendeDetails {
-  final Attendee attendee;
-  final CalanderBuilder calendar;
+  final Attendee? attendee;
+  final CalanderBuilder? calendar;
 
   AttendeDetails({
     this.attendee,
@@ -47,11 +47,11 @@ class AttendeDetails {
 }
 
 class KloudlessCalendarEvent {
-  final String eventTitle;
-  final String eventDescription;
-  final String eventStart;
-  final String eventEnd;
-  final String eventLocation;
+  final String? eventTitle;
+  final String? eventDescription;
+  final String? eventStart;
+  final String? eventEnd;
+  final String? eventLocation;
 
   KloudlessCalendarEvent({
     this.eventTitle,
@@ -74,8 +74,8 @@ class KloudlessCalendarEvent {
 }
 
 class EventMetaData {
-  String eventId;
-  CalanderBuilder calendar;
+  String? eventId;
+  CalanderBuilder? calendar;
 
   EventMetaData({this.eventId, this.calendar});
 
@@ -85,20 +85,20 @@ class EventMetaData {
   }
 
   Map<String, dynamic> toMap() => {
-        "calendar": this.calendar.toMap(),
+        "calendar": this.calendar?.toMap(),
         "eventId": this.eventId,
       };
 }
 
 class KloudlessWidgetBuilder {
-  String authorizationUrl;
-  String clienId;
-  String redirectUrl;
-  CalStateBuilder stateOfCalendarCallback;
-  AttendeDetails attendeeDetails;
-  EventMetaData initialEventDetails;
+  String? authorizationUrl;
+  String? clienId;
+  String? redirectUrl;
+  CalStateBuilder? stateOfCalendarCallback;
+  AttendeDetails? attendeeDetails;
+  EventMetaData? initialEventDetails;
 
-  Function onPressed;
+  Function? onPressed;
 
   KloudlessWidgetBuilder({
     this.clienId = "B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh",
@@ -108,18 +108,23 @@ class KloudlessWidgetBuilder {
     this.attendeeDetails,
     this.initialEventDetails,
   }) {
-    this.redirectUrl = FlavorConfig.values.cloudFunctionBaseURL + "/callbackurlforoauth";
+    this.redirectUrl =
+        FlavorConfig.values.cloudFunctionBaseURL + "/callbackurlforoauth";
   }
 
   KloudlessWidgetBuilder fromContext<M, T>({
-    BuildContext context,
-    String id,
-    T model,
+    BuildContext? context,
+    String id = '',
+    required T model,
   }) {
+    if (context == null) throw ArgumentError.notNull('context');
+    final fullname = SevaCore.of(context).loggedInUser.fullname;
+    if (fullname == null) throw StateError('User fullname is required');
+
     stateOfCalendarCallback = CalStateBuilder<M, T>(
-      name: SevaCore.of(context).loggedInUser.fullname,
+      name: fullname,
       id: id,
-      memberEmail: SevaCore.of(context).loggedInUser.email,
+      memberEmail: SevaCore.of(context).loggedInUser.email ?? '',
       model: model,
     );
 
@@ -131,7 +136,8 @@ class KloudlessWidgetBuilder {
       calendar: CalanderBuilder(
         caledarScope: SevaCore.of(context).loggedInUser.calendarScope,
         calendarAccId: SevaCore.of(context).loggedInUser.calendarAccId,
-        calendarAccessToken: SevaCore.of(context).loggedInUser.calendarAccessToken,
+        calendarAccessToken:
+            SevaCore.of(context).loggedInUser.calendarAccessToken,
         calendarEmail: SevaCore.of(context).loggedInUser.calendarEmail,
         calendarId: SevaCore.of(context).loggedInUser.calendarId,
       ),
@@ -141,11 +147,11 @@ class KloudlessWidgetBuilder {
 }
 
 class CalanderBuilder {
-  int calendarAccId;
-  String calendarAccessToken;
-  String calendarEmail;
-  String caledarScope;
-  String calendarId;
+  int? calendarAccId;
+  String? calendarAccessToken;
+  String? calendarEmail;
+  String? caledarScope;
+  String? calendarId;
 
   CalanderBuilder({
     this.calendarAccId,
@@ -177,18 +183,18 @@ class CalanderBuilder {
 }
 
 class CalStateBuilder<M, T> {
-  final String memberEmail;
-  final String id;
-  final T model;
-  final String name;
+  final String? memberEmail;
+  final String? id;
+  final T? model;
+  final String? name;
 
-  String stateType;
+  String? stateType;
 
   CalStateBuilder({
-    @required this.id,
-    @required this.memberEmail,
-    @required this.model,
-    @required this.name,
+    required this.id,
+    required this.memberEmail,
+    required this.model,
+    required this.name,
   }) {
     stateType = T.toString();
   }
@@ -226,7 +232,9 @@ class CalStateBuilder<M, T> {
 
     switch (T) {
       case RequestModel:
-        return M == CreateMode ? MODE_CREATE_MODE_REQUEST : MODE_APPLY_MODE_REQUEST;
+        return M == CreateMode
+            ? MODE_CREATE_MODE_REQUEST
+            : MODE_APPLY_MODE_REQUEST;
 
       case OfferModel:
         return M == CreateMode ? MODE_CREATE_MODE_OFFER : MODE_APPLY_MODE_OFFER;

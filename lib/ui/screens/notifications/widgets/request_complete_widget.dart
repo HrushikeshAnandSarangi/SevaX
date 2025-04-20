@@ -113,19 +113,13 @@ class RequestCompleteWidget extends StatelessWidget {
                           text: () {
                             return '${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours.toLowerCase() : S.of(context).hour.toLowerCase()}';
                           }(),
-                          style: TextStyle(
-                            color: Colors.black,
-                              fontSize: 12
-                          ),
+                          style: TextStyle(color: Colors.black, fontSize: 12),
                         ),
                         TextSpan(
                           text: () {
                             return ', ${S.of(context).notifications_waiting_for_approval}';
                           }(),
-                          style: TextStyle(
-                            color: Colors.grey,
-                              fontSize: 12
-                          ),
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
                         )
                       ],
                     ),

@@ -10,7 +10,7 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 typedef StringMapCallback = void Function(Map<String, dynamic> goods);
 
@@ -20,7 +20,9 @@ class InstructorDynamicSelection extends StatefulWidget {
   final ValueChanged<String> onRemoveGoods;
 
   InstructorDynamicSelection(
-      {@required this.onSelectedGoods, this.selectedGoods, this.onRemoveGoods});
+      {required this.onSelectedGoods,
+      required this.selectedGoods,
+      required this.onRemoveGoods});
   @override
   _InstructorDynamicSelectionState createState() =>
       _InstructorDynamicSelectionState();
@@ -28,7 +30,8 @@ class InstructorDynamicSelection extends StatefulWidget {
 
 class _InstructorDynamicSelectionState
     extends State<InstructorDynamicSelection> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController<SuggestedItem> controller =
+      SuggestionsController<SuggestedItem>();
   TextEditingController _textEditingController = TextEditingController();
   Map<String, String> goods = {};
   Map<String, String> _selectedGoods = {};
@@ -60,48 +63,7 @@ class _InstructorDynamicSelectionState
       children: <Widget>[
         SizedBox(height: 8),
         TypeAheadField<SuggestedItem>(
-          suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBuilder: (context, err) {
-            return Text(S.of(context).error_occured);
-          },
-          hideOnError: true,
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: _textEditingController,
-            decoration: InputDecoration(
-              hintText: S.of(context).search,
-              filled: true,
-              fillColor: Colors.grey[300],
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7)),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              suffixIcon: InkWell(
-                splashColor: Colors.transparent,
-                child: Icon(
-                  Icons.clear,
-                  color: Colors.grey,
-                  // color: _textEditingController.text.length > 1
-                  //     ? Colors.black
-                  //     : Colors.grey,
-                ),
-                onTap: () {
-                  _textEditingController.clear();
-                  controller.close();
-                },
-              ),
-            ),
-          ),
-          suggestionsBoxController: controller,
+          suggestionsController: controller,
           suggestionsCallback: (pattern) async {
             List<SuggestedItem> dataCopy = [];
             goods.forEach(
@@ -120,14 +82,14 @@ class _InstructorDynamicSelectionState
                   await SpellCheckManager.evaluateSpellingFor(pattern,
                       language:
                           SevaCore.of(context).loggedInUser.language ?? 'en');
-              if (spellCheckResult.hasErros) {
+              if (spellCheckResult.hasErros!) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
                   ..suggesttionTitle = pattern);
               } else if (spellCheckResult.correctSpelling != pattern) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.SUGGESTED
-                  ..suggesttionTitle = spellCheckResult.correctSpelling);
+                  ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -190,13 +152,13 @@ class _InstructorDynamicSelectionState
                 return Container();
             }
           },
-          noItemsFoundBuilder: (context) {
+          emptyBuilder: (context) {
             return searchUserDefinedEntity(
               keyword: _textEditingController.text,
               language: 'en',
             );
           },
-          onSuggestionSelected: (suggestion) {
+          onSelected: (suggestion) {
             if (ProfanityDetector()
                 .isProfaneString(suggestion.suggesttionTitle)) {
               return;
@@ -204,7 +166,7 @@ class _InstructorDynamicSelectionState
 
             switch (suggestion.suggestionMode) {
               case SuggestionMode.SUGGESTED:
-                var newGoodId = Uuid().generateV4();
+                var newGoodId = Uuid().v4();
                 addGoodsToDb(
                   goodsId: newGoodId,
                   goodsLanguage: 'en',
@@ -214,7 +176,7 @@ class _InstructorDynamicSelectionState
                 break;
 
               case SuggestionMode.USER_DEFINED:
-                var goodId = Uuid().generateV4();
+                var goodId = Uuid().v4();
                 addGoodsToDb(
                   goodsId: goodId,
                   goodsLanguage: 'en',
@@ -226,8 +188,6 @@ class _InstructorDynamicSelectionState
               case SuggestionMode.FROM_DB:
                 break;
             }
-            // controller.close();
-
             _textEditingController.clear();
             if (!_selectedGoods.containsValue(suggestion)) {
               controller.close();
@@ -238,6 +198,41 @@ class _InstructorDynamicSelectionState
               widget.onSelectedGoods(_selectedGoods);
               setState(() {});
             }
+          },
+          builder: (context, textFieldController, focusNode) {
+            _textEditingController = textFieldController;
+            return TextField(
+              controller: textFieldController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                hintText: S.of(context).search,
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(25.7),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7)),
+                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                suffixIcon: InkWell(
+                  splashColor: Colors.transparent,
+                  child: Icon(
+                    Icons.clear,
+                    color: Colors.grey,
+                  ),
+                  onTap: () {
+                    textFieldController.clear();
+                    controller.close();
+                  },
+                ),
+              ),
+            );
           },
         ),
         SizedBox(height: 20),
@@ -268,33 +263,33 @@ class _InstructorDynamicSelectionState
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
+        keyword!,
         language: language,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLinearLoading : LinearProgressIndicator();
+          return showLoader! ? getLinearLoading : LinearProgressIndicator();
         }
 
         return getSuggestionLayout(
           suggestion: keyword,
-          suggestionMode: suggestionMode,
+          suggestionMode: suggestionMode!,
         );
       },
     );
   }
 
   static Future<void> addGoodsToDb({
-    String goodsId,
-    String goodsTitle,
-    String goodsLanguage,
+    String? goodsId,
+    String? goodsTitle,
+    String? goodsLanguage,
   }) async {
     await CollectionRef.donationCategories.doc(goodsId).set(
       {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
@@ -305,7 +300,7 @@ class _InstructorDynamicSelectionState
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: LinearProgressIndicator(
-      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
         valueColor: AlwaysStoppedAnimation<Color>(
           Theme.of(context).primaryColor,
         ),
@@ -314,8 +309,8 @@ class _InstructorDynamicSelectionState
   }
 
   Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
+    String? suggestion,
+    SuggestionMode? suggestionMode,
   }) {
     return Padding(
       padding: const EdgeInsets.all(10.0),

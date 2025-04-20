@@ -14,7 +14,8 @@ class AddImagesForRequest extends StatefulWidget {
   final StringpListCallback onLinksCreated;
   final List<String> selectedList;
 
-  AddImagesForRequest({this.onLinksCreated, this.selectedList});
+  AddImagesForRequest(
+      {required this.onLinksCreated, required this.selectedList});
 
   @override
   _AddImagesForRequestState createState() => _AddImagesForRequestState();
@@ -77,7 +78,7 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
                   'lib/assets/images/cv.png',
                   height: 20,
                   width: 20,
-                  color:Theme.of(context).primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
                 Text(
                   S.of(context).choose_image,
@@ -102,9 +103,16 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
                                 widget.onLinksCreated(imageUrls);
                                 setState(() {});
                               },
+                              storeImageFile: (file) {},
+                              storPdfFile: (file) {},
+                              color: Theme.of(context).primaryColor,
                             );
                           });
                     },
+                    color: Theme.of(context).primaryColor,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    elevation: 2.0,
+                    textColor: Colors.white,
                     shape: StadiumBorder(),
                     child: Text(
                       S.of(context).choose,

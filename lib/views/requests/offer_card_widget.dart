@@ -20,13 +20,13 @@ class OfferCardWidget extends StatelessWidget {
   final OfferModel offerModel;
 
   OfferCardWidget({
-    this.offerId,
-    this.userModel,
-    this.memberInvited,
-    this.timebankModel,
-    this.offerAcceptors,
-    this.offerInvites,
-    this.offerModel,
+    required this.offerId,
+    required this.userModel,
+    required this.memberInvited,
+    required this.timebankModel,
+    required this.offerAcceptors,
+    required this.offerInvites,
+    required this.offerModel,
   });
 
   @override
@@ -48,9 +48,9 @@ class OfferCardWidget extends StatelessWidget {
 
   Widget getUserThumbnail(BuildContext context) {
     return UserProfileImage(
-      photoUrl: userModel.photoURL,
-      email: userModel.email,
-      userId: userModel.sevaUserID,
+      photoUrl: userModel.photoURL!,
+      email: userModel.email!,
+      userId: userModel.sevaUserID!,
       height: 60,
       width: 60,
       timebankModel: timebankModel,
@@ -122,6 +122,8 @@ class OfferCardWidget extends StatelessWidget {
                       color: Colors.indigo,
                       textColor: Colors.white,
                       elevation: 5,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
                       onPressed: () {
                         if (!offerAcceptors.contains(userModel.sevaUserID) &&
                             !offerInvites.contains(userModel.sevaUserID)) {
@@ -160,7 +162,7 @@ class OfferCardWidget extends StatelessWidget {
                         getStatus(
                           offerAcceptors: offerAcceptors,
                           offerInvites: offerInvites,
-                          sevaUserId: userModel.sevaUserID,
+                          sevaUserId: userModel.sevaUserID!,
                         ),
                         style: TextStyle(fontSize: 14),
                       ),
@@ -176,12 +178,12 @@ class OfferCardWidget extends StatelessWidget {
   }
 
   String getStatus({
-    List<String> offerAcceptors,
-    List<String> offerInvites,
-    String sevaUserId,
+    List<String>? offerAcceptors,
+    List<String>? offerInvites,
+    String? sevaUserId,
   }) {
-    if (offerAcceptors.contains(sevaUserId)) return 'Accepted Offer';
-    if (offerInvites.contains(sevaUserId)) return 'Invited';
+    if (offerAcceptors!.contains(sevaUserId)) return 'Accepted Offer';
+    if (offerInvites!.contains(sevaUserId)) return 'Invited';
     return 'Invite';
   }
 }

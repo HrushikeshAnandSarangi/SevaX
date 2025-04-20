@@ -56,13 +56,11 @@ class EditGroupInfoBloc {
       _groupName.addError('profanity');
       return false;
     } else {
-      String imageUrl;
+      String? imageUrl;
 
       if (_file.value != null && _file.value.selectedImage != null) {
-        imageUrl = _file.value != null
-            ? await StorageRepository.uploadFile(
-                "multiUserMessagingLogo", _file.value.selectedImage)
-            : null;
+        imageUrl = await StorageRepository.uploadFile(
+            "multiUserMessagingLogo", _file.value.selectedImage);
       } else if (_file.value != null && _file.value.stockImageUrl != null) {
         imageUrl = _file.value.stockImageUrl;
       }
@@ -79,13 +77,13 @@ class EditGroupInfoBloc {
       _participantInfo.value.forEach((ParticipantInfo info) async {
         if (!_currentMembers.value.contains(info.id)) {
           await MessageRoomManager.addRemoveParticipant(
-              communityId: creator.currentCommunity,
-              timebankId: creator.currentTimebank,
+              communityId: creator.currentCommunity ?? '',
+              timebankId: creator.currentTimebank ?? '',
               creatorDetails: creatorDetails,
-              messageRoomImageUrl: imageUrl,
+              messageRoomImageUrl: imageUrl ?? '',
               messageRoomName: _groupName.value,
               notificationType: NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM,
-              participantId: info.id,
+              participantId: info.id ?? '',
               context: context);
         }
       });
@@ -93,10 +91,10 @@ class EditGroupInfoBloc {
       _currentMembers.value.forEach((element) async {
         if (!participantsIds.contains(element)) {
           await MessageRoomManager.addRemoveParticipant(
-              communityId: creator.currentCommunity,
-              timebankId: creator.currentTimebank,
+              communityId: creator.currentCommunity ?? '',
+              timebankId: creator.currentTimebank ?? '',
               creatorDetails: creatorDetails,
-              messageRoomImageUrl: imageUrl,
+              messageRoomImageUrl: imageUrl ?? '',
               messageRoomName: _groupName.value,
               notificationType:
                   NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM,

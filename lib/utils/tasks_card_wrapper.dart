@@ -5,9 +5,9 @@ class TasksCardWrapper extends StatelessWidget {
   final int taskTimestamp;
 
   TasksCardWrapper({
-    Key key,
-    this.taskCard,
-    this.taskTimestamp,
+    Key? key,
+    required this.taskCard,
+    required this.taskTimestamp,
   }) : super(key: key);
 
   @override

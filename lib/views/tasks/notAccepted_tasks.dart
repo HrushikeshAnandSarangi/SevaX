@@ -9,10 +9,10 @@ class NotAcceptedTaskList extends StatefulWidget {
 }
 
 class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
-  List<TasksCardWrapper> pendingItems = [];
+  List<Widget> pendingItems = [];
   //List<UserModel> userList = [];
 
-  Stream<dynamic> requestStream;
+  Stream<dynamic>? requestStream;
 
   @override
   void didChangeDependencies() {
@@ -23,7 +23,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
       loggedinMemberEmail: SevaCore.of(context).loggedInUser.email,
     );
 
-    requestStream.listen(
+    requestStream?.listen(
       (list) {
         if (!mounted) return;
         pendingItems = PendingTasks.classifyPendingTasks(

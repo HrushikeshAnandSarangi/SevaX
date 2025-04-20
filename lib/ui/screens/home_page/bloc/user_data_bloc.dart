@@ -31,18 +31,21 @@ class UserDataBloc extends BlocBase {
     return CollectionRef.users.doc(email).snapshots();
   }
 
-  void getData({String email, String communityId}) {
+  void getData({required String email, required String communityId}) {
     if (!_user.isClosed && !_community.isClosed)
       CombineLatestStream.combine2(
         CollectionRef.users.doc(email).snapshots(),
         CollectionRef.communities.doc(communityId).snapshots(),
-        (u, c) => HomeRouterModel(user: u, community: c),
+        (u, c) => HomeRouterModel(
+            user: u as DocumentSnapshot, community: c as DocumentSnapshot),
       ).listen((HomeRouterModel model) {
         if (!_user.isClosed) {
-          _user.add(UserModel.fromMap(model.user.data(), 'user_data_bloc'));
+          _user.add(UserModel.fromMap(
+              model.user.data() as Map<String, dynamic>, 'user_data_bloc'));
         }
         if (!_community.isClosed) {
-          _community.add(CommunityModel(model.community.data()));
+          _community.add(
+              CommunityModel(model.community.data() as Map<String, dynamic>));
           AppConfig.paymentStatusMap = _community.value.payment;
           //AppConfig.isTestCommunity = _community.value.testCommunity;
           log('test ${AppConfig.isTestCommunity}');
@@ -61,5 +64,5 @@ class HomeRouterModel {
   final DocumentSnapshot user;
   final DocumentSnapshot community;
 
-  HomeRouterModel({this.user, this.community});
+  HomeRouterModel({required this.user, required this.community});
 }

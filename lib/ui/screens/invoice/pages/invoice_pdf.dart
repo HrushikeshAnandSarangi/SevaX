@@ -46,7 +46,11 @@ class InvoicePdf {
 
     double getSubTotal() {
       double subtotal = 0;
-      subtotal = model.details[1].price * model.details[1].units;
+      if (model.details != null && model.details!.length > 1) {
+        final price = model.details![1].price ?? 0.0;
+        final units = model.details![1].units ?? 0.0;
+        subtotal = price * units;
+      }
       return subtotal;
     }
 
@@ -60,7 +64,7 @@ class InvoicePdf {
         crossAxisAlignment: CrossAxisAlignment.start,
         header: (Context context) {
           if (context.pageNumber == 1) {
-            return null;
+            return SizedBox.shrink();
           }
           return Container(
             alignment: Alignment.centerRight,
@@ -187,12 +191,13 @@ class InvoicePdf {
             ),
             headers: ['DETAILS', 'NO.', 'PRICE', 'TOTAL'],
             data: List.generate(
-              model.details.length,
+              model.details?.length ?? 0,
               (index) => [
-                model.details[index].description,
-                model.details[index].units,
-                model.details[index].price,
-                model.details[index].units * model.details[index].price
+                model.details?[index].description ?? '',
+                model.details?[index].units ?? 0,
+                model.details?[index].price ?? 0,
+                (model.details?[index].units ?? 0) *
+                    (model.details?[index].price ?? 0)
               ],
             ),
           ),

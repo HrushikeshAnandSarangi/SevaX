@@ -9,14 +9,14 @@ import '../../flavor_config.dart';
 
 class MembershipManager {
   static Future<bool> updateMembershipStatus({
-    String communityId,
-    String timebankId,
-    String timebankName,
-    String targetUserId,
-    String parentTimebankId,
-    String userEmail,
-    String associatedName,
-    NotificationType notificationType,
+    required String communityId,
+    required String timebankId,
+    required String timebankName,
+    required String targetUserId,
+    required String parentTimebankId,
+    required String userEmail,
+    required String associatedName,
+    required NotificationType notificationType,
   }) async {
     var batch = CollectionRef.batch;
     NotificationsModel notification = new NotificationsModel(
@@ -84,14 +84,14 @@ class MembershipManager {
   }
 
   static Future<bool> updateOrganizerStatus({
-    String communityId,
-    String timebankId,
-    String timebankName,
-    String targetUserId,
-    String parentTimebankId,
-    String userEmail,
-    String associatedName,
-    NotificationType notificationType,
+    required String communityId,
+    required String timebankId,
+    required String timebankName,
+    required String targetUserId,
+    required String parentTimebankId,
+    required String userEmail,
+    required String associatedName,
+    required NotificationType notificationType,
   }) async {
     var batch = CollectionRef.batch;
     NotificationsModel notification = new NotificationsModel(

@@ -34,7 +34,8 @@ class PendingTasks {
         List<OfferModel> individualOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           individualOffers.add(offerModel);
         });
         sink.add(individualOffers);
@@ -49,13 +50,13 @@ class PendingTasks {
         .where('status', isEqualTo: 'ACCEPTED')
         .where('participantDetails.sevauserid', isEqualTo: loggedInmemberId)
         .snapshots()
-        .transform(StreamTransformer<QuerySnapshot,
+        .transform(StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
             List<TimeOfferParticipantsModel>>.fromHandlers(
       handleData: (data, sink) {
         List<TimeOfferParticipantsModel> oneToManyOffers = [];
         data.docs.forEach((element) {
-          var participantModel =
-              TimeOfferParticipantsModel.fromJSON(element.data());
+          var participantModel = TimeOfferParticipantsModel.fromJSON(
+              element.data() as Map<String, dynamic>);
           oneToManyOffers.add(participantModel);
         });
         sink.add(oneToManyOffers);
@@ -64,7 +65,7 @@ class PendingTasks {
   }
 
   static Stream<List<OfferModel>> getLendingOfferAcceptedStream(
-      {String email}) async* {
+      {String? email}) async* {
     yield* CollectionRef.offers
         .where('requestType', isEqualTo: 'LENDING_OFFER')
         .where('lendingOfferDetailsModel.endDate',
@@ -77,7 +78,8 @@ class PendingTasks {
         List<OfferModel> lendingOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           lendingOffers.add(offerModel);
         });
         sink.add(lendingOffers);
@@ -124,8 +126,8 @@ class PendingTasks {
   }
 
   static List<Widget> classifyPendingTasks({
-    @required List<dynamic> pendingSink,
-    @required BuildContext context,
+    required List<dynamic> pendingSink,
+    required BuildContext context,
   }) {
     List<TasksCardWrapper> tasksList = [];
     List<RequestModel> requestList = pendingSink[0];
@@ -133,9 +135,9 @@ class PendingTasks {
       tasksList.add(
         TasksCardWrapper(
           taskCard: ToDoCard(
-            title: model.title,
-            subTitle: model.description,
-            timeInMilliseconds: model.requestStart,
+            title: model.title!,
+            subTitle: model.description!,
+            timeInMilliseconds: model.requestStart!,
             onTap: () async {},
             tag: model.requestType == RequestType.ONE_TO_MANY_REQUEST
                 ? S.of(context).one_to_many_attendee_request
@@ -151,7 +153,7 @@ class PendingTasks {
                                     ? S.of(context).borrow
                                     : '',
           ),
-          taskTimestamp: model.requestStart,
+          taskTimestamp: model.requestStart!,
         ),
       );
     });
@@ -179,13 +181,13 @@ class PendingTasks {
       tasksList.add(
         TasksCardWrapper(
           taskCard: ToDoCard(
-            title: model.title,
-            subTitle: model.description,
-            timeInMilliseconds: model.requestStart,
+            title: model.title!,
+            subTitle: model.description!,
+            timeInMilliseconds: model.requestStart!,
             onTap: () async {},
             tag: S.of(context).one_to_many_request_speaker,
           ),
-          taskTimestamp: model.requestStart,
+          taskTimestamp: model.requestStart!,
         ),
       );
     });
@@ -208,13 +210,13 @@ class PendingTasks {
       tasksList.add(
         TasksCardWrapper(
           taskCard: ToDoCard(
-            title: model.title,
-            subTitle: model.description,
-            timeInMilliseconds: model.requestStart,
+            title: model.title!,
+            subTitle: model.description!,
+            timeInMilliseconds: model.requestStart!,
             onTap: () async {},
             tag: S.of(context).time_request_volunteer,
           ),
-          taskTimestamp: model.requestStart,
+          taskTimestamp: model.requestStart!,
         ),
       );
     });
@@ -224,12 +226,13 @@ class PendingTasks {
     pendingLendingOffers.forEach((element) {
       tasksList.add(TasksCardWrapper(
         taskCard: ToDoCard(
-          onTap: null,
-          title: element.individualOfferDataModel.title,
-          subTitle: element.individualOfferDataModel.description,
+          onTap: () {},
+          title: element.individualOfferDataModel!.title,
+          subTitle: element.individualOfferDataModel!.description,
           tag: S.of(context).lending_offer,
-          timeInMilliseconds: element.lendingOfferDetailsModel.startDate,
+          timeInMilliseconds: element.lendingOfferDetailsModel!.startDate!,
         ),
+        taskTimestamp: element.lendingOfferDetailsModel!.startDate!,
       ));
     });
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
@@ -262,13 +265,13 @@ class PendingTasks {
     await FirestoreManager
         .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
             requestModel: requestModel,
-            userEmail: SevaCore.of(context).loggedInUser.email,
+            userEmail: SevaCore.of(context).loggedInUser.email!,
             fromNotification: false);
   }
 
   static Stream<List<RequestModel>> getPendingCreditRequests({
-    String loggedInUserEmail,
-    String loggedInMemberId,
+    required String loggedInUserEmail,
+    required String loggedInMemberId,
   }) async* {
     var data = CollectionRef.requests
         .where('approvedUsers', arrayContains: loggedInUserEmail)
@@ -280,13 +283,14 @@ class PendingTasks {
         handleData: (snapshot, requestSink) {
           List<RequestModel> requestModelList = [];
           snapshot.docs.forEach((documentSnapshot) {
-            RequestModel model = RequestModel.fromMap(documentSnapshot.data());
+            RequestModel model = RequestModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             model.id = documentSnapshot.id;
 
             model.transactions?.forEach((transaction) {
               if (model.requestType == RequestType.TIME &&
                   transaction.to == loggedInMemberId &&
-                  !transaction.isApproved) requestModelList.add(model);
+                  !transaction.isApproved!) requestModelList.add(model);
             });
           });
           logger.d(requestModelList.length.toString() + "++++++++++++++");

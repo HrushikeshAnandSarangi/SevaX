@@ -11,6 +11,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -31,7 +32,7 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 class GroupPage extends StatefulWidget {
   final String communityId;
 
-  const GroupPage({Key key, this.communityId}) : super(key: key);
+  const GroupPage({Key? key, required this.communityId}) : super(key: key);
   @override
   _GroupPageState createState() => _GroupPageState();
 }
@@ -57,21 +58,22 @@ class _GroupPageState extends State<GroupPage> {
           }
 
           if (snapshot.hasError) {
-            return Text(snapshot.error);
+            return Text(snapshot.error.toString());
           }
 
-          logger.i(snapshot.data.listOfSubTimebanks.length);
+          logger.i(snapshot.data?.listOfSubTimebanks?.length ?? 0);
           if (snapshot.data == null ||
-              snapshot.data.listOfSubTimebanks.isEmpty) {
+              snapshot.data?.listOfSubTimebanks?.isEmpty == true) {
             return EmptyWidget(
               title: S.of(context).no_groups_found,
-              sub_title:S.of(context).try_text+ S.of(context).creating_one,
+              sub_title: S.of(context).try_text + S.of(context).creating_one,
+              titleFontSize: 16,
             );
           }
           List<TimebankModel> myGroups = [];
           List<TimebankModel> otherGroups = [];
 
-          snapshot.data.listOfSubTimebanks.forEach((group) {
+          snapshot.data?.listOfSubTimebanks?.forEach((group) {
             if (!isPrimaryTimebank(parentTimebankId: group.parentTimebankId)) {
               if (group.members.contains(user.sevaUserID)) {
                 myGroups.add(group);
@@ -121,10 +123,7 @@ class _GroupPageState extends State<GroupPage> {
                           comingFrom: ComingFrom.Groups,
                           child: ConfigurationCheck(
                             actionType: 'create_group',
-                            role: memberType(
-                              bloc.primaryTimebankModel(),
-                              user.sevaUserID,
-                            ),
+                            role: MemberType.CREATOR,
                             child: InkWell(
                               child: Container(
                                 margin: EdgeInsets.only(left: 5),
@@ -137,7 +136,7 @@ class _GroupPageState extends State<GroupPage> {
                                 bloc.primaryTimebankModel().protected
                                     ? isAccessAvailable(
                                         bloc.primaryTimebankModel(),
-                                        user.sevaUserID,
+                                        user.sevaUserID ?? '',
                                       )
                                         ? navigateToCreateGroup(
                                             primaryTimebankModel:
@@ -161,8 +160,11 @@ class _GroupPageState extends State<GroupPage> {
                   hide: myGroups.isNotEmpty || otherGroups.isNotEmpty,
                   child: EmptyWidget(
                     title: S.of(context).no_groups_found,
-                    sub_title: S.of(context).try_text + S.of(context).creating_one,
+                    sub_title:
+                        S.of(context).try_text + S.of(context).creating_one,
+                    titleFontSize: 16,
                   ),
+                  secondChild: Container(),
                 ),
                 myGroups.isNotEmpty
                     ? Text(
@@ -184,7 +186,7 @@ class _GroupPageState extends State<GroupPage> {
                         hideCard: timebank.softDelete,
                         hideButton: true,
                         buttonText: S.of(context).joined,
-                        onButtonPressed: null,
+                        onButtonPressed: () {},
                         timebank: timebank,
                         onTap: () {
                           navigateToGroup(timebank);
@@ -197,7 +199,7 @@ class _GroupPageState extends State<GroupPage> {
                     ? [
                         SizedBox(height: 15),
                         Text(
-                        S.of(context).seva_community_groups,
+                          S.of(context).seva_community_groups,
                           style: TextStyle(
                             fontSize: 18,
                           ),
@@ -211,7 +213,8 @@ class _GroupPageState extends State<GroupPage> {
                             var timebank = otherGroups[index];
                             var status = getMembershipStatusStatus(
                               timebankId: timebank.id,
-                              joinRequestModels: snapshot.data.joinRequestsMade,
+                              joinRequestModels:
+                                  snapshot.data?.joinRequestsMade,
                             );
                             return Padding(
                               padding: const EdgeInsets.all(5.0),
@@ -220,20 +223,18 @@ class _GroupPageState extends State<GroupPage> {
                                 buttonText: getLabelFromMembershipStatus(
                                     context: context, membshipStatus: status),
                                 onButtonPressed: status == MembershipStatus.JOIN
-                                    ? () async {
-                                        // if (status == MembershipStatus.JOIN) {
-                                        await CreateJoinRequestManager
+                                    ? () {
+                                        CreateJoinRequestManager
                                             .assembleAndSendRequest(
                                           subTimebankId: timebank.id,
                                           subTimebankLabel: timebank.name,
-                                          userIdForNewMember: user.sevaUserID,
+                                          userIdForNewMember: user.sevaUserID!,
                                           reasonForJoining:
                                               S.of(context).i_want_to_volunteer,
                                           communityId: timebank.communityId,
                                         );
-                                        // }
                                       }
-                                    : null,
+                                    : () {},
                                 timebank: timebank,
                                 onTap: () {
                                   navigateToGroup(timebank);
@@ -253,11 +254,11 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   void navigateToCreateGroup({
-    TimebankModel primaryTimebankModel,
+    required TimebankModel primaryTimebankModel,
   }) {
     if (isPrimaryTimebank(parentTimebankId: primaryTimebankModel.id) &&
         !isAccessAvailable(primaryTimebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+            SevaCore.of(context).loggedInUser.sevaUserID ?? '')) {
       showAdminAccessMessage(context: context);
     } else {
       createEditCommunityBloc
@@ -266,12 +267,12 @@ class _GroupPageState extends State<GroupPage> {
         context,
         MaterialPageRoute(
           builder: (context) => TimebankCreate(
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-            communityCreatorId:
-                Provider.of<HomePageBaseBloc>(context, listen: false)
-                    .communtiyModel(
-                        SevaCore.of(context).loggedInUser.currentCommunity)
-                    .created_by,
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank ?? '',
+            communityCreatorId: Provider.of<HomePageBaseBloc>(context,
+                    listen: false)
+                .communtiyModel(
+                    SevaCore.of(context).loggedInUser.currentCommunity ?? '')
+                .created_by,
           ),
         ),
       );
@@ -321,7 +322,7 @@ class _GroupPageState extends State<GroupPage> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               child: Text(S.of(context).close),
               textColor: Colors.white,
               onPressed: () {
@@ -342,11 +343,11 @@ class _GroupCard extends StatelessWidget {
   final String buttonText;
   final bool hideButton;
   const _GroupCard({
-    Key key,
-    @required this.timebank,
-    this.onTap,
-    @required this.onButtonPressed,
-    @required this.buttonText,
+    Key? key,
+    required this.timebank,
+    required this.onTap,
+    required this.onButtonPressed,
+    required this.buttonText,
     this.hideButton = false,
     this.hideCard = false,
   }) : super(key: key);
@@ -378,13 +379,22 @@ class _GroupCard extends StatelessWidget {
                   child: CustomElevatedButton(
                     child: Text(buttonText),
                     onPressed: onButtonPressed,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    elevation: 2.0,
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
+                  secondChild: Container(),
                 ),
               ],
             ),
           ),
         ),
       ),
+      secondChild: Container(),
     );
   }
 }
@@ -392,7 +402,7 @@ class _GroupCard extends StatelessWidget {
 enum MembershipStatus { JOINED, REQUESTED, REJECTED, JOIN }
 
 MembershipStatus getMembershipStatusStatus(
-    {List<JoinRequestModel> joinRequestModels, String timebankId}) {
+    {List<JoinRequestModel>? joinRequestModels, required String timebankId}) {
   if (joinRequestModels == null) return MembershipStatus.JOIN;
 
   var joinRequestModel;
@@ -421,8 +431,8 @@ MembershipStatus getMembershipStatusStatus(
 }
 
 String getLabelFromMembershipStatus({
-  MembershipStatus membshipStatus,
-  BuildContext context,
+  MembershipStatus? membshipStatus,
+  required BuildContext context,
 }) {
   switch (membshipStatus) {
     case MembershipStatus.JOINED:
@@ -443,11 +453,11 @@ String getLabelFromMembershipStatus({
 
 class CreateJoinRequestManager {
   static Future assembleAndSendRequest({
-    @required String userIdForNewMember,
-    @required String subTimebankLabel,
-    @required String subTimebankId,
-    @required String communityId,
-    @required String reasonForJoining,
+    required String userIdForNewMember,
+    required String subTimebankLabel,
+    required String subTimebankId,
+    required String communityId,
+    required String reasonForJoining,
   }) async {
     var joinRequestModel = _assembleJoinRequestModel(
       userIdForNewMember: userIdForNewMember,
@@ -472,30 +482,30 @@ class CreateJoinRequestManager {
   }
 
   static WriteBatch createAndSendJoinJoinRequest({
-    String subtimebankId,
-    NotificationsModel notification,
-    JoinRequestModel joinRequestModel,
+    String? subtimebankId,
+    NotificationsModel? notification,
+    JoinRequestModel? joinRequestModel,
   }) {
     WriteBatch batchWrite = CollectionRef.batch;
     var timebankNotificationReference = CollectionRef.timebank
         .doc(subtimebankId)
         .collection("notifications")
-        .doc(notification.id);
+        .doc(notification!.id);
     batchWrite.set(timebankNotificationReference, notification.toMap());
 
-    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel.id),
+    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel!.id),
         joinRequestModel.toMap());
     return batchWrite;
   }
 
   static JoinRequestModel _assembleJoinRequestModel({
-    String userIdForNewMember,
-    String subTimebankLabel,
-    String subtimebankId,
-    @required String reasonForJoining,
+    String? userIdForNewMember,
+    String? subTimebankLabel,
+    String? subtimebankId,
+    required String reasonForJoining,
   }) {
     return JoinRequestModel(
-      timebankTitle: subTimebankLabel,
+      timebankTitle: subTimebankLabel ?? '',
       accepted: false,
       entityId: subtimebankId,
       entityType: EntityType.Timebank,
@@ -509,15 +519,15 @@ class CreateJoinRequestManager {
   }
 
   static NotificationsModel _assembleNotificationForJoinRequest({
-    String userIdForNewMember,
-    JoinRequestModel joinRequestModel,
-    String subTimebankId,
-    String communityId,
-    String creatorId,
+    String? userIdForNewMember,
+    JoinRequestModel? joinRequestModel,
+    String? subTimebankId,
+    String? communityId,
+    String? creatorId,
   }) {
     return NotificationsModel(
       timebankId: subTimebankId,
-      id: joinRequestModel.notificationId,
+      id: joinRequestModel!.notificationId,
       targetUserId: creatorId,
       isRead: false,
       isTimebankNotification: true,

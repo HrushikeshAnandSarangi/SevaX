@@ -7,7 +7,7 @@ class ExitWithConfirmation extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   final Map<int, String> fieldValues = {};
 
-  ExitWithConfirmation({Key key, this.child}) : super(key: key);
+  ExitWithConfirmation({Key? key, required this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -25,52 +25,51 @@ class ExitWithConfirmation extends StatelessWidget {
   }
 
   Future<bool> showExitDialog(BuildContext context) {
-    return showDialog(
-          context: context,
-          builder: (_context) => AlertDialog(
-            title: Text(
-              S.of(context).cancel_editing_confirmation,
+    return showDialog<bool>(
+      context: context,
+      builder: (_context) => AlertDialog(
+        title: Text(
+          S.of(context).cancel_editing_confirmation,
+        ),
+        actions: [
+          CustomTextButton(
+            shape: StadiumBorder(),
+            color: Colors.grey,
+            onPressed: () {
+              Navigator.of(_context).pop(false);
+            },
+            child: Text(
+              S.of(context).no,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'Europa',
+              ),
             ),
-            actions: [
-              CustomTextButton(
-                shape: StadiumBorder(),
-                color: Colors.grey,
-                onPressed: () {
-                  Navigator.of(_context).pop(false);
-                },
-                child: Text(
-                  S.of(context).no,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Europa',
-                  ),
-                ),
-              ),
-              CustomTextButton(
-                shape: StadiumBorder(),
-                color: Theme.of(context).accentColor,
-                onPressed: () {
-                  Navigator.of(_context).pop(true);
-                },
-                child: Text(
-                  S.of(context).yes,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Europa',
-                  ),
-                ),
-              ),
-            ],
           ),
-        ) ??
-        false;
+          CustomTextButton(
+            shape: StadiumBorder(),
+            color: Theme.of(context).colorScheme.secondary,
+            onPressed: () {
+              Navigator.of(_context).pop(true);
+            },
+            child: Text(
+              S.of(context).yes,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'Europa',
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
   static ExitWithConfirmation of(BuildContext context) {
     final ExitWithConfirmation provider =
-        context.findAncestorWidgetOfExactType();
+        context.findAncestorWidgetOfExactType<ExitWithConfirmation>()!;
     return provider;
   }
 }

@@ -19,26 +19,26 @@ import 'search_timebank_manager_page.dart';
 enum MEMBER_SELECTION_MODE { SHARE_FEED, NEW_CHAT }
 
 class SelectMembersFromTimebank extends StatefulWidget {
-  String timebankId;
-  HashMap<String, UserModel> userSelected;
+  late String timebankId;
+  late HashMap<String, UserModel> userSelected;
   HashMap<String, UserModel> listOfMembers = HashMap();
 
   bool isFromShare = false;
-  NewsModel newsModel;
-  MEMBER_SELECTION_MODE selectionMode;
+  late NewsModel newsModel;
+  late MEMBER_SELECTION_MODE selectionMode;
 
   SelectMembersFromTimebank({
-    String timebankId,
-    HashMap<String, UserModel> userSelected,
-    bool isFromShare,
-    NewsModel newsModel,
-    MEMBER_SELECTION_MODE selectionMode,
+    String? timebankId,
+    HashMap<String, UserModel>? userSelected,
+    bool? isFromShare,
+    NewsModel? newsModel,
+    MEMBER_SELECTION_MODE? selectionMode,
   }) {
-    this.timebankId = timebankId;
-    this.userSelected = userSelected;
-    this.isFromShare = isFromShare;
-    this.newsModel = newsModel;
-    this.selectionMode = selectionMode;
+    this.timebankId = timebankId!;
+    this.userSelected = userSelected!;
+    this.isFromShare = isFromShare!;
+    this.newsModel = newsModel!;
+    this.selectionMode = selectionMode!;
   }
 
   @override
@@ -48,7 +48,7 @@ class SelectMembersFromTimebank extends StatefulWidget {
 }
 
 class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
-  ScrollController _controller;
+  ScrollController? _controller;
   var _indexSoFar = 0;
   var _pageIndex = 1;
   var _showMoreItems = true;
@@ -67,19 +67,19 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   void initState() {
     _showMoreItems = true;
     _controller = ScrollController();
-    _controller.addListener(_scrollListener);
+    _controller!.addListener(_scrollListener);
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_scrollListener);
+    _controller!.removeListener(_scrollListener);
     super.dispose();
   }
 
   void _scrollListener() {
-    if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange &&
+    if (_controller!.offset >= _controller!.position.maxScrollExtent &&
+        !_controller!.position.outOfRange &&
         !_isLoading) {
       if (!_lastReached) {
         loadNextBatchItems().then((onValue) {
@@ -133,18 +133,18 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     return finalWidget;
   }
 
-  TimebankModel timebankModel;
-  Widget getList({String timebankId}) {
+  TimebankModel? timebankModel;
+  Widget getList({String? timebankId}) {
     if (timebankModel != null) {
       return getContent(
         context,
-        timebankModel,
+        timebankModel!,
       );
     }
 
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
-        timebankId: timebankId,
+        timebankId: timebankId!,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -156,7 +156,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
         timebankModel = snapshot.data;
         return getContent(
           context,
-          timebankModel,
+          timebankModel!,
         );
       },
     );
@@ -204,7 +204,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Future<Widget> updateModelIndex(int index) async {
-    UserModel user = indexToModelMap[index];
+    UserModel user = indexToModelMap[index]!;
 
     return getUserWidget(user, context);
   }
@@ -226,7 +226,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
       FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex,
-              SevaCore.of(context).loggedInUser.email)
+              SevaCore.of(context).loggedInUser.email!)
           .then((onValue) {
         if (onValue == null) {
           checkAndStopLoading();
@@ -242,7 +242,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
               widget.listOfMembers.containsKey(member)) {
-            return getUserWidget(widget.listOfMembers[member], context);
+            return getUserWidget(widget.listOfMembers[member]!, context);
           }
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -251,8 +251,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return shimmerWidget;
               }
-              UserModel user = snapshot.data;
-              widget.listOfMembers[user.sevaUserID] = user;
+              UserModel user = snapshot.data!;
+              widget.listOfMembers[user.sevaUserID!] = user;
               return getUserWidget(user, context);
             },
           );
@@ -311,19 +311,20 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               createAndOpenChat(
                 context: context,
                 timebankId: widget.timebankId,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity!,
                 sender: sender,
                 reciever: reciever,
                 isFromRejectCompletion: false,
+                feedId: '',
+                showToCommunities: <String>[],
+                entityId: '',
                 onChatCreate: () {
-                  Navigator.of(dialogLoadingContext).pop();
+                  Navigator.of(dialogLoadingContext!).pop();
                   Navigator.of(context).pop();
                 },
               );
             }
-            return user.email == SevaCore.of(context).loggedInUser.email
-                ? null
-                : () {};
+            return;
 
             break;
 
@@ -340,7 +341,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               );
 
               prefix.ParticipantInfo reciever = prefix.ParticipantInfo(
-                id: user.sevaUserID,
+                id: user.sevaUserID!,
                 name: user.fullname,
                 photoUrl: user.photoURL,
                 type: prefix.ChatType.TYPE_PERSONAL,
@@ -349,21 +350,21 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               createAndOpenChat(
                 context: context,
                 timebankId: widget.timebankId,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity ?? '',
                 sender: sender,
                 reciever: reciever,
                 isFromRejectCompletion: false,
                 isFromShare: true,
-                feedId: widget.newsModel.id,
+                feedId: widget.newsModel.id ?? '',
+                showToCommunities: <String>[],
+                entityId: '',
                 onChatCreate: () {
-                  Navigator.of(dialogLoadingContext).pop();
+                  Navigator.of(dialogLoadingContext!).pop();
                   Navigator.of(context).pop();
                 },
               );
             }
-            return user.email == SevaCore.of(context).loggedInUser.email
-                ? null
-                : () {};
+            return;
 
             break;
         }
@@ -371,16 +372,16 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
       child: user.email == SevaCore.of(context).loggedInUser.email
           ? Container()
           : Card(
-              color: isSelected(user.email) ? Colors.green : Colors.white,
+              color: isSelected(user.email!) ? Colors.green : Colors.white,
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundImage:
                       NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
                 title: Text(
-                  user.fullname,
+                  user.fullname!,
                   style: TextStyle(
-                    color: getTextColorForSelectedItem(user.email),
+                    color: getTextColorForSelectedItem(user.email!),
                   ),
                 ),
                 // subtitle: Text(
@@ -394,7 +395,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     );
   }
 
-  BuildContext dialogLoadingContext;
+  BuildContext? dialogLoadingContext;
 
   void showProgressDialog() {
     showDialog(
@@ -405,11 +406,11 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
           return AlertDialog(
             title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -428,13 +429,13 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.subtitle2,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
     );
   }
 
   Widget getDataCard({
-    @required String title,
+    required String title,
   }) {
     return Container(
       child: Column(

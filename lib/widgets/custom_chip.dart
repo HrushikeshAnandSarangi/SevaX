@@ -4,9 +4,10 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class CustomChip extends StatelessWidget {
   final String title;
-  final Function onDelete;
+  final VoidCallback onDelete;
 
-  const CustomChip({Key key, this.title, this.onDelete}) : super(key: key);
+  const CustomChip({Key? key, required this.title, required this.onDelete})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -50,16 +51,17 @@ class CustomChipExploreFilter extends StatelessWidget {
   final bool isHidden;
 
   const CustomChipExploreFilter({
-    Key key,
-    this.isSelected,
-    this.onTap,
-    this.label,
+    Key? key,
+    required this.isSelected,
+    required this.onTap,
+    required this.label,
     this.isHidden = false,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return HideWidget(
       hide: isHidden,
+      secondChild: Container(),
       child: InkWell(
         onTap: onTap,
         child: Chip(
@@ -87,7 +89,7 @@ class CustomChipExploreFilter extends StatelessWidget {
           ),
           side: BorderSide(
             color:
-                isSelected ? Theme.of(context).primaryColor : Colors.grey[300],
+                isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
           ),
           backgroundColor:
               isSelected ? Theme.of(context).primaryColor : Colors.transparent,
@@ -104,16 +106,17 @@ class CustomChipWithTick extends StatelessWidget {
   final bool isHidden;
 
   const CustomChipWithTick({
-    Key key,
-    this.isSelected,
-    this.onTap,
-    this.label,
+    Key? key,
+    required this.isSelected,
+    required this.onTap,
+    required this.label,
     this.isHidden = false,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return HideWidget(
       hide: isHidden,
+      secondChild: Container(),
       child: InkWell(
         onTap: onTap,
         child: Chip(

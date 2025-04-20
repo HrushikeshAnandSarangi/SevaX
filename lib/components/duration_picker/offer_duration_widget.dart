@@ -11,13 +11,13 @@ import 'calendar_picker.dart';
 
 class OfferDurationWidget extends StatefulWidget {
   final String title;
-  final DateTime startTime;
-  final DateTime endTime;
-  final bool hideEndDate;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final bool? hideEndDate;
 
   OfferDurationWidget({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.endTime,
     this.startTime,
     this.hideEndDate = false,
@@ -28,8 +28,8 @@ class OfferDurationWidget extends StatefulWidget {
 }
 
 class OfferDurationWidgetState extends State<OfferDurationWidget> {
-  DateTime startTime;
-  DateTime endTime;
+  DateTime? startTime;
+  DateTime? endTime;
   static int starttimestamp = DateTime.now().millisecondsSinceEpoch;
   static int endtimestamp = DateTime.now().millisecondsSinceEpoch;
   final GlobalKey<CalendarPickerState> _calendarState = GlobalKey();
@@ -56,8 +56,9 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
                 startWidget,
                 SizedBox(width: 16),
                 HideWidget(
-                  hide: widget.hideEndDate,
+                  hide: widget.hideEndDate ?? false,
                   child: endWidget,
+                  secondChild: const SizedBox.shrink(),
                 ),
               ],
             ),
@@ -87,9 +88,9 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       starttimestamp = 0;
     // throw ("START_DATE_NOT_DEFINED");
     else
-      starttimestamp = startTime.millisecondsSinceEpoch;
+      starttimestamp = startTime?.millisecondsSinceEpoch ?? 0;
 
-    return getDateTimeWidget(startTime, DurationType.START);
+    return getDateTimeWidget(startTime ?? DateTime.now(), DurationType.START);
   }
 
   Widget get endWidget {
@@ -99,8 +100,8 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       // endtimestamp = endTime.add(  Duration(days: 1)).millisecondsSinceEpoch;
       // throw ("END_DATE_NOT_DEFINED");
     } else
-      endtimestamp = endTime.millisecondsSinceEpoch;
-    return getDateTimeWidget(endTime, DurationType.END);
+      endtimestamp = endTime?.millisecondsSinceEpoch ?? 0;
+    return getDateTimeWidget(endTime ?? DateTime.now(), DurationType.END);
   }
 
   Widget getDateTimeWidget(DateTime dateTime, DurationType type) {
@@ -120,19 +121,22 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
           Navigator.of(context)
               .push(MaterialPageRoute<List<DateTime>>(
             builder: (context) => CalendarPicker(
-                hideEndDate: widget.hideEndDate,
+                hideEndDate: widget.hideEndDate ?? false,
                 title: widget.title.replaceAll('*', ''),
                 key: _calendarState,
                 startDate: startTime ?? DateTime.now(),
                 endDate: endTime ?? DateTime.now(),
-                selectedstartorend: type == DurationType.START ? 'start' : 'end'),
+                selectedstartorend:
+                    type == DurationType.START ? 'start' : 'end'),
             // Open calendar
           ))
-              .then((List<DateTime> dateList) {
-            setState(() {
-              startTime = dateList?.elementAt(0);
-              endTime = dateList?.elementAt(1);
-            });
+              .then((List<DateTime>? dateList) {
+            if (dateList != null) {
+              setState(() {
+                startTime = dateList.elementAt(0);
+                endTime = dateList.elementAt(1);
+              });
+            }
           });
         },
         child: Row(
@@ -168,7 +172,8 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       return '${type == DurationType.START ? S.of(context).start : S.of(context).end}\n${S.of(context).date_time}';
     }
     String dateTimeString = '';
-    DateFormat format = DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag());
+    DateFormat format =
+        DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag());
     dateTimeString = format.format(dateTime);
     return dateTimeString;
   }

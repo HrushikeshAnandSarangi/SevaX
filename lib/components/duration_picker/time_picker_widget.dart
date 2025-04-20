@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 class TimePicker extends StatefulWidget {
-  final int hour;
-  final int minute;
-  final String ispm;
+  final int? hour;
+  final int? minute;
+  final String? ispm;
   final void Function(int hour, int minute, String ispm) onTimeSelected;
 
-  TimePicker({this.onTimeSelected, this.hour, this.minute, this.ispm});
+  TimePicker({required this.onTimeSelected, this.hour, this.minute, this.ispm});
 
   @override
   TimePickerState createState() => TimePickerState();
@@ -24,9 +24,9 @@ class TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    hour = widget.hour > 0 ? widget.hour : 0;
-    minute = widget.minute > 0 ? widget.minute : 0;
-    ispm = widget.ispm;
+    hour = (widget.hour ?? 0) > 0 ? widget.hour ?? 0 : 0;
+    minute = (widget.minute ?? 0) > 0 ? widget.minute ?? 0 : 0;
+    ispm = widget.ispm ?? 'AM';
     return Container(
       height: 130,
       child: Row(
@@ -130,8 +130,8 @@ class DataScrollPicker extends StatefulWidget {
 }
 
 class _DataScrollPickerState extends State<DataScrollPicker> {
-  PageController _pageController;
-  int _selectedIndex;
+  late PageController _pageController;
+  late int _selectedIndex;
 
   @override
   void initState() {

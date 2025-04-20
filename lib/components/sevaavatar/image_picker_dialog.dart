@@ -8,44 +8,44 @@ import 'package:sevaexchange/views/image_url_view.dart';
 import './image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
-  ImagePickerHandler _listener;
-  AnimationController _controller;
-  BuildContext context;
-  bool isCover;
+  ImagePickerHandler? _listener;
+  AnimationController? _controller;
+  BuildContext? context;
+  bool? isCover;
 
   ImagePickerDialog(this._listener, this._controller, this.isCover);
 
-  Animation<double> _drawerContentsOpacity;
-  Animation<Offset> _drawerDetailsPosition;
+  Animation<double>? _drawerContentsOpacity;
+  Animation<Offset>? _drawerDetailsPosition;
 
   void initState() {
     _drawerContentsOpacity = CurvedAnimation(
-      parent: ReverseAnimation(_controller),
+      parent: ReverseAnimation(_controller!),
       curve: Curves.fastOutSlowIn,
     );
     _drawerDetailsPosition = Tween<Offset>(
       begin: const Offset(0.0, 1.0),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-      parent: _controller,
+      parent: _controller!,
       curve: Curves.fastOutSlowIn,
     ));
   }
 
-  void getImage(BuildContext context, {bool isOnboarding}) {
+  void getImage(BuildContext context, {bool? isOnboarding}) {
     this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
         _drawerContentsOpacity == null) {
       return;
     }
-    _controller.forward();
+    _controller?.forward();
     showDialog(
       context: context,
       builder: (context) => SlideTransition(
-        position: _drawerDetailsPosition,
+        position: _drawerDetailsPosition!,
         child: FadeTransition(
-          opacity: ReverseAnimation(_drawerContentsOpacity),
+          opacity: ReverseAnimation(_drawerContentsOpacity!),
           child: this,
         ),
       ),
@@ -53,11 +53,11 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   void refresh(BuildContext context) {
-    _listener.addImageUrl(context);
+    _listener?.addImageUrl(context);
   }
 
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
   }
 
   Future<Timer> startTime(BuildContext context) async {
@@ -78,7 +78,7 @@ class ImagePickerDialog extends StatelessWidget {
   // }
 
   void dismissDialog(BuildContext context) {
-    _controller.reverse();
+    _controller?.reverse();
     startTime(context);
   }
 
@@ -97,19 +97,19 @@ class ImagePickerDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () => _listener.openCamera(_context),
+                  onTap: () => _listener?.openCamera(_context),
                   child: roundedButton(
-                      S.of(context).camera,
+                      S.of(_context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                     Theme.of(context).primaryColor,
+                      Theme.of(_context).primaryColor,
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
-                  onTap: () => _listener.openGallery(_context),
+                  onTap: () => _listener?.openGallery(_context),
                   child: roundedButton(
-                      S.of(context).gallery,
+                      S.of(_context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                     Theme.of(context).primaryColor,
+                      Theme.of(_context).primaryColor,
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
@@ -121,10 +121,10 @@ class ImagePickerDialog extends StatelessWidget {
                           // keepOnBackPress: false,
                           // showBackBtn: false,
                           // isFromHome: false,
-                          themeColor: Theme.of(context).primaryColor,
+                          themeColor: Theme.of(_context).primaryColor,
                           onChanged: (image) async {
-                            await _listener.addStockImageUrl(
-                                _context, image, isCover);
+                            await _listener?.addStockImageUrl(
+                                _context, image, isCover ?? false);
                             Navigator.pop(mContext);
                           },
                         ),
@@ -132,14 +132,14 @@ class ImagePickerDialog extends StatelessWidget {
                     )
                         .then((value) {
                       if (globals.isFromOnBoarding) {
-                        dismissDialog(context);
+                        dismissDialog(_context);
                       }
                     });
                   },
                   child: roundedButton(
-                      S.of(context).stock_images,
+                      S.of(_context).stock_images,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                     Theme.of(context).primaryColor,
+                      Theme.of(_context).primaryColor,
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
@@ -147,8 +147,13 @@ class ImagePickerDialog extends StatelessWidget {
                     Navigator.of(_context).push(
                       MaterialPageRoute(
                         builder: (mContext) {
-                          return ImageUrlView(isCover: isCover,
-                            themeColor: Theme.of(context).primaryColor,
+                          return ImageUrlView(
+                            isCover: isCover ?? false,
+                            themeColor: Theme.of(_context).primaryColor,
+                            onLinkCreated: (String url) async {
+                              await _listener?.addStockImageUrl(
+                                  _context, url, isCover ?? false);
+                            },
                           );
                         },
                       ),
@@ -158,9 +163,9 @@ class ImagePickerDialog extends StatelessWidget {
                     });
                   },
                   child: roundedButton(
-                    S.of(context).add_image_url,
+                    S.of(_context).add_image_url,
                     EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                   Theme.of(context).primaryColor,
+                    Theme.of(_context).primaryColor,
                     const Color(0xFFFFFFFF),
                   ),
                 ),
@@ -170,9 +175,9 @@ class ImagePickerDialog extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        S.of(context).cancel,
+                        S.of(_context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                       Theme.of(context).primaryColor,
+                        Theme.of(_context).primaryColor,
                         const Color(0xFFFFFFFF)),
                   ),
                 ),

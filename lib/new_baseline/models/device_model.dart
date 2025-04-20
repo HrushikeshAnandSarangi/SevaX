@@ -1,16 +1,16 @@
 import 'package:sevaexchange/models/models.dart';
 
 class DeviceModel extends DataModel {
-  String platform;
-  String osName;
-  String version;
-  String model;
+  String? platform;
+  String? osName;
+  String? version;
+  String? model;
 
   DeviceModel({
-    this.osName,
-    this.platform,
-    this.version,
-    this.model,
+    required this.osName,
+    required this.platform,
+    required this.version,
+    required this.model,
   });
 
   DeviceModel.fromMap(Map<String, dynamic> map) {
@@ -34,18 +34,18 @@ class DeviceModel extends DataModel {
   Map<String, dynamic> toMap() {
     // TODO: implement toMap
     Map<String, dynamic> object = {};
-    if (this.platform != null && this.platform.isNotEmpty) {
+    if (this.platform != null && this.platform?.isNotEmpty == true) {
       object['platform'] = this.platform;
     }
-    if (this.osName != null && this.osName.isNotEmpty) {
+    if (this.osName != null && this.osName?.isNotEmpty == true) {
       object['osName'] = this.osName;
     }
 
-    if (this.version != null && this.version.isNotEmpty) {
+    if (this.version != null && this.version?.isNotEmpty == true) {
       object['version'] = this.version;
     }
 
-    if (this.model != null && this.model.isNotEmpty) {
+    if (this.model != null && this.model?.isNotEmpty == true) {
       object['model'] = this.model;
     }
     return object;

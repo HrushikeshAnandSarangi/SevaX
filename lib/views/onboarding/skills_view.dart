@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -18,25 +18,26 @@ import '../spell_check_manager.dart';
 import 'interests_view.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
-typedef MapListCallback = void Function(Map<String, dynamic> _selectedSkillsMap);
+typedef MapListCallback = void Function(
+    Map<String, dynamic> _selectedSkillsMap);
 
 class SkillViewNew extends StatefulWidget {
   final bool automaticallyImplyLeading;
-  final UserModel userModel;
+  final UserModel? userModel;
   final VoidCallback onSkipped;
   final StringListCallback onSelectedSkills;
-  final bool isFromProfile;
+  final bool? isFromProfile;
   final String languageCode;
-  final bool isFromRequests;
-  final MapListCallback onSelectedSkillsMap;
-  final Map<String, dynamic> selectedSkills;
+  final bool? isFromRequests;
+  final MapListCallback? onSelectedSkillsMap;
+  final Map<String, dynamic>? selectedSkills;
   SkillViewNew({
-    @required this.onSelectedSkills,
-    @required this.onSkipped,
+    required this.onSelectedSkills,
+    required this.onSkipped,
     this.userModel,
     this.automaticallyImplyLeading = true,
     this.isFromProfile,
-    @required this.languageCode,
+    required this.languageCode,
     this.onSelectedSkillsMap,
     this.selectedSkills,
     this.isFromRequests = false,
@@ -46,38 +47,45 @@ class SkillViewNew extends StatefulWidget {
 }
 
 class _SkillViewNewState extends State<SkillViewNew> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController<SuggestedItem> controller =
+      SuggestionsController<SuggestedItem>();
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   Map<String, dynamic> skills = {};
   Map<String, dynamic> _selectedSkills = {};
   bool isDataLoaded = false;
-  bool hasPellError;
+  bool hasPellError = false;
 
   @override
   void initState() {
     hasPellError = false;
-    CollectionRef.skills.orderBy('name').get().then((QuerySnapshot querySnapshot) {
+    CollectionRef.skills
+        .orderBy('name')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.id);
-        if (data.data().containsKey(widget.languageCode)) {
+        if ((data.data() as Map<String, dynamic>?)
+                ?.containsKey(widget.languageCode) ??
+            false) {
           skills[data.id] = data[widget.languageCode];
         }
 
         // ids[data['name']] = data.id;
       });
-      if (!widget.isFromRequests) {
-        if (widget.userModel.skills != null && widget.userModel.skills.length > 0) {
-          widget.userModel.skills.forEach(
+      if (!widget.isFromRequests!) {
+        if (widget.userModel!.skills != null &&
+            widget.userModel!.skills!.length > 0) {
+          widget.userModel!.skills!.forEach(
             (id) {
               _selectedSkills[id] = skills[id];
             },
           );
         }
       } else {
-        _selectedSkills = widget.selectedSkills;
+        _selectedSkills = widget.selectedSkills!;
       }
 
       setState(() {
@@ -119,15 +127,21 @@ class _SkillViewNewState extends State<SkillViewNew> {
             ),
             SizedBox(height: 20),
             TypeAheadField<SuggestedItem>(
-              suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              suggestionsController: controller,
+              decorationBuilder: (context, child) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: child,
+                );
+              },
               errorBuilder: (context, err) {
                 return Text(S.of(context).error_was_thrown);
               },
               debounceDuration: Duration(milliseconds: 600),
               hideOnError: true,
-              textFieldConfiguration: TextFieldConfiguration(
+              builder: (context, controller, focusNode) => TextField(
                 style: hasPellError
                     ? TextStyle(
                         decoration: TextDecoration.underline,
@@ -136,7 +150,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                         decorationThickness: 3,
                       )
                     : TextStyle(),
-                controller: _textEditingController,
+                controller: controller,
+                focusNode: focusNode,
                 decoration: InputDecoration(
                   hintText: S.of(context).search,
                   filled: true,
@@ -146,7 +161,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     borderRadius: BorderRadius.circular(25.7),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(25.7)),
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7)),
                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                   prefixIcon: Icon(
                     Icons.search,
@@ -160,12 +176,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     ),
                     onTap: () {
                       _textEditingController.clear();
-                      controller.close();
+                      controller.clear();
                     },
                   ),
                 ),
               ),
-              suggestionsBoxController: controller,
               suggestionsCallback: (pattern) async {
                 List<SuggestedItem> dataCopy = [];
                 skills.forEach((k, v) => dataCopy.add(SuggestedItem()
@@ -177,17 +192,20 @@ class _SkillViewNewState extends State<SkillViewNew> {
                       ),
                 );
 
-                if (pattern.length > 2 && !dataCopy.contains(SuggestedItem()..suggesttionTitle = pattern)) {
+                if (pattern.length > 2 &&
+                    !dataCopy.contains(
+                        SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
-                      await SpellCheckManager.evaluateSpellingFor(pattern, language: widget.languageCode);
-                  if (spellCheckResult.hasErros) {
+                      await SpellCheckManager.evaluateSpellingFor(pattern,
+                          language: widget.languageCode);
+                  if (spellCheckResult.hasErros!) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
                       ..suggesttionTitle = pattern);
                   } else if (spellCheckResult.correctSpelling != pattern) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.SUGGESTED
-                      ..suggesttionTitle = spellCheckResult.correctSpelling);
+                      ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -215,7 +233,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
 
                   case SuggestionMode.SUGGESTED:
-                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.USER_DEFINED,
@@ -230,7 +249,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
 
                   case SuggestionMode.USER_DEFINED:
-                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.USER_DEFINED,
@@ -249,15 +269,16 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     return Container();
                 }
               },
-              noItemsFoundBuilder: (context) {
+              emptyBuilder: (context) {
                 return searchUserDefinedEntity(
                   keyword: _textEditingController.text,
                   language: widget.languageCode,
                   showLoader: false,
                 );
               },
-              onSuggestionSelected: (SuggestedItem suggestion) {
-                if (ProfanityDetector().isProfaneString(suggestion.suggesttionTitle)) {
+              onSelected: (SuggestedItem suggestion) {
+                if (ProfanityDetector()
+                    .isProfaneString(suggestion.suggesttionTitle)) {
                   return;
                 }
 
@@ -265,7 +286,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   case SuggestionMode.SUGGESTED:
                     var skillId = Uuid().generateV4();
                     SkillsAndInterestBloc.addSkillToDb(
-                        skillId: skillId, skillLanguage: widget.languageCode, skillTitle: suggestion.suggesttionTitle);
+                        skillId: skillId,
+                        skillLanguage: widget.languageCode,
+                        skillTitle: suggestion.suggesttionTitle);
                     skills[skillId] = suggestion.suggesttionTitle;
                     break;
 
@@ -284,16 +307,18 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 }
 
                 _textEditingController.clear();
-                if (!_selectedSkills.containsValue(suggestion.suggesttionTitle)) {
+                if (!_selectedSkills
+                    .containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
-                  String id = skills.keys.firstWhere((k) => skills[k] == suggestion.suggesttionTitle);
+                  String id = skills.keys.firstWhere(
+                      (k) => skills[k] == suggestion.suggesttionTitle);
                   _selectedSkills[id] = suggestion.suggesttionTitle;
                   setState(() {});
                 }
               },
             ),
             SizedBox(height: 20),
-            widget.isFromProfile && !isDataLoaded
+            widget.isFromProfile! && !isDataLoaded
                 ? getLoading
                 : Expanded(
                     child: ListView(
@@ -311,7 +336,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                                     : CustomChip(
                                         title: value,
                                         onDelete: () {
-                                          String id = skills.keys.firstWhere((k) => skills[k] == value);
+                                          String id = skills.keys.firstWhere(
+                                              (k) => skills[k] == value);
                                           _selectedSkills.remove(id);
                                           setState(() {});
                                         },
@@ -327,6 +353,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
             SizedBox(
               width: 134,
               child: CustomElevatedButton(
+                color: Theme.of(context).primaryColor,
+                shape: StadiumBorder(),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                elevation: 2.0,
+                textColor: Colors.white,
                 onPressed: () async {
                   var connResult = await Connectivity().checkConnectivity();
                   if (connResult == ConnectivityResult.none) {
@@ -335,14 +366,15 @@ class _SkillViewNewState extends State<SkillViewNew> {
                         content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
                           label: S.of(context).dismiss,
-                          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                          onPressed: () => ScaffoldMessenger.of(context)
+                              .hideCurrentSnackBar(),
                         ),
                       ),
                     );
                     return;
                   }
-                  if (widget.isFromRequests) {
-                    widget.onSelectedSkillsMap(_selectedSkills);
+                  if (widget.isFromRequests!) {
+                    widget.onSelectedSkillsMap!(_selectedSkills);
                   } else {
                     List<String> selectedID = [];
                     _selectedSkills.forEach((id, _) => selectedID.add(id));
@@ -351,26 +383,26 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   }
                 },
                 child: Text(
-                  widget.isFromRequests
+                  widget.isFromRequests!
                       ? S.of(context).done
-                      : widget.isFromProfile
+                      : widget.isFromProfile!
                           ? S.of(context).update
                           : S.of(context).next,
-                  style: Theme.of(context).primaryTextTheme.button,
+                  style: Theme.of(context).primaryTextTheme.labelLarge,
                 ),
               ),
             ),
             CustomTextButton(
               shape: StadiumBorder(),
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               onPressed: () {
                 widget.onSkipped();
               },
               child: Text(
-                widget.isFromRequests
+                widget.isFromRequests!
                     ? S.of(context).cancel
-                    : AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+                    : AppConfig.prefs!.getBool(AppConfig.skip_skill) == null
                         ? S.of(context).skip
                         : S.of(context).cancel,
                 style: TextStyle(
@@ -387,22 +419,23 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
 //TODO: refactor to one class
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
+        keyword!,
         language: language,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader
+          return showLoader!
               ? getLoading
               : LinearProgressIndicator(
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.5),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     Theme.of(context).primaryColor,
                   ),
@@ -410,7 +443,10 @@ class _SkillViewNewState extends State<SkillViewNew> {
         }
 
         return getSuggestionLayout(
-            suggestion: keyword, suggestionMode: suggestionMode, add: S.of(context).add + ' ', context: context);
+            suggestion: keyword,
+            suggestionMode: suggestionMode!,
+            add: S.of(context).add + ' ',
+            context: context);
       },
     );
   }
@@ -424,10 +460,10 @@ class _SkillViewNewState extends State<SkillViewNew> {
 }
 
 Padding getSuggestionLayout({
-  String suggestion,
-  SuggestionMode suggestionMode,
-  String add,
-  BuildContext context,
+  String? suggestion,
+  SuggestionMode? suggestionMode,
+  String? add,
+  BuildContext? context,
 }) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
@@ -471,7 +507,9 @@ Padding getSuggestionLayout({
                     ),
                   ),
                   Text(
-                    suggestionMode == SuggestionMode.SUGGESTED ? S.of(context).suggested : S.of(context).you_entered,
+                    suggestionMode == SuggestionMode.SUGGESTED
+                        ? S.of(context!).suggested
+                        : S.of(context!).you_entered,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,

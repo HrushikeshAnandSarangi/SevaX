@@ -16,29 +16,29 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class HandleModifiedAcknowlegementForDonationBuilder {
-  String timeBankId;
-  String notificationId;
-  RequestMode requestMode;
-  String userId;
-  String communityId;
-  BuildContext parentContext;
+  late String timeBankId;
+  late String notificationId;
+  late RequestMode requestMode;
+  late String userId;
+  late String communityId;
+  late BuildContext parentContext;
 
-  String entityTitle;
-  String entityImageURL;
-  String requestTitle;
-  String donationAmount;
-  String creatorSevaUserId;
-  String description;
+  late String entityTitle;
+  late String entityImageURL;
+  late String requestTitle;
+  late String donationAmount;
+  late String creatorSevaUserId;
+  late String description;
 
-  String donationId;
-  String donorEmail;
+  late String donationId;
+  late String donorEmail;
 }
 
 class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
   final HandleModifiedAcknowlegementForDonationBuilder builder;
 
   HandleModifiedAcknowlegementForDonation({
-    this.builder,
+    required this.builder,
   });
 
   @override
@@ -109,6 +109,13 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                     width: double.infinity,
                     child: CustomElevatedButton(
                       color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).acknowledge,
                         style: TextStyle(
@@ -119,31 +126,30 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                       onPressed: () async {
                         //update status of donation
                         await HandlerForModificationManager
-                                .acknowledeModificationInDonation(
+                            .acknowledeModificationInDonation(
                           donationId: builder.donationId,
                           donorEmail: builder.donorEmail,
                           notificationId: builder.notificationId,
-                        )
-                            .then(
-                              HandlerForModificationManager.handleSuuccess,
-                            )
-                            .catchError(
-                              HandlerForModificationManager.handleFailure,
-                            );
+                        ).then((_) {
+                          HandlerForModificationManager.handleSuuccess();
+                        }).catchError((e) {
+                          HandlerForModificationManager.handleFailure(e);
+                        });
                         Navigator.of(context).pop();
                       },
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
-                  ),
-                  Container(
-                    width: double.infinity,
                     child: CustomElevatedButton(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).message,
                         style: TextStyle(
@@ -208,9 +214,9 @@ class HandlerForModificationManager {
   static Function handleFailure = (e) {};
 
   static Future<bool> acknowledeModificationInDonation({
-    String donorEmail,
-    String notificationId,
-    String donationId,
+    String? donorEmail,
+    String? notificationId,
+    String? donationId,
   }) async {
     return await _getBatchForUpdates(
       donationId: donationId,
@@ -220,9 +226,9 @@ class HandlerForModificationManager {
   }
 
   static WriteBatch _getBatchForUpdates({
-    String donorEmail,
-    String notificationId,
-    String donationId,
+    String? donorEmail,
+    String? notificationId,
+    String? donationId,
   }) {
     ///This notification is always directed towards member
     /// as member can only donate as of now
@@ -242,14 +248,14 @@ class HandlerForModificationManager {
   }
 
   static Future createChat({
-    @required String userId,
-    @required String creatorSevaUserId,
-    @required BuildContext context,
-    @required String notificationId,
-    @required String timeBankId,
-    @required RequestMode requestMode,
-    @required BuildContext parentContext,
-    @required UserModel loggedInUser,
+    required String userId,
+    required String creatorSevaUserId,
+    required BuildContext context,
+    required String notificationId,
+    required String timeBankId,
+    required RequestMode requestMode,
+    required BuildContext parentContext,
+    required UserModel loggedInUser,
   }) async {
     ParticipantInfo sender, reciever;
 
@@ -267,8 +273,12 @@ class HandlerForModificationManager {
         break;
 
       case RequestMode.TIMEBANK_REQUEST:
-        TimebankModel timebankModel =
+        TimebankModel? timebankModel =
             await getTimeBankForId(timebankId: timeBankId);
+
+        if (timebankModel == null) {
+          throw Exception('Timebank not found for id: $timeBankId');
+        }
 
         reciever = ParticipantInfo(
           id: timebankModel.id,
@@ -294,10 +304,13 @@ class HandlerForModificationManager {
       isTimebankMessage: requestMode == RequestMode.TIMEBANK_REQUEST,
       context: parentContext,
       timebankId: timeBankId,
-      communityId: loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity ?? '',
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: false,
+      feedId: '', // Provide appropriate value if available
+      showToCommunities: const [], // Provide appropriate value if available
+      entityId: '', // Provide appropriate value if available
       onChatCreate: () {
         Navigator.pop(context);
       },
@@ -305,15 +318,15 @@ class HandlerForModificationManager {
   }
 
   static Future createChatForDispute({
-    @required ParticipantInfo sender,
-    @required ParticipantInfo receiver,
-    @required BuildContext context,
-    @required String timeBankId,
-    @required bool isTimebankMessage,
-    @required String communityId,
-    @required bool interCommunity,
-    @required List<String> showToCommunities,
-    @required String entityId,
+    required ParticipantInfo sender,
+    required ParticipantInfo receiver,
+    required BuildContext context,
+    required String timeBankId,
+    required bool isTimebankMessage,
+    required String communityId,
+    required bool interCommunity,
+    required List<String> showToCommunities,
+    required String entityId,
   }) async {
     logger.i(showToCommunities);
     createAndOpenChat(
@@ -327,6 +340,7 @@ class HandlerForModificationManager {
       interCommunity: interCommunity,
       showToCommunities: showToCommunities,
       entityId: entityId,
+      feedId: '', // Provide appropriate value if available
       onChatCreate: () {
         Navigator.pop(context);
       },

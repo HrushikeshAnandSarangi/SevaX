@@ -3,8 +3,8 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
 class DonationAssociatedTimebankDetails {
-  String timebankTitle;
-  String timebankPhotoURL;
+  String? timebankTitle;
+  String? timebankPhotoURL;
   DonationAssociatedTimebankDetails({
     this.timebankPhotoURL,
     this.timebankTitle,
@@ -18,8 +18,8 @@ class DonationAssociatedTimebankDetails {
         map.containsKey('timebankPhotoURL') ? map['timebankPhotoURL'] : null;
   }
 
-  Map<String, String> toMap() {
-    Map<String, String> map = Map();
+  Map<String, String?> toMap() {
+    Map<String, String?> map = Map();
     map['timebankPhotoURL'] = this.timebankPhotoURL;
     map['timebankTitle'] = this.timebankTitle;
     return map;
@@ -50,27 +50,27 @@ class DonationModel {
     this.lastModifiedBy,
     this.minimumAmount,
   });
-  String communityId;
-  String donorSevaUserId;
-  String donatedTo;
-  bool donatedToTimebank;
-  List<String> donationInBetween;
-  RequestType donationType;
-  String id;
-  String requestId;
-  String requestIdType;
-  String requestTitle;
-  String timebankId;
-  String notificationId;
-  int timestamp;
-  int minimumAmount;
-  DonationStatus donationStatus;
-  CashDetails cashDetails;
-  GoodsDetails goodsDetails;
-  DonorDetails donorDetails;
-  DonorDetails receiverDetails;
-  DonationAssociatedTimebankDetails donationAssociatedTimebankDetails;
-  String lastModifiedBy;
+  String? communityId;
+  String? donorSevaUserId;
+  String? donatedTo;
+  bool? donatedToTimebank;
+  List<String>? donationInBetween;
+  RequestType? donationType;
+  String? id;
+  String? requestId;
+  String? requestIdType;
+  String? requestTitle;
+  String? timebankId;
+  String? notificationId;
+  int? timestamp;
+  int? minimumAmount;
+  DonationStatus? donationStatus;
+  CashDetails? cashDetails;
+  GoodsDetails? goodsDetails;
+  DonorDetails? donorDetails;
+  DonorDetails? receiverDetails;
+  DonationAssociatedTimebankDetails? donationAssociatedTimebankDetails;
+  String? lastModifiedBy;
 
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
         communityId: json["communityId"] == null ? null : json["communityId"],
@@ -162,13 +162,13 @@ class DonationModel {
             ? null
             : donationStatus.toString().split('.')[1],
         "timestamp": DateTime.now().millisecondsSinceEpoch,
-        "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
-        "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
-        "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
+        "cashDetails": cashDetails == null ? null : cashDetails?.toMap(),
+        "goodsDetails": goodsDetails == null ? null : goodsDetails?.toMap(),
+        "donorDetails": donorDetails == null ? null : donorDetails?.toMap(),
         "receiverDetails":
-            receiverDetails == null ? null : receiverDetails.toMap(),
+            receiverDetails == null ? null : receiverDetails?.toMap(),
         'donationAssociatedTimebankDetails':
-            donationAssociatedTimebankDetails.toMap(),
+            donationAssociatedTimebankDetails?.toMap(),
         "changeHistory": lastModifiedBy,
       };
 
@@ -178,13 +178,14 @@ class DonationModel {
   }
 
   //local variables
-  String get createdDate => DateFormat('MMMM dd')
-      .format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+  String get createdDate =>
+      DateFormat('MMMM dd').format(DateTime.fromMillisecondsSinceEpoch(
+          timestamp ?? DateTime.now().millisecondsSinceEpoch));
 }
 
 class CashDetails {
-  double pledgedAmount;
-  CashModel cashDetails = CashModel(
+  double? pledgedAmount;
+  CashModel? cashDetails = CashModel(
       paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel());
 
   CashDetails({
@@ -203,17 +204,17 @@ class CashDetails {
 
   Map<String, dynamic> toMap() => {
         "pledgedAmount": pledgedAmount == null ? null : pledgedAmount,
-        "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
+        "cashDetails": cashDetails == null ? null : cashDetails?.toMap(),
       };
 }
 
 class GoodsDetails {
   GoodsDetails(
       {this.toAddress, this.comments, this.donatedGoods, this.requiredGoods});
-  String toAddress;
-  String comments;
-  Map<String, String> donatedGoods;
-  Map<String, String> requiredGoods;
+  String? toAddress;
+  String? comments;
+  Map<String, String>? donatedGoods;
+  Map<String, String>? requiredGoods;
 
   factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
     return GoodsDetails(
@@ -247,12 +248,12 @@ class DonorDetails {
     // @required ÷this.communityName,
   });
 
-  String name;
-  String photoUrl;
-  String email;
-  String bio;
-  String communityId;
-  String communityName;
+  String? name;
+  String? photoUrl;
+  String? email;
+  String? bio;
+  String? communityId;
+  String? communityName;
 
   factory DonorDetails.fromMap(Map<String, dynamic> json) => DonorDetails(
         name: json["name"],

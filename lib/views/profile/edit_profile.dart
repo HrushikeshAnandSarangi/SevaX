@@ -1,14 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:path/path.dart' as pathExt;
 import 'package:path_drawing/path_drawing.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +44,7 @@ import '../../globals.dart' as globals;
 import '../core.dart';
 
 class EditProfilePage extends StatefulWidget {
-  UserModel userModel;
+  UserModel? userModel;
 
   EditProfilePage({this.userModel});
 
@@ -61,28 +61,28 @@ class _EditProfilePageState extends State<EditProfilePage>
   bool _shouldObscure = true;
   bool _isLoading = false;
 
-  String fullName;
-  String password;
-  String email;
-  String imageUrl;
-  String confirmPassword;
-  File selectedImage;
+  String? fullName;
+  String? password;
+  String? email;
+  String? imageUrl;
+  String? confirmPassword;
+  File? selectedImage;
   String isImageSelected = 'Add Photo';
-  ImagePickerHandler imagePicker;
-  UserModel usermodel;
+  late ImagePickerHandler imagePicker;
+  late UserModel usermodel;
   bool _saving = false;
   bool _isDocumentBeingUploaded = false;
   final int tenMegaBytes = 10485760;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  String _fileName;
-  String _path;
-  String cvName;
-  String cvUrl;
+  String? _fileName;
+  String? _path;
+  String? cvName;
+  String? cvUrl;
   String cvFileError = '';
   bool canuploadCV = false;
 
-  BuildContext parentContext;
+  late BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
 
   @override
@@ -94,7 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         milliseconds: 300,
       ),
     );
-    this.usermodel = widget.userModel;
+    this.usermodel = widget.userModel!;
     if (usermodel.cvUrl == null) {
       setState(() {
         this.canuploadCV = true;
@@ -167,12 +167,12 @@ class _EditProfilePageState extends State<EditProfilePage>
             SizedBox(height: 50),
             detailsBuilder(
               title: S.of(context).name,
-              text: widget.userModel.fullname,
+              text: widget.userModel!.fullname!,
               onTap: () => _updateName(),
             ),
             detailsBuilder(
               title: S.of(context).bio,
-              text: widget.userModel.bio ?? S.of(context).add_bio,
+              text: widget.userModel!.bio ?? S.of(context).add_bio,
               onTap: _updateBio,
             ),
             detailsBuilder(
@@ -202,6 +202,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                 child: CustomElevatedButton(
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
+                  elevation: 2.0,
+                  shape: const StadiumBorder(),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     S.of(context).log_out,
                   ),
@@ -215,7 +219,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  Padding detailsBuilder({String title, String text, Function onTap}) {
+  Padding detailsBuilder({String? title, String? text, VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: InkWell(
@@ -224,7 +228,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
+              title!,
               style: TextStyle(
                 fontSize: 15.0,
                 fontWeight: FontWeight.w600,
@@ -242,7 +246,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  Padding cvBuilder({String title, String text, Function onTap}) {
+  Padding cvBuilder({String? title, String? text, VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 20, 10),
       child: InkWell(
@@ -251,7 +255,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
+              title!,
               style: TextStyle(
                 fontSize: 15.0,
                 fontWeight: FontWeight.w600,
@@ -308,8 +312,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                                     );
                                     return;
                                   }
-                                  if (await canLaunch(usermodel.cvUrl)) {
-                                    launch(usermodel.cvUrl);
+                                  if (await canLaunch(usermodel.cvUrl!)) {
+                                    launch(usermodel.cvUrl!);
                                   } else {}
                                 },
                                 icon: Icon(
@@ -330,6 +334,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                         width: 105,
                         child: Center(
                           child: CustomElevatedButton(
+                            color: Theme.of(context).primaryColor,
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            elevation: 2.0,
                             shape: StadiumBorder(),
                             child: Text(
                               S.of(context).replace_cv,
@@ -351,7 +360,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  Widget cvUpload({String title, String text, Function onTap}) {
+  Widget cvUpload({String? title, String? text, Function? onTap}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -360,7 +369,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         ),
         TransactionsMatrixCheck(
           comingFrom: ComingFrom.Profile,
-          upgradeDetails: AppConfig.upgradePlanBannerModel.upload_cv,
+          upgradeDetails: AppConfig.upgradePlanBannerModel!.upload_cv!,
           transaction_matrix_type: "upload_cv",
           child: GestureDetector(
             onTap: () {
@@ -448,6 +457,8 @@ class _EditProfilePageState extends State<EditProfilePage>
               child: Container(
                 height: 30,
                 child: CustomElevatedButton(
+                  elevation: 2.0,
+                  textColor: Colors.white,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -494,7 +505,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   padding: EdgeInsets.all(3),
                   color: cvUrl == null
                       ? Theme.of(context).primaryColor
-                      : Theme.of(context).accentColor,
+                      : Theme.of(context).colorScheme.secondary,
                   child: Text(
                     S.of(context).upload,
                     textAlign: TextAlign.center,
@@ -518,7 +529,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future _navigateToInterestsView(UserModel loggedInUser) async {
-    AppConfig.prefs.setBool(AppConfig.skip_interest, true);
+    AppConfig.prefs!.setBool(AppConfig.skip_interest, true);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
@@ -546,23 +557,17 @@ class _EditProfilePageState extends State<EditProfilePage>
     //File _file;
     //List<File> _files;
     String _fileName;
-    String _path;
-    Map<String, String> _paths;
+    String? _path;
     try {
-      _paths = null;
-      FilePickerResult result = await FilePicker.platform
+      FilePickerResult? result = await FilePicker.platform
           .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
-      if (result != null) {
-        _path = result.files.single.path;
+      if (result != null && result.files.single.path != null) {
+        _path = result.files.single.path!;
+        _fileName = _path.split('/').last;
+        userDoc(_path, _fileName);
       }
     } on PlatformException catch (e) {
       throw e;
-    }
-    //   if (!mounted) return;
-    if (_path != null) {
-      _fileName = _path.split('/').last;
-
-      userDoc(_path, _fileName);
     }
   }
 
@@ -570,10 +575,10 @@ class _EditProfilePageState extends State<EditProfilePage>
   addWebImageUrl() {
     // TODO: implement addWebImageUrl
 
-    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+    if (globals.webImageUrl != null && globals.webImageUrl!.isNotEmpty) {
       setState(() {
         SevaCore.of(context).loggedInUser.photoURL = globals.webImageUrl;
-        widget.userModel.photoURL = globals.webImageUrl;
+        widget.userModel!.photoURL = globals.webImageUrl;
         this._saving = true;
       });
       globals.webImageUrl = null;
@@ -608,7 +613,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   void checkFileSize() async {
-    var file = File(_path);
+    var file = File(_path!);
     final bytes = await file.lengthSync();
     if (bytes > tenMegaBytes) {
       this._isDocumentBeingUploaded = false;
@@ -627,11 +632,11 @@ class _EditProfilePageState extends State<EditProfilePage>
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String name =
-        SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
+        SevaCore.of(context).loggedInUser.email! + timestampString + _fileName!;
     Reference ref =
         FirebaseStorage.instance.ref().child('cv_files').child(name);
     UploadTask uploadTask = ref.putFile(
-      File(_path),
+      File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CV File'},
@@ -647,7 +652,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     return documentURL;
   }
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
 
   void showProgressDialog(String message) {
     showDialog(
@@ -668,7 +673,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
-    AppConfig.prefs.setBool(AppConfig.skip_skill, true);
+    AppConfig.prefs!.setBool(AppConfig.skip_skill, true);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
@@ -701,19 +706,19 @@ class _EditProfilePageState extends State<EditProfilePage>
         this._saving = true;
       });
       String imageUrl =
-          await uploadImage(SevaCore.of(context).loggedInUser.email);
+          await uploadImage(SevaCore.of(context).loggedInUser.email!);
       log("link ${imageUrl.toString()}");
 
       await profanityCheck(imageURL: imageUrl, storagePath: imageUrl);
     }
   }
 
-  Future<void> profanityCheck({String imageURL, String storagePath}) async {
+  Future<void> profanityCheck({String? imageURL, String? storagePath}) async {
     // _newsImageURL = imageURL;
     log("inside profanity");
 
-    profanityImageModel =
-        await checkProfanityForImage(imageUrl: imageURL, storagePath: imageUrl);
+    profanityImageModel = await checkProfanityForImage(
+        imageUrl: imageURL!, storagePath: imageUrl!);
     log("model ${profanityImageModel.toString()}");
     if (profanityImageModel == null) {
       setState(() {
@@ -724,12 +729,12 @@ class _EditProfilePageState extends State<EditProfilePage>
       profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
+      if (profanityStatusModel.isProfane!) {
         showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
+                context: context, content: profanityStatusModel.category!)
             .then((status) {
           if (status == 'Proceed') {
-            deleteFireBaseImage(imageUrl: imageUrl).then((value) {
+            deleteFireBaseImage(imageUrl: imageUrl!).then((value) {
               if (value) {
                 setState(() {
                   this._saving = false;
@@ -741,7 +746,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       } else {
         setState(() {
           SevaCore.of(context).loggedInUser.photoURL = imageURL;
-          widget.userModel.photoURL = imageURL;
+          widget.userModel!.photoURL = imageURL;
         });
         await updateUserPic();
       }
@@ -764,7 +769,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     setState(() {
       this._saving = true;
     });
-    widget.userModel.bio = bio;
+    widget.userModel!.bio = bio;
     SevaCore.of(context).loggedInUser.bio = bio;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
@@ -815,7 +820,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             ),
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                widget.userModel.photoURL ?? defaultUserImageURL,
+                widget.userModel!.photoURL ?? defaultUserImageURL,
               ),
               backgroundColor: Colors.white,
               radius: MediaQuery.of(context).size.width / 4.5,
@@ -838,7 +843,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   void _updateName() {
-    String name = widget.userModel.fullname;
+    String name = widget.userModel!.fullname!;
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
@@ -861,13 +866,13 @@ class _EditProfilePageState extends State<EditProfilePage>
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
-                  initialValue: widget.userModel.fullname,
+                  initialValue: widget.userModel!.fullname!,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20),
                   ],
                   onChanged: (value) => name = value,
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value!.isEmpty) {
                       return S.of(context).enter_name_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
                       return S.of(context).profanity_text_alert;
@@ -896,7 +901,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   SizedBox(width: 10),
                   CustomTextButton(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     textColor: Colors.white,
                     child: Text(
                       S.of(context).update,
@@ -919,10 +924,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                         );
                         return;
                       }
-                      if (!_formKey.currentState.validate()) {
+                      if (!_formKey.currentState!.validate()) {
                         return;
                       }
-                      widget.userModel.fullname = name;
+                      widget.userModel!.fullname = name;
                       updateName(name);
                       Navigator.pop(viewContext);
                       isLoading = false;
@@ -964,9 +969,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
-                  initialValue: widget.userModel.bio,
+                  initialValue: widget.userModel!.bio,
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value!.isEmpty) {
                       return S.of(context).update_bio_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
                       return S.of(context).profanity_text_alert;
@@ -998,7 +1003,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   SizedBox(width: 10),
                   CustomTextButton(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     textColor: Colors.white,
                     child: Text(
                       S.of(context).update,
@@ -1021,7 +1026,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                         );
                         return;
                       }
-                      if (!_formKey.currentState.validate()) {
+                      if (!_formKey.currentState!.validate()) {
                         return;
                       }
                       Navigator.pop(viewContext);
@@ -1047,7 +1052,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         .child('profile_images')
         .child(email + '.jpg');
     UploadTask uploadTask = ref.putFile(
-      selectedImage,
+      selectedImage!,
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Image'},
@@ -1062,11 +1067,15 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future addUserToTimebank(UserModel loggedInUser) async {
-    TimebankModel timebankModel = await FirestoreManager.getTimeBankForId(
+    TimebankModel? timebankModel = await FirestoreManager.getTimeBankForId(
       timebankId: FlavorConfig.values.timebankId,
     );
+    if (timebankModel == null) {
+      // Handle the null case appropriately, e.g., return or throw
+      return;
+    }
     List<String> _members = timebankModel.members;
-    timebankModel.members = [..._members, loggedInUser.email];
+    timebankModel.members = [..._members, loggedInUser!.email!];
     await FirestoreManager.updateTimebank(timebankModel: timebankModel);
   }
 
@@ -1107,7 +1116,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   CustomTextButton(
                     shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Text(
                       S.of(context).log_out,
                       style: TextStyle(
@@ -1118,7 +1127,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     onPressed: () async {
                       FCMNotificationManager.removeDeviceRegisterationForMember(
-                          email: SevaCore.of(context).loggedInUser.email);
+                          email: SevaCore.of(context).loggedInUser.email!);
 
                       _signOut(
                         context,

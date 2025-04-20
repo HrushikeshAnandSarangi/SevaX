@@ -17,12 +17,13 @@ class TimebankRepository {
         .where('associatedParentTimebankId', isEqualTo: timebankId)
         .get();
 
-    logger.i(data.docs.length, timebankId);
+    logger.i('Number of docs: ${data.docs.length}, TimebankId: $timebankId');
 
     List<TimebankModel> models = [];
     data.docs.forEach(
       (element) {
-        var model = TimebankModel.fromMap(element.data());
+        var model =
+            TimebankModel.fromMap(element.data() as Map<String, dynamic>);
         // if (!(model.softDelete ?? false)) {
         models.add(model);
         // }
@@ -44,7 +45,8 @@ class TimebankRepository {
         .get();
 
     querySnapshot.docs.forEach((DocumentSnapshot document) {
-      timebanks.add(TimebankModel.fromMap(document.data()));
+      timebanks
+          .add(TimebankModel.fromMap(document.data() as Map<String, dynamic>));
     });
     return timebanks;
   }
@@ -58,7 +60,8 @@ class TimebankRepository {
           List<TimebankModel> timebanks = [];
           try {
             data.docs.forEach((element) {
-              var timebank = TimebankModel.fromMap(element.data());
+              var timebank =
+                  TimebankModel.fromMap(element.data() as Map<String, dynamic>);
               timebanks.add(timebank);
             });
             sink.add(timebanks);
@@ -88,10 +91,12 @@ class TimebankRepository {
       (a, b) {
         List<TimebankModel> _timebanks = [];
         a.docs.forEach((element) {
-          _timebanks.add(TimebankModel.fromMap(element.data()));
+          _timebanks.add(
+              TimebankModel.fromMap(element.data() as Map<String, dynamic>));
         });
         b.docs.forEach((element) {
-          _timebanks.add(TimebankModel.fromMap(element.data()));
+          _timebanks.add(
+              TimebankModel.fromMap(element.data() as Map<String, dynamic>));
         });
 
         return _timebanks;
@@ -106,7 +111,8 @@ class TimebankRepository {
       StreamTransformer.fromHandlers(
         handleData: (document, sink) {
           try {
-            sink.add(TimebankModel.fromMap(document.data()));
+            sink.add(
+                TimebankModel.fromMap(document.data() as Map<String, dynamic>));
           } catch (e) {
             logger.e(e);
             sink.addError(e);
@@ -118,7 +124,7 @@ class TimebankRepository {
   }
 
   Stream<List<JoinRequestModel>> getJoinRequestsCretedByUserStream({
-    @required String userID,
+    required String userID,
   }) async* {
     var query = CollectionRef.joinRequests
         .where('user_id', isEqualTo: userID)
@@ -131,7 +137,7 @@ class TimebankRepository {
       try {
         data.docs.forEach((element) {
           JoinRequestModel joinRequest =
-              JoinRequestModel.fromMap(element.data());
+              JoinRequestModel.fromMap(element.data() as Map<String, dynamic>);
           if (joinRequest.userId == userID) {
             joinRequests.add(joinRequest);
           }

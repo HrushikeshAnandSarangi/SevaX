@@ -12,7 +12,7 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class CommonHelpIconWidget extends StatelessWidget {
-  const CommonHelpIconWidget({Key key}) : super(key: key);
+  const CommonHelpIconWidget({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<TimebankModel>(
@@ -21,8 +21,8 @@ class CommonHelpIconWidget extends StatelessWidget {
         bool isAdmin = false;
         if (snapshot.data != null) {
           isAdmin = isAccessAvailable(
-            snapshot.data,
-            SevaCore.of(context).loggedInUser.sevaUserID,
+            snapshot.data!,
+            SevaCore.of(context).loggedInUser.sevaUserID ?? '',
           );
         }
         return Container(
@@ -34,7 +34,7 @@ class CommonHelpIconWidget extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              logger.wtf("isAdmin", isAdmin);
+              logger.wtf("isAdmin: $isAdmin");
               navigateToWebView(
                 aboutMode: AboutMode(
                   title: S.of(context).help,

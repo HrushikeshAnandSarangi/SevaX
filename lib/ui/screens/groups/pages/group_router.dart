@@ -11,7 +11,8 @@ class GroupRouter extends StatefulWidget {
   final TimebankModel timebankModel;
   final String userId;
 
-  const GroupRouter({Key key, this.timebankModel, this.userId})
+  const GroupRouter(
+      {Key? key, required this.timebankModel, required this.userId})
       : super(key: key);
   @override
   _GroupRouterState createState() => _GroupRouterState();
@@ -19,8 +20,8 @@ class GroupRouter extends StatefulWidget {
 
 class _GroupRouterState extends State<GroupRouter>
     with SingleTickerProviderStateMixin {
-  TabController tabController;
-  UserType userType;
+  TabController? tabController;
+  UserType? userType;
 
   @override
   void initState() {
@@ -28,13 +29,13 @@ class _GroupRouterState extends State<GroupRouter>
       userId: widget.userId,
       timeBankModel: widget.timebankModel,
     );
-    tabController = TabController(length: getTabLength(userType), vsync: this);
+    tabController = TabController(length: getTabLength(userType!), vsync: this);
     super.initState();
   }
 
   @override
   void dispose() {
-    tabController.dispose();
+    tabController?.dispose();
     super.dispose();
   }
 
@@ -120,10 +121,10 @@ class _GroupRouterState extends State<GroupRouter>
 }
 
 UserType checkUserRole({
-  String userId,
-  TimebankModel timeBankModel,
+  String? userId,
+  TimebankModel? timeBankModel,
 }) {
-  if (isAccessAvailable(timeBankModel, userId)) {
+  if (isAccessAvailable(timeBankModel!, userId!)) {
     return UserType.GROUP_ADMIN;
   } else if (timeBankModel.members.contains(userId)) {
     return UserType.GROUP_MEMBER;

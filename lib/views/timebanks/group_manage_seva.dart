@@ -18,7 +18,7 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 import '../../flavor_config.dart';
 
 class ManageGroupView extends StatefulWidget {
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
 
   ManageGroupView.of({this.timebankModel});
   @override
@@ -37,10 +37,14 @@ class _ManageGroupView extends State<ManageGroupView> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getCommunityDetailsByCommunityId(communityId: widget.timebankModel.communityId).then((onValue) {
+      FirestoreManager.getCommunityDetailsByCommunityId(
+              communityId: widget.timebankModel!.communityId)
+          .then((onValue) {
         communityModel = onValue;
-        if (SevaCore.of(context).loggedInUser.sevaUserID == communityModel.created_by ||
-            communityModel.organizers.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (SevaCore.of(context).loggedInUser.sevaUserID ==
+                communityModel.created_by ||
+            communityModel.organizers
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
           setState(() {});
         }
@@ -75,13 +79,14 @@ class _ManageGroupView extends State<ManageGroupView> {
               child: TabBarView(
                 children: [
                   EditGroupView(
-                    timebankModel: widget.timebankModel,
+                    timebankModel: widget.timebankModel!,
                   ),
                   Settings,
                   NotificationManagerForAmins(
-                    widget.timebankModel.id,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId,
+                    widget.timebankModel!.id,
+                    SevaCore.of(context).loggedInUser.sevaUserID!,
+                    widget.timebankModel!.parentTimebankId ==
+                        FlavorConfig.values.timebankId,
                   )
                 ],
               ),
@@ -110,13 +115,14 @@ class _ManageGroupView extends State<ManageGroupView> {
               child: TabBarView(
                 children: [
                   EditGroupView(
-                    timebankModel: widget.timebankModel,
+                    timebankModel: widget.timebankModel!,
                   ),
                   Settings,
                   NotificationManagerForAmins(
-                    widget.timebankModel.id,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId,
+                    widget.timebankModel!.id,
+                    SevaCore.of(context).loggedInUser.sevaUserID!,
+                    widget.timebankModel!.parentTimebankId ==
+                        FlavorConfig.values.timebankId,
                   )
                 ],
               ),
@@ -149,7 +155,7 @@ class _ManageGroupView extends State<ManageGroupView> {
                   CreateEditCommunityView(
                     isCreateTimebank: false,
                     isFromFind: false,
-                    timebankId: widget.timebankModel.id,
+                    timebankId: widget.timebankModel!.id,
                   ),
                   // TimeBankBillingAdminView(),
                   Settings,
@@ -169,7 +175,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         CreateEditCommunityView(
           isCreateTimebank: false,
           isFromFind: false,
-          timebankId: widget.timebankModel.id,
+          timebankId: widget.timebankModel!.id,
         ),
         Settings,
       ],
@@ -201,19 +207,19 @@ class _ManageGroupView extends State<ManageGroupView> {
   //   );
   // }
 
-  Widget viewReportedMembers({BuildContext context}) {
+  Widget viewReportedMembers({BuildContext? context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.of(context!).push(
           ReportedMembersPage.route(
-            timebankModel: widget.timebankModel,
-            communityId: widget.timebankModel.communityId,
+            timebankModel: widget.timebankModel!,
+            communityId: widget.timebankModel!.communityId,
             isFromTimebank: false,
           ),
         );
       },
       child: Text(
-        S.of(context).reported_members,
+        S.of(context!).reported_members,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -228,11 +234,12 @@ class _ManageGroupView extends State<ManageGroupView> {
       onTap: () {
         showAdvisoryBeforeDeletion(
           context: context,
-          associatedId: widget.timebankModel.id,
+          associatedId: widget.timebankModel!.id,
           softDeleteType: SoftDelete.REQUEST_DELETE_GROUP,
-          associatedContentTitle: widget.timebankModel.name,
-          email: SevaCore.of(context).loggedInUser.email,
-          isAccedentalDeleteEnabled: widget.timebankModel.preventAccedentalDelete,
+          associatedContentTitle: widget.timebankModel!.name,
+          email: SevaCore.of(context).loggedInUser.email!,
+          isAccedentalDeleteEnabled:
+              widget.timebankModel!.preventAccedentalDelete,
         );
       },
       child: Text(
@@ -248,7 +255,7 @@ class _ManageGroupView extends State<ManageGroupView> {
 
   Widget get getTitle {
     return Text(
-      "${S.of(context).manage} ${widget.timebankModel.name}",
+      "${S.of(context).manage} ${widget.timebankModel!.name}",
       style: TextStyle(
         fontSize: 20,
         color: Colors.black,
@@ -264,7 +271,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         CreateEditCommunityView(
           isCreateTimebank: false,
           isFromFind: false,
-          timebankId: widget.timebankModel.id,
+          timebankId: widget.timebankModel!.id,
         ),
         // TimeBankBillingAdminView(),
         Settings,
@@ -296,10 +303,12 @@ class _ManageGroupView extends State<ManageGroupView> {
             height: 30,
           ),
           Offstage(
-              offstage: SevaCore.of(context).loggedInUser.sevaUserID != widget.timebankModel.creatorId,
+              offstage: SevaCore.of(context).loggedInUser.sevaUserID !=
+                  widget.timebankModel!.creatorId,
               child: transferOwnersShip(context: context)),
           Offstage(
-            offstage: SevaCore.of(context).loggedInUser.sevaUserID != widget.timebankModel.creatorId,
+            offstage: SevaCore.of(context).loggedInUser.sevaUserID !=
+                widget.timebankModel!.creatorId,
             child: SizedBox(
               height: 30,
             ),
@@ -310,17 +319,17 @@ class _ManageGroupView extends State<ManageGroupView> {
     );
   }
 
-  Widget viewMemberConfigurations({BuildContext context}) {
+  Widget viewMemberConfigurations({BuildContext? context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context!).push(MaterialPageRoute(
           builder: (context) => MemberPermissions(
-            timebankModel: widget.timebankModel,
+            timebankModel: widget.timebankModel!,
           ),
         ));
       },
       child: Text(
-        S.of(context).manage_permissions,
+        S.of(context!).manage_permissions,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -330,18 +339,18 @@ class _ManageGroupView extends State<ManageGroupView> {
     );
   }
 
-  Widget transferOwnersShip({BuildContext context}) {
+  Widget transferOwnersShip({BuildContext? context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context!).push(MaterialPageRoute(
           builder: (context) => TransferGroupOwnerShip(
-            timebankModel: widget.timebankModel,
-            timebankId: widget.timebankModel.id,
+            timebankModel: widget.timebankModel!,
+            timebankId: widget.timebankModel!.id,
           ),
         ));
       },
       child: Text(
-        S.of(context).change_ownership,
+        S.of(context!).change_ownership,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -351,21 +360,21 @@ class _ManageGroupView extends State<ManageGroupView> {
     );
   }
 
-  Widget getTile({String address, String title, String subtitle}) {
+  Widget getTile({String? address, String? title, String? subtitle}) {
     return ListTile(
       leading: SvgPicture.asset(
-        address,
+        address!,
         height: 24,
         width: 24,
       ),
       title: Text(
-        title,
+        title!,
         style: TextStyle(
           fontSize: 14,
         ),
       ),
       subtitle: Text(
-        subtitle,
+        subtitle!,
         style: TextStyle(
           fontSize: 12,
         ),

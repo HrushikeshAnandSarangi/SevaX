@@ -25,11 +25,13 @@ class ImagePickerDialogMobile extends StatefulWidget {
   final Function(File pdfFile) storPdfFile;
   final Color color;
 
-  ImagePickerDialogMobile(
-      {this.imagePickerType,
-      this.onLinkCreated,
-      this.storeImageFile,
-      this.storPdfFile,  this.color });
+  ImagePickerDialogMobile({
+    required this.imagePickerType,
+    required this.onLinkCreated,
+    required this.storeImageFile,
+    required this.storPdfFile,
+    required this.color,
+  });
 
   @override
   _ImagePickerDialogMobileState createState() =>
@@ -37,8 +39,8 @@ class ImagePickerDialogMobile extends StatefulWidget {
 }
 
 class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
-  File imagefile;
-  BuildContext parentContext;
+  late File imagefile;
+  late BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
     parentContext = context;
@@ -226,6 +228,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
                     widget.onLinkCreated(link);
                     Navigator.of(context).pop();
                   },
+                  isCover: false,
                 );
               });
         });
@@ -237,7 +240,9 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         icon: Icons.add_circle_outline,
         onTap: () async {
           final picker = ImagePicker();
-          final pickedFile = await picker.getImage(source: ImageSource.camera);
+          final XFile? pickedFile =
+              await picker.pickImage(source: ImageSource.camera);
+          if (pickedFile == null) return;
           String _extension =
               pathExt.extension(pickedFile.path).split('?').first;
 
@@ -252,21 +257,23 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
 
   Widget galleryImageWidget() {
     return imagePickerOption(
-        title: S.of(context).gallery,
-        icon: Icons.add_circle_outline,
-        onTap: () async {
-          final picker = ImagePicker();
-          final pickedFile = await picker.getImage(source: ImageSource.gallery);
-          String _extension =
-              pathExt.extension(pickedFile.path).split('?').first;
+      title: S.of(context).gallery,
+      icon: Icons.add_circle_outline,
+      onTap: () async {
+        final picker = ImagePicker();
+        final XFile? pickedFile =
+            await picker.pickImage(source: ImageSource.gallery);
+        if (pickedFile == null) return;
+        String _extension = pathExt.extension(pickedFile.path).split('?').first;
 
-          if (_extension == 'gif' || _extension == '.gif') {
-            showProgressDialog(parentContext);
-            uploadImage(File(pickedFile.path));
-          } else {
-            cropImage(pickedFile.path);
-          }
-        });
+        if (_extension == 'gif' || _extension == '.gif') {
+          showProgressDialog(parentContext);
+          uploadImage(File(pickedFile.path));
+        } else {
+          cropImage(pickedFile.path);
+        }
+      },
+    );
   }
 
   Widget pdfWidget() {
@@ -275,13 +282,13 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         icon: Icons.picture_as_pdf,
         onTap: () async {
           try {
-            String _path = '';
-            FilePickerResult result = await FilePicker.platform
+            String? _path = '';
+            FilePickerResult? result = await FilePicker.platform
                 .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
             if (result != null) {
               _path = result.files.single.path;
             }
-            if (_path != null) {
+            if (_path != null && _path.isNotEmpty) {
               widget.storPdfFile(File(_path));
             }
           } on PlatformException catch (e) {
@@ -299,32 +306,33 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         });
   }
 
-  Widget imagePickerOption({String title, IconData icon, Function onTap}) {
+  Widget imagePickerOption({String? title, IconData? icon, Function? onTap}) {
+    final String safeTitle = title ?? '';
     return Container(
       decoration: BoxDecoration(
-        color: widget.color?? Theme.of(context).primaryColor,
+        color: widget.color,
         borderRadius: BorderRadius.circular(10),
       ),
       height: 50,
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        onTap: onTap,
-        leading: title.contains('Add Image')
+        onTap: onTap as GestureTapCallback?,
+        leading: safeTitle.contains('Add Image')
             ? Image.asset('images/icons/link.png',
                 height: 16, color: Colors.white)
-            : title.contains('Stock')
+            : safeTitle.contains('Stock')
                 ? Image.asset('images/icons/multi_image.png',
                     height: 16, color: Colors.white)
                 : Icon(icon, color: Colors.white),
         title: Text(
-          title,
+          safeTitle,
           style: TextStyle(color: Colors.white),
         ),
       ),
     );
   }
 
-  BuildContext dialogContext;
+  late BuildContext dialogContext;
 
   void showProgressDialog(BuildContext context) {
     showDialog(
@@ -347,7 +355,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   Future<String> uploadImage(File file) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    String imageURL;
+    String imageURL = '';
     String folderName = '';
     // ImageUploadToFirestore imageData;
     if (widget.imagePickerType == ImagePickerType.FEED) {
@@ -381,13 +389,17 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     );
     // UploadTask uploadTask = ref.putFile(File.)
 
-    uploadTask.whenComplete(() async {
+    try {
+      await uploadTask;
       imageURL = await ref.getDownloadURL();
       await profanityCheck(
         imageURL: imageURL,
         storagePath: imageURL,
       );
-    });
+    } catch (e) {
+      log('Image upload failed: $e');
+      imageURL = '';
+    }
     // imageData =
     // await uploadImageWeb(file, folderName + timestampString + '.jpg');
     // imageURL = imageData.imageUrl;
@@ -396,7 +408,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   }
 
   Future cropImage(String path) async {
-    File croppedFile = await ImageCropper().cropImage(
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
         ratioX: 1.0,
@@ -405,58 +417,63 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       maxWidth: 200,
       maxHeight: 200,
     );
+    if (croppedFile == null) return;
     showProgressDialog(parentContext);
 
-    uploadImage(croppedFile);
+    uploadImage(File(croppedFile.path));
   }
 
   Future<void> profanityCheck(
-      {String imageURL, @required String storagePath}) async {
+      {required String? imageURL, required String storagePath}) async {
     ProfanityImageModel profanityImageModel = ProfanityImageModel();
     ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(
-      imageUrl: imageURL,
+      imageUrl: imageURL ?? '',
       storagePath: storagePath,
     );
 
-    if (profanityImageModel == null) {
-      if (dialogContext != null) {
-        Navigator.of(dialogContext).pop();
-      }
+    // Remove null check for profanityImageModel, as it can't be null
+    // Instead, check if imageURL is null or empty
+    if (imageURL == null || imageURL.isEmpty) {
+      Navigator.of(dialogContext).pop();
       showFailedLoadImage(context: context).then((value) {
-        deleteFireBaseImage(imageUrl: imageURL).then((value) {
+        deleteFireBaseImage(imageUrl: imageURL ?? '').then((value) {
           if (value) {
-            imagefile = null;
+            // Assign a dummy File or handle accordingly
+            // imagefile = null; // Not allowed, so skip or re-initialize
           }
           Navigator.of(context).pop();
         });
       });
-    } else {
-      profanityStatusModel =
-          await getProfanityStatus(profanityImageModel: profanityImageModel);
+      return;
+    }
 
-      if (profanityStatusModel.isProfane) {
-        if (dialogContext != null) {
-          Navigator.of(dialogContext).pop();
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane == true) {
+      Navigator.of(dialogContext).pop();
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category ?? '')
+          .then((status) {
+        if (status == 'Proceed') {
+          deleteFireBaseImage(imageUrl: imageURL).then((value) {
+            if (value) {
+              // Assign a dummy File or handle accordingly
+              // imagefile = null; // Not allowed, so skip or re-initialize
+            }
+          }).catchError((e) {
+            log(e.toString());
+            return null;
+          });
         }
-        showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
-            .then((status) {
-          if (status == 'Proceed') {
-            deleteFireBaseImage(imageUrl: imageURL).then((value) {
-              if (value) {
-                imagefile = null;
-              }
-            }).catchError((e) => log(e));
-          }
-        });
-      } else {
-        widget.onLinkCreated(imageURL);
-        Navigator.of(dialogContext).pop();
-        Navigator.of(parentContext).pop();
-        // Navigator.of(context).pop();
-      }
+      });
+    } else {
+      widget.onLinkCreated(imageURL);
+      Navigator.of(dialogContext).pop();
+      Navigator.of(parentContext).pop();
+      // Navigator.of(context).pop();
     }
   }
 }

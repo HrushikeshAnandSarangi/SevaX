@@ -50,7 +50,7 @@ class LanguageList extends StatefulWidget {
 
 class LanguageListState extends State<LanguageList> {
   List<LanguageModel> languagelist = [];
-  String isSelected;
+  String? isSelected;
 //  ScrollController _scrollController = ScrollController();
 
   @override
@@ -68,8 +68,9 @@ class LanguageListState extends State<LanguageList> {
     });
 
     languagelist.sort(
-      (a, b) =>
-          a.languageName.toLowerCase().compareTo(b.languageName.toLowerCase()),
+      (a, b) => a.languageName!
+          .toLowerCase()
+          .compareTo(b.languageName!.toLowerCase()),
     );
     super.initState();
   }
@@ -79,7 +80,7 @@ class LanguageListState extends State<LanguageList> {
     var appLanguage = Provider.of<AppLanguage>(context);
     return StreamBuilder<Object>(
       stream: FirestoreManager.getUserForIdStream(
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -87,7 +88,7 @@ class LanguageListState extends State<LanguageList> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        UserModel userModel = snapshot.data;
+        UserModel userModel = snapshot.data! as UserModel;
         return ListView.builder(
           itemCount: languagelist.length,
 //            controller: _scrollController,
@@ -97,7 +98,7 @@ class LanguageListState extends State<LanguageList> {
             return Card(
               child: ListTile(
                 leading: getIcon(
-                  model.locale == getLocaleFromCode(userModel.language),
+                  model.locale == getLocaleFromCode(userModel.language!),
                 ),
                 trailing: Text(
                   '${model.languageName}',
@@ -108,11 +109,11 @@ class LanguageListState extends State<LanguageList> {
                   ),
                 ),
                 title: Text('${model.languageName}'),
-                subtitle: Text(getCodeFromLocale(model.locale)),
+                subtitle: Text(getCodeFromLocale(model.locale!)),
                 onTap: () async {
-                  if (userModel.language != getCodeFromLocale(model.locale)) {
-                    appLanguage.changeLanguage(model.locale);
-                    userModel.language = getCodeFromLocale(model.locale);
+                  if (userModel.language != getCodeFromLocale(model.locale!)) {
+                    appLanguage.changeLanguage(model.locale!);
+                    userModel.language = getCodeFromLocale(model.locale!);
                     await updateUserLanguage(user: userModel);
                   }
                 },
@@ -134,13 +135,13 @@ class LanguageListState extends State<LanguageList> {
               size: 28,
             ),
           )
-        : null;
+        : null!;
   }
 }
 
 class LanguageModel {
-  String languageName;
-  Locale locale;
+  String? languageName;
+  Locale? locale;
   LanguageModel({this.languageName, this.locale});
 }
 
@@ -154,7 +155,7 @@ Locale getLocaleFromCode(String code) {
     country = data[1];
   } else {
     langCode = code;
-    country = null;
+    country = null!;
   }
   return Locale.fromSubtags(languageCode: langCode, countryCode: country);
 }

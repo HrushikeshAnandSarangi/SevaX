@@ -11,11 +11,13 @@ class TimebankMessagePage extends StatefulWidget {
   final String communityId;
 
   const TimebankMessagePage(
-      {Key key, this.adminMessageWrapperModel, this.communityId})
+      {Key? key,
+      required this.adminMessageWrapperModel,
+      required this.communityId})
       : super(key: key);
   static Route<dynamic> route(
-          {AdminMessageWrapperModel adminMessageWrapperModel,
-          String communityId}) =>
+          {required AdminMessageWrapperModel adminMessageWrapperModel,
+          required String communityId}) =>
       MaterialPageRoute(
         builder: (context) => TimebankMessagePage(
           adminMessageWrapperModel: adminMessageWrapperModel,
@@ -55,15 +57,15 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          if (snapshot.data.length == 0) {
+          if (snapshot.data == null || snapshot.data!.isEmpty) {
             return Center(
               child: Text(S.of(context).no_message),
             );
           }
           return ListView.builder(
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data?.length ?? 0,
             itemBuilder: (_, index) {
-              ChatModel chat = snapshot.data[index];
+              ChatModel chat = snapshot.data![index];
               return MessageCard(
                 model: chat,
                 isAdminMessage: true,

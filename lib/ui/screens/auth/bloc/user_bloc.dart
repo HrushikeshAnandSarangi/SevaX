@@ -24,10 +24,10 @@ class UserBloc {
     );
   }
 
-  void get clearUserData => _user.add(null);
+  void get clearUserData => _user.add(UserModel());
 
   void dispose() {
-    _user.add(null);
+    _user.add(UserModel());
     _user.close();
   }
 }

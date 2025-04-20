@@ -14,7 +14,7 @@ class CombinedNotificationsPage extends StatefulWidget {
 
 class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
+  TabController? _controller;
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -48,7 +48,7 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
               snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          return snapshot.data.isAdmin
+          return snapshot.data?.isAdmin == true
               ? Column(
                   children: [
                     TabBar(

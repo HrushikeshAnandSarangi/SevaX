@@ -15,11 +15,11 @@ import '../../../../../flavor_config.dart';
 
 ///Search component in share feeds
 class SearchComponent extends StatelessWidget {
-  final PageController pageController;
+  final PageController? pageController;
   // final TimebankModel timebankModel;
-  final List<UserModel> membersInTimebank;
-  final SearchSegmentBloc searchSegmentBloc;
-  final UserModel loggedInUser;
+  final List<UserModel>? membersInTimebank;
+  final SearchSegmentBloc? searchSegmentBloc;
+  final UserModel? loggedInUser;
 
   List<UserModel> selectedMembersToShareWith = [];
   TextEditingController searchController = TextEditingController();
@@ -113,14 +113,14 @@ class SearchComponent extends StatelessWidget {
                   return null;
                 },
                 onChanged: (text) {
-                  searchSegmentBloc.searchComponent(text);
+                  searchSegmentBloc?.searchComponent(text);
                 },
                 decoration: InputDecoration(
                   errorMaxLines: 2,
                   suffixIcon: CustomCloseButton(
                     onCleared: () {
                       searchController.clear();
-                      searchSegmentBloc.searchComponent('');
+                      searchSegmentBloc?.searchComponent('');
                     },
                   ),
                   alignLabelWithHint: true,
@@ -150,50 +150,60 @@ class SearchComponent extends StatelessWidget {
             ),
           ),
           StreamBuilder<List<SearchResultModel>>(
-            stream: searchSegmentBloc.searchResultsStream,
+            stream: searchSegmentBloc!.searchResultsStream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return LoadingIndicator();
               } else
                 return Expanded(
-                  child: snapshot.data.isEmpty
+                  child: snapshot.data!.isEmpty
                       ? Center(
                           child: Text(S.of(context).no_volunteers_available))
                       : ListView.builder(
-                          itemCount: snapshot.data.length,
+                          itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            return snapshot.data[index].userModel.sevaUserID !=
-                                    loggedInUser.sevaUserID
+                            return snapshot
+                                        .data![index].userModel?.sevaUserID !=
+                                    loggedInUser?.sevaUserID
                                 ? InkWell(
                                     onTap: () {
                                       handleSelection(
                                         associatedSevaUserId: snapshot
-                                            .data[index].userModel.sevaUserID,
+                                                .data?[index]
+                                                .userModel
+                                                ?.sevaUserID ??
+                                            '',
                                         isSelected:
-                                            snapshot.data[index].isSelected,
+                                            snapshot.data?[index].isSelected ??
+                                                false,
                                       );
                                     },
                                     child: Row(
                                       children: [
                                         Checkbox(
                                           value:
-                                              snapshot.data[index].isSelected,
+                                              snapshot.data![index].isSelected,
                                           onChanged: (selectedItem) {
                                             handleSelection(
                                               associatedSevaUserId: snapshot
-                                                  .data[index]
-                                                  .userModel
-                                                  .sevaUserID,
-                                              isSelected: snapshot
-                                                  .data[index].isSelected,
+                                                      .data![index]
+                                                      .userModel!
+                                                      .sevaUserID ??
+                                                  '',
+                                              isSelected: snapshot.data![index]
+                                                      .isSelected ??
+                                                  false,
                                             );
                                           },
                                         ),
                                         Text(
                                           "${_membersBloc.getMemberFromLocalData(
-                                                userId: snapshot.data[index]
-                                                    .userModel.sevaUserID,
-                                              ).fullname}",
+                                                userId: snapshot
+                                                        .data![index]
+                                                        .userModel
+                                                        ?.sevaUserID ??
+                                                    '',
+                                              )?.fullname ?? ''}",
                                           style: TextStyle(
                                             color: HexColor('#4A4A4A'),
                                             fontSize: 16,
@@ -211,12 +221,18 @@ class SearchComponent extends StatelessWidget {
           ),
           Center(
             child: CustomElevatedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                elevation: 2,
+                textColor: Colors.white,
                 color: Theme.of(context).primaryColor,
                 onPressed: () {
                   var listOfSelectedMembers =
-                      searchSegmentBloc.getSelectedUsersForShare();
-                  if (listOfSelectedMembers.length > 0) {
-                    pageController.animateToPage(
+                      searchSegmentBloc?.getSelectedUsersForShare();
+                  if ((listOfSelectedMembers?.length ?? 0) > 0) {
+                    pageController?.animateToPage(
                       2,
                       duration: Duration(milliseconds: 300),
                       curve: Curves.linear,
@@ -236,7 +252,8 @@ class SearchComponent extends StatelessWidget {
     );
   }
 
-  void showSelectMembersAlert({BuildContext context, String message}) {
+  void showSelectMembersAlert(
+      {required BuildContext context, required String message}) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -259,20 +276,21 @@ class SearchComponent extends StatelessWidget {
   }
 
   void handleSelection({
-    bool isSelected,
-    String associatedSevaUserId,
+    required bool isSelected,
+    required String associatedSevaUserId,
   }) {
     if (isSelected)
-      searchSegmentBloc.removeMemberToSelectedList(associatedSevaUserId);
+      searchSegmentBloc?.removeMemberToSelectedList(associatedSevaUserId);
     else
-      searchSegmentBloc.addMemberToSelectedList(associatedSevaUserId);
+      searchSegmentBloc?.addMemberToSelectedList(associatedSevaUserId);
   }
 }
 
 class CustomCloseButton extends StatelessWidget {
   final VoidCallback onCleared;
 
-  const CustomCloseButton({Key key, this.onCleared}) : super(key: key);
+  const CustomCloseButton({Key? key, required this.onCleared})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

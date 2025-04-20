@@ -41,14 +41,14 @@ class CategoryModel {
     this.data,
   });
 
-  String categoryId;
-  String title_en;
-  CategoryType type;
-  String typeId;
-  String logo;
-  String creatorId;
-  String creatorEmail;
-  final Map<String, String> data;
+  String? categoryId;
+  String? title_en;
+  CategoryType? type;
+  String? typeId;
+  String? logo;
+  String? creatorId;
+  String? creatorEmail;
+  final Map<String, String>? data;
 
   factory CategoryModel.fromMap(Map<String, dynamic> json) => CategoryModel(
         categoryId: json["categoryId"] == null ? null : json["categoryId"],
@@ -82,9 +82,7 @@ class CategoryModel {
 
   String getCategoryName(BuildContext context) {
     var key = S.of(context).localeName;
-    return data.containsKey('title_' + key)
-        ? data['title_' + key]
-        : data['title_en'];
+    return data?['title_' + key] ?? data?['title_en'] ?? '';
   }
 }
 

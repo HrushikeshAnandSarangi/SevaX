@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -27,17 +27,18 @@ class CreateCommunityMessage extends StatefulWidget {
   final ParentCommunityMessageBloc bloc;
   final ChatModel chatModel;
 
-  CreateCommunityMessage({Key key, this.bloc, this.chatModel})
+  CreateCommunityMessage(
+      {Key? key, required this.bloc, required this.chatModel})
       : super(key: key);
   @override
   _CreateCommunityMessageState createState() => _CreateCommunityMessageState();
 }
 
 class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
-  ParentCommunityMessageBloc bloc;
+  late ParentCommunityMessageBloc bloc;
 
   final TextEditingController _controller = TextEditingController();
-  BuildContext dialogContext;
+  late BuildContext dialogContext;
   List<String> ids = [];
   bool editable = false;
   @override
@@ -56,8 +57,10 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
               .id,
         );
         if (widget.chatModel != null &&
-            !widget.chatModel.groupDetails.admins
-                .contains(SevaCore.of(context).loggedInUser.currentTimebank)) {
+            widget.chatModel.groupDetails != null &&
+            !(widget.chatModel.groupDetails.admins?.contains(
+                    SevaCore.of(context).loggedInUser.currentTimebank) ??
+                false)) {
           editable = false;
         } else {
           editable = true;

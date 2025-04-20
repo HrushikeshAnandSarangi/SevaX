@@ -1,35 +1,57 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-GeoFirePoint getLocation(map) {
-  GeoFirePoint geoFirePoint;
+double? _parseDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is double) return value;
+  if (value is int) return value.toDouble();
+  if (value is String) return double.tryParse(value);
+  return null;
+}
 
+GeoFirePoint? getLocation(Map<String, dynamic> map) {
   try {
-    if (map.containsKey("location")) {
-      if (map['location'].containsKey('geopoint')) {
-        if (map['location']['geopoint'] is GeoPoint) {
-          GeoPoint d = map["location"]["geopoint"];
-          geoFirePoint = GeoFirePoint(
-            d.latitude,
-            d.longitude,
-          );
-        } else {
-          if (map['location']['geopoint'].containsKey('_latitude')) {
-            geoFirePoint = GeoFirePoint(
-              map["location"]["geopoint"]["_latitude"],
-              map["location"]["geopoint"]["_longitude"],
-            );
-          }
-        }
-      }
-    } else {
-      return null;
+    final locationData = map['location'];
+    if (locationData == null) return null;
+    if (locationData is GeoFirePoint) {
+      return locationData;
     }
-  } catch (e) {
-    logger.d("Failed to do the location conversion!", e);
-    e.toString();
-  }
 
-  return geoFirePoint;
+    double? latitude;
+    double? longitude;
+
+    if (locationData is Map<String, dynamic>) {
+      final dynamic geoPointData = locationData['geopoint'];
+      if (geoPointData is GeoPoint) {
+        latitude = geoPointData.latitude;
+        longitude = geoPointData.longitude;
+      } else if (geoPointData is Map<String, dynamic>) {
+        latitude =
+            _parseDouble(geoPointData['_latitude'] ?? geoPointData['latitude']);
+        longitude = _parseDouble(
+            geoPointData['_longitude'] ?? geoPointData['longitude']);
+      }
+
+      if (latitude == null || longitude == null) {
+        latitude =
+            _parseDouble(locationData['latitude'] ?? locationData['lat']);
+        longitude =
+            _parseDouble(locationData['longitude'] ?? locationData['lng']);
+      }
+    } else if (locationData is GeoPoint) {
+      latitude = locationData.latitude;
+      longitude = locationData.longitude;
+    }
+
+    if (latitude != null && longitude != null) {
+      return GeoFirePoint(GeoPoint(latitude, longitude));
+    }
+
+    logger.d("Unexpected location format: ${locationData.runtimeType}");
+    return null;
+  } catch (e, stackTrace) {
+    logger.d("GeoPoint conversion error", error: e, stackTrace: stackTrace);
+    return null;
+  }
 }

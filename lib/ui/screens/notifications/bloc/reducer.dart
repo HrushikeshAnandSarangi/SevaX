@@ -48,7 +48,7 @@ import '../../../../flavor_config.dart';
 import 'notifications_bloc.dart';
 
 class PersonalNotificationReducerForRequests {
-  static void showDialogForIncompleteTransactions(
+  void showDialogForIncompleteTransactions(
       BuildContext context, SoftDeleteRequestDataHolder deletionRequest) {
     var reason = S
             .of(context)
@@ -93,19 +93,18 @@ class PersonalNotificationReducerForRequests {
     );
   }
 
-  static Widget getWidgetNotificaitonForDeletionrequest({
-    NotificationsModel notification,
-    BuildContext context,
-    NotificationsBloc bloc,
-    String email,
+  Widget getWidgetNotificaitonForDeletionrequest({
+    required NotificationsModel notification,
+    required BuildContext context,
+    required NotificationsBloc bloc,
+    required String email,
   }) {
-    var requestData = SoftDeleteRequestDataHolder.fromMap(notification.data);
+    var requestData = SoftDeleteRequestDataHolder.fromMap(notification.data!);
 
     return NotificationCard(
-      timestamp: notification.timestamp,
-      entityName:
-          requestData.entityTitle ?? S.of(context).deletion_request_text,
-      photoUrl: null,
+      timestamp: notification.timestamp ?? 0,
+      entityName: requestData.entityTitle,
+      photoUrl: '',
       title: requestData.requestAccepted
           ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
           : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
@@ -116,49 +115,49 @@ class PersonalNotificationReducerForRequests {
                   ) +
               " "
           : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}  ",
-      onPressed: () => !requestData.requestAccepted
-          ? showDialogForIncompleteTransactions(
+      onPressed: requestData.requestAccepted
+          ? () {}
+          : () => showDialogForIncompleteTransactions(
               context,
               requestData,
-            )
-          : null,
+            ),
       onDismissed: () {
         onDismissed(
           bloc: bloc,
-          notificationId: notification.id,
+          notificationId: notification.id!,
           userEmail: email,
         );
       },
     );
   }
 
-  static Widget getWidgetNotificationForTransactionDebit({
-    NotificationsModel notification,
-    String loggedInUserEmail,
+  Widget getWidgetNotificationForTransactionDebit({
+    required NotificationsModel notification,
+    required String loggedInUserEmail,
   }) {
-    TransactionModel model = TransactionModel.fromMap(notification.data);
+    TransactionModel model = TransactionModel.fromMap(notification.data!);
 
     return FutureBuilder<UserModel>(
-      future: UserRepository.fetchUserById(notification.senderUserId),
+      future: UserRepository.fetchUserById(notification.senderUserId!),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        UserModel user = snapshot.data;
+        UserModel? user = snapshot.data;
 
         return NotificationCard(
-          timestamp: notification.timestamp,
-          entityName: user.fullname,
+          timestamp: notification.timestamp ?? 0,
+          entityName: user?.fullname ?? '',
           isDissmissible: true,
           onDismissed: () {
             NotificationsRepository.readUserNotification(
-              notification.id,
+              notification.id!,
               loggedInUserEmail,
             );
           },
-          onPressed: null,
-          photoUrl: user.photoURL,
+          onPressed: () {},
+          photoUrl: user?.photoURL ?? '',
           title: S.of(context).notifications_debited,
           subTitle:
               "${model.credits} ${S.of(context).seva_credits} ${S.of(context).notifications_debited_to} ",
@@ -167,21 +166,21 @@ class PersonalNotificationReducerForRequests {
     );
   }
 
-  static Widget getWidgetNotificationForGroupJoinInvite({
-    NotificationsModel notification,
-    BuildContext context,
-    UserModel user,
+  Widget getWidgetNotificationForGroupJoinInvite({
+    required NotificationsModel notification,
+    required BuildContext context,
+    required UserModel user,
   }) {
     GroupInviteUserModel groupInviteUserModel =
-        GroupInviteUserModel.fromMap(notification.data);
+        GroupInviteUserModel.fromMap(notification.data!);
 
     return NotificationCard(
-      timestamp: notification.timestamp,
-      entityName: groupInviteUserModel.timebankName.toLowerCase(),
+      timestamp: notification.timestamp ?? 0,
+      entityName: groupInviteUserModel.timebankName?.toLowerCase() ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-            notification.id, user.email);
+            notification.id!, user.email!);
       },
       onPressed: () {
         showDialog(
@@ -189,47 +188,47 @@ class PersonalNotificationReducerForRequests {
           builder: (context) {
             return GroupJoinRejectDialogView(
               groupInviteUserModel: groupInviteUserModel,
-              timeBankId: groupInviteUserModel.groupId,
-              notificationId: notification.id,
+              timeBankId: groupInviteUserModel.groupId ?? '',
+              notificationId: notification.id!,
               userModel: user,
             );
           },
         );
       },
-      photoUrl: groupInviteUserModel.timebankImage,
+      photoUrl: groupInviteUserModel.timebankImage ?? '',
       subTitle:
-          '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view} ',
+          '${groupInviteUserModel.adminName?.toLowerCase() ?? ''} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view} ',
       title: "${S.of(context).notifications_group_join_invite}",
     );
   }
 
-  static Widget getWidgetNotificationForTransactionCredit({
-    NotificationsModel notification,
-    String loggedInUserEmail,
+  Widget getWidgetNotificationForTransactionCredit({
+    required NotificationsModel notification,
+    required String loggedInUserEmail,
   }) {
-    TransactionModel model = TransactionModel.fromMap(notification.data);
+    TransactionModel model = TransactionModel.fromMap(notification.data!);
 
     return FutureBuilder<UserModel>(
-      future: UserRepository.fetchUserById(notification.senderUserId),
+      future: UserRepository.fetchUserById(notification.senderUserId!),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        UserModel user = snapshot.data;
+        UserModel? user = snapshot.data;
 
         return NotificationCard(
-          timestamp: notification.timestamp,
-          entityName: user.fullname,
+          timestamp: notification.timestamp ?? 0,
+          entityName: user?.fullname ?? '',
           isDissmissible: true,
           onDismissed: () {
             NotificationsRepository.readUserNotification(
-              notification.id,
+              notification.id!,
               loggedInUserEmail,
             );
           },
-          onPressed: null,
-          photoUrl: user.photoURL,
+          onPressed: () {},
+          photoUrl: user?.photoURL ?? '',
           title: S.of(context).notifications_credited,
           subTitle:
               ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).seva_credits} ${S.of(context).notifications_credited_to}. ',
@@ -238,41 +237,42 @@ class PersonalNotificationReducerForRequests {
     );
   }
 
-  static Widget getWidgetForRequestCompletedApproved({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
+  Widget getWidgetForRequestCompletedApproved({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
   }) {
-    RequestModel model = RequestModel.fromMap(notification.data);
-    TransactionModel transactionModel = model.transactions.firstWhere(
+    RequestModel model = RequestModel.fromMap(notification.data!);
+    TransactionModel? transactionModel = model.transactions?.firstWhere(
       (transaction) => transaction.to == user.sevaUserID,
+      orElse: () => TransactionModel(),
     );
     return NotificationCard(
-      timestamp: notification.timestamp,
-      entityName: model.fullName,
+      timestamp: notification.timestamp ?? 0,
+      entityName: model.fullName ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id!,
+          user.email!,
         );
       },
-      onPressed: null,
-      photoUrl: model.photoUrl,
+      onPressed: () {},
+      photoUrl: model.photoUrl ?? '',
       subTitle:
-          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour} ',
+          '${model.fullName ?? ''} ${S.of(context).notifications_approved_for}  ${transactionModel?.credits ?? 0} ${(transactionModel?.credits ?? 0) > 1 ? S.of(context).hours : S.of(context).hour} ',
       //plural here
-      title: model.title,
+      title: model.title ?? '',
     );
   }
 
-  static Widget getWidgetForRequestCompleted({
-    NotificationsModel notification,
-    BuildContext parentContext,
+  Widget getWidgetForRequestCompleted({
+    required NotificationsModel notification,
+    required BuildContext parentContext,
   }) {
-    RequestModel model = RequestModel.fromMap(notification.data);
+    RequestModel model = RequestModel.fromMap(notification.data!);
     return FutureBuilder<RequestModel>(
-      future: RequestRepository.getRequestFutureById(model.id),
+      future: RequestRepository.getRequestFutureById(model.id!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -281,18 +281,17 @@ class PersonalNotificationReducerForRequests {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        RequestModel model = snapshot.data;
+        RequestModel? model = snapshot.data;
         return RequestCompleteWidget(
           parentContext: parentContext,
-          model: model,
-          userId: notification.senderUserId,
-          notificationId: notification.id,
+          model: model!,
+          userId: notification.senderUserId ?? '',
+          notificationId: notification.id ?? '',
         );
       },
     );
   }
-
-  static void _settingModalBottomSheet(
+  void settingModalBottomSheet(
       BuildContext context,
       RequestInvitationModel requestInvitationModel,
       String timebankId,
@@ -327,7 +326,7 @@ class PersonalNotificationReducerForRequests {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Home,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel.calendar_sync!,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -341,9 +340,9 @@ class PersonalNotificationReducerForRequests {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
-                                await launch(authorizationUrl.toString());
+                              final uri = Uri.parse(authorizationUrl.toString());
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
                               }
                               Navigator.of(bc).pop();
                               showDialog(
@@ -363,7 +362,7 @@ class PersonalNotificationReducerForRequests {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Home,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel.calendar_sync!,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -377,9 +376,9 @@ class PersonalNotificationReducerForRequests {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
-                                await launch(authorizationUrl.toString());
+                              final uri = Uri.parse(authorizationUrl.toString());
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
                               }
                               Navigator.of(bc).pop();
                               showDialog(
@@ -399,7 +398,7 @@ class PersonalNotificationReducerForRequests {
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Home,
                         upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                            AppConfig.upgradePlanBannerModel.calendar_sync!,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -412,9 +411,9 @@ class PersonalNotificationReducerForRequests {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
-                                await launch(authorizationUrl.toString());
+                              final uri = Uri.parse(authorizationUrl.toString());
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
                               }
                               Navigator.of(bc).pop();
                               showDialog(
@@ -465,14 +464,15 @@ class PersonalNotificationReducerForRequests {
           );
         });
   }
+  }
 
   static Widget getWidgetForAcceptedOfferNotification({
-    NotificationsModel notification,
+    required NotificationsModel notification,
   }) {
     OfferAcceptedNotificationModel acceptedOffer =
-        OfferAcceptedNotificationModel.fromMap(notification.data);
+        OfferAcceptedNotificationModel.fromMap(notification.data!);
     return FutureBuilder<UserModel>(
-      future: UserRepository.fetchUserById(acceptedOffer.acceptedBy),
+      future: UserRepository.fetchUserById(acceptedOffer.acceptedBy!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -480,35 +480,36 @@ class PersonalNotificationReducerForRequests {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
+        UserModel? user = snapshot.data;
+        if (user == null) return Container();
 
         return NotificationCard(
-          timestamp: notification.timestamp,
-          entityName: user.fullname,
+          timestamp: notification.timestamp ?? 0,
+          entityName: user.fullname ?? '',
           isDissmissible: true,
           onDismissed: () {
             NotificationsRepository.readUserNotification(
-              notification.id,
-              user.email,
+              notification.id!,
+              user.email!,
             );
           },
-          onPressed: null,
-          photoUrl: user.photoURL,
+          onPressed: () {},
+          photoUrl: user.photoURL ?? '',
           title: S.of(context).notifications_offer_accepted,
           subTitle:
-              '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest} ',
+              '${user.fullname?.toLowerCase() ?? ''} ${S.of(context).notifications_shown_interest} ',
         );
       },
     );
   }
 
   static Widget getOfferRequestInvitation({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
   }) {
     TimeOfferParticipantsModel timeOfferParticipantsModel =
-        TimeOfferParticipantsModel.fromJSON(notification.data);
+        TimeOfferParticipantsModel.fromJSON(notification.data!);
 
     return _getNotificationCardForOfferRequestInvitationRequest(
       notification: notification,
@@ -519,14 +520,14 @@ class PersonalNotificationReducerForRequests {
   }
 
   static Widget getInvitationForRequest({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
   }) {
     RequestInvitationModel requestInvitationModel =
-        RequestInvitationModel.fromMap(notification.data);
+        RequestInvitationModel.fromMap(notification.data!);
 
-    switch (requestInvitationModel.requestModel.requestType) {
+    switch (requestInvitationModel.requestModel?.requestType) {
       case RequestType.TIME:
         return _getNotificationCardForTimeInvitationRequest(
           notification: notification,
@@ -571,23 +572,23 @@ class PersonalNotificationReducerForRequests {
   }
 
   static Widget _getNotificationCardForOneToManyInvitationRequest({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
-    RequestInvitationModel requestInvitationModel,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
   }) {
     return NotificationCard(
-      entityName: requestInvitationModel.timebankModel.name,
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id!,
+          user.email!,
         );
       },
-      photoUrl: requestInvitationModel.timebankModel.photoUrl,
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
       subTitle:
-          '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel?.title ?? ''}, ${S.of(context).notifications_tap_to_view}',
       title: S.of(context).join_webinar,
       onPressed: () {
         //TODO calendar updated please test.
@@ -601,8 +602,8 @@ class PersonalNotificationReducerForRequests {
           builder: (context) {
             return JoinRejectDialogView(
               requestInvitationModel: requestInvitationModel,
-              timeBankId: notification.timebankId,
-              notificationId: notification.id,
+              timeBankId: notification.timebankId ?? '',
+              notificationId: notification.id ?? '',
               userModel: user,
             );
           },
@@ -612,94 +613,94 @@ class PersonalNotificationReducerForRequests {
                 builder: KloudlessWidgetBuilder()
                     .fromContext<ApplyMode, RequestModel>(
                   context: context,
-                  id: requestInvitationModel.requestModel.id,
-                  model: requestInvitationModel.requestModel,
+                  id: requestInvitationModel.requestModel?.id ?? '',
+                  model: requestInvitationModel.requestModel!,
                 ),
               )
             });
       },
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
     );
   }
 
   static Widget _getNotificationCardForGoodsInvitationRequest({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
-    RequestInvitationModel requestInvitationModel,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
   }) {
     return NotificationCard(
-      entityName: requestInvitationModel.timebankModel.name,
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id!,
+          user.email!,
         );
       },
-      photoUrl: requestInvitationModel.timebankModel.photoUrl,
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
       subTitle:
-          '${requestInvitationModel.timebankModel.name} ${S.of(context).goods_donation_invite}',
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).goods_donation_invite}',
       title:
-          "${requestInvitationModel.timebankModel.name} ${S.of(context).has_goods_donation}",
+          "${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).has_goods_donation}",
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
               return DonationView(
-                requestModel: requestInvitationModel.requestModel,
-                timabankName: requestInvitationModel.timebankModel.name,
-                notificationId: notification.id,
+                requestModel: requestInvitationModel.requestModel!,
+                timabankName: requestInvitationModel.timebankModel?.name ?? '',
+                notificationId: notification.id ?? '',
               );
             },
           ),
         );
       },
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
     );
   }
 
   static Widget _getNotificationCardForCashInvitationRequest({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
-    RequestInvitationModel requestInvitationModel,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
   }) {
     return NotificationCard(
-      entityName: requestInvitationModel.timebankModel.name,
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id!,
+          user.email!,
         );
       },
-      photoUrl: requestInvitationModel.timebankModel.photoUrl,
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
       subTitle:
-          '${requestInvitationModel.timebankModel.name} ${S.of(context).cash_donation_invite}',
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).cash_donation_invite}',
       title:
-          "${requestInvitationModel.timebankModel.name} ${S.of(context).has_cash_donation}",
+          "${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).has_cash_donation}",
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
-            notificationId: notification.id,
-            requestModel: requestInvitationModel.requestModel,
-            timabankName: requestInvitationModel.timebankModel.name,
+            notificationId: notification.id ?? '',
+            requestModel: requestInvitationModel.requestModel!,
+            timabankName: requestInvitationModel.timebankModel?.name ?? '',
           );
         }));
       },
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
     );
   }
 
   static Widget getNotificationForRequestAccept({
-    NotificationsModel notification,
+    required NotificationsModel notification,
   }) {
-    RequestModel model = RequestModel.fromMap(notification.data);
+    final model = RequestModel.fromMap(notification.data ?? <dynamic, dynamic>{});
 
     return FutureBuilder<RequestModel>(
-        future: RequestRepository.getRequestFutureById(model.id),
+        future: RequestRepository.getRequestFutureById(model.id ?? ''),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             log('Error request accept');
@@ -709,83 +710,85 @@ class PersonalNotificationReducerForRequests {
             return LoadingIndicator();
           }
 
-          log('request type: ' + model.requestType.toString());
+          log('request type: ' + (model.requestType?.toString() ?? ''));
+
+          if (snapshot.data == null) return Container();
 
           return RequestAcceptedWidget(
-            model: snapshot.data,
-            userId: notification.senderUserId,
-            notificationId: notification.id,
+            model: snapshot.data!,
+            userId: notification.senderUserId ?? '',
+            notificationId: notification.id ?? '',
           );
         });
   }
 
   static Widget getNotificationForRecurringOffer({
-    NotificationsModel notification,
-    NotificationsBloc bloc,
-    BuildContext context,
-    UserModel user,
+    required NotificationsModel notification,
+    required NotificationsBloc bloc,
+    required BuildContext context,
+    required UserModel user,
   }) {
-    ReccuringOfferUpdated eventData =
-        ReccuringOfferUpdated.fromMap(notification.data);
+    final eventData =
+        ReccuringOfferUpdated.fromMap(notification.data ?? <String, dynamic>{});
     return NotificationCard(
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
       title: S.of(context).offer_updated,
       subTitle:
           "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-              .replaceFirst('***eventName', eventData.eventName)
+              .replaceFirst('***eventName', eventData.eventName ?? '')
               .replaceFirst(
                   '***eventDate',
                   DateTime.fromMillisecondsSinceEpoch(
-                    eventData.eventDate,
+                    eventData.eventDate ?? 0,
                   ).toString()),
       entityName: S.of(context).request_updated,
-      photoUrl: eventData.photoUrl,
+      photoUrl: eventData.photoUrl ?? '',
       onDismissed: () {
         onDismissed(
           bloc: bloc,
-          notificationId: notification.id,
-          userEmail: user.email,
+          notificationId: notification.id ?? '',
+          userEmail: user.email ?? '',
         );
       },
     );
   }
 
   static Widget getNotificationForRecurringRequestUpdated({
-    NotificationsModel notification,
-    NotificationsBloc bloc,
-    BuildContext context,
-    UserModel user,
+    required NotificationsModel notification,
+    required NotificationsBloc bloc,
+    required BuildContext context,
+    required UserModel user,
   }) {
-    ReccuringRequestUpdated eventData =
-        ReccuringRequestUpdated.fromMap(notification.data);
+    final eventData =
+        ReccuringRequestUpdated.fromMap(notification.data ?? <String, dynamic>{});
     return NotificationCard(
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
       title: S.of(context).request_updated,
       subTitle:
           "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-              .replaceFirst('***eventName', eventData.eventName)
+              .replaceFirst('***eventName', eventData.eventName ?? '')
               .replaceFirst(
                 '***eventDate',
                 DateTime.fromMillisecondsSinceEpoch(
-                  eventData.eventDate,
+                  eventData.eventDate ?? 0,
                 ).toString(),
               ),
       entityName: S.of(context).request_updated,
-      photoUrl: eventData.photoUrl,
+      photoUrl: eventData.photoUrl ?? '',
       onDismissed: () {
         onDismissed(
           bloc: bloc,
-          notificationId: notification.id,
-          userEmail: user.email,
+          notificationId: notification.id ?? '',
+          userEmail: user.email ?? '',
         );
       },
     );
   }
 
   static Future<void> onDismissed({
-    String notificationId,
-    String userEmail,
-    NotificationsBloc bloc,
+    required String notificationId,
+    required String userEmail,
+    required NotificationsBloc bloc,
   }) async {
     await bloc.clearNotification(
       notificationId: notificationId,
@@ -794,12 +797,12 @@ class PersonalNotificationReducerForRequests {
   }
 
   static Widget getNotificationForJoinRequest({
-    NotificationsModel notification,
+    required NotificationsModel notification,
   }) {
-    JoinRequestNotificationModel model =
-        JoinRequestNotificationModel.fromMap(notification.data);
+    final model =
+        JoinRequestNotificationModel.fromMap(notification.data ?? <String, dynamic>{});
     return FutureBuilder<UserModel>(
-      future: UserRepository.fetchUserById(notification.senderUserId),
+      future: UserRepository.fetchUserById(notification.senderUserId ?? ''),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -807,34 +810,33 @@ class PersonalNotificationReducerForRequests {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
-        return user != null && user.fullname != null
-            ? NotificationCard(
-                timestamp: notification.timestamp,
-                entityName: user.fullname,
-                title: S.of(context).notifications_join_request,
-                isDissmissible: true,
-                onDismissed: () {
-                  NotificationsRepository.readUserNotification(
-                    notification.id,
-                    user.email,
-                  );
-                },
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => JoinRequestView(
-                        timebankId: model.timebankId,
-                      ),
-                    ),
-                  );
-                },
-                photoUrl: user.photoURL,
-                subTitle:
-                    '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view} ',
-              )
-            : Container();
+        final user = snapshot.data;
+        if (user == null) return Container();
+        return NotificationCard(
+          timestamp: notification.timestamp ?? 0,
+          entityName: user.fullname ?? '',
+          title: S.of(context).notifications_join_request,
+          isDissmissible: true,
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id ?? '',
+              user.email ?? '',
+            );
+          },
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => JoinRequestView(
+                  timebankId: model.timebankId ?? '',
+                ),
+              ),
+            );
+          },
+          photoUrl: user.photoURL ?? '',
+          subTitle:
+              '${user.fullname?.toLowerCase() ?? ''} ${S.of(context).notifications_requested_join} ${model.timebankTitle ?? ''}, ${S.of(context).notifications_tap_to_view} ',
+        );
       },
     );
   }
@@ -842,23 +844,23 @@ class PersonalNotificationReducerForRequests {
   //
 
   static Widget _getNotificationCardForTimeInvitationRequest({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
-    RequestInvitationModel requestInvitationModel,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
   }) {
     return NotificationCard(
-      entityName: requestInvitationModel.timebankModel.name,
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id ?? '',
+          user.email ?? '',
         );
       },
-      photoUrl: requestInvitationModel.timebankModel.photoUrl,
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
       subTitle:
-          '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel?.title ?? ''}, ${S.of(context).notifications_tap_to_view}',
       title: S.of(context).notifications_join_request,
       onPressed: () {
         // if (SevaCore.of(context).loggedInUser.calendarId == null) {
@@ -871,84 +873,85 @@ class PersonalNotificationReducerForRequests {
           builder: (context) {
             return JoinRejectDialogView(
               requestInvitationModel: requestInvitationModel,
-              timeBankId: notification.timebankId,
-              notificationId: notification.id,
+              timeBankId: notification.timebankId ?? '',
+              notificationId: notification.id ?? '',
               userModel: user,
             );
           },
         ).then((value) => {
-              KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
-                context: context,
-                builder: KloudlessWidgetBuilder()
-                    .fromContext<ApplyMode, RequestModel>(
+              if (requestInvitationModel.requestModel != null)
+                KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
                   context: context,
-                  id: requestInvitationModel.requestModel.id,
-                  model: requestInvitationModel.requestModel,
-                ),
-              )
+                  builder: KloudlessWidgetBuilder()
+                      .fromContext<ApplyMode, RequestModel>(
+                    context: context,
+                    id: requestInvitationModel.requestModel?.id ?? '',
+                    model: requestInvitationModel.requestModel!,
+                  ),
+                )
             });
       },
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
     );
   }
 
   static Widget _getNotificationCardForOfferRequestInvitationRequest({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
-    TimeOfferParticipantsModel timeOfferParticipantsModel,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required TimeOfferParticipantsModel timeOfferParticipantsModel,
   }) {
     return NotificationCard(
-      entityName: timeOfferParticipantsModel.participantDetails.fullname,
+      entityName: timeOfferParticipantsModel.participantDetails.fullname ?? '',
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id ?? '',
+          user.email ?? '',
         );
       },
-      photoUrl: timeOfferParticipantsModel.participantDetails.photourl,
-      subTitle: timeOfferParticipantsModel.participantDetails.fullname +
-          S.of(context).invitation_accepted_subtitle,
+      photoUrl: timeOfferParticipantsModel.participantDetails.photourl ?? '',
+      subTitle: '${timeOfferParticipantsModel.participantDetails.fullname ?? ''}${S.of(context).invitation_accepted_subtitle}',
       title: S.of(context).invitation_accepted,
       onPressed: () {
         showDialog(
           context: context,
           builder: (context) {
             return OfferJoinRequestDialog(
-              offerId: timeOfferParticipantsModel.offerId,
-              requestId: timeOfferParticipantsModel.requestId,
-              requestStartDate: timeOfferParticipantsModel.requestStartDate,
-              requestEndDate: timeOfferParticipantsModel.requestEndDate,
-              requestTitle: timeOfferParticipantsModel.requestTitle,
-              timeBankId: notification.timebankId,
-              notificationId: notification.id,
+              offerId: timeOfferParticipantsModel.offerId ?? '',
+              requestId: timeOfferParticipantsModel.requestId ?? '',
+              requestStartDate: timeOfferParticipantsModel.requestStartDate ?? 0,
+              requestEndDate: timeOfferParticipantsModel.requestEndDate ?? 0,
+              requestTitle: timeOfferParticipantsModel.requestTitle ?? '',
+              timeBankId: notification.timebankId ?? '',
+              notificationId: notification.id ?? '',
               userModel: user,
               timeOfferParticipantsModel: timeOfferParticipantsModel,
             );
           },
         );
       },
-      timestamp: notification.timestamp,
+      timestamp: notification.timestamp ?? 0,
     );
   }
+}
 }
 
 class PersonalNotificationsReducerForOffer {
   static Widget getNotificationFromOfferCreator({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
   }) {
-    OfferModel model = OfferModel.fromMap(notification.data);
+    OfferModel model = OfferModel.fromMap(notification.data as Map<dynamic, dynamic>);
     return NotificationCard(
       isDissmissible: true,
-      timestamp: notification.timestamp,
-      entityName: model.fullName,
+      timestamp: notification.timestamp ?? 0,
+      entityName: model.fullName ?? '',
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
+          notification.id ?? '',
+          user.email ?? '',
         );
       },
       onPressed: () async {
@@ -957,25 +960,26 @@ class PersonalNotificationsReducerForOffer {
           MaterialPageRoute(
             builder: (parentContext) => CreateOfferRequest(
               offer: model,
-              timebankId: model.timebankId,
+              timebankId: model.timebankId ?? '',
             ),
           ),
         );
       },
       photoUrl: model.photoUrlImage ?? defaultUserImageURL,
       subTitle:
-          model.fullName + S.of(context).offer_invitation_notification_subtitle,
+          (model.fullName ?? '') + S.of(context).offer_invitation_notification_subtitle,
       title: S.of(context).offer_invitation_notification_title,
     );
   }
+  }
 
   static Widget getNotificationForLendingOfferAccept({
-    NotificationsModel notification,
+    required NotificationsModel notification,
   }) {
-    var model = OfferModel.fromMap(notification.data);
+    var model = OfferModel.fromMap(notification.data as Map<dynamic, dynamic>);
 
     return FutureBuilder<UserModel>(
-      future: UserRepository.fetchUserById(notification.senderUserId),
+      future: UserRepository.fetchUserById(notification.senderUserId ?? ''),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -983,111 +987,107 @@ class PersonalNotificationsReducerForOffer {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
-        return user != null && user.fullname != null
-            ? NotificationCard(
-                timestamp: notification.timestamp,
-                entityName: 'NAME',
-                isDissmissible: true,
-                onPressed: () async {
-                  //Implemented by lending offer team
-                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
-                      await LendingOffersRepo.getBorrowAcceptorModel(
-                          offerId: model.id, acceptorEmail: user.email);
-                  //Fetch latest offer model
-                  OfferModel offerModel =
-                      await getOfferFromId(offerId: model.id);
+        UserModel? user = snapshot.data;
+        if (user == null) return Container();
+        return NotificationCard(
+          timestamp: notification.timestamp ?? 0,
+          entityName: 'NAME',
+          isDissmissible: true,
+          onPressed: () async {
+            //Implemented by lending offer team
+            LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                await LendingOffersRepo.getBorrowAcceptorModel(
+                    offerId: model.id ?? '', acceptorEmail: user.email ?? '');
+            //Fetch latest offer model
+            OfferModel offerModel =
+                await getOfferFromId(offerId: model.id ?? '');
 
-                  //Implemented by lending offer team
-                  LendingOfferAcceptorModel lendingOfferAcceptorModelOfApproved;
-                  if (offerModel.lendingOfferDetailsModel.approvedUsers.length >
-                      0) {
-                    lendingOfferAcceptorModelOfApproved =
-                        await LendingOffersRepo.getBorrowAcceptorModel(
-                            offerId: model.id,
-                            acceptorEmail: offerModel
-                                .lendingOfferDetailsModel.approvedUsers.first);
-                  }
-                  //Dialog box also to restrict approving more than one Borrower at a time.
-                  bool isCurrentlyLent = false;
-                  if (offerModel.lendingOfferDetailsModel.approvedUsers !=
-                          null &&
-                      offerModel.lendingOfferDetailsModel.approvedUsers.length >
-                          0) {
-                    isCurrentlyLent = true;
-                  }
+            //Implemented by lending offer team
+            LendingOfferAcceptorModel? lendingOfferAcceptorModelOfApproved;
+            if ((offerModel.lendingOfferDetailsModel?.approvedUsers?.length ?? 0) > 0) {
+              lendingOfferAcceptorModelOfApproved =
+                  await LendingOffersRepo.getBorrowAcceptorModel(
+                      offerId: model.id ?? '',
+                      acceptorEmail: offerModel
+                          .lendingOfferDetailsModel!.approvedUsers!.first);
+            }
+            //Dialog box also to restrict approving more than one Borrower at a time.
+            bool isCurrentlyLent = false;
+            if ((offerModel.lendingOfferDetailsModel?.approvedUsers?.length ?? 0) > 0) {
+              isCurrentlyLent = true;
+            }
 
-                  if (isCurrentlyLent) {
-                    return showDialog(
-                        context: context,
-                        builder: (dialogContext) {
-                          return AlertDialog(
-                            content: Container(
-                              height: MediaQuery.of(context).size.width * 0.40,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      InkWell(
-                                        child: Icon(
-                                          Icons.cancel_rounded,
-                                          color: Colors.grey,
-                                        ),
-                                        onTap: () =>
-                                            Navigator.of(dialogContext).pop(),
-                                      ),
-                                    ],
+            if (isCurrentlyLent) {
+              return showDialog(
+                  context: context,
+                  builder: (dialogContext) {
+                    return AlertDialog(
+                      content: Container(
+                        height: MediaQuery.of(context).size.width * 0.40,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  child: Icon(
+                                    Icons.cancel_rounded,
+                                    color: Colors.grey,
                                   ),
-                                  Text(offerModel.lendingOfferDetailsModel
-                                              .lendingModel.lendingType ==
-                                          LendingType.PLACE
-                                      ? S
-                                          .of(context)
-                                          .cannot_approve_multiple_borrowers_place
-                                          .replaceAll(
-                                              " **name",
-                                              lendingOfferAcceptorModelOfApproved
-                                                  .acceptorName)
-                                      : S
-                                          .of(context)
-                                          .cannot_approve_multiple_borrowers_item
-                                          .replaceAll(
-                                              " **name",
-                                              lendingOfferAcceptorModelOfApproved
-                                                  .acceptorName)),
-                                ],
-                              ),
+                                  onTap: () =>
+                                      Navigator.of(dialogContext).pop(),
+                                ),
+                              ],
                             ),
-                          );
-                        });
-                  } else {
-                    //if no other member is currently approved
-                    //then we can navigate to approve page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        // fullscreenDialog: true,
-                        builder: (context) => ApproveLendingOffer(
-                          offerModel: model,
-                          lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                            Text((offerModel.lendingOfferDetailsModel?.lendingModel?.lendingType ?? LendingType.PLACE) ==
+                                    LendingType.PLACE
+                                ? S
+                                    .of(context)
+                                    .cannot_approve_multiple_borrowers_place
+                                    .replaceAll(
+                                        " **name",
+                                        lendingOfferAcceptorModelOfApproved
+                                                ?.acceptorName ??
+                                            '')
+                                : S
+                                    .of(context)
+                                    .cannot_approve_multiple_borrowers_item
+                                    .replaceAll(
+                                        " **name",
+                                        lendingOfferAcceptorModelOfApproved
+                                                ?.acceptorName ??
+                                            '')),
+                          ],
                         ),
                       ),
                     );
-                  }
-                },
-                photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
-                title: '${model.individualOfferDataModel.title}',
-                subTitle:
-                    "${user.fullname} ${S.of(context).accepted} ${model.individualOfferDataModel.title}",
-                onDismissed: () {
-                  NotificationsRepository.readUserNotification(
-                    notification.id,
-                    notification.targetUserId,
-                  );
-                },
-              )
-            : Container();
+                  });
+            } else {
+              //if no other member is currently approved
+              //then we can navigate to approve page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  // fullscreenDialog: true,
+                  builder: (context) => ApproveLendingOffer(
+                    offerModel: model,
+                    lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                  ),
+                ),
+              );
+            }
+          },
+          photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
+          title: '${model.individualOfferDataModel?.title ?? ''}',
+          subTitle:
+              "${user.fullname ?? ''} ${S.of(context).accepted} ${model.individualOfferDataModel?.title ?? ''}",
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id ?? '',
+              notification.targetUserId ?? '',
+            );
+          },
+        );
       },
     );
   }
@@ -1097,23 +1097,29 @@ class PersonalNotificationsRedcerForDonations {
   static Widget getWidgetNotificationForAcknowlegeDonorDonation({
     NotificationsModel notification,
     UserModel user,
-    BuildContext context,
+class PersonalNotificationsRedcerForDonations {
+  static Widget getWidgetNotificationForAcknowlegeDonorDonation({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
   }) {
-    DonationModel donationModel = DonationModel.fromMap(notification.data);
+    DonationModel donationModel = DonationModel.fromMap(notification.data as Map<String, dynamic>);
     return FutureBuilder<double>(
         future: donationModel.requestIdType == 'offer'
             ? currencyConversion(
                 fromCurrency:
-                    donationModel.cashDetails.cashDetails.offerCurrencyType,
+                    donationModel.cashDetails?.cashDetails?.offerCurrencyType ?? '',
                 toCurrency: donationModel
-                    .cashDetails.cashDetails.offerDonatedCurrencyType,
-                amount: donationModel.cashDetails.pledgedAmount)
+                    .cashDetails?.cashDetails?.offerDonatedCurrencyType ?? '',
+                amount: donationModel.cashDetails?.pledgedAmount ?? 0.0)
             : currencyConversion(
                 fromCurrency: donationModel
-                    .cashDetails.cashDetails.requestDonatedCurrency,
+                        .cashDetails?.cashDetails?.requestDonatedCurrency ??
+                    '',
                 toCurrency:
-                    donationModel.cashDetails.cashDetails.requestCurrencyType,
-                amount: donationModel.cashDetails.pledgedAmount),
+                    donationModel.cashDetails?.cashDetails?.requestCurrencyType ??
+                        '',
+                amount: donationModel.cashDetails?.pledgedAmount ?? 0.0),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text(
@@ -1128,15 +1134,15 @@ class PersonalNotificationsRedcerForDonations {
             //   child: LoadingIndicator(),
             // );
           }
-          double amount = snapshot.data;
+          double amount = snapshot.data ?? 0.0;
           return NotificationCard(
             isDissmissible: false,
-            timestamp: notification.timestamp,
-            entityName: donationModel.requestTitle.toLowerCase(),
+            timestamp: notification.timestamp ?? 0,
+            entityName: donationModel.requestTitle?.toLowerCase() ?? '',
             onDismissed: () {
               NotificationsRepository.readUserNotification(
-                notification.id,
-                user.email,
+                notification.id ?? '',
+                user.email ?? '',
               );
             },
             onPressed: () async {
@@ -1146,35 +1152,33 @@ class PersonalNotificationsRedcerForDonations {
                     convertedAmount: amount,
                     currency: donationModel.requestIdType == 'offer'
                         ? donationModel
-                            .cashDetails.cashDetails.offerDonatedCurrencyType
+                                .cashDetails?.cashDetails?.offerDonatedCurrencyType ??
+                            ''
                         : donationModel
-                            .cashDetails.cashDetails.requestCurrencyType,
-                    notificationId: notification.id,
+                                .cashDetails?.cashDetails?.requestCurrencyType ??
+                            '',
+                    notificationId: notification.id ?? '',
                     model: donationModel,
                   ),
                 ),
               );
             },
-            photoUrl: donationModel.donorDetails.photoUrl,
+            photoUrl: donationModel.donorDetails?.photoUrl ?? '',
             subTitle:
-                "${donationModel.donorDetails.name} ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "${donationModel.requestIdType == 'offer' ? donationModel.cashDetails.cashDetails.offerDonatedCurrencyType : donationModel.cashDetails.cashDetails.requestCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                "${donationModel.donorDetails?.name ?? ''} ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "${donationModel.requestIdType == 'offer' ? donationModel.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? '' : donationModel.cashDetails?.cashDetails?.requestCurrencyType ?? ''} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
             title: S.of(context).donations_received,
-          );
-        });
-  }
-
   static Widget getWidgetNotificationForOfferRequestGoods({
-    NotificationsModel notification,
-    UserModel user,
-    BuildContext context,
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
   }) {
-    DonationModel donationModel = DonationModel.fromMap(notification.data);
+    DonationModel donationModel = DonationModel.fromMap(notification.data as Map<String, dynamic>);
     return FutureBuilder<double>(
         future: currencyConversion(
             fromCurrency:
-                donationModel.cashDetails.cashDetails.offerDonatedCurrencyType,
-            toCurrency: donationModel.cashDetails.cashDetails.offerCurrencyType,
-            amount: donationModel.cashDetails.cashDetails.amountRaised),
+                donationModel.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? '',
+            toCurrency: donationModel.cashDetails?.cashDetails?.offerCurrencyType ?? '',
+            amount: donationModel.cashDetails?.cashDetails?.amountRaised ?? 0.0),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text(
@@ -1192,61 +1196,61 @@ class PersonalNotificationsRedcerForDonations {
           double amount;
           if (donationModel.requestIdType == 'offer' &&
               donationModel.donationStatus == DonationStatus.REQUESTED) {
-            amount = snapshot.data;
+            amount = snapshot.data ?? 0.0;
           } else {
-            amount = donationModel.cashDetails.pledgedAmount;
+            amount = donationModel.cashDetails?.pledgedAmount ?? 0.0;
           }
           return NotificationCard(
             isDissmissible: false,
-            timestamp: notification.timestamp,
-            entityName: donationModel.requestTitle.toLowerCase(),
+            timestamp: notification.timestamp ?? 0,
+            entityName: donationModel.requestTitle?.toLowerCase() ?? '',
             onDismissed: () {
               NotificationsRepository.readUserNotification(
-                notification.id,
-                user.email,
+                notification.id ?? '',
+                user.email ?? '',
               );
             },
             onPressed: () async {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => RequestDonationDisputePage(
-                    notificationId: notification.id,
+                    notificationId: notification.id ?? '',
                     model: donationModel,
                     convertedAmountRaised: amount,
                     currency:
-                        donationModel.cashDetails.cashDetails.offerCurrencyType,
+                        donationModel.cashDetails?.cashDetails?.offerCurrencyType ?? '',
                   ),
                 ),
               );
             },
-            photoUrl: donationModel.receiverDetails.photoUrl,
+            photoUrl: donationModel.receiverDetails?.photoUrl ?? '',
             subTitle:
-                "${donationModel.receiverDetails.name} ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "${donationModel.cashDetails.cashDetails.offerCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                "${donationModel.receiverDetails?.name ?? ''} ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "${donationModel.cashDetails?.cashDetails?.offerCurrencyType ?? ''} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
             title: S.of(context).donations_requested,
           );
         });
   }
 
   static Widget getWidgetForDonationsModifiedByDonor({
-    Function onDismissed,
-    BuildContext context,
-    NotificationsModel notificationsModel,
+    required Function onDismissed,
+    required BuildContext context,
+    required NotificationsModel notificationsModel,
   }) {
-    final holder = DonationModel.fromMap(notificationsModel.data);
+    final holder = DonationModel.fromMap(notificationsModel.data as Map<String, dynamic>);
     bool invertGoodsLabel = false;
     if (holder.donationType == RequestType.GOODS &&
         holder.requestIdType == 'offer' &&
-        holder.donorDetails.email != SevaCore.of(context).loggedInUser.email) {
+        (holder.donorDetails?.email ?? '') != (SevaCore.of(context).loggedInUser.email ?? '')) {
       invertGoodsLabel = true;
     }
-    double amount;
+    double? amount;
     return NotificationCard(
       isDissmissible: false,
-      photoUrl: holder.donorDetails.photoUrl ?? defaultUserImageURL,
+      photoUrl: holder.donorDetails?.photoUrl ?? defaultUserImageURL,
       entityName: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
           : invertGoodsLabel
-              ? holder.donorDetails.name + S.of(context).pledge_goods_supplies
+              ? (holder.donorDetails?.name ?? '') + S.of(context).pledge_goods_supplies
               : S.of(context).goods_modified_by_donor,
       title: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
@@ -1256,42 +1260,42 @@ class PersonalNotificationsRedcerForDonations {
       subTitle: holder.donationType == RequestType.CASH
           ? S.of(context).amount_modified_by_donor_desc
           : invertGoodsLabel
-              ? holder.donorDetails.name + S.of(context).pledge_goods_supplies
+              ? (holder.donorDetails?.name ?? '') + S.of(context).pledge_goods_supplies
               : S.of(context).goods_modified_by_donor_desc,
       onDismissed: onDismissed,
       onPressed: () async {
         if (holder.donationType == RequestType.CASH) {
           amount = await currencyConversion(
-              fromCurrency: holder.cashDetails.cashDetails.offerCurrencyType,
+              fromCurrency: holder.cashDetails?.cashDetails?.offerCurrencyType ?? '',
               toCurrency:
-                  holder.cashDetails.cashDetails.offerDonatedCurrencyType,
-              amount: holder.cashDetails.pledgedAmount);
+                  holder.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? '',
+              amount: holder.cashDetails?.pledgedAmount ?? 0.0);
         }
 
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
               convertedAmount: holder.requestIdType == 'offer'
-                  ? amount
-                  : holder.cashDetails.pledgedAmount,
+                  ? (amount ?? 0.0)
+                  : (holder.cashDetails?.pledgedAmount ?? 0.0),
               currency: holder.requestIdType == 'offer'
-                  ? holder.cashDetails.cashDetails.offerDonatedCurrencyType
-                  : holder.cashDetails.cashDetails.requestCurrencyType,
-              notificationId: notificationsModel.id,
+                  ? holder.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? ''
+                  : holder.cashDetails?.cashDetails?.requestCurrencyType ?? '',
+              notificationId: notificationsModel.id ?? '',
               model: holder,
             ),
           ),
         );
       },
-      timestamp: notificationsModel.timestamp,
+      timestamp: notificationsModel.timestamp ?? 0,
     );
   }
 
-  static Widget getWidgetForSuccessfullDonation(
-      {Function onDismissed,
-      Function onTap,
-      int timestampVal,
-      BuildContext context}) {
+  static Widget getWidgetForSuccessfullDonation({
+    required Function onDismissed,
+    required VoidCallback onTap,
+    required int timestampVal,
+    required BuildContext context}) {
     return NotificationCard(
       entityName: S.of(context).donation_completed,
       title: S.of(context).donation_completed,
@@ -1302,63 +1306,55 @@ class PersonalNotificationsRedcerForDonations {
     );
   }
 
-  static getWidgetForDonationsModifiedByCreator({
-    Function onDismissed,
-    BuildContext context,
-    NotificationsModel notificationsModel,
-    int timestampVal,
-  }) {
-    final holder = DonationModel.fromMap(notificationsModel.data);
-    double amount;
-    return NotificationCard(
-      isDissmissible: false,
-      photoUrl: holder.donationAssociatedTimebankDetails.timebankPhotoURL ??
-          defaultGroupImageURL,
-      entityName: holder.donationType == RequestType.CASH
-          ? S.of(context).pledge_modified
-          : S.of(context).goods_modified_by_creator,
-      title: holder.donationType == RequestType.CASH
-          ? S.of(context).pledge_modified
-          : S.of(context).goods_modified_by_creator,
-      subTitle: holder.donationType == RequestType.CASH
-          ? S.of(context).amount_modified_by_creator_desc
-          : S.of(context).goods_modified_by_creator_desc,
-      onDismissed: onDismissed,
-      onPressed: () async {
-        if (holder.donationType == RequestType.CASH) {
-/*          progressDialog = ProgressDialog(context,
-              customBody: Container(
-                height: 100,
-                width: 100,
-                child: LoadingIndicator(),
-              ));*/
-          // progressDialog.show();
-          // progressDialog.hide();
-          amount = await currencyConversion(
-              fromCurrency: holder.requestIdType == 'offer'
-                  ? holder.cashDetails.cashDetails.offerDonatedCurrencyType
-                  : holder.cashDetails.cashDetails.requestCurrencyType,
-              toCurrency: holder.requestIdType == 'offer'
-                  ? holder.cashDetails.cashDetails.offerCurrencyType
-                  : holder.cashDetails.cashDetails.requestDonatedCurrency,
-              amount: holder.cashDetails.pledgedAmount);
-        }
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RequestDonationDisputePage(
-              convertedAmount: holder.requestIdType == 'offer'
-                  ? holder.cashDetails.pledgedAmount
-                  : amount,
-              currency: holder.requestIdType == 'offer'
-                  ? holder.cashDetails.cashDetails.offerCurrencyType
-                  : holder.cashDetails.cashDetails.requestDonatedCurrency,
-              notificationId: notificationsModel.id,
-              model: holder,
-            ),
+static getWidgetForDonationsModifiedByCreator({
+  required Function onDismissed,
+  required BuildContext context,
+  required NotificationsModel notificationsModel,
+  required int timestampVal,
+}) {
+  final holder = DonationModel.fromMap(notificationsModel.data as Map<String, dynamic>);
+  double? amount;
+  return NotificationCard(
+    isDissmissible: false,
+    photoUrl: holder.donationAssociatedTimebankDetails?.timebankPhotoURL ??
+        defaultGroupImageURL,
+    entityName: holder.donationType == RequestType.CASH
+        ? S.of(context).pledge_modified
+        : S.of(context).goods_modified_by_creator,
+    title: holder.donationType == RequestType.CASH
+        ? S.of(context).pledge_modified
+        : S.of(context).goods_modified_by_creator,
+    subTitle: holder.donationType == RequestType.CASH
+        ? S.of(context).amount_modified_by_creator_desc
+        : S.of(context).goods_modified_by_creator_desc,
+    onDismissed: onDismissed,
+    onPressed: () async {
+      if (holder.donationType == RequestType.CASH) {
+        amount = await currencyConversion(
+            fromCurrency: holder.requestIdType == 'offer'
+                ? holder.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? ''
+                : holder.cashDetails?.cashDetails?.requestCurrencyType ?? '',
+            toCurrency: holder.requestIdType == 'offer'
+                ? holder.cashDetails?.cashDetails?.offerCurrencyType ?? ''
+                : holder.cashDetails?.cashDetails?.requestDonatedCurrency ?? '',
+            amount: holder.cashDetails?.pledgedAmount ?? 0.0);
+      }
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => RequestDonationDisputePage(
+            convertedAmount: holder.requestIdType == 'offer'
+                ? (holder.cashDetails?.pledgedAmount ?? 0.0)
+                : (amount ?? 0.0),
+            currency: holder.requestIdType == 'offer'
+                ? holder.cashDetails?.cashDetails?.offerCurrencyType ?? ''
+                : holder.cashDetails?.cashDetails?.requestDonatedCurrency ?? '',
+            notificationId: notificationsModel.id ?? '',
+            model: holder,
           ),
-        );
-      },
-      timestamp: timestampVal,
-    );
-  }
+        ),
+      );
+    },
+    timestamp: timestampVal,
+  );
+}
 }

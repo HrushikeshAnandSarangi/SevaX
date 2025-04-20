@@ -16,13 +16,14 @@ class FadeAnimation extends StatelessWidget {
     //       curve: Curves.easeOut)
     // ]);
 
-    return PlayAnimation<double>(
-      tween: Tween(begin: 0, end: 1),
+    return CustomAnimationBuilder<double>(
+      control: Control.play,
+      tween: Tween(begin: 0.0, end: 1.0),
       duration: Duration(
         milliseconds: (500 * delay).round(),
       ),
       child: child,
-      builder: (contex, child, value) {
+      builder: (context, value, child) {
         return Opacity(
           opacity: value,
           child: child,

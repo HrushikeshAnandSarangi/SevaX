@@ -17,9 +17,9 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class SearchTimebankMemberElastic extends StatefulWidget {
-  String timebankId;
-  MEMBER_SELECTION_MODE selectionMode;
-  NewsModel newsModel;
+  late String timebankId;
+  late MEMBER_SELECTION_MODE selectionMode;
+  late NewsModel newsModel;
   bool isFromShare = false;
 
   SearchTimebankMemberElastic(String timebankId, bool isFromShare,
@@ -46,7 +46,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
       timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
-        validItems = onValue.listOfElement;
+        validItems = onValue.listOfElement!;
       });
     });
   }
@@ -90,7 +90,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                 SearchType.USER,
                 searchTextController,
                 widget.timebankId,
-                validItems,
+                validItems.cast<String>(),
                 widget.selectionMode,
                 widget.newsModel,
                 widget.isFromShare),
@@ -149,16 +149,16 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
   }
 
   Widget fetchHeadingFromNewsModel(NewsModel newsModel) {
-    if (checkValidSting(newsModel.title)) {
-      return getTitleForCard(newsModel.title, newsModel.fullName);
+    if (checkValidSting(newsModel.title!)) {
+      return getTitleForCard(newsModel.title!, newsModel.fullName!);
     }
-    if (checkValidSting(newsModel.subheading)) {
-      return getTitleForCard(newsModel.subheading, newsModel.fullName);
+    if (checkValidSting(newsModel.subheading!)) {
+      return getTitleForCard(newsModel.subheading!, newsModel.fullName!);
     }
-    if (checkValidSting(newsModel.description)) {
-      return getTitleForCard(newsModel.description, newsModel.fullName);
+    if (checkValidSting(newsModel.description!)) {
+      return getTitleForCard(newsModel.description!, newsModel.fullName!);
     }
-    return getTitleForCard('No content', newsModel.fullName);
+    return getTitleForCard('No content', newsModel.fullName!);
   }
 
   Widget getUserWidget(UserModel user, BuildContext context) {
@@ -190,15 +190,16 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 },
                 context: context,
                 timebankId: widget.timebankId,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity!,
                 sender: sender,
                 reciever: reciever,
                 isFromShare: false,
+                feedId: "",
+                showToCommunities: const <String>[],
+                entityId: "",
               );
             }
-            return user.email == SevaCore.of(context).loggedInUser.email
-                ? null
-                : () {};
+            return;
 
             break;
 
@@ -227,21 +228,21 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 },
                 context: context,
                 timebankId: widget.timebankId,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity!,
                 sender: sender,
                 reciever: reciever,
                 isFromShare: true,
-                feedId: widget.newsModel.id,
+                feedId: widget.newsModel.id!,
+                showToCommunities: const <String>[],
+                entityId: "",
               );
               // Navigator.of(context).pop();
             }
-            return user.email == SevaCore.of(context).loggedInUser.email
-                ? null
-                : () {};
+            return;
 
             break;
           default:
-            return () {};
+            return;
         }
       },
       child: Card(
@@ -251,7 +252,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
           ),
           title: Text(
-            user.fullname,
+            user.fullname!,
             style: TextStyle(
               color: Colors.black,
             ),
@@ -294,7 +295,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             ),
           );
         }
-        List<UserModel> userList = snapshot.data;
+        List<UserModel> userList = snapshot.data ?? [];
         if (userList.length == 0) {
           return getEmptyWidget(
             S.of(context).users,

@@ -8,14 +8,14 @@ abstract class BlocBase {
 class BlocProvider<T extends BlocBase> extends StatefulWidget {
   const BlocProvider({this.bloc, this.child});
 
-  final T bloc;
-  final Widget child;
+  final T? bloc;
+  final Widget? child;
 
   @override
   State<StatefulWidget> createState() => _BlocProviderState<dynamic>();
 
-  static T of<T extends BlocBase>(BuildContext context) {
-    final BlocProvider<T> provider = context.findAncestorWidgetOfExactType();
+  static T? of<T extends BlocBase>(BuildContext context) {
+    final provider = context.findAncestorWidgetOfExactType<BlocProvider<T>>();
     return provider?.bloc;
   }
 
@@ -24,11 +24,11 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
 
 class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
   @override
-  Widget build(context) => widget.child;
+  Widget build(context) => widget.child!;
 
   @override
   void dispose() {
-    widget.bloc.dispose();
+    widget.bloc!.dispose();
     super.dispose();
   }
 }

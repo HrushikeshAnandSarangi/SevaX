@@ -20,13 +20,13 @@ class AcceptorModel {
     this.timebankId,
   });
 
-  String sevauserid;
-  String communityId;
-  String communityName;
-  String memberName;
-  String memberEmail;
-  String memberPhotoUrl;
-  String timebankId;
+  String? sevauserid;
+  String? communityId;
+  String? communityName;
+  String? memberName;
+  String? memberEmail;
+  String? memberPhotoUrl;
+  String? timebankId;
 
   factory AcceptorModel.fromMap(Map<String, dynamic> json) => AcceptorModel(
         sevauserid: json["sevauserid"] == null ? null : json["sevauserid"],

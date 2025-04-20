@@ -17,7 +17,7 @@ class CalendarWidget extends StatefulWidget {
     this.endDate,
     this.selectionType,
     this.onDateSelected, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -27,12 +27,12 @@ class CalendarWidget extends StatefulWidget {
 }
 
 class CalendarWidgetState extends State<CalendarWidget> {
-  DateTime _currentDate;
-  int _beginMonthPadding = 0;
+  DateTime? _currentDate;
+  num _beginMonthPadding = 0;
 
-  DateTime startDate;
-  DateTime endDate;
-  SelectionType selectionType;
+  DateTime? startDate;
+  DateTime? endDate;
+  SelectionType? selectionType;
 
   @override
   void initState() {
@@ -77,13 +77,13 @@ class CalendarWidgetState extends State<CalendarWidget> {
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     children: List.generate(
-                        getNumberOfDaysInMonth(_currentDate.month), (index) {
+                        getNumberOfDaysInMonth(_currentDate!.month), (index) {
                       int dayNumber = index + 1;
                       return GestureDetector(
                         onTap: () {
                           switch (widget.selectionType) {
                             case SelectionType.START_DATE:
-                              if (isPastDay(dayNumber)) return false;
+                              if (isPastDay(dayNumber)) ;
 //                              if (getSelectedDate(dayNumber).isAfter(endDate))
 //                                return false;
                               setState(() {
@@ -92,11 +92,11 @@ class CalendarWidgetState extends State<CalendarWidget> {
 
                                 //   selectionType = SelectionType.END_DATE;
                                 widget.onDateSelected(
-                                    getSelectedDate(dayNumber), selectionType);
+                                    getSelectedDate(dayNumber), selectionType!);
                               });
                               break;
                             case SelectionType.END_DATE:
-                              if (isPastDay(dayNumber)) return false;
+                              if (isPastDay(dayNumber)) return;
 //                              if (getSelectedDate(dayNumber)
 //                                  .isBefore(startDate)) return false;
                               setState(() {
@@ -104,11 +104,10 @@ class CalendarWidgetState extends State<CalendarWidget> {
 
                                 //   selectionType = SelectionType.START_DATE;
                                 widget.onDateSelected(
-                                    getSelectedDate(dayNumber), selectionType);
+                                    getSelectedDate(dayNumber), selectionType!);
                               });
                               break;
                           }
-                          return DateTime.now();
                         },
                         child: Center(
                           child: AnimatedContainer(
@@ -120,8 +119,9 @@ class CalendarWidgetState extends State<CalendarWidget> {
                             decoration: BoxDecoration(
                               borderRadius: dateBorder(dayNumber),
                               color: <Color>() {
-                                if (dayNumber <= _beginMonthPadding)
+                                if (dayNumber <= (_beginMonthPadding ?? 0)) {
                                   return Colors.transparent;
+                                }
                                 if (isInSelectedRange(dayNumber))
                                   return Theme.of(context).primaryColor;
                                 return Colors.transparent;
@@ -191,15 +191,15 @@ class CalendarWidgetState extends State<CalendarWidget> {
   }
 
   BorderRadius dateBorder(int dayNumber) {
-    if (isSameDay(getSelectedDate(dayNumber), startDate) &&
-        isSameDay(getSelectedDate(dayNumber), endDate)) {
+    if (isSameDay(getSelectedDate(dayNumber), startDate!) &&
+        isSameDay(getSelectedDate(dayNumber), endDate!)) {
       return BorderRadius.all(Radius.circular(15.0));
     }
-    if (isSameDay(getSelectedDate(dayNumber), startDate)) {
+    if (isSameDay(getSelectedDate(dayNumber), startDate!)) {
       return BorderRadius.only(
           topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0));
     }
-    if (isSameDay(getSelectedDate(dayNumber), endDate)) {
+    if (isSameDay(getSelectedDate(dayNumber), endDate!)) {
       return BorderRadius.only(
           topRight: Radius.circular(15.0), bottomRight: Radius.circular(15.0));
     }
@@ -222,14 +222,14 @@ class CalendarWidgetState extends State<CalendarWidget> {
         ),
         Expanded(
           child: Text(
-            '${monthName.elementAt(_currentDate.month - 1)}',
+            '${monthName.elementAt(_currentDate!.month - 1)}',
             textAlign: TextAlign.center,
             // style: sectionLabelTextStyle,
           ),
         ),
         Expanded(
           child: Text(
-            '${_currentDate.year}',
+            '${_currentDate!.year}',
             textAlign: TextAlign.center,
             // style: sectionLabelTextStyle,
           ),
@@ -250,16 +250,16 @@ class CalendarWidgetState extends State<CalendarWidget> {
 
   void setMonthPadding() {
     _beginMonthPadding =
-        DateTime(_currentDate.year, _currentDate.month, 1).weekday;
+        DateTime(_currentDate!.year, _currentDate!.month, 1).weekday;
     _beginMonthPadding = _beginMonthPadding == 7 ? 0 : _beginMonthPadding;
   }
 
   void goToPreviousMonth() {
     setState(() {
-      if (_currentDate.month == DateTime.january)
-        _currentDate = DateTime(_currentDate.year - 1, DateTime.december);
+      if (_currentDate!.month == DateTime.january)
+        _currentDate = DateTime(_currentDate!.year - 1, DateTime.december);
       else
-        _currentDate = DateTime(_currentDate.year, _currentDate.month - 1);
+        _currentDate = DateTime(_currentDate!.year, _currentDate!.month - 1);
 
       setMonthPadding();
     });
@@ -267,33 +267,33 @@ class CalendarWidgetState extends State<CalendarWidget> {
 
   void goToNextMonth() {
     setState(() {
-      if (_currentDate.month == DateTime.december)
-        _currentDate = DateTime(_currentDate.year + 1, DateTime.january);
+      if (_currentDate!.month == DateTime.december)
+        _currentDate = DateTime(_currentDate!.year + 1, DateTime.january);
       else
-        _currentDate = DateTime(_currentDate.year, _currentDate.month + 1);
+        _currentDate = DateTime(_currentDate!.year, _currentDate!.month + 1);
 
       setMonthPadding();
     });
   }
 
   DateTime getSelectedDate(int dayNumber) {
-    int day = dayNumber - _beginMonthPadding;
+    int day = dayNumber - _beginMonthPadding.toInt();
     var date = DateTime(
-      _currentDate.year,
-      _currentDate.month,
+      _currentDate!.year,
+      _currentDate!.month,
       day,
     );
     return date;
   }
 
   bool isInSelectedRange(int dayNumber) {
-    int day = dayNumber - _beginMonthPadding;
-    DateTime testDate = DateTime(_currentDate.year, _currentDate.month, day);
+    int day = dayNumber - _beginMonthPadding.toInt();
+    DateTime testDate = DateTime(_currentDate!.year, _currentDate!.month, day);
 
     if (startDate == null) return false;
     if (endDate == null) return false;
-    if ((testDate.isAfter(startDate) || isSameDay(testDate, startDate)) &&
-        (testDate.isBefore(endDate) || isSameDay(testDate, endDate))) {
+    if ((testDate.isAfter(startDate!) || isSameDay(testDate, startDate!)) &&
+        (testDate.isBefore(endDate!) || isSameDay(testDate, endDate!))) {
       return true;
     }
     return false;
@@ -301,13 +301,13 @@ class CalendarWidgetState extends State<CalendarWidget> {
 
   bool isPastDay(int dayNumber) =>
       (dayNumber - _beginMonthPadding) < DateTime.now().day &&
-      _currentDate.month == DateTime.now().month &&
-      _currentDate.year == DateTime.now().year;
+      _currentDate!.month == DateTime.now().month &&
+      _currentDate!.year == DateTime.now().year;
 
   bool isCurrentDay(int dayNumber) =>
       (dayNumber - _beginMonthPadding) == DateTime.now().day &&
-      _currentDate.month == DateTime.now().month &&
-      _currentDate.year == DateTime.now().year;
+      _currentDate!.month == DateTime.now().month &&
+      _currentDate!.year == DateTime.now().year;
 
   int getNumberOfDaysInMonth(int month) {
     int numDays = 28;
@@ -316,7 +316,7 @@ class CalendarWidgetState extends State<CalendarWidget> {
         numDays = 31;
         break;
       case 2:
-        if (isLeapYear(_currentDate.year)) {
+        if (isLeapYear(_currentDate!.year)) {
           numDays = 29;
         } else {
           numDays = 28;
@@ -355,7 +355,7 @@ class CalendarWidgetState extends State<CalendarWidget> {
       default:
         numDays = 28;
     }
-    return numDays + _beginMonthPadding;
+    return numDays + _beginMonthPadding.toInt();
   }
 
   List<String> get monthName => [

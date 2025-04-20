@@ -7,11 +7,11 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 class CommunityCategorySelector extends StatefulWidget {
-  final List<String> selectedCategories;
-  final ValueChanged<List<CommunityCategoryModel>> onChanged;
+  final List<String>? selectedCategories;
+  final ValueChanged<List<CommunityCategoryModel>>? onChanged;
 
   const CommunityCategorySelector({
-    Key key,
+    Key? key,
     this.onChanged,
     this.selectedCategories,
   }) : super(key: key);
@@ -22,17 +22,16 @@ class CommunityCategorySelector extends StatefulWidget {
 
 class _CommunityCategorySelectorState extends State<CommunityCategorySelector> {
   Map<String, CommunityCategoryModel> selectedCateories = {};
-  // List<CommunityCategoryModel> availableCategories = [];
-  SuggestionsBoxController controller = SuggestionsBoxController();
-  TextEditingController _textEditingController = TextEditingController();
-  Future<List<CommunityCategoryModel>> future;
+  final SuggestionsController<CommunityCategoryModel> controller =
+      SuggestionsController<CommunityCategoryModel>();
+  final TextEditingController _textEditingController = TextEditingController();
+  late final Future<List<CommunityCategoryModel>> future;
   bool isDataLoaded = false;
   @override
   void initState() {
     future = CommunityRepository.getCommunityCategories();
-    if (widget.selectedCategories != null &&
-        widget.selectedCategories.isNotEmpty) {
-      widget.selectedCategories.forEach((element) {
+    if (widget.selectedCategories?.isNotEmpty ?? false) {
+      widget.selectedCategories?.forEach((element) {
         // selectedCateories[element.id] = element;
       });
     }
@@ -51,8 +50,9 @@ class _CommunityCategorySelectorState extends State<CommunityCategorySelector> {
               }
               if (!isDataLoaded) {
                 widget.selectedCategories?.forEach((element) {
-                  selectedCateories[element] = snapshot.data
-                      .firstWhere((e) => element == e.id, orElse: () => null);
+                  selectedCateories[element] = (snapshot.data
+                          as List<CommunityCategoryModel>)
+                      .firstWhere((e) => element == e.id, orElse: () => null!);
                   isDataLoaded = true;
                 });
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -60,14 +60,16 @@ class _CommunityCategorySelectorState extends State<CommunityCategorySelector> {
                 });
               }
               return TypeAheadField<CommunityCategoryModel>(
-                suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                onSelected: (suggestion) {
+                  selectedCateories[suggestion.id] = suggestion;
+                  widget.onChanged?.call(selectedCateories.values.toList());
+                  setState(() {});
+                },
                 errorBuilder: (context, err) {
                   return Text(S.of(context).error_occured);
                 },
                 hideOnError: true,
-                textFieldConfiguration: TextFieldConfiguration(
+                builder: (context, controller, focusNode) => TextField(
                   controller: _textEditingController,
                   decoration: InputDecoration(
                     hintText: S.of(context).search,
@@ -93,12 +95,12 @@ class _CommunityCategorySelectorState extends State<CommunityCategorySelector> {
                       ),
                       onTap: () {
                         _textEditingController.clear();
-                        controller.close();
+                        controller.clear();
                       },
                     ),
                   ),
                 ),
-                suggestionsBoxController: controller,
+                suggestionsController: controller,
                 itemBuilder: (BuildContext context, itemData) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -108,18 +110,24 @@ class _CommunityCategorySelectorState extends State<CommunityCategorySelector> {
                     ),
                   );
                 },
-                onSuggestionSelected: (suggestion) {
-                  selectedCateories[suggestion.id] = suggestion;
-                  widget.onChanged(selectedCateories.values.toList());
-                  setState(() {});
-                },
+                // onSuggestionSelected: (suggestion) {
+                //   selectedCateories[suggestion.id] = suggestion;
+                //   widget.onChanged(selectedCateories.values.toList());
+                //   setState(() {});
+                // },
+                // onSelected: (suggestion) {
+                //   // You can keep this the same as onSuggestionSelected or customize as needed
+                //   selectedCateories[suggestion.id] = suggestion;
+                //   widget.onChanged(selectedCateories.values.toList());
+                //   setState(() {});
+                // },
                 suggestionsCallback: (String pattern) async {
                   // if (availableCategories.isEmpty) {
                   //   availableCategories =
                   //       await CommunityRepository.getCommunityCategories();
                   // }
-                  var dataCopy =
-                      List<CommunityCategoryModel>.from(snapshot.data);
+                  var dataCopy = List<CommunityCategoryModel>.from(
+                      snapshot.data as List<CommunityCategoryModel>);
                   dataCopy.retainWhere(
                     (s) =>
                         s.getCategoryName(context).toLowerCase().contains(

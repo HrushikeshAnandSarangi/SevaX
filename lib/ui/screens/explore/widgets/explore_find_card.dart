@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ExploreFindCard extends StatelessWidget {
   const ExploreFindCard({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.title,
     this.style,
@@ -11,10 +11,10 @@ class ExploreFindCard extends StatelessWidget {
     //this.padding,
   }) : super(key: key);
 
-  final VoidCallback onTap;
-  final String imageUrl;
-  final String title;
-  final TextStyle style;
+  final VoidCallback? onTap;
+  final String? imageUrl;
+  final String? title;
+  final TextStyle? style;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -31,12 +31,12 @@ class ExploreFindCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Image.network(imageUrl),
+                  Image.network(imageUrl ?? ''),
                   const SizedBox(width: 2),
                   Container(
                     padding: const EdgeInsets.only(left: 14, right: 14),
                     child: Text(
-                      title,
+                      title ?? '',
                       style: style ??
                           const TextStyle(
                             fontSize: 16,

@@ -33,7 +33,7 @@ import 'package:sevaexchange/utils/extensions.dart';
 
 class ToDo {
   static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
-    String loggedInMemberEmail,
+    String? loggedInMemberEmail,
   }) async* {
     yield* CollectionRef.requests
         .where('oneToManyRequestAttenders', arrayContains: loggedInMemberEmail)
@@ -45,14 +45,15 @@ class ToDo {
                 handleData: (data, sink) {
       List<RequestModel> requestList = [];
       data.docs.forEach((element) {
-        requestList.add(RequestModel.fromMap(element.data()));
+        requestList
+            .add(RequestModel.fromMap(element.data() as Map<String, dynamic>));
       });
       return sink.add(requestList);
     }));
   }
 
   static Stream<List<RequestModel>> getBorrowRequestLenderReturnAcknowledgment({
-    String loggedInMemberEmail,
+    String? loggedInMemberEmail,
   }) async* {
     yield* CollectionRef.requests
         .where('approvedUsers', arrayContains: loggedInMemberEmail)
@@ -64,7 +65,8 @@ class ToDo {
                 handleData: (data, sink) {
       List<RequestModel> requestList = [];
       data.docs.forEach((element) {
-        requestList.add(RequestModel.fromMap(element.data()));
+        requestList
+            .add(RequestModel.fromMap(element.data() as Map<String, dynamic>));
       });
       logger.e('LENGTH CHECK 1:  ' + requestList.length.toString());
       return sink.add(requestList);
@@ -72,9 +74,9 @@ class ToDo {
   }
 
   static Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
-    @required String userEmail,
-    @required String userId,
-    BuildContext context,
+    required String userEmail,
+    required String userId,
+    BuildContext? context,
   }) async* {
     var data = CollectionRef.requests
         .where('approvedUsers', arrayContains: userEmail)
@@ -88,7 +90,8 @@ class ToDo {
           log('REQUESTS LIST:  ' + snapshot.docs.length.toString());
           List<RequestModel> requestModelList = [];
           snapshot.docs.forEach((documentSnapshot) {
-            RequestModel model = RequestModel.fromMap(documentSnapshot.data());
+            RequestModel model = RequestModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>);
             model.id = documentSnapshot.id;
             bool isCompletedByUser = false;
 
@@ -124,7 +127,8 @@ class ToDo {
         List<OfferModel> oneToManyOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -147,7 +151,8 @@ class ToDo {
         List<OfferModel> oneToManyOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -156,7 +161,7 @@ class ToDo {
   }
 
   static Stream<List<OfferModel>> getLendingOfferApprovedStream(
-      {String email}) async* {
+      {String? email}) async* {
     yield* CollectionRef.offers
         .where('requestType', isEqualTo: 'LENDING_OFFER')
         // .where('lendingOfferDetailsModel.endDate',
@@ -169,7 +174,8 @@ class ToDo {
         List<OfferModel> lendingOffers = [];
 
         data.docs.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data());
+          var offerModel =
+              OfferModel.fromMap(element.data() as Map<String, dynamic>);
           lendingOffers.add(offerModel);
           log('pending ${lendingOffers.length}');
         });
@@ -224,11 +230,11 @@ class ToDo {
   }
 
   static List<Widget> classifyToDos({
-    @required List<dynamic> toDoSink,
-    @required ValueChanged<RequestModel> requestCallback,
-    @required BuildContext context,
-    @required ValueChanged<int> feedbackCallback,
-    @required String email,
+    required List<dynamic> toDoSink,
+    required ValueChanged<RequestModel> requestCallback,
+    required BuildContext context,
+    required ValueChanged<int> feedbackCallback,
+    required String email,
   }) {
     List<TasksCardWrapper> tasksList = [];
     MessageBloc _messageBloc = MessageBloc();
@@ -244,11 +250,11 @@ class ToDo {
             taskCard: ToDoCard(
               requestModel: model,
               isSpeaker: true,
-              title: model.title,
-              subTitle: model.description,
-              timeInMilliseconds: model.requestStart,
+              title: model.title!,
+              subTitle: model.description!,
+              timeInMilliseconds: model.requestStart!,
               onTap: () {
-                model.isSpeakerCompleted
+                model.isSpeakerCompleted!
                     ? log("")
                     : Navigator.of(context).push(
                         MaterialPageRoute(
@@ -270,7 +276,7 @@ class ToDo {
               },
               tag: S.of(context).one_to_many_request_speaker,
             ),
-            taskTimestamp: model.requestStart,
+            taskTimestamp: model.requestStart!,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -280,10 +286,10 @@ class ToDo {
         tasksList.add(
           TasksCardWrapper(
             taskCard: ToDoCard(
-              timeInMilliseconds: model.requestStart,
+              timeInMilliseconds: model.requestStart!,
               tag: S.of(context).time_request_volunteer,
-              subTitle: model.description,
-              title: model.title,
+              subTitle: model.description!,
+              title: model.title!,
               onTap: () {
                 if (model.requestType == RequestType.BORROW) {
                   feedbackCallback(0);
@@ -294,14 +300,14 @@ class ToDo {
                       builder: (context) => TaskCardView(
                         requestModel: model,
                         userTimezone:
-                            SevaCore.of(context).loggedInUser.timezone,
+                            SevaCore.of(context).loggedInUser.timezone!,
                       ),
                     ),
                   );
                 }
               },
             ),
-            taskTimestamp: model.requestStart,
+            taskTimestamp: model.requestStart!,
           ),
         );
       }
@@ -314,12 +320,12 @@ class ToDo {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () {},
-            title: element.groupOfferDataModel.classTitle,
-            subTitle: element.groupOfferDataModel.classDescription,
+            title: element.groupOfferDataModel!.classTitle!,
+            subTitle: element.groupOfferDataModel!.classDescription,
             tag: S.of(context).one_to_many_offer_attende,
-            timeInMilliseconds: element.groupOfferDataModel.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate,
           ),
-          taskTimestamp: element.groupOfferDataModel.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate,
         ),
       );
     });
@@ -331,12 +337,12 @@ class ToDo {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () {},
-            title: element.groupOfferDataModel.classTitle,
-            subTitle: element.groupOfferDataModel.classDescription,
+            title: element.groupOfferDataModel!.classTitle,
+            subTitle: element.groupOfferDataModel!.classDescription,
             tag: S.of(context).one_to_many_offer_speaker,
-            timeInMilliseconds: element.groupOfferDataModel.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate,
           ),
-          taskTimestamp: element.groupOfferDataModel.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate,
         ),
       );
     });
@@ -348,12 +354,12 @@ class ToDo {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () {},
-            title: element.title,
-            subTitle: element.description,
+            title: element.title!,
+            subTitle: element.description!,
             tag: S.of(context).one_to_many_request_attende,
-            timeInMilliseconds: element.requestStart,
+            timeInMilliseconds: element.requestStart!,
           ),
-          taskTimestamp: element.requestStart,
+          taskTimestamp: element.requestStart!,
         ),
       );
     });
@@ -361,8 +367,8 @@ class ToDo {
     //Lender Borrow Request Pending Acknowledgement of Return of item/place
     List<RequestModel> pendingReturnBorrowRequest = toDoSink[4];
     pendingReturnBorrowRequest.forEach((element) {
-      if (element.borrowModel.isCheckedIn == true ||
-          element.borrowModel.itemsCollected == true) {
+      if (element.borrowModel!.isCheckedIn! == true ||
+          element.borrowModel!.itemsCollected! == true) {
         tasksList.add(
           TasksCardWrapper(
             taskCard: ToDoCard(
@@ -380,7 +386,7 @@ class ToDo {
                     actions: [
                       CustomTextButton(
                         shape: StadiumBorder(),
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         onPressed: () {
                           Navigator.of(_context).pop();
@@ -397,7 +403,7 @@ class ToDo {
                         onPressed: () async {
                           Navigator.of(_context).pop();
 
-                          log('timebank ID:  ' + element.timebankId);
+                          log('timebank ID:  ' + (element.timebankId ?? ''));
 
                           //Update request model to complete it
                           //requestModelNew.approvedUsers = [];
@@ -407,20 +413,35 @@ class ToDo {
                           element.isNotified = true; //resets to false otherwise
 
                           if (element.roomOrTool == LendingType.ITEM.readable) {
-                            element.borrowModel.itemsReturned = true;
+                            element.borrowModel!.itemsReturned = true;
                           } else {
-                            element.borrowModel.isCheckedOut = true;
+                            element.borrowModel!.isCheckedOut = true;
                           }
 
                           await lenderReceivedBackCheck(
-                              notification: null,
-                              notificationId: null,
+                              notification: NotificationsModel(
+                                // Provide appropriate values for the required fields
+                                timebankId: element.timebankId,
+                                targetUserId: element.sevaUserId,
+                                data: element.toMap(),
+                                type: NotificationType
+                                    .BorrowRequestIdleFirstWarning,
+                                id: utils.Utils.getUuid(),
+                                isRead: false,
+                                senderUserId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID,
+                                communityId: element.communityId,
+                                isTimebankNotification: true,
+                              ),
+                              notificationId:
+                                  '', // Provide an empty string or a valid String id
                               requestModelUpdated: element,
                               context: context);
                           await FirestoreManager
                               .readLenderNotificationIfAcceptedFromTasks(
                             requestModel: element,
-                            userEmail: SevaCore.of(context).loggedInUser.email,
+                            userEmail: SevaCore.of(context).loggedInUser.email!,
                             fromNotification: false,
                           );
                         },
@@ -439,12 +460,12 @@ class ToDo {
                   ),
                 );
               },
-              title: element.title,
-              subTitle: element.description,
+              title: element.title ?? '',
+              subTitle: element.description ?? '',
               tag: S.of(context).borrow_request_lender_pending_return_check,
-              timeInMilliseconds: element.requestStart,
+              timeInMilliseconds: element.requestStart ?? 0,
             ),
-            taskTimestamp: element.requestStart,
+            taskTimestamp: element.requestStart ?? 0,
           ),
         );
       }
@@ -455,65 +476,67 @@ class ToDo {
     borrowRequestCreatorAwaitingConfirmation.forEach((model) async {
       if (model.roomOrTool == LendingType.ITEM.readable) {
         //FOR BORROW ITEMS
-        if (!model.borrowModel.itemsCollected) {
+        if (model.borrowModel != null &&
+            model.borrowModel!.itemsCollected != true) {
           //items to be collected status
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.title,
+                title: model.title ?? '',
                 subTitle: S.of(context).collect_items,
-                timeInMilliseconds: model.requestStart,
+                timeInMilliseconds: model.requestStart ?? 0,
                 onTap: () async {},
                 tag: S.of(context).borrow_request_collect_items_tag,
               ),
-              taskTimestamp: model.requestStart,
+              taskTimestamp: model.requestStart ?? 0,
             ),
           );
-        } else if (model
-                .borrowModel.itemsCollected && //items to be returned status
-            !model.borrowModel.itemsReturned) {
+        } else if (model.borrowModel != null &&
+            model.borrowModel!.itemsCollected == true &&
+            model.borrowModel!.itemsReturned != true) {
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.title,
+                title: model.title ?? '',
                 subTitle: S.of(context).return_items,
-                timeInMilliseconds: model.requestEnd,
+                timeInMilliseconds: model.requestEnd ?? 0,
                 onTap: () async {},
                 tag: S.of(context).borrow_request_return_items_tag,
               ),
-              taskTimestamp: model.requestStart,
+              taskTimestamp: model.requestStart ?? 0,
             ),
           );
         }
         //FOR BORROW PLACE
       } else {
-        if (!model.borrowModel.isCheckedIn) {
+        if (model.borrowModel != null &&
+            model.borrowModel!.isCheckedIn != true) {
           //items to be collected status
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.title,
+                title: model.title ?? '',
                 subTitle: S.of(context).check_in_pending,
-                timeInMilliseconds: model.requestStart,
+                timeInMilliseconds: model.requestStart ?? 0,
                 onTap: () async {},
                 tag: S.of(context).check_in_text,
               ),
-              taskTimestamp: model.requestStart,
+              taskTimestamp: model.requestStart ?? 0,
             ),
           );
-        } else if (model
-                .borrowModel.isCheckedIn && //items to be returned status
-            !model.borrowModel.isCheckedOut) {
+        } else if (model.borrowModel != null &&
+            model.borrowModel!.isCheckedIn == true &&
+            model.borrowModel!.isCheckedOut != true) {
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.title,
+                title: model.title ?? '',
                 subTitle: S.of(context).check_out_text,
-                timeInMilliseconds: model.requestEnd,
+                timeInMilliseconds: model.requestEnd ?? 0,
                 onTap: () async {},
                 tag: S.of(context).check_out_text,
               ),
-              taskTimestamp: model.requestStart,
+              taskTimestamp: model.requestStart ?? 0,
             ),
           );
         }
@@ -526,128 +549,134 @@ class ToDo {
       logger.e('LENGTH OF APPROVED: ' +
           lendingOfferBorrowerRequestApproved.length.toString());
 
-      if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
-          LendingType.ITEM) {
+      if (model.lendingOfferDetailsModel != null &&
+          model.lendingOfferDetailsModel!.lendingModel != null &&
+          model.lendingOfferDetailsModel!.lendingModel!.lendingType ==
+              LendingType.ITEM) {
         //FOR BORROW ITEMS
-        if (!model.lendingOfferDetailsModel.collectedItems) {
+        if (model.lendingOfferDetailsModel!.collectedItems != true) {
           //items to be collected status
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    S.of(context).collect_items + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
+                title: model.individualOfferDataModel?.title ?? '',
+                subTitle: model.selectedAdrress != null &&
+                        model.selectedAdrress!.isNotEmpty
+                    ? '${S.of(context).collect_items} at ${model.selectedAdrress}'
+                    : S.of(context).collect_items,
                 timeInMilliseconds:
-                    model.lendingOfferDetailsModel.approvedStartDate,
+                    model.lendingOfferDetailsModel!.approvedStartDate ??
+                        DateTime.now().millisecondsSinceEpoch,
                 onTap: () async {
                   LendingOfferAcceptorModel lendingOfferAcceptorModel =
                       await LendingOffersRepo.getBorrowAcceptorModel(
-                          offerId: model.id, acceptorEmail: email);
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                          offerId: model.id ?? '', acceptorEmail: email);
+                  LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: S.of(context).lending_offer_collect_items_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
-                  DateTime.now().millisecondsSinceEpoch,
+              taskTimestamp:
+                  model.lendingOfferDetailsModel!.approvedStartDate ??
+                      DateTime.now().millisecondsSinceEpoch,
             ),
           );
-        } else if (model.lendingOfferDetailsModel
-                .collectedItems && //items to be returned status
-            !model.lendingOfferDetailsModel.returnedItems) {
+        } else if (model.lendingOfferDetailsModel!.collectedItems == true &&
+            model.lendingOfferDetailsModel!.returnedItems != true) {
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    S.of(context).return_items + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
-                timeInMilliseconds:
-                    model.lendingOfferDetailsModel.approvedEndDate ??
-                        (model.lendingOfferDetailsModel.lendingOfferTypeMode ==
-                                'ONE_TIME'
-                            ? model.lendingOfferDetailsModel.endDate
-                            : 0),
+                title: model.individualOfferDataModel?.title ?? '',
+                subTitle: model.selectedAdrress != null &&
+                        model.selectedAdrress!.isNotEmpty
+                    ? '${S.of(context).return_items} at ${model.selectedAdrress}'
+                    : S.of(context).return_items,
+                timeInMilliseconds: model
+                        .lendingOfferDetailsModel!.approvedEndDate ??
+                    ((model.lendingOfferDetailsModel!.lendingOfferTypeMode ==
+                            'ONE_TIME')
+                        ? (model.lendingOfferDetailsModel!.endDate ?? 0)
+                        : 0),
                 onTap: () async {
                   LendingOfferAcceptorModel lendingOfferAcceptorModel =
                       await LendingOffersRepo.getBorrowAcceptorModel(
-                          offerId: model.id, acceptorEmail: email);
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                          offerId: model.id ?? '', acceptorEmail: email);
+                  LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: S.of(context).lending_offer_return_items_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
-                  DateTime.now().millisecondsSinceEpoch,
+              taskTimestamp:
+                  model.lendingOfferDetailsModel!.approvedStartDate ??
+                      DateTime.now().millisecondsSinceEpoch,
             ),
           );
         }
         //FOR BORROW PLACE
-      } else {
-        if (!model.lendingOfferDetailsModel.checkedIn) {
+      } else if (model.lendingOfferDetailsModel != null) {
+        if (model.lendingOfferDetailsModel!.checkedIn != true) {
           //items to be collected status
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    S.of(context).check_in_text + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
+                title: model.individualOfferDataModel?.title ?? '',
+                subTitle: model.selectedAdrress != null &&
+                        model.selectedAdrress!.isNotEmpty
+                    ? '${S.of(context).check_in_text} at ${model.selectedAdrress}'
+                    : S.of(context).check_in_text,
                 timeInMilliseconds:
-                    model.lendingOfferDetailsModel.approvedStartDate,
+                    model.lendingOfferDetailsModel!.approvedStartDate ??
+                        DateTime.now().millisecondsSinceEpoch,
                 onTap: () async {
                   LendingOfferAcceptorModel lendingOfferAcceptorModel =
                       await LendingOffersRepo.getBorrowAcceptorModel(
-                          offerId: model.id, acceptorEmail: email);
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                          offerId: model.id ?? '', acceptorEmail: email);
+                  LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: S.of(context).lending_offer_check_in_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
-                  DateTime.now().millisecondsSinceEpoch,
+              taskTimestamp:
+                  model.lendingOfferDetailsModel!.approvedStartDate ??
+                      DateTime.now().millisecondsSinceEpoch,
             ),
           );
-        } else if (model.lendingOfferDetailsModel
-                .checkedIn && //items to be returned status
-            !model.lendingOfferDetailsModel.checkedOut) {
+        } else if (model.lendingOfferDetailsModel!.checkedIn == true &&
+            model.lendingOfferDetailsModel!.checkedOut != true) {
           tasksList.add(
             TasksCardWrapper(
               taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    S.of(context).check_out_text + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
-                timeInMilliseconds:
-                    model.lendingOfferDetailsModel.approvedEndDate ??
-                        (model.lendingOfferDetailsModel.lendingOfferTypeMode ==
-                                'ONE_TIME'
-                            ? model.lendingOfferDetailsModel.endDate
-                            : 0),
+                title: model.individualOfferDataModel?.title ?? '',
+                subTitle: model.selectedAdrress != null &&
+                        model.selectedAdrress!.isNotEmpty
+                    ? '${S.of(context).check_out_text} at ${model.selectedAdrress}'
+                    : S.of(context).check_out_text,
+                timeInMilliseconds: model
+                        .lendingOfferDetailsModel!.approvedEndDate ??
+                    ((model.lendingOfferDetailsModel!.lendingOfferTypeMode ==
+                            'ONE_TIME')
+                        ? (model.lendingOfferDetailsModel!.endDate ?? 0)
+                        : 0),
                 onTap: () async {
                   LendingOfferAcceptorModel lendingOfferAcceptorModel =
                       await LendingOffersRepo.getBorrowAcceptorModel(
-                          offerId: model.id, acceptorEmail: email);
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                          offerId: model.id ?? '', acceptorEmail: email);
+                  LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: S.of(context).lending_offer_check_out_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
-                  DateTime.now().millisecondsSinceEpoch,
+              taskTimestamp:
+                  model.lendingOfferDetailsModel!.approvedStartDate ??
+                      DateTime.now().millisecondsSinceEpoch,
             ),
           );
         }
@@ -686,7 +715,7 @@ class ToDo {
     await FirestoreManager
         .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
             requestModel: requestModel,
-            userEmail: SevaCore.of(context).loggedInUser.email,
+            userEmail: SevaCore.of(context).loggedInUser.email!,
             fromNotification: false);
   }
 }
@@ -696,8 +725,8 @@ class ToDoTag extends StatelessWidget {
     this.tag,
     this.color,
   });
-  final String tag;
-  final Color color;
+  final String? tag;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -717,15 +746,15 @@ class ToDoCard extends StatelessWidget {
   ToDoCard({
     this.requestModel,
     this.isSpeaker = false,
-    this.onTap,
-    this.tag,
-    this.title,
-    this.subTitle,
-    this.timeInMilliseconds,
+    required this.onTap,
+    required this.tag,
+    required this.title,
+    required this.subTitle,
+    required this.timeInMilliseconds,
   });
-  final RequestModel requestModel;
+  final RequestModel? requestModel;
   final bool isSpeaker;
-  final Function onTap;
+  final VoidCallback onTap;
   final String tag;
   final String title;
   final String subTitle;
@@ -770,6 +799,7 @@ class ToDoCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            secondChild: const SizedBox.shrink(),
           ),
           HideWidget(
             hide: !isSpeaker,
@@ -780,7 +810,12 @@ class ToDoCard extends StatelessWidget {
                 bottom: 12,
               ),
               child: CustomElevatedButton(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
+                shape: const StadiumBorder(),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                elevation: 2.0,
+                textColor: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Text(
@@ -794,10 +829,10 @@ class ToDoCard extends StatelessWidget {
                       builder: (context) {
                         return OneToManySpeakerTimeEntryComplete(
                           userModel: SevaCore.of(context).loggedInUser,
-                          requestModel: requestModel,
+                          requestModel: requestModel!,
                           onFinish: () async {
                             await ToDo.oneToManySpeakerCompletesRequest(
-                                context, requestModel);
+                                context, requestModel!);
                           },
                           isFromtasks: true,
                         );
@@ -807,6 +842,7 @@ class ToDoCard extends StatelessWidget {
                 },
               ),
             ),
+            secondChild: const SizedBox.shrink(),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 12),

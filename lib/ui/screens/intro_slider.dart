@@ -6,24 +6,40 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-
 class Intro extends StatelessWidget {
-  final Function onSkip;
+  final VoidCallback onSkip;
   Intro({
-    @required this.onSkip,
+    required this.onSkip,
   });
 
   @override
+  @override
   Widget build(BuildContext context) {
-    logger.i(">>>>" + AppConfig.remoteConfig.getString('intro_screens'));
+    logger.i(">>>>" + AppConfig.remoteConfig!.getString('intro_screens'));
     List<dynamic> introSliderScreenshots =
-        json.decode(AppConfig.remoteConfig.getString('intro_screens'));
+        json.decode(AppConfig.remoteConfig!.getString('intro_screens'));
+    List<ContentConfig> slides =
+        introSliderScreenshots.map<ContentConfig>((item) {
+      return ContentConfig(
+        title: item['title'] ?? '',
+        description: item['description'] ?? '',
+        pathImage: item['image'] ?? '',
+        backgroundColor: Colors.white,
+      );
+    }).toList();
     return IntroSlider(
-      skipText:S.of(context).skip,
-      continueText:S.of(context).continue_text,
-      nextText:S.of(context).next,
-      data: [...introSliderScreenshots],
-      onSkip: onSkip,
+      listContentConfig: slides,
+      onDonePress: onSkip,
+      onSkipPress: onSkip,
+      skipButtonStyle: TextButton.styleFrom(
+        foregroundColor: Theme.of(context).primaryColor,
+      ),
+      nextButtonStyle: TextButton.styleFrom(
+        foregroundColor: Theme.of(context).primaryColor,
+      ),
+      doneButtonStyle: TextButton.styleFrom(
+        foregroundColor: Theme.of(context).primaryColor,
+      ),
     );
   }
 }

@@ -18,45 +18,42 @@ import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 
-
 class InvitationManager {
-  Map<String, InvitationViaLink> cacheList;
-  BuildContext _context;
-  BuildContext progressContext;
-  BuildContext finalConfirmationContext;
+  Map<String, InvitationViaLink> cacheList = HashMap();
+  BuildContext? _context;
+  BuildContext? progressContext;
+  BuildContext? finalConfirmationContext;
 
-  InvitationManager() {
-    cacheList = HashMap();
-  }
+  InvitationManager();
 
-  void initDialogForProgress({BuildContext context}) {
+  void initDialogForProgress({BuildContext? context}) {
     _context = context;
   }
 
-  void showProgress({String title}) {
+  void showProgress({String? title}) {
     showDialog(
-      context: _context,
+      context: _context!,
       builder: (context) {
         progressContext = context;
         return AlertDialog(
-          title: Text(title),
+          title: Text(title ?? ''),
           content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       },
     );
   }
 
   void hideProgress() {
-    Navigator.of(progressContext).pop();
+    Navigator.of(progressContext!).pop();
   }
 
-  InvitationViaLink getInvitationForEmailFromCache({String inviteeEmail}) {
-    return cacheList[inviteeEmail];
+  InvitationViaLink getInvitationForEmailFromCache({String? inviteeEmail}) {
+    return cacheList[inviteeEmail] ?? InvitationViaLink.empty();
   }
 
   Future<InvitationStatus> checkInvitationStatus(
@@ -64,7 +61,7 @@ class InvitationManager {
     String timebankId,
   ) async {
     if (cacheList.containsKey(email)) {
-      return InvitationStatus.isInvited(invitation: cacheList[email]);
+      return InvitationStatus.isInvited(invitation: cacheList[email]!);
     }
 
     var invitationStatus = await CollectionRef.invitations
@@ -72,8 +69,8 @@ class InvitationManager {
         .where('data.timebankId', isEqualTo: timebankId)
         .get();
     if (invitationStatus.docs.length > 0) {
-      var invitationData =
-          InvitationViaLink.fromMap(invitationStatus.docs.first.data());
+      var invitationData = InvitationViaLink.fromMap(
+          invitationStatus.docs.first.data() as Map<String, dynamic>);
       cacheList[email] = invitationData;
       return InvitationStatus.isInvited(invitation: invitationData);
     } else {
@@ -86,35 +83,35 @@ class InvitationManager {
   }
 
   Future<bool> resendInvitationToMember({
-    InvitationViaLink invitation,
+    InvitationViaLink? invitation,
   }) async {
-    String invitationTitle = S.of(_context).invited_to_timebank_message;
+    String invitationTitle = S.of(_context!).invited_to_timebank_message;
 
     var mailContent =
-        '''<p>${SevaCore.of(_context).loggedInUser.fullname} has invited you to join their "${invitation.timebankTitle}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. <a href="https://youtu.be/xe56UJyQ9ws">https://youtu.be/xe56UJyQ9ws</a>   <br><br>Here is what you'll need to know: <br>First, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main <a href="https://www.sevaxapp.com">https://www.sevaxapp.com</a>   web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you will automatically become a member of the "${invitation.timebankTitle}" Seva Community.<br><br>Click to Join ${SevaCore.of(_context).loggedInUser.fullname} and their Seva Community via this dynamic link at <a href="${invitation.invitationLink}">${invitation.invitationLink}</a>. Please do not share this link with any one.<br><br>Thank you for being a part of our Seva Exchange movement!<br>-the Seva Exchange team<br>Please email us at support@sevaexchange.com if you have any questions or issues joining with the link given.</p>''';
+        '''<p>${SevaCore.of(_context!).loggedInUser.fullname} has invited you to join their "${invitation!.timebankTitle}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. <a href="https://youtu.be/xe56UJyQ9ws">https://youtu.be/xe56UJyQ9ws</a>   <br><br>Here is what you'll need to know: <br>First, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main <a href="https://www.sevaxapp.com">https://www.sevaxapp.com</a>   web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you will automatically become a member of the "${invitation.timebankTitle}" Seva Community.<br><br>Click to Join ${SevaCore.of(_context!).loggedInUser.fullname} and their Seva Community via this dynamic link at <a href="${invitation.invitationLink}">${invitation.invitationLink}</a>. Please do not share this link with any one.<br><br>Thank you for being a part of our Seva Exchange movement!<br>-the Seva Exchange team<br>Please email us at support@sevaexchange.com if you have any questions or issues joining with the link given.</p>''';
 
     return await mailCodeToInvitedMember(
       mailContent: mailContent,
-      mailReciever: invitation.inviteeEmail,
+      mailReciever: invitation!.inviteeEmail,
       mailSender: invitation.senderEmail,
       mailSubject: invitationTitle,
     ).then((_) => true).catchError((_) => false);
   }
 
   Future<bool> inviteMemberToTimebankViaLink({
-    InvitationViaLink invitation,
-    BuildContext context,
+    InvitationViaLink? invitation,
+    BuildContext? context,
   }) async {
     return await createDynamicLinkFor(
-      communityId: invitation.communityId,
+      communityId: invitation!.communityId,
       inviteeEmail: invitation.inviteeEmail,
       primaryTimebankId: invitation.timebankId,
     )
         .then((String invitationLink) async {
-          String invitationTitle = S.of(context).invited_to_timebank_message;
+          String invitationTitle = S.of(context!).invited_to_timebank_message;
 
           var mailContent =
-              '''<p>${SevaCore.of(_context).loggedInUser.fullname} has invited you to join their "${invitation.timebankTitle}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. <a href="https://youtu.be/xe56UJyQ9ws">https://youtu.be/xe56UJyQ9ws</a>   <br><br>Here is what you'll need to know: <br>First, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main <a href="https://www.sevaxapp.com">https://www.sevaxapp.com</a>   web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you will automatically become a member of the "${invitation.timebankTitle}" Seva Community.<br><br>Click to Join ${SevaCore.of(_context).loggedInUser.fullname} and their Seva Community via this dynamic link at <a href="${invitationLink}">${invitationLink}</a>. Please do not share this link with any one.<br><br>Thank you for being a part of our Seva Exchange movement!<br>-the Seva Exchange team<br>Please email us at support@sevaexchange.com if you have any questions or issues joining with the link given.</p>''';
+              '''<p>${SevaCore.of(_context!).loggedInUser.fullname} has invited you to join their "${invitation.timebankTitle}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. <a href="https://youtu.be/xe56UJyQ9ws">https://youtu.be/xe56UJyQ9ws</a>   <br><br>Here is what you'll need to know: <br>First, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main <a href="https://www.sevaxapp.com">https://www.sevaxapp.com</a>   web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you will automatically become a member of the "${invitation.timebankTitle}" Seva Community.<br><br>Click to Join ${SevaCore.of(_context!).loggedInUser.fullname} and their Seva Community via this dynamic link at <a href="${invitationLink}">${invitationLink}</a>. Please do not share this link with any one.<br><br>Thank you for being a part of our Seva Exchange movement!<br>-the Seva Exchange team<br>Please email us at support@sevaexchange.com if you have any questions or issues joining with the link given.</p>''';
 
           invitation.setInvitationLink(invitationLink);
           await mailCodeToInvitedMember(
@@ -134,25 +131,25 @@ class InvitationManager {
   }
 
   Future<bool> registerRecordInDatabase({
-    InvitationViaLink invitation,
+    InvitationViaLink? invitation,
   }) async {
     return await CollectionRef.invitations
         .add({
           'invitationType': 'INVITATION_FOR_TIMEBANK',
-          'data': invitation.toMap(),
+          'data': invitation!.toMap(),
         })
         .then((_) => true)
         .catchError((_) => false);
   }
 
   static Future<bool> registerMemberToCommunity({
-    @required String communityId,
-    @required String primaryTimebankId,
-    @required String memberJoiningSevaUserId,
-    @required String newMemberJoinedEmail,
-    @required User adminCredentials,
-    @required String newMemberFullName,
-    @required String newMemberPhotoUrl,
+    required String communityId,
+    required String primaryTimebankId,
+    required String memberJoiningSevaUserId,
+    required String newMemberJoinedEmail,
+    required User adminCredentials,
+    required String newMemberFullName,
+    required String newMemberPhotoUrl,
   }) async {
     return await _addMemberToTimebank(
       communityId: communityId,
@@ -171,13 +168,13 @@ class InvitationManager {
   }
 
   static Future<WriteBatch> _addMemberToTimebank(
-      {@required String communityId,
-      @required String primaryTimebankId,
-      @required String memberJoiningSevaUserId,
-      @required String newMemberJoinedEmail,
-      @required User adminCredentials,
-      @required String newMemberFullName,
-      @required String newMemberPhotoUrl}) async {
+      {required String communityId,
+      required String primaryTimebankId,
+      required String memberJoiningSevaUserId,
+      required String newMemberJoinedEmail,
+      required User adminCredentials,
+      required String newMemberFullName,
+      required String newMemberPhotoUrl}) async {
     //add to timebank members
 
     // log('CHECK DATA: ' + timebankModel.name + ' ' + timebankModel.id);
@@ -231,7 +228,7 @@ class InvitationManager {
       'associatedTimebankDetails': {
         //Need to check if timebankModel data is correct or null
         'timebankId': primaryTimebankId,
-        'timebankTitle': timebankDetals.name,
+        'timebankTitle': timebankDetals!.name,
         'missionStatement': timebankDetals.missionStatement,
       }
     });
@@ -240,10 +237,10 @@ class InvitationManager {
   }
 
   static Future<bool> mailCodeToInvitedMember({
-    String mailSender,
-    String mailReciever,
-    String mailSubject,
-    String mailContent,
+    String? mailSender,
+    String? mailReciever,
+    String? mailSubject,
+    String? mailContent,
   }) async {
     return SevaMailer.createAndSendEmail(
       mailContent: MailContent.createMail(
@@ -256,28 +253,80 @@ class InvitationManager {
   }
 }
 
+class InvitationViaLink {
+  InvitationViaLink({
+    this.communityId,
+    this.inviteeEmail,
+    this.primaryTimebankId,
+    this.senderEmail,
+    this.timebankId,
+    this.timebankTitle,
+    this.invitationLink,
+  });
+
+  String? communityId;
+  String? inviteeEmail;
+  String? primaryTimebankId;
+  String? senderEmail;
+  String? timebankId;
+  String? timebankTitle;
+  String? invitationLink;
+
+  factory InvitationViaLink.empty() {
+    return InvitationViaLink();
+  }
+
+  static InvitationViaLink fromMap(Map<String, dynamic> map) {
+    return InvitationViaLink(
+      communityId: map['data']['communityId'],
+      inviteeEmail: map['data']['inviteeEmail'],
+      primaryTimebankId: map['data']['primaryTimebankId'],
+      senderEmail: map['data']['senderEmail'],
+      timebankId: map['data']['timebankId'],
+      timebankTitle: map['data']['timebankTitle'],
+      invitationLink: map['data']['invitationLink'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'communityId': communityId,
+      'inviteeEmail': inviteeEmail,
+      'primaryTimebankId': primaryTimebankId,
+      'senderEmail': senderEmail,
+      'timebankId': timebankId,
+      'timebankTitle': timebankTitle,
+      'invitationLink': invitationLink,
+    };
+  }
+
+  void setInvitationLink(String invitationLink) {
+    this.invitationLink = invitationLink;
+  }
+}
+
 class InvitationStatus {
-  bool isInvited;
-  InvitationViaLink invitation;
+  final bool isInvited;
+  final InvitationViaLink invitation;
 
-  InvitationStatus.notYetInvited() {
-    this.isInvited = false;
-  }
+  InvitationStatus.notYetInvited()
+      : isInvited = false,
+        invitation = InvitationViaLink.empty();
 
-  InvitationStatus.isInvited({InvitationViaLink invitation}) {
-    this.isInvited = true;
-  }
+  InvitationStatus.isInvited({required InvitationViaLink invitation})
+      : isInvited = true,
+        invitation = invitation;
 }
 
 //export to  a new  file
 @Deprecated('Class no longer used as we now use normal flow')
 class OfferInvitationManager {
   static Future<bool> handleInvitationNotificationForRequestCreatedFromOffer({
-    RequestModel requestModel,
-    OfferModel offerModel,
-    TimebankModel timebankModel,
-    String currentCommunity,
-    String senderSevaUserID,
+    RequestModel? requestModel,
+    OfferModel? offerModel,
+    TimebankModel? timebankModel,
+    String? currentCommunity,
+    String? senderSevaUserID,
   }) async {
     //if this if from offer
     if (offerModel == null) return true;
@@ -285,11 +334,11 @@ class OfferInvitationManager {
       case RequestType.CASH:
       case RequestType.GOODS:
         return await createNotificaitonForInvitee(
-          requestModel: requestModel,
+          requestModel: requestModel!,
           offerModel: offerModel,
-          timebankModel: timebankModel,
-          currentCommunity: currentCommunity,
-          senderSevaUserID: senderSevaUserID,
+          timebankModel: timebankModel!,
+          currentCommunity: currentCommunity!,
+          senderSevaUserID: senderSevaUserID!,
         ).then((value) => true).catchError((onError) => false);
         break;
 
@@ -302,24 +351,24 @@ class OfferInvitationManager {
   }
 
   static Future<bool> createNotificaitonForInvitee({
-    RequestModel requestModel,
-    OfferModel offerModel,
-    TimebankModel timebankModel,
-    String currentCommunity,
-    String senderSevaUserID,
+    RequestModel? requestModel,
+    OfferModel? offerModel,
+    TimebankModel? timebankModel,
+    String? currentCommunity,
+    String? senderSevaUserID,
   }) async {
     //add to invited members
     WriteBatch batchWrite = CollectionRef.batch;
-    batchWrite.update(CollectionRef.requests.doc(requestModel.id), {
-      'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
+    batchWrite.update(CollectionRef.requests.doc(requestModel!.id), {
+      'invitedUsers': FieldValue.arrayUnion([offerModel!.sevaUserId])
     });
 
     NotificationsModel invitationNotification = getNotificationForInvitation(
-      currentCommunity: currentCommunity,
-      senderSevaUserID: senderSevaUserID,
-      inviteeSevaUserId: offerModel.sevaUserId,
+      currentCommunity: currentCommunity!,
+      senderSevaUserID: senderSevaUserID!,
+      inviteeSevaUserId: offerModel.sevaUserId!,
       requestModel: requestModel,
-      timebankModel: timebankModel,
+      timebankModel: timebankModel!,
     );
     batchWrite.set(
       CollectionRef.users
@@ -336,15 +385,15 @@ class OfferInvitationManager {
   }
 
   static NotificationsModel getNotificationForInvitation({
-    String inviteeSevaUserId,
-    RequestModel requestModel,
-    String currentCommunity,
-    String senderSevaUserID,
-    TimebankModel timebankModel,
+    String? inviteeSevaUserId,
+    RequestModel? requestModel,
+    String? currentCommunity,
+    String? senderSevaUserID,
+    TimebankModel? timebankModel,
   }) {
     return NotificationsModel(
       id: utils.Utils.getUuid(),
-      timebankId: timebankModel.id,
+      timebankId: timebankModel!.id,
       data: RequestInvitationModel(
         requestModel: requestModel,
         timebankModel: timebankModel,

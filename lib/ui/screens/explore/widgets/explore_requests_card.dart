@@ -4,29 +4,30 @@ import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with
 //import 'package:sevaexchange/constants/sevatitles.dart';
 
 class ExploreRequestsCard extends StatelessWidget {
-  const ExploreRequestsCard({
-    Key key,
-    this.imageUrl,
-    this.communityName,
-    this.city,
-    this.description,
-    this.userIds,
-    this.firstTextStyle,
-    this.secondTextStyle,
-    this.onTap,
-    this.requestDate
-    //this.padding,
-  }) : super(key: key);
+  const ExploreRequestsCard(
+      {Key? key,
+      this.imageUrl,
+      this.communityName,
+      this.city,
+      this.description,
+      this.userIds,
+      this.firstTextStyle,
+      this.secondTextStyle,
+      this.onTap,
+      this.requestDate
+      //this.padding,
+      })
+      : super(key: key);
 
-  final VoidCallback onTap;
-  final String imageUrl;
-  final String communityName;
-  final String city;
-  final String description;
-  final List<String> userIds;
-  final TextStyle firstTextStyle;
-  final TextStyle secondTextStyle;
-  final String requestDate;
+  final VoidCallback? onTap;
+  final String? imageUrl;
+  final String? communityName;
+  final String? city;
+  final String? description;
+  final List<String>? userIds;
+  final TextStyle? firstTextStyle;
+  final TextStyle? secondTextStyle;
+  final String? requestDate;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -48,8 +49,11 @@ class ExploreRequestsCard extends StatelessWidget {
                 //child:
                 ClipRRect(
                   borderRadius: BorderRadius.circular(3.0),
-                  child: Image.network(imageUrl,
-                      width: 300, height: 150, fit: BoxFit.cover),
+                  child: Image.network(
+                      imageUrl ?? 'https://placeholder.com/image',
+                      width: 300,
+                      height: 150,
+                      fit: BoxFit.cover),
                 ),
                 //),
                 const SizedBox(height: 3),
@@ -60,18 +64,18 @@ class ExploreRequestsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(communityName?.toUpperCase()??'',
+                        Text(
+                          communityName?.toUpperCase() ?? '',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w400,
                               ),
                         ),
-                        
                         Text(
-                          city != null && city.isNotEmpty
-                              ? ' - ${city.toUpperCase()}'
-                              :'',
+                          city != null && city?.isNotEmpty == true
+                              ? ' - ${city!.toUpperCase()}'
+                              : '',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
@@ -88,7 +92,7 @@ class ExploreRequestsCard extends StatelessWidget {
                   child: Container(
                     width: 250,
                     child: Text(
-                      description,
+                      description ?? '',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: secondTextStyle ??
@@ -100,13 +104,13 @@ class ExploreRequestsCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                MemberAvatarListWithCount(userIds:userIds,radius:10),
+                MemberAvatarListWithCount(userIds: userIds ?? [], radius: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: Text(
-                    requestDate.toUpperCase(),
+                    requestDate?.toUpperCase() ?? '',
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 13,
                     ),
                   ),

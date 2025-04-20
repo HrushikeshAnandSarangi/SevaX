@@ -14,7 +14,7 @@ export 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 
 class FirestoreManager {
   static Stream<List<DataModel>> getEntityDataListStream(
-      {@required String userEmail}) async* {
+      {required String userEmail}) async* {
     // var campaignSnapshotStream = CollectionRef.collection('campaigns')
     //     .where('membersemail', arrayContains: userEmail)
     //     .snapshots();

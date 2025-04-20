@@ -9,13 +9,13 @@ import 'package:sevaexchange/ui/screens/feeds/share_feed_component/states/share_
 import 'package:sevaexchange/views/core.dart';
 
 class ShareFeedsComponent extends StatefulWidget {
-  final NewsModel feedToShare;
-  final String timebankId;
-  final SearchSegmentBloc searchSegmentBloc;
-  final UserModel loggedInUser;
+  final NewsModel? feedToShare;
+  final String? timebankId;
+  final SearchSegmentBloc? searchSegmentBloc;
+  final UserModel? loggedInUser;
 
   const ShareFeedsComponent({
-    Key key,
+    Key? key,
     this.feedToShare,
     this.timebankId,
     this.searchSegmentBloc,
@@ -64,9 +64,9 @@ class ShareFeedsComponentState extends State<ShareFeedsComponent> {
                     //     _homePageBaseBloc.getTimebankModelFromCurrentCommunity(
                     //   widget.timebankId,
                     // ),
-                    loggedInUser: widget.loggedInUser,
+                    loggedInUser: widget.loggedInUser!,
                     pageController: pageController,
-                    searchSegmentBloc: widget.searchSegmentBloc,
+                    searchSegmentBloc: widget.searchSegmentBloc!,
                   ),
                   ShareDashboard(
                     dialogContextReference: dialogContextReference,
@@ -85,7 +85,7 @@ class ShareFeedsComponentState extends State<ShareFeedsComponent> {
   }
 
   void clearData() {
-    widget.searchSegmentBloc.disposeSelectionsMade();
-    widget.searchSegmentBloc.selectedMembersForShare.clear();
+    widget.searchSegmentBloc?.disposeSelectionsMade();
+    widget.searchSegmentBloc?.selectedMembersForShare.clear();
   }
 }

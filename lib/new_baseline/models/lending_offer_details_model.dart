@@ -11,26 +11,31 @@ class LendingOfferDetailsModel {
     this.lendingOfferApprovedAgreementLink,
     this.agreementId,
     this.lendingOfferAgreementName,
-    this.offerAcceptors,
-    this.offerInvites,
-    this.approvedUsers,
-    this.completedUsers,
-    this.collectedItems,
-    this.returnedItems,
-    this.checkedIn,
-    this.checkedOut,
-    this.agreementConfig,
-    this.lendingOfferTypeMode,
-  });
-  int approvedStartDate;
-  int approvedEndDate;
-  int startDate;
-  int endDate;
-  LendingModel lendingModel;
-  String lendingOfferAgreementLink;
-  String lendingOfferApprovedAgreementLink;
-  String agreementId;
-  String lendingOfferAgreementName;
+    List<String>? offerAcceptors,
+    List<String>? offerInvites,
+    List<String>? approvedUsers,
+    List<String>? completedUsers,
+    this.collectedItems = false,
+    this.returnedItems = false,
+    this.checkedIn = false,
+    this.checkedOut = false,
+    Map<String, dynamic>? agreementConfig,
+    required this.lendingOfferTypeMode,
+  })  : offerAcceptors = offerAcceptors ?? [],
+        offerInvites = offerInvites ?? [],
+        approvedUsers = approvedUsers ?? [],
+        completedUsers = completedUsers ?? [],
+        agreementConfig = agreementConfig ?? {};
+
+  int? approvedStartDate;
+  int? approvedEndDate;
+  int? startDate;
+  int? endDate;
+  LendingModel? lendingModel;
+  String? lendingOfferAgreementLink;
+  String? lendingOfferApprovedAgreementLink;
+  String? agreementId;
+  String? lendingOfferAgreementName;
   List<String> offerAcceptors = [];
   List<String> offerInvites = [];
   List<String> approvedUsers = [];
@@ -111,7 +116,7 @@ class LendingOfferDetailsModel {
         "lendingOfferAgreementName": lendingOfferAgreementName == null
             ? null
             : lendingOfferAgreementName,
-        "lendingModel": lendingModel == null ? null : lendingModel.toMap(),
+        "lendingModel": lendingModel == null ? null : lendingModel?.toMap(),
         "offerAcceptors": offerAcceptors == null
             ? []
             : List<dynamic>.from(offerAcceptors.map((x) => x)),

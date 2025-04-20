@@ -5,7 +5,11 @@ class HideWidget extends StatelessWidget {
   final Widget child;
   final Widget secondChild;
 
-  const HideWidget({Key key, this.hide = true, this.child, this.secondChild})
+  const HideWidget(
+      {Key? key,
+      required this.hide,
+      required this.child,
+      required this.secondChild})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,12 @@
 import 'package:sevaexchange/models/data_model.dart';
 
 class ClaimedRequestStatusModel extends DataModel {
-  bool isAccepted;
-  String id;
-  num timestamp;
-  num credits;
-  String requesterEmail;
-  String adminEmail;
+  bool? isAccepted;
+  String? id;
+  num? timestamp;
+  num? credits;
+  String? requesterEmail;
+  String? adminEmail;
 
   ClaimedRequestStatusModel(
       {this.isAccepted,

@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/parent_community_message_create.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/parent_community_message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/quick_scroll_bar.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/frequent_contacts_builder.dart';
@@ -30,14 +31,15 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 class NewChatPage extends StatefulWidget {
   final List<FrequentContactsModel> frequentContacts;
 
-  const NewChatPage({Key key, this.frequentContacts}) : super(key: key);
+  const NewChatPage({required Key key, required this.frequentContacts})
+      : super(key: key);
   @override
   _NewChatPageState createState() => _NewChatPageState();
 }
 
 class _NewChatPageState extends State<NewChatPage> {
   int currentIndex = 0;
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
   bool showQuickScroll = false;
 
   @override
@@ -85,7 +87,7 @@ class _NewChatPageState extends State<NewChatPage> {
                         TransactionsMatrixCheck(
                           comingFrom: ComingFrom.Chats,
                           upgradeDetails: AppConfig
-                              .upgradePlanBannerModel.multi_member_messaging,
+                              .upgradePlanBannerModel.multi_member_messaging!,
                           transaction_matrix_type: "multi_member_messaging",
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -100,18 +102,30 @@ class _NewChatPageState extends State<NewChatPage> {
                                     ),
                                   ),
                                 )
-                                    .then((ChatModel model) {
+                                    .then((ChatModel? model) {
                                   if (model != null) {
                                     Navigator.of(context).pop(model);
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => ChatPage(
+                                          key: UniqueKey(),
                                           chatModel: model,
                                           senderId:
-                                              model.groupDetails.admins[0],
+                                              model.groupDetails?.admins !=
+                                                          null &&
+                                                      model.groupDetails!
+                                                          .admins!.isNotEmpty
+                                                  ? model.groupDetails!.admins!
+                                                      .first
+                                                  : '',
                                           timebankId: SevaCore.of(context)
-                                              .loggedInUser
-                                              .currentTimebank,
+                                                  .loggedInUser
+                                                  .currentTimebank ??
+                                              '',
+                                          feedId:
+                                              '', // Provide appropriate feedId if needed
+                                          isAdminMessage:
+                                              false, // Set as needed
                                         ),
                                       ),
                                     );
@@ -155,7 +169,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                       .primaryTimebankModel(),
                                   SevaCore.of(context)
                                       .loggedInUser
-                                      .sevaUserID) ==
+                                      .sevaUserID!) ==
                               MemberType.MEMBER,
                           child: Container(
                             height: 50,
@@ -168,7 +182,11 @@ class _NewChatPageState extends State<NewChatPage> {
                                       isEditing: false,
                                       primaryTimebankId: SevaCore.of(context)
                                           .loggedInUser
-                                          .currentTimebank,
+                                          .currentTimebank!,
+                                      bloc: ParentCommunityMessageBloc(),
+                                      onSelected: (selected) {
+                                        // Handle selection if needed
+                                      },
                                     ),
                                   ),
                                 );
@@ -183,6 +201,7 @@ class _NewChatPageState extends State<NewChatPage> {
                               ),
                             ),
                           ),
+                          secondChild: SizedBox.shrink(),
                         ),
                       ],
                 Container(
@@ -252,7 +271,7 @@ class _NewChatPageState extends State<NewChatPage> {
                     if (snapshot.data == null) {
                       return LoadingIndicator();
                     }
-                    if (snapshot.data.length == 0) {
+                    if (snapshot.data != null && snapshot.data!.length == 0) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -313,7 +332,7 @@ class _NewChatPageState extends State<NewChatPage> {
                   _scrollController.animateTo(
                     // (key.codeUnits[0] - 65) * 40.0 +
                     alphabetList.indexOf(key) * 40.0 +
-                        _bloc.scrollOffset[key] * 40.0,
+                        (_bloc.scrollOffset[key]! * 40.0),
                     duration: Duration(milliseconds: 200),
                     curve: Curves.easeIn,
                   );

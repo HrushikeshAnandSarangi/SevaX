@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 import '../search_manager.dart';
 
 Future<List<String>> getSkillsForTimebank({
-  @required String timebankId,
+  required String timebankId,
 }) async {
   log('getSkillsForTimebankId: $timebankId');
   try {
@@ -22,17 +22,17 @@ Future<List<String>> getSkillsForTimebank({
 
     return dataMap.containsKey('skills')
         ? List.castFrom(dataMap['skills'])
-        : null;
+        : <String>[];
   } catch (error) {
     log('getSkillsForTimebank: error: $error');
-    return null;
+    return null!;
   }
 }
 
 Future<List<String>> getInterestsForTimebank({
-  @required String timebankId,
+  required String timebankId,
 }) async {
-  log('getSkillsForTimebankId: $timebankId');
+  log('getInterestsForTimebankId: $timebankId');
   try {
     QuerySnapshot data =
         await FirebaseFirestore.instance.collection('constants').get();
@@ -45,17 +45,17 @@ Future<List<String>> getInterestsForTimebank({
 
     return dataMap.containsKey('interests')
         ? List.castFrom(dataMap['interests'])
-        : null;
+        : <String>[];
   } catch (error) {
     log('getInterestsForTimebank: error: $error');
-    return null;
+    return <String>[];
   }
 }
 
 Future<Map<String, dynamic>> getUserSkillsInterests({
-  List<dynamic> skillsIdList,
-  List<dynamic> interestsIdList,
-  String languageCode,
+  List<dynamic>? skillsIdList,
+  List<dynamic>? interestsIdList,
+  String? languageCode,
 }) async {
   List<String> skillsarr, interestsarr;
 
@@ -65,23 +65,16 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
 
   if (skillsIdList != null && skillsIdList.length != 0) {
     skillsarr = await SearchManager.getSkills(
-        skillsList: skillsIdList, languageCode: languageCode);
+        skillsList: List<String>.from(skillsIdList),
+        languageCode: languageCode!);
 
     resultMap["skills"] = skillsarr;
   }
 
   if (interestsIdList != null && interestsIdList.length != 0) {
     interestsarr = await SearchManager.getInterests(
-        interestList: interestsIdList, languageCode: languageCode);
-//    queryData2 =
-//        await CollectionRef.interests.get();
-//    queryData2.docs.forEach((docsnapshot) {
-//      if (interestsIdList.contains(docsnapshot.id)) {
-//        interestsarr.add(docsnapshot.data[languageCode] != null
-//            ? docsnapshot.data[languageCode]
-//            : docsnapshot.data["name"]);
-//      }
-//    });
+        interestList: List<String>.from(interestsIdList),
+        languageCode: languageCode!);
 
     resultMap["interests"] = interestsarr;
   }

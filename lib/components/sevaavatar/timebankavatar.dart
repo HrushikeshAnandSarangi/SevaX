@@ -16,7 +16,7 @@ import './image_picker_handler.dart';
 import '../../globals.dart' as globals;
 
 class TimebankAvatar extends StatefulWidget {
-  final String photoUrl;
+  final String? photoUrl;
 
   TimebankAvatar({this.photoUrl});
 
@@ -26,9 +26,9 @@ class TimebankAvatar extends StatefulWidget {
 @override
 class _TimebankAvatarState extends State<TimebankAvatar>
     with TickerProviderStateMixin, ImagePickerListener {
-  File _image;
-  AnimationController _controller;
-  ImagePickerHandler imagePicker;
+  File? _image;
+  AnimationController? _controller;
+  ImagePickerHandler? imagePicker;
   bool _isImageBeingUploaded = false;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
@@ -36,9 +36,10 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     Reference ref = FirebaseStorage.instance.ref().child('timebanklogos').child(
-        SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+        SevaCore.of(context).loggedInUser.email! + timestampString + '.jpg');
+    if (_image == null) return;
     UploadTask uploadTask = ref.putFile(
-      _image,
+      _image!,
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'Timebank Logo'},
@@ -53,7 +54,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     });
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({required String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     this._isImageBeingUploaded = false;
@@ -68,9 +69,9 @@ class _TimebankAvatarState extends State<TimebankAvatar>
       profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
+      if (profanityStatusModel?.isProfane ?? false) {
         showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
+                context: context, content: profanityStatusModel?.category ?? '')
             .then((status) {
           if (status == 'Proceed') {
             deleteFireBaseImage(imageUrl: imageURL).then((value) {
@@ -114,13 +115,13 @@ class _TimebankAvatarState extends State<TimebankAvatar>
       duration: const Duration(milliseconds: 500),
     );
 
-    imagePicker = ImagePickerHandler(this, _controller, false);
-    imagePicker.init();
+    imagePicker = ImagePickerHandler(this, _controller!, false);
+    imagePicker!.init();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -130,7 +131,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     var widthOfAvtar = 150.0;
     return Container(
       child: GestureDetector(
-        onTap: () => imagePicker.showDialog(context),
+        onTap: () => imagePicker?.showDialog(context),
         child: _isImageBeingUploaded
             ? Container(
                 margin: EdgeInsets.only(top: 20),
@@ -187,7 +188,8 @@ class _TimebankAvatarState extends State<TimebankAvatar>
 
   @override
   addWebImageUrl() {
-    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+    if (globals.webImageUrl != null &&
+        globals.webImageUrl?.isNotEmpty == true) {
       globals.timebankAvatarURL = globals.webImageUrl;
       setState(() {});
     }

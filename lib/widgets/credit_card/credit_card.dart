@@ -17,50 +17,44 @@ class CustomCreditCard extends StatefulWidget {
 
   final Widget frontBackground;
 
-  final Widget frontLayout;
+  final Widget? frontLayout;
 
   final bool showShadow;
   final CardType cardType;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
   CustomCreditCard({
-    Key key,
-    @required this.cardNumber,
-    @required this.cardExpiry,
-    @required this.cardHolderName,
-    @required this.bankName,
-    @required this.brand,
-    @required this.frontBackground,
-    this.cardType,
+    Key? key,
+    required this.cardNumber,
+    required this.cardExpiry,
+    required this.cardHolderName,
+    required this.bankName,
+    required this.brand,
+    required this.frontBackground,
+    this.cardType = CardType.other,
     this.frontLayout,
     this.frontTextColor = Colors.white,
     this.backTextColor = Colors.black,
     this.showShadow = false,
     this.width,
     this.height,
-    this.isDefaultCard,
-  })  : assert(frontBackground != null),
-        // assert(backBackground != null),
-        super(key: key);
+    this.isDefaultCard = false,
+  }) : super(key: key);
 
   @override
   _CustomCreditCardState createState() => _CustomCreditCardState();
 }
 
 class _CustomCreditCardState extends State<CustomCreditCard> {
-  double cardWidth;
-  double cardHeight;
+  late double cardWidth;
+  late double cardHeight;
 
   @override
   Widget build(BuildContext context) {
-    widget.width == null
-        ? cardWidth = MediaQuery.of(context).size.width - 40
-        : cardWidth = widget.width;
-    widget.height == null
-        ? cardHeight = (cardWidth / 2) + 10
-        : cardHeight = widget.height;
-    return Center(
+    cardWidth = widget.width ?? MediaQuery.of(context).size.width - 40;
+    cardHeight = widget.height ?? (cardWidth / 2) + 10;
+    return Container(
       child: Stack(
         children: <Widget>[
           _buildFrontCard(),

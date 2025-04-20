@@ -1,9 +1,9 @@
-import 'package:emoji_picker/emoji_picker.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -33,13 +33,13 @@ import '../../labels.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
-  final TimebankModel timebankModel;
-  final bool isFocused;
-  CommunityModel communityModel;
+  final TimebankModel? timebankModel;
+  final bool? isFocused;
+  CommunityModel? communityModel;
 
   NewsCardView(
-      {Key key,
-      @required this.newsModel,
+      {Key? key,
+      required this.newsModel,
       this.isFocused = false,
       this.timebankModel,
       this.communityModel})
@@ -53,7 +53,7 @@ class NewsCardView extends StatefulWidget {
 
 class NewsCardViewState extends State<NewsCardView> {
   TextEditingController _textEditingController = TextEditingController();
-  bool isShowSticker;
+  bool? isShowSticker;
   final profanityDetector = ProfanityDetector();
   TimebankModel timebankModel = TimebankModel({});
 
@@ -66,7 +66,7 @@ class NewsCardViewState extends State<NewsCardView> {
     if (widget.timebankModel == null) {
       getTimebank();
     }
-    if (this.widget.isFocused) {
+    if (this.widget.isFocused!) {
       setState(() {
         SystemChannels.textInput.invokeMethod('TextInput.show');
       });
@@ -74,8 +74,8 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Future<void> getTimebank() async {
-    timebankModel = await FirestoreManager.getTimeBankForId(
-        timebankId: widget.newsModel.entity.entityId);
+    timebankModel = (await FirestoreManager.getTimeBankForId(
+        timebankId: widget.newsModel.entity!.entityId!))!;
     setState(() {});
   }
 
@@ -87,23 +87,23 @@ class NewsCardViewState extends State<NewsCardView> {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           widget.newsModel.title == null
-              ? widget.newsModel.fullName
-              : widget.newsModel.title.trim(),
+              ? widget.newsModel.fullName!
+              : widget.newsModel.title!.trim(),
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
           widget.timebankModel != null &&
                   utils.isDeletable(
-                      timebankCreatorId: widget.timebankModel.creatorId,
+                      timebankCreatorId: widget.timebankModel!.creatorId,
                       context: context,
                       contentCreatorId: widget.newsModel.sevaUserId,
                       communityCreatorId: widget
-                              .timebankModel.managedCreatorIds.isNotEmpty
-                          ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                              .timebankModel!.managedCreatorIds.isNotEmpty
+                          ? widget.timebankModel!.managedCreatorIds.elementAt(0)
                           : BlocProvider.of<HomeDashBoardBloc>(context)
                                   ?.selectedCommunityModel
                                   ?.created_by ??
-                              widget.communityModel.created_by)
+                              widget.communityModel!.created_by)
               ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -128,7 +128,7 @@ class NewsCardViewState extends State<NewsCardView> {
                           newsMmodel: widget.newsModel,
                           timebankId:
                               SevaCore.of(context).loggedInUser.currentTimebank,
-                              timebankModel: widget.timebankModel,
+                          timebankModel: widget.timebankModel,
                         ),
                       ),
                     );
@@ -158,9 +158,9 @@ class NewsCardViewState extends State<NewsCardView> {
                   listOfLinks,
                   LikeComment(
                     newsModel: widget.newsModel,
-                    userId: SevaCore.of(context).loggedInUser.email,
+                    userId: SevaCore.of(context).loggedInUser.email!,
                     isFromHome: false,
-                    timebankModel: widget.timebankModel,
+                    timebankModel: widget.timebankModel!,
                   ),
 
                   //============================//
@@ -168,17 +168,18 @@ class NewsCardViewState extends State<NewsCardView> {
                     padding: EdgeInsets.fromLTRB(8, 19, 8, 0),
                     child: StreamBuilder<NewsModel>(
                       stream: NewsService()
-                          .getCommentsByFeedId(id: widget.newsModel.id),
+                          .getCommentsByFeedId(id: widget.newsModel.id!),
                       builder: (context, snapshot) {
                         if (snapshot.data == null ||
                             (snapshot.hasData &&
-                                snapshot.data.comments.length == 0)) {
+                                snapshot.data!.comments!.length == 0)) {
                           return Center(
                             child: Text(S.of(context).no_data),
                           );
                         }
                         if (snapshot.hasData) {
-                          List<Comments> commentsList = snapshot.data.comments;
+                          List<Comments> commentsList =
+                              snapshot.data!.comments!;
                           return ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: commentsList.length,
@@ -253,7 +254,7 @@ class NewsCardViewState extends State<NewsCardView> {
                         isDense: true,
                         contentPadding: EdgeInsets.all(3.0),
                       ),
-                      autofocus: this.widget.isFocused ? true : false,
+                      autofocus: this.widget.isFocused! ? true : false,
                       onTap: () => {
                         setState(() {
                           isShowSticker = false;
@@ -309,8 +310,8 @@ class NewsCardViewState extends State<NewsCardView> {
                       iconSize: 30,
                       onPressed: () => {
                             setState(() {
-                              isShowSticker = !isShowSticker;
-                              if (isShowSticker) {
+                              isShowSticker = !isShowSticker!;
+                              if (isShowSticker!) {
                                 FocusScope.of(context).unfocus();
                               } else {
                                 isShowSticker = false;
@@ -334,7 +335,7 @@ class NewsCardViewState extends State<NewsCardView> {
                   ),
                 )
               : Offstage(),
-          (isShowSticker ? buildSticker() : Container())
+          (isShowSticker! ? buildSticker() : Container())
 //          Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
 //              Widget>[
 //          ]),
@@ -345,12 +346,14 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget buildSticker() {
     return EmojiPicker(
-      rows: 3,
-      columns: 7,
-      buttonMode: ButtonMode.MATERIAL,
-      recommendKeywords: ["racing", "horse"],
-      numRecommended: 10,
-      onEmojiSelected: (emoji, category) {
+      config: Config(
+        height: 256,
+        emojiViewConfig: EmojiViewConfig(
+          columns: 7,
+          buttonMode: ButtonMode.MATERIAL,
+        ),
+      ),
+      onEmojiSelected: (category, emoji) {
         _textEditingController.text += emoji.emoji;
       },
     );
@@ -363,7 +366,7 @@ class NewsCardViewState extends State<NewsCardView> {
           widget.newsModel.title == null || widget.newsModel.title == "NoData"
               ? Offstage()
               : Text(
-                  widget.newsModel.title.trim(),
+                  widget.newsModel.title!.trim(),
                   style: TextStyle(
                       fontSize: 28.0,
                       fontStyle: FontStyle.normal,
@@ -374,20 +377,20 @@ class NewsCardViewState extends State<NewsCardView> {
 
   _saveComment(Comments comment) {
     setState(() {
-      widget.newsModel.comments.add(comment);
+      widget.newsModel.comments!.add(comment);
       NewsService().updateFeedById(newsModel: widget.newsModel);
     });
   }
 
   Widget get listOfHashTags {
-    if (widget.newsModel.hashTags.isNotEmpty) {
+    if (widget.newsModel.hashTags!.isNotEmpty) {
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
-            children: widget.newsModel.hashTags.map((hash) {
+            children: widget.newsModel.hashTags!.map((hash) {
               // final _random = new Random();
               // var element = colorList[_random.nextInt(colorList.length)];
               return chip(hash, false);
@@ -457,14 +460,14 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get listOfLinks {
-    if (widget.newsModel.urlsFromPost.length > 0) {
+    if (widget.newsModel.urlsFromPost!.length > 0) {
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
-            children: widget.newsModel.urlsFromPost.map((link) {
+            children: widget.newsModel.urlsFromPost!.map((link) {
               // final _random = new Random();
               // var element = colorList[_random.nextInt(colorList.length)];
               return chipForLinks(link, false);
@@ -546,12 +549,12 @@ class NewsCardViewState extends State<NewsCardView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           UserProfileImage(
-            timebankModel: widget.timebankModel,
+            timebankModel: widget.timebankModel!,
             width: 40,
             height: 40,
-            userId: widget.newsModel.sevaUserId,
-            email: widget.newsModel.email,
-            photoUrl: widget.newsModel.userPhotoURL,
+            userId: widget.newsModel.sevaUserId!,
+            email: widget.newsModel.email!,
+            photoUrl: widget.newsModel.userPhotoURL!,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -559,7 +562,7 @@ class NewsCardViewState extends State<NewsCardView> {
               Container(
                 margin: EdgeInsets.only(top: 5, left: 5),
                 child: Text(
-                  widget.newsModel.fullName.trim(),
+                  widget.newsModel.fullName!.trim(),
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
@@ -568,7 +571,7 @@ class NewsCardViewState extends State<NewsCardView> {
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  _getFormattedTime(widget.newsModel.postTimestamp),
+                  _getFormattedTime(widget.newsModel.postTimestamp!),
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500,
@@ -587,7 +590,7 @@ class NewsCardViewState extends State<NewsCardView> {
     return widget.newsModel.newsImageUrl == null
         ? Offstage()
         : getImageView(
-            url: widget.newsModel.newsImageUrl, imageId: widget.newsModel.id);
+            url: widget.newsModel.newsImageUrl!, imageId: widget.newsModel.id!);
   }
 
   Widget get scrappedImage {
@@ -596,19 +599,19 @@ class NewsCardViewState extends State<NewsCardView> {
         ? Offstage()
         //change tag to avoid hero widget issue
         : getImageView(
-            url: widget.newsModel.imageScraped,
-            imageId: widget.newsModel.id + "*");
+            url: widget.newsModel.imageScraped!,
+            imageId: widget.newsModel.id! + "*");
   }
 
   Widget getImageView({
-    String url,
-    String imageId,
+    String? url,
+    String? imageId,
   }) {
     return Container(
       margin: EdgeInsets.all(5),
       child: url != null
           ? Hero(
-              tag: imageId,
+              tag: imageId!,
               child: Image.network(
                 url ?? defaultUserImageURL,
                 fit: BoxFit.cover,
@@ -620,7 +623,7 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget get photoCredits {
     return widget.newsModel.photoCredits != null &&
-            widget.newsModel.photoCredits.isNotEmpty
+            widget.newsModel.photoCredits!.isNotEmpty
         ? Center(
             child: Container(
               child: Text(
@@ -646,7 +649,7 @@ class NewsCardViewState extends State<NewsCardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  widget.newsModel.description.trim(),
+                  widget.newsModel.description!.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
                 )
               ],
@@ -682,21 +685,22 @@ class NewsCardViewState extends State<NewsCardView> {
   void openPdfViewer() {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
-    progressDialog.show();
-    createFileOfPdfUrl(
-            widget.newsModel.newsDocumentUrl, widget.newsModel.newsDocumentName)
+    progressDialog!.show();
+    createFileOfPdfUrl(widget.newsModel.newsDocumentUrl!,
+            widget.newsModel.newsDocumentName!)
         .then((f) {
-      progressDialog.hide();
+      progressDialog!.hide();
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PDFScreen(
-                  docName: widget.newsModel.newsDocumentName,
+                  docName: widget.newsModel.newsDocumentName!,
                   pathPDF: f.path,
                   isFromFeeds: true,
+                  pdfUrl: widget.newsModel.newsDocumentUrl!,
                 )),
       );
     });
@@ -711,7 +715,7 @@ class NewsCardViewState extends State<NewsCardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  widget.newsModel.subheading.trim(),
+                  widget.newsModel.subheading!.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
                 ),
                 Center(
@@ -722,7 +726,7 @@ class NewsCardViewState extends State<NewsCardView> {
           );
   }
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
   void showProgressDialog(String message, BuildContext context) {
     showDialog(
         barrierDismissible: false,
@@ -732,11 +736,11 @@ class NewsCardViewState extends State<NewsCardView> {
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -760,8 +764,12 @@ class NewsCardViewState extends State<NewsCardView> {
                   Spacer(),
                   CustomElevatedButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     textColor: FlavorConfig.values.buttonTextColor,
+                    elevation: 2.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                     child: Text(
                       S.of(context).delete,
                       style: TextStyle(
@@ -803,7 +811,7 @@ class NewsCardViewState extends State<NewsCardView> {
   void _deleteNews(BuildContext context) async {
     await deleteNews(widget.newsModel);
     if (dialogContext != null) {
-      Navigator.pop(dialogContext);
+      Navigator.pop(dialogContext!);
     }
     Navigator.of(context).pop();
 
@@ -819,12 +827,12 @@ class NewsCardViewState extends State<NewsCardView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           UserProfileImage(
-            photoUrl: commentsList.userPhotoURL,
-            email: widget.newsModel.email,
-            userId: widget.newsModel.sevaUserId,
+            photoUrl: commentsList.userPhotoURL!,
+            email: widget.newsModel.email!,
+            userId: widget.newsModel.sevaUserId!,
             height: 30,
             width: 30,
-            timebankModel: widget.timebankModel,
+            timebankModel: widget.timebankModel!,
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
@@ -843,7 +851,7 @@ class NewsCardViewState extends State<NewsCardView> {
                   child: Text(
                       timeAgo.format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              commentsList.createdAt),
+                              commentsList.createdAt!),
                           locale: Locale(getLangTag()).toLanguageTag()),
                       style: TextStyle(
                           fontSize: 11,
@@ -866,23 +874,25 @@ class NewsCardViewState extends State<NewsCardView> {
                         InkWell(
                           onTap: () {
                             Set<String> likesList =
-                                Set.from(commentsList.likes);
+                                Set.from(commentsList.likes!);
                             commentsList.likes != null &&
-                                    commentsList.likes
+                                    commentsList.likes!
                                         .contains(commentsList.createdEmail)
                                 ? likesList.remove(commentsList.createdEmail)
-                                : likesList.add(commentsList.createdEmail);
+                                : likesList.add(commentsList.createdEmail!);
                             // commentsList.likes = likesList.toList();
-                            widget.newsModel.comments[index].likes =
-                                likesList.toList();
-                            NewsService()
-                                .updateFeed(newsModel: widget.newsModel);
-                            setState(() {});
+                            if (widget.newsModel.comments != null) {
+                              widget.newsModel.comments![index].likes =
+                                  likesList.toList();
+                              NewsService()
+                                  .updateFeed(newsModel: widget.newsModel);
+                              setState(() {});
+                            }
                           },
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: commentsList.likes != null &&
-                                    commentsList.likes
+                                    commentsList.likes!
                                         .contains(commentsList.createdEmail)
                                 ? Icon(
                                     Icons.favorite,
@@ -906,7 +916,7 @@ class NewsCardViewState extends State<NewsCardView> {
                         padding: EdgeInsets.only(top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('${commentsList.likes.length}',
+                            child: Text('${commentsList.likes!.length}',
                                 // child: Text('1',
                                 style: TextStyle(
                                     fontSize: 11,
@@ -931,7 +941,7 @@ class NewsCardViewState extends State<NewsCardView> {
                                       commentsList,
                                       widget.newsModel,
                                       index,
-                                      widget.timebankModel)));
+                                      widget.timebankModel!)));
                             },
                             child: Text(S.of(context).reply,
                                 style: TextStyle(
@@ -945,17 +955,17 @@ class NewsCardViewState extends State<NewsCardView> {
                   padding: EdgeInsets.only(top: 8),
                   child: InkWell(
                     onTap: () {
-                      if (commentsList.comments.length > 0) {
+                      if (commentsList.comments!.length > 0) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => RepliesView(
                                 commentsList,
                                 widget.newsModel,
                                 index,
-                                widget.timebankModel)));
+                                widget.timebankModel!)));
                       }
                     },
                     child: Text(
-                        commentsList.comments.length > 0
+                        commentsList.comments!.length > 0
                             ? S.of(context).view_prev_replies
                             : '',
                         style: TextStyle(
@@ -976,11 +986,11 @@ class NewsCardViewState extends State<NewsCardView> {
 
 class DetailDescription extends StatefulWidget {
   NewsModel data = NewsModel();
-  TimebankModel timebankModel;
-  UserModel userModel = UserModel();
-  List<String> moreList = [];
-  String userId;
-  final bool isFocused;
+  TimebankModel? timebankModel;
+  UserModel? userModel = UserModel();
+  List<String>? moreList = [];
+  String? userId;
+  final bool? isFocused;
   DetailDescription(this.data,
       {this.isFocused = false, this.userModel, this.timebankModel});
   @override
@@ -989,12 +999,12 @@ class DetailDescription extends StatefulWidget {
 
 class _DetailDescriptionState extends State<DetailDescription> {
   NewsModel data = NewsModel();
-  bool isFocused;
+  bool isFocused = false;
   _DetailDescriptionState();
   TextEditingController _textEditingController = TextEditingController();
   // List<Comments> comments = List<Comments>();
   final dbRef = CollectionRef;
-  bool isShowSticker;
+  bool isShowSticker = false;
 
   @override
   void initState() {
@@ -1009,26 +1019,28 @@ class _DetailDescriptionState extends State<DetailDescription> {
 
   _saveComment(Comments comment) {
     setState(() {
-      data.comments.add(comment);
+      data.comments!.add(comment);
       NewsService().updateFeedById(newsModel: data);
     });
   }
 
   Widget buildSticker() {
     return EmojiPicker(
-      rows: 3,
-      columns: 7,
-      buttonMode: ButtonMode.MATERIAL,
-      recommendKeywords: ["racing", "horse"],
-      numRecommended: 10,
-      onEmojiSelected: (emoji, category) {
+      config: Config(
+        height: 256,
+        emojiViewConfig: EmojiViewConfig(
+          columns: 7,
+          buttonMode: ButtonMode.MATERIAL,
+        ),
+      ),
+      onEmojiSelected: (category, emoji) {
         _textEditingController.text += emoji.emoji;
       },
     );
   }
 
   void updateMoreList() {
-    widget.moreList.clear();
+    widget.moreList!.clear();
 //    widget.userModel.bookmarks.contains(data.id) == true
 //        ? widget.moreList.add('UnBookmark')
 //        : widget.moreList.add('Bookmark');
@@ -1037,13 +1049,15 @@ class _DetailDescriptionState extends State<DetailDescription> {
 //        : widget.moreList.add('Follow');
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     if (isShowSticker) {
       setState(() {
         isShowSticker = (!isShowSticker);
       });
+      return false;
     } else {
       Navigator.pop(context, true);
+      return true;
     }
   }
 
@@ -1114,7 +1128,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         Container(
                             padding: EdgeInsets.only(top: 20, bottom: 12),
                             child: HashTagText(
-                              text: data.description,
+                              text: data.description!,
                               textStyle: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontFamily: 'Europa',
@@ -1140,15 +1154,15 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         LikeComment(
                           newsModel: data,
                           isFromHome: false,
-                          userId: SevaCore.of(context).loggedInUser.email,
-                          timebankModel: widget.timebankModel,
+                          userId: SevaCore.of(context).loggedInUser.email!,
+                          timebankModel: widget.timebankModel!,
                         ),
                         Container(
                           height: MediaQuery.of(context).size.width / 0.9,
                           padding: EdgeInsets.fromLTRB(0, 19, 0, 0),
                           child: StreamBuilder<NewsModel>(
                               stream: NewsService()
-                                  .getCommentsByFeedId(id: data.id),
+                                  .getCommentsByFeedId(id: data.id!),
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
                                   return Center(
@@ -1157,7 +1171,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                 }
                                 if (snapshot.hasData) {
                                   List<Comments> commentsList =
-                                      snapshot.data.comments;
+                                      snapshot.data!.comments!;
                                   return ListView.builder(
                                     itemCount: commentsList.length,
                                     itemBuilder: (context, index) {
@@ -1189,6 +1203,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                     shrinkWrap: true,
                                   );
                                 }
+                                return SizedBox.shrink();
                               }),
                         ),
                       ],
@@ -1213,10 +1228,10 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                   left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
                               child: CircleAvatar(
                                 child: ClipOval(
-                                  child: widget.userModel.photoURL == null
+                                  child: widget.userModel!.photoURL == null
                                       ? Container(color: Colors.grey)
                                       : Image.network(
-                                          widget.userModel.photoURL,
+                                          widget.userModel!.photoURL!,
                                           fit: BoxFit.cover,
                                         ),
                                 ),
@@ -1303,7 +1318,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
         children: <Widget>[
           CircleAvatar(
             child: ClipOval(
-              child: widget.userModel.photoURL == null
+              child: widget.userModel!.photoURL == null
                   ? Container(color: Colors.grey)
                   : Image.network(
                       widget.data.userPhotoURL ?? defaultUserImageURL,
@@ -1329,7 +1344,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                   child: Text(
                       timeAgo.format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              commentsList.createdAt),
+                              commentsList.createdAt!),
                           locale: Locale(getLangTag()).toLanguageTag()),
                       style: TextStyle(
                           fontSize: 11,
@@ -1352,21 +1367,21 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         InkWell(
                           onTap: () {
                             Set<String> likesList =
-                                Set.from(commentsList.likes);
+                                Set.from(commentsList.likes!);
                             commentsList.likes != null &&
-                                    commentsList.likes
+                                    commentsList.likes!
                                         .contains(commentsList.createdEmail)
                                 ? likesList.remove(commentsList.createdEmail)
-                                : likesList.add(commentsList.createdEmail);
+                                : likesList.add(commentsList.createdEmail!);
                             // commentsList.likes = likesList.toList();
-                            data.comments[index].likes = likesList.toList();
+                            data.comments![index].likes = likesList.toList();
                             NewsService().updateFeed(newsModel: data);
                             setState(() {});
                           },
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: commentsList.likes != null &&
-                                    commentsList.likes
+                                    commentsList.likes!
                                         .contains(commentsList.createdEmail)
                                 ? Icon(
                                     Icons.favorite,
@@ -1390,7 +1405,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         padding: EdgeInsets.only(top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('${commentsList.likes.length}',
+                            child: Text('${commentsList.likes!.length}',
                                 // child: Text('1',
                                 style: TextStyle(
                                     fontSize: 11,
@@ -1415,7 +1430,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                       commentsList,
                                       data,
                                       index,
-                                      widget.timebankModel)));
+                                      widget.timebankModel!)));
                             },
                             child: Text(S.of(context).reply,
                                 style: TextStyle(
@@ -1429,14 +1444,14 @@ class _DetailDescriptionState extends State<DetailDescription> {
                   padding: EdgeInsets.only(top: 8),
                   child: InkWell(
                     onTap: () {
-                      if (commentsList.comments.length > 0) {
+                      if (commentsList.comments!.length > 0) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => RepliesView(commentsList,
-                                data, index, widget.timebankModel)));
+                                data, index, widget!.timebankModel!)));
                       }
                     },
                     child: Text(
-                        commentsList.comments.length > 0
+                        commentsList.comments!.length > 0
                             ? S.of(context).view_prev_replies
                             : '',
                         style: TextStyle(
@@ -1456,17 +1471,17 @@ class _DetailDescriptionState extends State<DetailDescription> {
 }
 
 class HashTagText extends StatelessWidget {
-  final String text;
-  final TextStyle textStyle;
-  final TextStyle hashTagStyle;
-  final Function(String) onTap;
+  final String? text;
+  final TextStyle? textStyle;
+  final TextStyle? hashTagStyle;
+  final Function(String)? onTap;
 
   const HashTagText({
-    Key key,
+    Key? key,
     this.text,
     this.textStyle,
     this.hashTagStyle,
-    @required this.onTap,
+    required this.onTap,
   })  : assert(onTap != null),
         assert(text != null),
         super(key: key);
@@ -1477,8 +1492,8 @@ class HashTagText extends StatelessWidget {
       text: _getHashTagTextSpan(
         hashTagStyle ?? TextStyle(color: Colors.blue),
         textStyle ?? TextStyle(color: Colors.black),
-        text,
-        onTap,
+        text!,
+        onTap!,
       ),
     );
   }
@@ -1524,10 +1539,10 @@ class HashTagText extends StatelessWidget {
 }
 
 class _Annotation extends Comparable<_Annotation> {
-  _Annotation({@required this.range, this.style});
+  _Annotation({required this.range, this.style});
 
   final TextRange range;
-  final TextStyle style;
+  final TextStyle? style;
 
   @override
   int compareTo(_Annotation other) {
@@ -1536,8 +1551,8 @@ class _Annotation extends Comparable<_Annotation> {
 }
 
 class _Annotator {
-  final TextStyle textStyle;
-  final TextStyle decoratedStyle;
+  final TextStyle? textStyle;
+  final TextStyle? decoratedStyle;
   static final hashTagRegExp = RegExp(
     r'\B(\#[a-zA-Z]+\b)(?!;)',
     multiLine: true,
@@ -1547,8 +1562,8 @@ class _Annotator {
 
   List<_Annotation> _getSourceAnnotations(
       List<RegExpMatch> tags, String copiedText) {
-    TextRange previousItem;
-    final result = [];
+    TextRange? previousItem = null;
+    final List<_Annotation> result = [];
     for (var tag in tags) {
       if (previousItem == null) {
         if (tag.start > 0) {
@@ -1577,7 +1592,7 @@ class _Annotator {
       previousItem = TextRange(start: tag.start, end: tag.end);
     }
 
-    if (result.last.range.end < copiedText.length) {
+    if (result.isNotEmpty && result.last.range.end < copiedText.length) {
       result.add(_Annotation(
           range:
               TextRange(start: result.last.range.end, end: copiedText.length),
@@ -1597,10 +1612,10 @@ class _Annotator {
 }
 
 class LikeComment extends StatefulWidget {
-  final NewsModel newsModel;
-  final TimebankModel timebankModel;
-  final bool isFromHome;
-  final String userId;
+  final NewsModel? newsModel;
+  final TimebankModel? timebankModel;
+  final bool? isFromHome;
+  final String? userId;
   LikeComment(
       {this.newsModel, this.isFromHome, this.userId, this.timebankModel});
   @override
@@ -1623,19 +1638,19 @@ class _LikeCommentState extends State<LikeComment> {
         padding: const EdgeInsets.only(top: 10.0, left: 10),
         child: InkWell(
           onTap: () {
-            Set<String> likesList = Set.from(widget.newsModel.likes);
-            widget.newsModel.likes != null &&
-                    widget.newsModel.likes.contains(widget.userId)
+            Set<String> likesList = Set.from(widget.newsModel!.likes!);
+            widget.newsModel!.likes != null &&
+                    widget.newsModel!.likes!.contains(widget.userId)
                 ? likesList.remove(widget.userId)
-                : likesList.add(widget.userId);
-            widget.newsModel.likes = likesList.toList();
-            NewsService().updateFeed(newsModel: widget.newsModel);
+                : likesList.add(widget.userId!);
+            widget.newsModel!.likes = likesList.toList();
+            NewsService().updateFeed(newsModel: widget.newsModel!);
             setState(() {});
           },
           child: Align(
             alignment: Alignment.bottomCenter,
-            child: widget.newsModel.likes != null &&
-                    widget.newsModel.likes.contains(widget.userId)
+            child: widget.newsModel!.likes != null &&
+                    widget.newsModel!.likes!.contains(widget.userId)
                 ? Icon(
                     Icons.favorite,
                     color: Color(0xFFec444b),
@@ -1652,7 +1667,7 @@ class _LikeCommentState extends State<LikeComment> {
           padding: EdgeInsets.only(left: 6, top: 10),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('${widget.newsModel.likes.length.toString()}',
+              child: Text('${widget.newsModel!.likes!.length.toString()}',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -1671,19 +1686,19 @@ class _LikeCommentState extends State<LikeComment> {
           padding: EdgeInsets.only(left: 20, top: 10),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('${widget.newsModel.comments.length}',
+              child: Text('${widget.newsModel!.comments!.length}',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.black)))),
       GestureDetector(
         onTap: () {
-          widget.isFromHome
+          widget.isFromHome!
               ? Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => DetailDescription(
-                            widget.newsModel,
+                            widget.newsModel!,
                             isFocused: true,
                             timebankModel: widget.timebankModel,
                           )))
@@ -1706,10 +1721,10 @@ class _LikeCommentState extends State<LikeComment> {
 }
 
 class DeleteCommentOverlay extends StatefulWidget {
-  int comments;
-  NewsModel feed;
-  int index;
-  bool isReply;
+  int? comments;
+  NewsModel? feed;
+  int? index;
+  bool? isReply;
 
   DeleteCommentOverlay({this.feed, this.comments, this.index, this.isReply});
 
@@ -1719,8 +1734,8 @@ class DeleteCommentOverlay extends StatefulWidget {
 
 class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  Animation<double> scaleAnimation;
+  AnimationController? controller;
+  Animation<double>? scaleAnimation;
 
   @override
   void initState() {
@@ -1729,27 +1744,27 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     scaleAnimation =
-        CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
+        CurvedAnimation(parent: controller!, curve: Curves.elasticInOut);
 
-    controller.addListener(() {
+    controller!.addListener(() {
       setState(() {});
     });
 
-    controller.forward();
+    controller!.forward();
   }
 
   _deleteReplyComment(int comment) {
     setState(() {
-      widget.feed.comments[widget.index].comments.removeAt(comment);
-      NewsService().updateFeedById(newsModel: widget.feed);
+      widget.feed!.comments![widget.index!].comments!.removeAt(comment);
+      NewsService().updateFeedById(newsModel: widget.feed!);
     });
   }
 
   _deleteComment(int index) {
     setState(() {
-      widget.feed.comments.removeAt(index);
+      widget.feed!.comments!.removeAt(index);
 //      print(widget.feed.comments[widget.index].comments.length);
-      NewsService().updateFeedById(newsModel: widget.feed);
+      NewsService().updateFeedById(newsModel: widget.feed!);
     });
   }
 
@@ -1759,7 +1774,7 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
       child: Material(
         color: Colors.transparent,
         child: ScaleTransition(
-          scale: scaleAnimation,
+          scale: scaleAnimation!,
           child: Container(
               margin: EdgeInsets.all(20.0),
               padding: EdgeInsets.all(15.0),
@@ -1789,7 +1804,11 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                             height: 35.0,
                             minWidth: 110.0,
                             child: CustomElevatedButton(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              textColor: Colors.black,
                               color: Colors.white,
+                              elevation: 0.0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0)),
                               child: Text(
@@ -1802,10 +1821,10 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                               ),
                               onPressed: () {
                                 setState(() {
-                                  if (widget.isReply) {
-                                    _deleteReplyComment(widget.comments);
+                                  if (widget.isReply!) {
+                                    _deleteReplyComment(widget.comments!);
                                   } else {
-                                    _deleteComment(widget.index);
+                                    _deleteComment(widget.index!);
                                   }
                                   Navigator.pop(context);
                                 });
@@ -1819,6 +1838,10 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                               height: 35.0,
                               minWidth: 110.0,
                               child: CustomElevatedButton(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                elevation: 0.0,
+                                textColor: Colors.black,
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0)),
@@ -1861,8 +1884,8 @@ class RepliesView extends StatefulWidget {
 class _RepliesViewState extends State<RepliesView> {
   TextEditingController _textEditingController = TextEditingController();
   bool isFocused = true;
-  bool isShowSticker;
-  bool isKeyboardVisible;
+  bool? isShowSticker;
+  bool? isKeyboardVisible;
   final profanityDetector = ProfanityDetector();
   bool isProfane = false;
   String errorText = '';
@@ -1881,10 +1904,10 @@ class _RepliesViewState extends State<RepliesView> {
 
   _saveComment(Comments comment) {
     setState(() {
-      if (widget.feed.comments[widget.index].comments == null) {
-        widget.feed.comments[widget.index].comments = [];
+      if (widget.feed.comments![widget.index].comments == null) {
+        widget.feed.comments![widget.index].comments = [];
       }
-      widget.feed.comments[widget.index].comments.add(comment);
+      widget.feed.comments![widget.index].comments!.add(comment);
       NewsService().updateFeedById(newsModel: widget.feed);
     });
   }
@@ -1924,7 +1947,7 @@ class _RepliesViewState extends State<RepliesView> {
                     padding: EdgeInsets.only(left: 50),
                     child: StreamBuilder<NewsModel>(
                         stream: NewsService()
-                            .getCommentsByFeedId(id: widget.feed.id),
+                            .getCommentsByFeedId(id: widget.feed.id!),
                         builder: (context, snapshot) {
                           if (snapshot.data == null) {
                             return Center(
@@ -1932,8 +1955,8 @@ class _RepliesViewState extends State<RepliesView> {
                             );
                           }
                           if (snapshot.hasData) {
-                            List<Comments> commentsList =
-                                snapshot.data.comments[widget.index].comments;
+                            List<Comments> commentsList = snapshot
+                                .data!.comments![widget.index].comments!;
                             return ListView.builder(
                               itemCount: commentsList.length,
                               itemBuilder: (context, index) {
@@ -1962,6 +1985,7 @@ class _RepliesViewState extends State<RepliesView> {
                               shrinkWrap: true,
                             );
                           }
+                          return SizedBox.shrink();
                         }),
                   ),
                 ],
@@ -2061,8 +2085,8 @@ class _RepliesViewState extends State<RepliesView> {
                         iconSize: 30,
                         onPressed: () => {
                               setState(() {
-                                isShowSticker = !isShowSticker;
-                                if (isShowSticker) {
+                                isShowSticker = !isShowSticker!;
+                                if (isShowSticker!) {
                                   FocusScope.of(context).unfocus();
                                 } else {
                                   isShowSticker = false;
@@ -2086,7 +2110,7 @@ class _RepliesViewState extends State<RepliesView> {
                     ),
                   )
                 : Offstage(),
-            (isShowSticker ? buildSticker() : Container()),
+            (isShowSticker! ? buildSticker() : Container()),
           ],
         ),
       ),
@@ -2095,12 +2119,14 @@ class _RepliesViewState extends State<RepliesView> {
 
   Widget buildSticker() {
     return EmojiPicker(
-      rows: 3,
-      columns: 7,
-      buttonMode: ButtonMode.MATERIAL,
-      recommendKeywords: ["racing", "horse"],
-      numRecommended: 10,
-      onEmojiSelected: (emoji, category) {
+      config: Config(
+        height: 256,
+        emojiViewConfig: EmojiViewConfig(
+          columns: 7,
+          buttonMode: ButtonMode.MATERIAL,
+        ),
+      ),
+      onEmojiSelected: (category, emoji) {
         _textEditingController.text += emoji.emoji;
       },
     );
@@ -2116,9 +2142,9 @@ class _RepliesViewState extends State<RepliesView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           UserProfileImage(
-            photoUrl: commentsList.userPhotoURL,
-            email: widget.feed.email,
-            userId: widget.feed.sevaUserId,
+            photoUrl: commentsList.userPhotoURL!,
+            email: widget.feed.email!,
+            userId: widget.feed.sevaUserId!,
             height: 30,
             width: 30,
             timebankModel: widget.timebankModel,
@@ -2143,7 +2169,7 @@ class _RepliesViewState extends State<RepliesView> {
                   child: Text(
                       timeAgo.format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              commentsList.createdAt),
+                              commentsList.createdAt!),
                           locale: Locale(getLangTag()).toLanguageTag()),
                       style: TextStyle(
                           fontSize: 11,
@@ -2166,21 +2192,21 @@ class _RepliesViewState extends State<RepliesView> {
                         InkWell(
                           onTap: () {
                             Set<String> likesList =
-                                Set.from(commentsList.likes);
+                                Set.from(commentsList.likes!);
                             commentsList.likes != null &&
-                                    commentsList.likes
+                                    commentsList.likes!
                                         .contains(commentsList.createdEmail)
                                 ? likesList.remove(commentsList.createdEmail)
-                                : likesList.add(commentsList.createdEmail);
+                                : likesList.add(commentsList.createdEmail!);
                             commentsList.likes = likesList.toList();
                             setState(() {
                               isParent
-                                  ? widget.feed.comments[widget.index].likes =
+                                  ? widget.feed.comments![widget.index].likes =
                                       likesList.toList()
                                   : widget
                                       .feed
-                                      .comments[widget.index]
-                                      .comments[index]
+                                      .comments![widget.index]
+                                      .comments![index]
                                       .likes = likesList.toList();
                             });
                             NewsService().updateFeed(newsModel: widget.feed);
@@ -2189,7 +2215,7 @@ class _RepliesViewState extends State<RepliesView> {
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: commentsList.likes != null &&
-                                    commentsList.likes
+                                    commentsList.likes!
                                         .contains(commentsList.createdEmail)
                                 ? Icon(
                                     Icons.favorite,
@@ -2214,7 +2240,7 @@ class _RepliesViewState extends State<RepliesView> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '${commentsList.likes.length}',
+                          '${commentsList.likes!.length}',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,

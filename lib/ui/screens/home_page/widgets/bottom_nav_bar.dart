@@ -15,7 +15,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final int selected;
 
   const CustomBottomNavigationBar(
-      {Key key, this.onChanged, this.startIndex = 2, this.selected})
+      {Key? key,
+      required this.onChanged,
+      this.startIndex = 2,
+      required this.selected})
       : super(key: key);
 
   @override
@@ -24,18 +27,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final _notificationBloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder<NavBarBadgeModel>(
       stream: CombineLatestStream.combine3(
-        _notificationBloc.personalNotificationCount,
+        _notificationBloc!.personalNotificationCount,
         _notificationBloc.timebankNotificationCount,
-        _messageBloc.messageCount,
-        (p, t, m) => NavBarBadgeModel(notificationCount: p + t, chatCount: m),
+        _messageBloc!.messageCount,
+        (p, t, m) => NavBarBadgeModel(
+          notificationCount: (p as int) + (t as int),
+          chatCount: m as int,
+        ),
       ),
       builder: (context, AsyncSnapshot<NavBarBadgeModel> snapshot) {
         int notificationCount = 0;
         int chatCount = 0;
 
         if (snapshot.hasData && snapshot.data != null) {
-          notificationCount = snapshot.data.notificationCount;
-          chatCount = snapshot.data.chatCount;
+          notificationCount = snapshot.data!.notificationCount;
+          chatCount = snapshot.data!.chatCount;
         }
         // log('notification count -> ${snapshot.data.notificationCount}');
         return CurvedNavigationBar(

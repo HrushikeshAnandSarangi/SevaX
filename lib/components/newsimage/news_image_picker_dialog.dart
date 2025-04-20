@@ -9,12 +9,12 @@ import 'news_image_picker_handler.dart';
 class NewsImagePickerDialog extends StatelessWidget {
   NewsImagePickerHandler _listener;
   AnimationController _controller;
-  BuildContext context;
+  late BuildContext context;
 
   NewsImagePickerDialog(this._listener, this._controller);
 
-  Animation<double> _drawerContentsOpacity;
-  Animation<Offset> _drawerDetailsPosition;
+  late Animation<double> _drawerContentsOpacity;
+  late Animation<Offset> _drawerDetailsPosition;
 
   void refresh() {
     _listener.addImageUrl();
@@ -36,7 +36,9 @@ class NewsImagePickerDialog extends StatelessWidget {
 
   void getImage(BuildContext context) {
     this.context = context;
-    if (_controller == null || _drawerDetailsPosition == null || _drawerContentsOpacity == null) {
+    if (_controller == null ||
+        _drawerDetailsPosition == null ||
+        _drawerContentsOpacity == null) {
       return;
     }
     _controller.forward();
@@ -70,7 +72,7 @@ class NewsImagePickerDialog extends StatelessWidget {
     startTime();
   }
 
-  BuildContext dialogContext;
+  late BuildContext dialogContext;
 
   @override
   Widget build(BuildContext _context) {
@@ -103,7 +105,6 @@ class NewsImagePickerDialog extends StatelessWidget {
                       S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       Theme.of(context).primaryColor,
-
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.image,
@@ -118,6 +119,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                         builder: (_context) {
                           return ImageUrlView(
                             themeColor: Theme.of(context).primaryColor,
+                            onLinkCreated: (url) {},
+                            isCover: false,
                           );
                         },
                       ),
@@ -129,7 +132,6 @@ class NewsImagePickerDialog extends StatelessWidget {
                       S.of(context).add_image_url,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       Theme.of(context).primaryColor,
-
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.language,
@@ -142,7 +144,6 @@ class NewsImagePickerDialog extends StatelessWidget {
                       S.of(context).pdf_document,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       Theme.of(context).primaryColor,
-
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.assignment,
@@ -168,8 +169,8 @@ class NewsImagePickerDialog extends StatelessWidget {
         ));
   }
 
-  Widget roundedButton(
-      String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor, Widget widget) {
+  Widget roundedButton(String buttonLabel, EdgeInsets margin, Color bgColor,
+      Color textColor, Widget widget) {
     var loginBtn = Container(
       margin: margin,
       padding: EdgeInsets.all(15.0),
@@ -187,7 +188,8 @@ class NewsImagePickerDialog extends StatelessWidget {
           ),
           Text(
             buttonLabel,
-            style: TextStyle(color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
           ),
         ],
       ),

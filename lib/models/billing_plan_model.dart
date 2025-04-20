@@ -9,8 +9,8 @@ String billingPlanModelToJson(BillingPlanModel data) =>
     json.encode(data.toJson());
 
 class BillingPlanModel {
-  Plan starterPlan;
-  Plan freePlan;
+  Plan? starterPlan;
+  Plan? freePlan;
 
   BillingPlanModel({
     this.starterPlan,
@@ -24,14 +24,14 @@ class BillingPlanModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "starter_plan": starterPlan.toJson(),
-        "free_plan": freePlan.toJson(),
+        "starter_plan": starterPlan?.toJson(),
+        "free_plan": freePlan?.toJson(),
       };
 }
 
 class Plan {
-  String createdOn;
-  Action action;
+  String? createdOn;
+  Action? action;
 
   Plan({
     this.createdOn,
@@ -45,21 +45,21 @@ class Plan {
 
   Map<String, dynamic> toJson() => {
         "created_on": createdOn,
-        "action": action.toJson(),
+        "action": action?.toJson(),
       };
 }
 
 class Action {
-  Data userJoinsTimebank;
-  Data requestMade;
-  Data requestAccepted;
-  Data offerMade;
-  Data postFeed;
-  Data messageSent;
-  Data recievesNotification;
-  Data requestMarkedComplete;
-  Data adminReviewsCompleted;
-  Data userCreditedWithCoins;
+  Data? userJoinsTimebank;
+  Data? requestMade;
+  Data? requestAccepted;
+  Data? offerMade;
+  Data? postFeed;
+  Data? messageSent;
+  Data? recievesNotification;
+  Data? requestMarkedComplete;
+  Data? adminReviewsCompleted;
+  Data? userCreditedWithCoins;
 
   Action({
     this.userJoinsTimebank,
@@ -88,23 +88,23 @@ class Action {
       );
 
   Map<String, dynamic> toJson() => {
-        "user_joins_timebank": userJoinsTimebank.toJson(),
-        "request_made": requestMade.toJson(),
-        "request_accepted": requestAccepted.toJson(),
-        "offer_made": offerMade.toJson(),
-        "post_feed": postFeed.toJson(),
-        "message_sent": messageSent.toJson(),
-        "recieves_notification": recievesNotification.toJson(),
-        "request_marked_complete": requestMarkedComplete.toJson(),
-        "admin_reviews_completed": adminReviewsCompleted.toJson(),
-        "user_credited_with_coins": userCreditedWithCoins.toJson(),
+        "user_joins_timebank": userJoinsTimebank?.toJson(),
+        "request_made": requestMade?.toJson(),
+        "request_accepted": requestAccepted?.toJson(),
+        "offer_made": offerMade?.toJson(),
+        "post_feed": postFeed?.toJson(),
+        "message_sent": messageSent?.toJson(),
+        "recieves_notification": recievesNotification?.toJson(),
+        "request_marked_complete": requestMarkedComplete?.toJson(),
+        "admin_reviews_completed": adminReviewsCompleted?.toJson(),
+        "user_credited_with_coins": userCreditedWithCoins?.toJson(),
       };
 }
 
 class Data {
-  bool billable;
-  int freeLimit;
-  double charge;
+  bool? billable;
+  int? freeLimit;
+  double? charge;
 
   Data({
     this.billable,

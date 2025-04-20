@@ -85,7 +85,11 @@ class GroupMemberBuilder extends StatelessWidget {
   final bool isAdmin;
   final TimebankModel timebankModel;
 
-  GroupMemberBuilder({this.participants, this.onRemovePressed, this.isAdmin, this.timebankModel});
+  GroupMemberBuilder(
+      {this.participants,
+      this.onRemovePressed,
+      this.isAdmin,
+      this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +99,9 @@ class GroupMemberBuilder extends StatelessWidget {
         (index) => SelectedMemberWidget(
           timebankModel: timebankModel,
           info: participants[index],
-          isEditable:
-              isAdmin && participants[index]?.id != SevaCore.of(context).loggedInUser.sevaUserID,
+          isEditable: isAdmin &&
+              participants[index]?.id !=
+                  SevaCore.of(context).loggedInUser.sevaUserID,
           onRemovePressed: () => onRemovePressed(participants[index].id),
         ),
       ),

@@ -35,7 +35,7 @@ class HomePageRouter extends StatefulWidget {
   // final UserModel userModel;
 
   const HomePageRouter({
-    Key key,
+    Key? key,
     // @required this.userModel
   }) : super(key: key);
 
@@ -69,17 +69,19 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
       Duration.zero,
       () {
         _userBloc.getData(
-          email: SevaCore.of(context).loggedInUser.email,
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          email: SevaCore.of(context).loggedInUser.email!,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
         );
-        Provider.of<HomePageBaseBloc>(context, listen: false).init(SevaCore.of(context).loggedInUser);
+        Provider.of<HomePageBaseBloc>(context, listen: false)
+            .init(SevaCore.of(context).loggedInUser);
         _userBloc.userStream.listen((UserModel user) async {
-          Provider.of<MembersBloc>(context, listen: false).init(user.currentCommunity);
+          Provider.of<MembersBloc>(context, listen: false)
+              .init(user.currentCommunity ?? '');
 
           _notificationsBloc.init(
-            user.email,
-            user.sevaUserID,
-            user.currentCommunity,
+            user.email!,
+            user.sevaUserID!,
+            user.currentCommunity ?? '',
           );
 
           // var membersList =
@@ -88,14 +90,17 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           //         .first;
 
           _messageBloc.fetchAllMessage(
-            user.currentCommunity,
+            user.currentCommunity ?? '',
             user,
             // membersList,
           );
           CommunityModel communityModel =
-              await FirestoreManager.getCommunityDetailsByCommunityId(communityId: user.currentCommunity);
-          Provider.of<ThemeBloc>(context, listen: false)
-              .changeColor(HexColor(communityModel.theme_color == '' ? '766FE0' : communityModel.theme_color));
+              await FirestoreManager.getCommunityDetailsByCommunityId(
+                  communityId: user.currentCommunity ?? '');
+          Provider.of<ThemeBloc>(context, listen: false).changeColor(HexColor(
+              communityModel.theme_color == ''
+                  ? '766FE0'
+                  : communityModel.theme_color));
           logger.e(communityModel.toString());
           AppConfig.isTestCommunity = communityModel.testCommunity ?? false;
         });
@@ -142,27 +147,36 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                     ],
                     title: AppConfig.appName,
                     debugShowCheckedModeBanner: false,
-                    theme: FlavorConfig.values.theme.copyWith(
-                        primaryColor: snapshot.data, buttonTheme: ButtonThemeData(buttonColor: snapshot.data)),
+                    theme: (FlavorConfig.values.theme ?? ThemeData()).copyWith(
+                        primaryColor: snapshot.data,
+                        buttonTheme:
+                            ButtonThemeData(buttonColor: snapshot.data)),
                     home: BlocProvider<UserDataBloc>(
                       bloc: _userBloc,
                       child: Scaffold(
                         resizeToAvoidBottomInset: false,
                         body: StreamBuilder(
                           stream: CombineLatestStream.combine2(
-                              _userBloc.userStream, _userBloc.comunityStream, (u, c) => true),
+                              _userBloc.userStream,
+                              _userBloc.comunityStream,
+                              (u, c) => true),
                           builder: (context, AsyncSnapshot<bool> snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               UserModel loggedInUser = _userBloc.user;
-                              loggedInUser.currentTimebank = _userBloc.community.primary_timebank;
-                              loggedInUser.associatedWithTimebanks = _userBloc.user.communities.length;
+                              loggedInUser.currentTimebank =
+                                  _userBloc.community.primary_timebank;
+                              loggedInUser.associatedWithTimebanks =
+                                  _userBloc.user.communities?.length ?? 0;
 
                               SevaCore.of(context).loggedInUser = loggedInUser;
 
-                              if (_userBloc.user.communities == null || _userBloc.user.communities.isEmpty) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (_userBloc.user.communities == null ||
+                                  _userBloc.user.communities?.isEmpty == true) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
                                   Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(builder: (context) => SplashView()),
+                                      MaterialPageRoute(
+                                          builder: (context) => SplashView()),
                                       ((Route<dynamic> route) => false));
                                 });
                               }
@@ -173,7 +187,9 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                                     child: BlocProvider<MessageBloc>(
                                       bloc: _messageBloc,
                                       child: Container(
-                                        height: MediaQuery.of(context).size.height - 65,
+                                        height:
+                                            MediaQuery.of(context).size.height -
+                                                65,
                                         child: pages[selected],
                                       ),
                                     ),
@@ -185,7 +201,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.grey[300],
+                                            color:
+                                                Colors.grey[300] ?? Colors.grey,
                                             blurRadius: 100.0,
                                           ),
                                         ],

@@ -54,9 +54,9 @@ class RepeatWidgetState extends State<RepeatWidget> {
 
   double _result = 0.0;
 
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      endType = value;
+      endType = value ?? 0;
     });
   }
 
@@ -121,29 +121,31 @@ class RepeatWidgetState extends State<RepeatWidget> {
 //      });
 //  }
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2015, 1),
         lastDate: DateTime(2101),
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
               primaryColor: Colors.purple, //Head background
-              accentColor: Colors.purple, //selection color
-              colorScheme:
-                  ColorScheme.light(primary: Theme.of(context).primaryColor),
+              colorScheme: ColorScheme.light(
+                primary: Theme.of(context).primaryColor,
+                secondary: Colors.purple, //selection color
+              ),
               buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
               //dialogBackgroundColor: Colors.white,//Background color
             ),
-            child: child,
+            child: child!,
           );
         });
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
   @override
@@ -161,7 +163,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                     value: isRecurring,
                     onChanged: (Value) {
                       setState(() {
-                        isRecurring = Value;
+                        isRecurring = Value!;
                         if (viewVisible) {
                           viewVisible = Value;
                         }
@@ -358,7 +360,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     onChanged: endType == 1
                                         ? (Value) {
                                             setState(() {
-                                              after = Value;
+                                              after = Value as String;
                                             });
                                           }
                                         : null,

@@ -26,8 +26,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'create_edit_project.dart';
 
 class AboutProjectView extends StatefulWidget {
-  final String project_id;
-  final TimebankModel timebankModel;
+  final String? project_id;
+  final TimebankModel? timebankModel;
 
   AboutProjectView({this.project_id, this.timebankModel});
 
@@ -36,9 +36,9 @@ class AboutProjectView extends StatefulWidget {
 }
 
 class _AboutProjectViewState extends State<AboutProjectView> {
-  ProjectModel projectModel;
+  ProjectModel? projectModel;
   String loggedintimezone = '';
-  UserModel user;
+  UserModel? user;
   bool isDataLoaded = false;
   @override
   void initState() {
@@ -48,7 +48,8 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   }
 
   void getData() async {
-    await FirestoreManager.getProjectFutureById(projectId: widget.project_id).then((onValue) {
+    await FirestoreManager.getProjectFutureById(projectId: widget.project_id!)
+        .then((onValue) {
       projectModel = onValue;
       setState(() {
         getUserData();
@@ -63,7 +64,8 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   }
 
   void getUserData() async {
-    user = await FirestoreManager.getUserForId(sevaUserId: projectModel.creatorId);
+    user = await FirestoreManager.getUserForId(
+        sevaUserId: projectModel!.creatorId!);
     isDataLoaded = true;
     setState(() {});
   }
@@ -87,7 +89,8 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
                           height: 180,
-                          imageUrl: projectModel.cover_url ?? defaultProjectImageURL,
+                          imageUrl:
+                              projectModel!.cover_url ?? defaultProjectImageURL,
                           placeholder: (context, url) {
                             return LoadingIndicator();
                           },
@@ -96,9 +99,10 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                       Positioned(
                         child: Container(
                           child: CachedNetworkImage(
-                            imageUrl: (projectModel.photoUrl == null || projectModel.photoUrl == '')
+                            imageUrl: (projectModel!.photoUrl == null ||
+                                    projectModel!.photoUrl == '')
                                 ? defaultProjectImageURL
-                                : projectModel.photoUrl,
+                                : projectModel!.photoUrl!,
                             fit: BoxFit.cover,
                             width: 100,
                             height: 70,
@@ -119,7 +123,8 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        projectModel.creatorId == SevaCore.of(context).loggedInUser.sevaUserID
+                        projectModel!.creatorId ==
+                                SevaCore.of(context).loggedInUser.sevaUserID
                             ? Center(
                                 child: Container(
                                   child: CustomTextButton(
@@ -128,11 +133,13 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => CreateEditProject(
-                                            timebankId: widget.timebankModel.id,
+                                          builder: (context) =>
+                                              CreateEditProject(
+                                            timebankId:
+                                                widget.timebankModel!.id,
                                             isCreateProject: false,
-                                            projectId: projectModel.id,
-                                            projectTemplateModel: null,
+                                            projectId: projectModel!.id!,
+                                            projectTemplateModel: null!,
                                           ),
                                         ),
                                       );
@@ -151,7 +158,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                               )
                             : Container(),
                         headingText(S.of(context).title),
-                        Text(projectModel.name ?? ""),
+                        Text(projectModel!.name ?? ""),
                         headingText(S.of(context).mission_statement),
                         SizedBox(height: 8),
                         Wrap(
@@ -159,9 +166,10 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           children: <Widget>[
                             Text(
                                 getTimeFormattedString(
-                                  projectModel.startTime,
+                                  projectModel!.startTime!,
                                 ),
-                                style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12)),
                             SizedBox(width: 2),
                             Icon(
                               Icons.remove,
@@ -171,15 +179,17 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                             SizedBox(width: 4),
                             Text(
                               getTimeFormattedString(
-                                projectModel.endTime,
+                                projectModel!.endTime!,
                               ),
-                              style: TextStyle(color: Colors.grey, fontSize: 12),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ],
                         ),
                         SizedBox(height: 10),
-                        Text(projectModel.description ?? ""),
-                        (projectModel.registrationLink == null || projectModel.registrationLink == '')
+                        Text(projectModel!.description ?? ""),
+                        (projectModel!.registrationLink == null ||
+                                projectModel!.registrationLink == '')
                             ? Container()
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +197,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                   headingText(S.of(context).registration_link),
                                   SizedBox(height: 10),
                                   Umeshify(
-                                    text: projectModel.registrationLink,
+                                    text: projectModel!.registrationLink!,
                                     onOpen: (link) async {
                                       if (await canLaunch(link)) {
                                         await launch(link);
@@ -202,7 +212,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         SponsorsWidget(
                           textColor: Theme.of(context).primaryColor,
                           sponsorsMode: SponsorsMode.ABOUT,
-                          sponsors: projectModel.sponsors,
+                          sponsors: projectModel!.sponsors!,
                           isAdminVerified: false,
                         ),
                         headingText(S.of(context).organizer),
@@ -210,20 +220,25 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         Row(
                           children: <Widget>[
                             UserProfileImage(
-                              photoUrl: user.photoURL,
-                              email: user.email,
-                              userId: user.sevaUserID,
+                              photoUrl: user!.photoURL!,
+                              email: user!.email!,
+                              userId: user!.sevaUserID!,
                               height: 60,
                               width: 60,
-                              timebankModel: widget.timebankModel,
+                              timebankModel: widget.timebankModel!,
                             ),
                             SizedBox(width: 10),
-                            Text(user.fullname ?? ""),
+                            Text(user!.fullname ?? ""),
                             SizedBox(width: 30),
                             Text(
                               timeAgo
-                                  .format(DateTime.fromMillisecondsSinceEpoch(projectModel.createdAt),
-                                      locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                                  .format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          projectModel!.createdAt!),
+                                      locale: Locale(AppConfig.prefs!
+                                                  .getString('language_code') ??
+                                              'en')
+                                          .toLanguageTag())
                                   .replaceAll('hours ago', 'h'),
                               style: TextStyle(
                                 fontFamily: 'Europa',
@@ -235,18 +250,25 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            projectModel.creatorId == SevaCore.of(context).loggedInUser.sevaUserID
+                            projectModel!.creatorId ==
+                                    SevaCore.of(context).loggedInUser.sevaUserID
                                 ? addManualTime
                                 : Container(),
                             utils.isDeletable(
-                              contentCreatorId: projectModel.creatorId,
+                              contentCreatorId: projectModel!.creatorId,
                               context: context,
-                              communityCreatorId: widget.timebankModel.managedCreatorIds.isNotEmpty
-                                  ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                                  : isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)
-                                      ? widget.timebankModel.creatorId
-                                      : widget.timebankModel.managedCreatorIds.first,
-                              timebankCreatorId: widget.timebankModel.creatorId,
+                              communityCreatorId: widget.timebankModel!
+                                      .managedCreatorIds.isNotEmpty
+                                  ? widget.timebankModel!.managedCreatorIds
+                                      .elementAt(0)
+                                  : isPrimaryTimebank(
+                                          parentTimebankId: widget
+                                              .timebankModel!.parentTimebankId)
+                                      ? widget.timebankModel!.creatorId
+                                      : widget.timebankModel!.managedCreatorIds
+                                          .first,
+                              timebankCreatorId:
+                                  widget.timebankModel!.creatorId,
                             )
                                 ? deleteProject
                                 : Container(),
@@ -262,21 +284,22 @@ class _AboutProjectViewState extends State<AboutProjectView> {
 
   Widget get addManualTime {
     return TransactionsMatrixCheck(
-      upgradeDetails: AppConfig.upgradePlanBannerModel.add_manual_time,
+      upgradeDetails: AppConfig.upgradePlanBannerModel!.add_manual_time!,
       transaction_matrix_type: "add_manual_time",
       child: GestureDetector(
         onTap: () => AddManualTimeButton.onPressed(
           context: context,
           timeFor: ManualTimeType.Project,
-          typeId: projectModel.id,
-          communityName: widget.timebankModel.name,
+          typeId: projectModel!.id!,
+          communityName: widget.timebankModel!.name!,
           userType: utils.getLoggedInUserRole(
-            widget.timebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID,
+            widget.timebankModel!,
+            SevaCore.of(context).loggedInUser.sevaUserID!,
           ),
-          timebankId: widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-              ? widget.timebankModel.id
-              : widget.timebankModel.parentTimebankId,
+          timebankId: widget.timebankModel!.parentTimebankId ==
+                  FlavorConfig.values.timebankId
+              ? widget.timebankModel!.id!
+              : widget.timebankModel!.parentTimebankId,
         ),
         child: Container(
           margin: EdgeInsets.only(top: 20),
@@ -297,16 +320,18 @@ class _AboutProjectViewState extends State<AboutProjectView> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: CustomElevatedButton(
+        elevation: 0,
+        textColor: Colors.white,
         shape: StadiumBorder(),
         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         onPressed: () {
           showAdvisoryBeforeDeletion(
             context: context,
-            associatedId: widget.project_id,
+            associatedId: widget.project_id!,
             softDeleteType: SoftDelete.REQUEST_DELETE_PROJECT,
-            associatedContentTitle: projectModel.name,
-            email: SevaCore.of(context).loggedInUser.email,
+            associatedContentTitle: projectModel!.name!,
+            email: SevaCore.of(context).loggedInUser.email!,
             isAccedentalDeleteEnabled: false,
           ).then((value) {
             if (value) Navigator.of(context).pop();

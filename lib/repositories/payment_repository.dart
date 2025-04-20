@@ -16,17 +16,17 @@ class PaymentRepository {
       FlavorConfig.values.cloudFunctionBaseURL + '/';
 
   static Future<Either<Failure, bool>> subscribe({
-    String communityId,
-    String paymentMethodId,
-    PlanIds planId,
-    bool isPrivate,
-    bool isBundlePricingEnabled,
+    String? communityId,
+    String? paymentMethodId,
+    PlanIds? planId,
+    bool? isPrivate,
+    bool? isBundlePricingEnabled,
   }) async {
     try {
       logger.i(
           "hitting ${communityId} $paymentMethodId $planId $isPrivate $isBundlePricingEnabled");
       var result = await http.post(
-        _baseUrl + 'stripeCreateSubscription',
+        Uri.parse(_baseUrl + 'stripeCreateSubscription'),
         headers: {
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*"
@@ -34,7 +34,7 @@ class PaymentRepository {
         body: jsonEncode({
           "communityId": communityId,
           "paymentMethodId": paymentMethodId,
-          "planId": planId.label,
+          "planId": planId?.label,
           "isPrivate": isPrivate,
           "isBundlePricingEnabled": isBundlePricingEnabled,
         }),

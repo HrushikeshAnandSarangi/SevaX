@@ -61,7 +61,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
             StreamBuilder<List<AdminMessageWrapperModel>>(
                 stream: _bloc.adminMessage,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data.length > 0) {
+                  if (snapshot.hasData && (snapshot.data?.length ?? 0) > 0) {
                     return Column(
                       children: <Widget>[
                         SizedBox(height: 10),
@@ -72,7 +72,8 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                   return HideWidget(
                     hide: isPrimaryTimebank(
                         parentTimebankId:
-                            SevaCore.of(context).loggedInUser.currentTimebank),
+                            SevaCore.of(context).loggedInUser.currentTimebank ??
+                                ''),
                     child: Container(
                       height: 50,
                       padding:
@@ -109,6 +110,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                         ),
                       ),
                     ),
+                    secondChild: SizedBox.shrink(),
                   );
                 }),
             Expanded(

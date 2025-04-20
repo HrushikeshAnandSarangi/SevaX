@@ -44,15 +44,15 @@ Widget getTimebanks(
   List<TimebankModel> timebankList = [];
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
-        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        userId: SevaCore.of(context).loggedInUser.sevaUserID!,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        timebankList = snapshot.data;
+        timebankList = snapshot.data ?? [];
         timebankList.forEach((t) {
           dropdownList.add(t.id);
         });

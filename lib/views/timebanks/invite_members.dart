@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +19,13 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/csv_file_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
+import 'package:sevaexchange/new_baseline/models/invitation_model.dart'
+    as invitation_model;
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
@@ -39,7 +41,7 @@ import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -51,31 +53,38 @@ class InviteAddMembers extends StatefulWidget {
 }
 
 class InviteAddMembersState extends State<InviteAddMembers> {
-  TimebankCodeModel codeModel = TimebankCodeModel();
-  TimebankCodeModel generatedModel;
+  TimebankCodeModel codeModel = TimebankCodeModel(
+    createdOn: 0,
+    timebankCode: '',
+    timebankId: '',
+    validUpto: 0,
+    timebankCodeId: '',
+    communityId: '',
+  );
+  TimebankCodeModel? generatedModel;
   final TextEditingController searchTextController = TextEditingController();
-  Future<TimebankModel> getTimebankDetails;
-  TimebankModel timebankModel;
+  Future<TimebankModel>? getTimebankDetails;
+  TimebankModel? timebankModel;
 
   List<String> validItems = [];
   InvitationManager inivitationManager = InvitationManager();
   bool _isDocumentBeingUploaded = false;
 
-  String _fileName;
-  String _path;
+  String? _fileName;
+  String? _path;
   final int oneMegaBytes = 1048576;
-  BuildContext parentContext;
+  BuildContext? parentContext;
   CsvFileModel csvFileModel = CsvFileModel();
   String csvFileError = '';
   String sampleCSVLink =
       "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53";
-  String _localPath;
+  String? _localPath;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final String samplelink =
       "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Fumesha%40uipep.com15918788235481000%20Sales%20Records.csv?alt=media&token=d1919180-7e97-4f95-b2e3-6cca1c51c688";
 
-  PageController pageController;
-  ScrollController _scrollController;
+  PageController? pageController;
+  ScrollController? _scrollController;
 
   @override
   void initState() {
@@ -99,7 +108,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       timebankId: widget.timebankModel.id,
     ).then((onValue) {
       setState(() {
-        validItems = onValue.listOfElement;
+        validItems = onValue.listOfElement!;
         logger.i('validItems len ${validItems.length}');
       });
     });
@@ -107,19 +116,20 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   @override
   void dispose() {
-    _scrollController.dispose(); // dispose the controller
+    _scrollController!.dispose(); // dispose the controller
     super.dispose();
   }
 
   // This function is triggered when the user presses the back-to-top button
   void _scrollToTop() {
-    _scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.easeOut);
+    _scrollController!
+        .animateTo(0, duration: Duration(seconds: 1), curve: Curves.easeOut);
   }
 
   Future<Null> setup() async {
     //_permissionReady = await _checkPermission();
     _localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
-    final savedDir = Directory(_localPath);
+    final savedDir = Directory(_localPath!);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {
       savedDir.create();
@@ -135,7 +145,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<String> _findLocalPath() async {
     Directory directory;
     if (Platform.isAndroid) {
-      directory = await getExternalStorageDirectory();
+      final dir = await getExternalStorageDirectory();
+      if (dir == null) {
+        throw Exception('Could not get external storage directory');
+      }
+      directory = dir;
       return directory.parent.parent.parent.parent.path;
     } else {
       directory = await getApplicationDocumentsDirectory();
@@ -154,7 +168,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       final taskId = await FlutterDownloader.enqueue(
         url: link,
         headers: {"auth": "test_for_sql_encoding"},
-        savedDir: _localPath,
+        savedDir: _localPath!,
         fileName: 'template.csv',
         showNotification: true,
         openFileFromNotification: true,
@@ -188,7 +202,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           child: FutureBuilder(
             future: getTimebankDetails,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) return LoadingIndicator();
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return LoadingIndicator();
               return inviteCodeWidget;
             },
           ),
@@ -218,7 +233,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     ),
                     onPressed: () {
                       //searchTextController.clear();
-                      WidgetsBinding.instance.addPostFrameCallback((_) => searchTextController.clear());
+                      WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => searchTextController.clear());
                     },
                   ),
                 ),
@@ -282,12 +298,15 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     ),
                   ),
                   onTap: () async {
-                    _asyncInputDialog(context, SevaCore.of(context).loggedInUser);
+                    _asyncInputDialog(
+                        context, SevaCore.of(context).loggedInUser);
                   },
                 ),
               )
             : Offstage(),
-        !widget.timebankModel.private == true ? getTimebankCodesWidget : Offstage(),
+        !widget.timebankModel.private == true
+            ? getTimebankCodesWidget
+            : Offstage(),
       ],
     );
   }
@@ -327,11 +346,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TransactionsMatrixCheck(
             comingFrom: ComingFrom.Members,
-            upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
+            upgradeDetails: AppConfig.upgradePlanBannerModel!.csv_import_users!,
             transaction_matrix_type: "csv_import_users",
             child: ConfigurationCheck(
               actionType: 'invite_bulk_members',
-              role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+              role: MemberType.CREATOR,
               child: GestureDetector(
                 onTap: () {
                   _openFileExplorer();
@@ -341,7 +360,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: DashPathBorder.all(
-                      dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+                      dashArray:
+                          CircularIntervalList<double>(<double>[5.0, 2.5]),
                     ),
                   ),
                   child: Column(
@@ -378,7 +398,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                         child: ListTile(
                                           leading: Icon(Icons.attachment),
                                           title: Text(
-                                            csvFileModel.csvTitle ?? S.of(context).document_csv,
+                                            csvFileModel.csvTitle ??
+                                                S.of(context).document_csv,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           trailing: IconButton(
@@ -433,7 +454,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                           content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -443,7 +465,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         csvFileModel.csvUrl == '' ||
                         csvFileModel.csvTitle == '' ||
                         csvFileModel.csvTitle == null ||
-                        csvFileModel.csvUrl == null && csvFileModel.csvTitle == null) {
+                        csvFileModel.csvUrl == null &&
+                            csvFileModel.csvTitle == null) {
                       logger.e(
                           'csvFileModel.csvUrl :  ${csvFileModel.csvUrl}\n csvFileModel.csvTitle : ${csvFileModel.csvTitle}');
                       setState(() {
@@ -453,14 +476,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       showProgressDialog(S.of(context).uploading_csv);
 
                       csvFileModel.timebankId = widget.timebankModel.id;
-                      csvFileModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-                      csvFileModel.timestamp = DateTime.now().millisecondsSinceEpoch;
-                      csvFileModel.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+                      csvFileModel.communityId =
+                          SevaCore.of(context).loggedInUser.currentCommunity;
+                      csvFileModel.timestamp =
+                          DateTime.now().millisecondsSinceEpoch;
+                      csvFileModel.sevaUserId =
+                          SevaCore.of(context).loggedInUser.sevaUserID;
 
                       await CollectionRef.csvFiles.add(csvFileModel.toMap());
 
                       if (dialogContext != null) {
-                        Navigator.pop(dialogContext);
+                        Navigator.pop(dialogContext!);
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -469,7 +495,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                           ),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -487,10 +514,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       fontSize: 12,
                     ),
                   ),
-                  color: csvFileModel.csvUrl == null || csvFileModel.csvTitle == null
+                  color: csvFileModel.csvUrl == null ||
+                          csvFileModel.csvTitle == null
                       ? Theme.of(context).primaryColor
-                      : Theme.of(context).accentColor,
-                  // color: Theme.of(context).primaryColor,
+                      : Theme.of(context).colorScheme.secondary,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  elevation: 2.0,
+                  textColor: Colors.white,
                   shape: StadiumBorder(),
                 ),
               ),
@@ -508,9 +538,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     //  bool _isDocumentBeingUploaded = false;
     //File _file;
     //List<File> _files;
-    String _fileName;
-    String _path;
-    Map<String, String> _paths;
+    String? _fileName;
+    String? _path;
+    Map<String, String>? _paths;
     try {
       _paths = null;
       var data = await FilePicker.platform.pickFiles(
@@ -518,7 +548,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         allowedExtensions: ['csv'],
         allowMultiple: false,
       );
-      if (data.isSinglePick) {
+      if (data != null && data.isSinglePick) {
         _path = data.files.first.path;
       }
     } on PlatformException catch (e) {
@@ -531,7 +561,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       if (_extension == 'csv' || _extension == '.csv') {
         userDoc(_path, _fileName);
       } else {
-        getExtensionAlertDialog(context: context, message: S.of(context).only_csv_allowed);
+        getExtensionAlertDialog(
+            context: context, message: S.of(context).only_csv_allowed);
       }
     }
   }
@@ -539,10 +570,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<void> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    String name = SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
-    Reference ref = FirebaseStorage.instance.ref().child('csv_files').child(name);
+    String name =
+        SevaCore.of(context).loggedInUser.email! + timestampString + _fileName!;
+    Reference ref =
+        FirebaseStorage.instance.ref().child('csv_files').child(name);
     UploadTask uploadTask = ref.putFile(
-      File(_path),
+      File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CSV File'},
@@ -553,7 +586,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     uploadTask.whenComplete(() async {
       documentURL = await ref.getDownloadURL();
       csvFileModel.csvUrl = documentURL;
-      logger.e('csvFileModel.csvUrl :  ${csvFileModel.csvUrl} \n documentURL : ${documentURL}');
+      logger.e(
+          'csvFileModel.csvUrl :  ${csvFileModel.csvUrl} \n documentURL : ${documentURL}');
     });
 
     csvFileModel.csvTitle = name;
@@ -576,11 +610,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   void checkFileSize() async {
-    var file = File(_path);
+    var file = File(_path!);
     final bytes = await file.lengthSync();
     if (bytes > oneMegaBytes) {
       this._isDocumentBeingUploaded = false;
-      getAlertDialog(parentContext);
+      getAlertDialog(parentContext!);
     } else {
       uploadDocument();
     }
@@ -626,13 +660,16 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ),
             );
           }
-          List<UserModel> userlist = snapshot.data;
+          List<UserModel> userlist = snapshot.data ?? [];
           if (userlist.length > 1) {
-            userlist.removeWhere((user) => user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
+            userlist.removeWhere((user) =>
+                user.sevaUserID ==
+                SevaCore.of(context).loggedInUser.sevaUserID);
           }
 
           if (userlist.length == 0) {
-            if (searchTextController.text.length > 1 && isvalidEmailId(searchTextController.text)) {
+            if (searchTextController.text.length > 1 &&
+                isvalidEmailId(searchTextController.text)) {
               return userInviteWidget(email: searchTextController.text);
             }
 
@@ -640,7 +677,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: searchTextController.text.length > 1
-                    ? Text("${searchTextController.text} ${S.of(context).not_found}")
+                    ? Text(
+                        "${searchTextController.text} ${S.of(context).not_found}")
                     : Container(),
               ),
             );
@@ -660,7 +698,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   bool isvalidEmailId(String value) {
-    RegExp emailPattern = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     if (emailPattern.hasMatch(value)) return true;
     return false;
   }
@@ -710,7 +749,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }*/
 
   Widget userInviteWidget({
-    String email,
+    String? email,
   }) {
     inivitationManager.initDialogForProgress(context: context);
     return Card(
@@ -723,7 +762,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               children: <Widget>[
                 ListTile(
                   leading: CircleAvatar(),
-                  title: Text(email, style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700)),
+                  title: Text(email!,
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.w700)),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -732,22 +773,25 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       height: 40,
                       padding: EdgeInsets.only(right: 8),
                       child: FutureBuilder(
-                        future: inivitationManager.checkInvitationStatus(email, timebankModel.id),
-                        builder: (BuildContext context, AsyncSnapshot<InvitationStatus> snapshot) {
+                        future: inivitationManager.checkInvitationStatus(
+                            email, timebankModel!.id),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<InvitationStatus> snapshot) {
                           if (!snapshot.hasData) {
                             return gettigStatus();
                           }
                           var invitationStatus = snapshot.data;
-                          if (invitationStatus.isInvited) {
+                          if (invitationStatus!.isInvited) {
                             return resendInvitation(
-                              invitation: inivitationManager.getInvitationForEmailFromCache(
+                              invitation: inivitationManager
+                                  .getInvitationForEmailFromCache(
                                 inviteeEmail: email,
-                              ),
+                              ) as InvitationViaLink?,
                             );
                           }
                           return inviteMember(
                             inviteeEmail: email,
-                            timebankModel: timebankModel,
+                            timebankModel: timebankModel!,
                           );
                         },
                       ),
@@ -766,22 +810,24 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget inviteMember({
-    String inviteeEmail,
-    TimebankModel timebankModel,
+    required String? inviteeEmail,
+    required TimebankModel timebankModel,
   }) {
     return CustomElevatedButton(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2.0,
       onPressed: () async {
         inivitationManager.showProgress(
           title: S.of(context).sending_invitation,
         );
         await inivitationManager.inviteMemberToTimebankViaLink(
-          invitation: InvitationViaLink.createInvitation(
-            timebankTitle: timebankModel.name,
-            timebankId: timebankModel.id,
-            senderEmail: SevaCore.of(context).loggedInUser.email,
-            inviteeEmail: inviteeEmail,
-            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-          ),
+          // invitation: invitation_model.InvitationViaLink.createInvitation(
+          //   timebankTitle: timebankModel!.name,
+          //   timebankId: timebankModel.id,
+          //   senderEmail: SevaCore.of(context).loggedInUser.email!,
+          //   inviteeEmail: inviteeEmail!,
+          //   communityId: SevaCore.of(context).loggedInUser.currentCommunity!,
+          // ),
           context: context,
         );
         inivitationManager.hideProgress();
@@ -794,7 +840,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
 
   void showProgressDialog(String message) {
     showDialog(
@@ -814,10 +860,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         });
   }
 
-  Widget resendInvitation({InvitationViaLink invitation}) {
+  Widget resendInvitation({InvitationViaLink? invitation}) {
     return CustomElevatedButton(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2.0,
       onPressed: () async {
-        inivitationManager.showProgress(title: S.of(context).sending_invitation);
+        inivitationManager.showProgress(
+            title: S.of(context).sending_invitation);
         await inivitationManager.resendInvitationToMember(
           invitation: invitation,
         );
@@ -840,7 +889,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Widget gettigStatus() {
     return CustomElevatedButton(
-      onPressed: null,
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2.0,
+      onPressed: null!,
       child: Text('...'),
       color: Colors.indigo,
       textColor: Colors.white,
@@ -849,10 +900,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget userWidget({
-    UserModel user,
+    UserModel? user,
   }) {
     bool isJoined = false;
-    if (validItems.contains(user.sevaUserID)) {
+    if (validItems.contains(user!.sevaUserID!)) {
       isJoined = true;
     }
 
@@ -874,12 +925,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                             width: 50,
                             height: 50,
                             placeholder: 'lib/assets/images/noimagefound.png',
-                            image: user.photoURL,
+                            image: user.photoURL!,
                           ),
                         )
                       : CircleAvatar(),
                   // onTap: goToNext(snapshot.data),
-                  title: Text(user.fullname, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+                  title: Text(user.fullname!,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w700)),
                   // subtitle: Text(user.email),
                 ),
                 Row(
@@ -888,30 +941,34 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: CustomElevatedButton(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        shape: StadiumBorder(),
                         onPressed: !isJoined
                             ? () async {
                                 await addMemberToTimebank(
-                                        timebankModel: timebankModel,
-                                        sevaUserId: user.sevaUserID,
-                                        timebankId: timebankModel.id,
-                                        communityId: timebankModel.communityId,
-                                        userEmail: user.email,
-                                        userFullName: user.fullname,
-                                        userPhotoURL: user.photoURL,
-                                        timebankTitle: timebankModel.name,
-                                        parentTimebankId: timebankModel.parentTimebankId)
+                                        timebankModel: timebankModel!,
+                                        sevaUserId: user.sevaUserID!,
+                                        timebankId: timebankModel!.id,
+                                        communityId: timebankModel!.communityId,
+                                        userEmail: user.email!,
+                                        userFullName: user.fullname!,
+                                        userPhotoURL: user.photoURL!,
+                                        timebankTitle: timebankModel!.name,
+                                        parentTimebankId:
+                                            timebankModel!.parentTimebankId)
                                     .commit();
                                 setState(() {
                                   getMembersList();
                                 });
                               }
-                            : null,
+                            : () {},
                         child: Text(
                           isJoined ? S.of(context).joined : S.of(context).add,
                         ),
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
-                        shape: StadiumBorder(),
                       ),
                     ),
                     SizedBox(
@@ -937,7 +994,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (!snapshot.hasData) {
             return LoadingIndicator();
           }
-          List<TimebankCodeModel> codeList = snapshot.data.reversed.toList();
+          List<TimebankCodeModel> codeList = snapshot.data!.reversed.toList();
 
           if (codeList.length == 0) {
             return Center(
@@ -955,11 +1012,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 String length = "0";
 
                 TimebankCodeModel timebankCode = codeList.elementAt(index);
-                if (timebankCode.usersOnBoarded == null || timebankCode.usersOnBoarded.length == 0) {
+                if (timebankCode.usersOnBoarded == null ||
+                    timebankCode.usersOnBoarded!.length == 0) {
                   length = S.of(context).not_yet_redeemed;
                 } else {
                   length =
-                      "${S.of(context).redeemed_by} ${timebankCode.usersOnBoarded.length} ${S.of(context).user(timebankCode.usersOnBoarded.length)}";
+                      "${S.of(context).redeemed_by} ${timebankCode.usersOnBoarded!.length} ${S.of(context).user(timebankCode.usersOnBoarded!.length)}";
                 }
                 return GestureDetector(
                   child: Card(
@@ -971,11 +1029,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            S.of(context).timebank_code + timebankCode.timebankCode,
+                            S.of(context).timebank_code +
+                                timebankCode.timebankCode!,
                           ),
                           Text(length),
                           Text(
-                            DateTime.now().millisecondsSinceEpoch > timebankCode.validUpto
+                            DateTime.now().millisecondsSinceEpoch >
+                                    timebankCode.validUpto!
                                 ? S.of(context).expired
                                 : S.of(context).active,
                           ),
@@ -990,7 +1050,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   child: Text(
                                     S.of(context).share_code,
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
                                   ),
                                 ),
                               ),
@@ -1002,7 +1063,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                   ),
                                   iconSize: 30,
                                   onPressed: () {
-                                    deleteShareCode(timebankCode.timebankCodeId);
+                                    deleteShareCode(
+                                        timebankCode.timebankCodeId!);
                                     setState(() {});
                                   },
                                 ),
@@ -1019,14 +1081,16 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   String shareText(TimebankCodeModel timebankCode) {
-    return '''${SevaCore.of(context).loggedInUser.fullname} has invited you to join their "${timebankModel.name}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. https://youtu.be/xe56UJyQ9ws \n\nHere is what you'll need to know: \nFirst, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main https://www.sevaxapp.com web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you can explore Seva Communities near you. Type in the "${timebankModel.name}" and enter code "${timebankCode.timebankCode}" when prompted.\n\nClick to Join ${SevaCore.of(context).loggedInUser.fullname} and their Seva Community via this dynamic link at https://sevaexchange.page.link/sevaxapp.\n\nThank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com if you have any questions or issues joining with the link given.
+    return '''${SevaCore.of(context).loggedInUser.fullname} has invited you to join their "${timebankModel!.name}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. https://youtu.be/xe56UJyQ9ws \n\nHere is what you'll need to know: \nFirst, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main https://www.sevaxapp.com web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you can explore Seva Communities near you. Type in the "${timebankModel!.name}" and enter code "${timebankCode.timebankCode}" when prompted.\n\nClick to Join ${SevaCore.of(context).loggedInUser.fullname} and their Seva Community via this dynamic link at https://sevaexchange.page.link/sevaxapp.\n\nThank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com if you have any questions or issues joining with the link given.
     ''';
   }
 
   Stream<List<TimebankCodeModel>> getTimebankCodes({
-    String timebankId,
+    String? timebankId,
   }) async* {
-    var data = CollectionRef.timebankCodes.where('timebankId', isEqualTo: timebankId).snapshots();
+    var data = CollectionRef.timebankCodes
+        .where('timebankId', isEqualTo: timebankId)
+        .snapshots();
 
     yield* data.transform(
       StreamTransformer<QuerySnapshot, List<TimebankCodeModel>>.fromHandlers(
@@ -1034,7 +1098,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           List<TimebankCodeModel> timebankCodes = [];
           querySnapshot.docs.forEach((documentSnapshot) {
             timebankCodes.add(TimebankCodeModel.fromMap(
-              documentSnapshot.data(),
+              documentSnapshot.data() as Map<String, dynamic>,
             ));
           });
           timebankCodeSink.add(timebankCodes);
@@ -1043,12 +1107,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-  Future<String> _asyncInputDialog(BuildContext context, UserModel user) async {
+  Future<String?> _asyncInputDialog(
+      BuildContext context, UserModel user) async {
     String timebankCode = createCryptoRandomString();
 
     return showDialog<String>(
       context: context,
-      barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+      barrierDismissible:
+          false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(S.of(context).code_generated),
@@ -1061,6 +1127,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           ),
           actions: <Widget>[
             CustomElevatedButton(
+              shape: StadiumBorder(),
+              elevation: 2.0,
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).primaryColor,
               textColor: FlavorConfig.values.buttonTextColor,
@@ -1072,7 +1140,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ),
               onPressed: () async {
                 var today = DateTime.now();
-                var oneDayFromToday = today.add(Duration(days: 30)).millisecondsSinceEpoch;
+                var oneDayFromToday =
+                    today.add(Duration(days: 30)).millisecondsSinceEpoch;
                 await registerTimebankCode(
                   timebankCode: timebankCode,
                   timebankId: widget.timebankModel.id,
@@ -1098,7 +1167,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               textColor: Colors.white,
               child: Text(
                 S.of(context).cancel,
-                style: TextStyle(  fontSize: dialogButtonSize),
+                style: TextStyle(fontSize: dialogButtonSize),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -1118,19 +1187,21 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Future<void> registerTimebankCode({
-    String timebankId,
-    String timebankCode,
-    int validUpto,
-    String communityId,
+    String? timebankId,
+    String? timebankCode,
+    int? validUpto,
+    String? communityId,
   }) async {
     codeModel.createdOn = DateTime.now().millisecondsSinceEpoch;
-    codeModel.timebankId = timebankId;
-    codeModel.validUpto = validUpto;
+    codeModel.timebankId = timebankId!;
+    codeModel.validUpto = validUpto!;
     codeModel.timebankCodeId = utils.Utils.getUuid();
-    codeModel.timebankCode = timebankCode;
-    codeModel.communityId = communityId;
+    codeModel.timebankCode = timebankCode!;
+    codeModel.communityId = communityId!;
 
-    await CollectionRef.timebankCodes.doc(codeModel.timebankCodeId).set(codeModel.toMap());
+    await CollectionRef.timebankCodes
+        .doc(codeModel.timebankCodeId)
+        .set(codeModel.toMap());
   }
 
   void deleteShareCode(String timebankCodeId) {
@@ -1146,15 +1217,15 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   WriteBatch addMemberToTimebank({
-    String sevaUserId,
-    String timebankId,
-    String communityId,
-    String userEmail,
-    String userFullName,
-    String userPhotoURL,
-    String timebankTitle,
-    String parentTimebankId,
-    TimebankModel timebankModel,
+    required String sevaUserId,
+    required String timebankId,
+    required String communityId,
+    required String userEmail,
+    required String userFullName,
+    required String userPhotoURL,
+    required String timebankTitle,
+    required String parentTimebankId,
+    required TimebankModel timebankModel,
   }) {
     WriteBatch batch = CollectionRef.batch;
 
@@ -1164,7 +1235,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
     var newMemberDocumentReference = CollectionRef.users.doc(userEmail);
 
-    var entryExitLogReference = CollectionRef.timebank.doc(timebankId).collection('entryExitLogs').doc();
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankId)
+        .collection('entryExitLogs')
+        .doc();
 
     batch.update(timebankRef, {
       'members': FieldValue.arrayUnion([sevaUserId]),
@@ -1183,7 +1257,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': userEmail,
         'id': sevaUserId,
@@ -1204,16 +1281,22 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     });
 
     sendNotificationToMember(
-        communityId: communityId, timebankId: timebankId, sevaUserId: sevaUserId, userEmail: userEmail);
+        communityId: communityId,
+        timebankId: timebankId,
+        sevaUserId: sevaUserId,
+        userEmail: userEmail);
 
     return batch;
   }
 
   Future<void> sendNotificationToMember(
-      {String communityId, String sevaUserId, String timebankId, String userEmail}) async {
+      {required String communityId,
+      required String sevaUserId,
+      required String timebankId,
+      required String userEmail}) async {
     UserAddedModel userAddedModel = UserAddedModel(
-        timebankImage: timebankModel.photoUrl,
-        timebankName: timebankModel.name,
+        timebankImage: timebankModel!.photoUrl,
+        timebankName: timebankModel!.name,
         adminName: SevaCore.of(context).loggedInUser.fullname);
 
     NotificationsModel notification = NotificationsModel(
@@ -1226,18 +1309,22 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id).set(notification.toMap());
+    await CollectionRef.users
+        .doc(userEmail)
+        .collection("notifications")
+        .doc(notification.id)
+        .set(notification.toMap());
   }
 }
 
-getExtensionAlertDialog({BuildContext context, String message}) {
+getExtensionAlertDialog({BuildContext? context, String? message}) {
   return showDialog(
-    context: context,
+    context: context!,
     builder: (BuildContext context) {
       // return object of type Dialog
       return AlertDialog(
         title: Text(S.of(context).extension_alert),
-        content: new Text(message),
+        content: new Text(message!),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           new CustomTextButton(

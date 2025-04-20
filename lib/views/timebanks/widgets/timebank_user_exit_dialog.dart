@@ -6,10 +6,10 @@ import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankUserExitDialogView extends StatelessWidget {
-  final UserExitModel userExitModel;
-  final String timeBankId;
-  final String notificationId;
-  final UserModel userModel;
+  final UserExitModel? userExitModel;
+  final String? timeBankId;
+  final String? notificationId;
+  final UserModel? userModel;
 
   TimebankUserExitDialogView(
       {this.userExitModel,
@@ -32,7 +32,8 @@ class TimebankUserExitDialogView extends StatelessWidget {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(userExitModel.userPhotoUrl),
+                backgroundImage:
+                    NetworkImage(userExitModel?.userPhotoUrl ?? ''),
               ),
             ),
             Padding(
@@ -41,7 +42,7 @@ class TimebankUserExitDialogView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                userExitModel.userName,
+                userExitModel?.userName ?? '',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -51,13 +52,14 @@ class TimebankUserExitDialogView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                userExitModel.timebank ?? S.of(context).seva_community_name_not_updated,
+                userExitModel?.timebank ??
+                    S.of(context).seva_community_name_not_updated,
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                userExitModel.reason ?? S.of(context).reason_not_mentioned,
+                userExitModel?.reason ?? S.of(context).reason_not_mentioned,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -70,6 +72,11 @@ class TimebankUserExitDialogView extends StatelessWidget {
                   width: double.infinity,
                   child: CustomElevatedButton(
                     color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    elevation: 2.0,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).ok,
                       style:

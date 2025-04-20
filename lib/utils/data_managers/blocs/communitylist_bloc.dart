@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -94,16 +95,16 @@ class VolunteerFindBloc {
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
   TimebankModel timebank = TimebankModel({});
-  UserModel loggedinuser;
+  UserModel? loggedinuser;
   List<TimebankModel> timebanks = [];
-  String selectedAddress;
-  String timebankAvatarURL = null;
+  String? selectedAddress;
+  String timebankAvatarURL = null!;
   List addedMembersId = [];
   List addedMembersFullname = [];
   List addedMembersPhotoURL = [];
   bool loading = false;
   HashMap selectedUsers = HashMap();
-  CommunityModel selectedCommunity;
+  CommunityModel? selectedCommunity;
 
   CommunityCreateEditController() {
     timebank.preventAccedentalDelete = true;
@@ -125,7 +126,7 @@ class CommunityCreateEditController {
     this.community.isCreatedFromWeb = false;
   }
 
-  UpdateTimebankDetails(user, timebankimageurl, coverUrl) {
+  UpdateTimebankDetails(user, timebankimageurl, coverUrl, location) {
     this.timebank.updateValueByKey('id', Utils.getUuid());
     this.timebank.updateValueByKey('name', this.community.name);
     this.timebank.updateValueByKey('creatorId', user.sevaUserID);
@@ -158,10 +159,15 @@ class CommunityCreateEditController {
     this.timebank.updateValueByKey('address', this.timebank.address);
     this.timebank.updateValueByKey(
         'preventAccedentalDelete', this.timebank.preventAccedentalDelete);
-    this.timebank.updateValueByKey('location',
-        location == null ? GeoFirePoint(40.754387, -73.984291) : location);
     this.timebank.updateValueByKey(
-        'timebankConfigurations', getNeighbourhoodPlanConfigurationModel());
+        'location',
+        location == null
+            ? GeoFirePoint(GeoPoint(40.754387, -73.984291))
+            : location);
+    final timebankConfigurations = TimeBankBloc();
+    this.timebank.updateValueByKey(
+        'timebankConfigurations', timebankConfigurations.toMap());
+    this.timebank.updateValueByKey('additionalField', 'value');
   }
 
   updateUserDetails(userdata) {
@@ -213,7 +219,7 @@ class TransactionBloc {
         DocumentSnapshot document =
             snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
-                : null;
+                : null!;
         if (document != null)
           CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
@@ -226,7 +232,7 @@ class TransactionBloc {
         snapshot = await query.get();
         document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
-            : null;
+            : null!;
         if (document != null)
           CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
@@ -239,9 +245,9 @@ class TransactionBloc {
         Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
         QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.docs?.length > 0 && snapshot.docs != null
+            snapshot.docs != null && snapshot.docs!.length > 0
                 ? snapshot.docs.first
-                : null;
+                : null!;
         if (document != null)
           CollectionRef.timebank.doc(document.id).set({
             'balance':
@@ -252,7 +258,7 @@ class TransactionBloc {
         snapshot = await query.get();
         document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
-            : null;
+            : null!;
         if (document != null)
           CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
@@ -265,9 +271,9 @@ class TransactionBloc {
         Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
         QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.docs != null && snapshot.docs?.length > 0
+            snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
-                : null;
+                : null!;
         if (document != null)
           CollectionRef.timebank.doc(document.id).set({
             'balance':
@@ -280,7 +286,7 @@ class TransactionBloc {
         DocumentSnapshot document =
             snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
-                : null;
+                : null!;
         if (document != null)
           CollectionRef.timebank.doc(document.id).set({
             'balance':
@@ -292,7 +298,7 @@ class TransactionBloc {
         snapshot = await query.get();
         document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
-            : null;
+            : null!;
         if (document != null)
           CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
@@ -307,7 +313,7 @@ class TransactionBloc {
         DocumentSnapshot document =
             snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
-                : null;
+                : null!;
         if (document != null)
           CollectionRef.timebank.doc(document.id).set({
             'balance':
@@ -318,7 +324,7 @@ class TransactionBloc {
         snapshot = await query.get();
         document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
-            : null;
+            : null!;
         if (document != null)
           CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
@@ -331,35 +337,26 @@ class TransactionBloc {
   }
 
   void createNewTransaction(
-    from,
-    to,
-    timestamp,
-    credits,
-    isApproved,
-    type,
-    typeid,
-    timebankid, {
-    @required String communityId,
-    @required String fromEmailORId,
-    @required String toEmailORId,
-        String offerId
-  }) async {
+      from, to, timestamp, credits, isApproved, type, typeid, timebankid,
+      {required String communityId,
+      required String fromEmailORId,
+      required String toEmailORId,
+      String? offerId}) async {
     TransactionModel transactionModel = TransactionModel(
-      communityId: communityId,
-      from: from,
-      to: to,
-      timestamp: timestamp,
-      credits: num.parse(credits.toStringAsFixed(2)),
-      isApproved: isApproved,
-      type: type,
-      typeid: typeid,
-      timebankid: timebankid,
-      transactionbetween: [from, to],
-      toEmail_Id: toEmailORId,
-      fromEmail_Id: fromEmailORId,
-      liveMode: !AppConfig.isTestCommunity,
-      offerId: offerId
-    );
+        communityId: communityId,
+        from: from,
+        to: to,
+        timestamp: timestamp,
+        credits: num.parse(credits.toStringAsFixed(2)),
+        isApproved: isApproved,
+        type: type,
+        typeid: typeid,
+        timebankid: timebankid,
+        transactionbetween: [from, to],
+        toEmail_Id: toEmailORId,
+        fromEmail_Id: fromEmailORId,
+        liveMode: !AppConfig.isTestCommunity,
+        offerId: offerId);
 
     //commented because transaction and balance handling will be done in backend
 
@@ -380,9 +377,9 @@ class TransactionBloc {
 //     typeid,
 //     timebankid,
 //     id, {
-//     @required String communityId,
-//     @required String fromEmailORId,
-//     @required String toEmailORId,
+//     required String communityId,
+//     required String fromEmailORId,
+//     required String toEmailORId,
 //   }) async {
 //     TransactionModel prevtransactionModel;
 //     TransactionModel transactionModel = TransactionModel(
@@ -449,7 +446,7 @@ class TransactionBloc {
 }
 
 class TransactionController {
-  TimebankModel selectedtimebank;
+  TimebankModel selectedtimebank = TimebankModel({});
   List<TransactionModel> userTransactions = [];
   List<TransactionModel> timebankTransactions = [];
   TransactionController() {}
@@ -470,7 +467,9 @@ class TimebankController {
   List<UserModel> invitedUsersForRequest = [];
   bool isAdmin = false;
 
-  TimebankController() {}
+  TimebankController()
+      : selectedtimebank = TimebankModel({}),
+        selectedrequest = RequestModel(communityId: '');
 
   setRequestList(requests) {
     this.requests = requests;
@@ -551,6 +550,10 @@ class TimeBankBloc {
     _timebankController.add(_timebankController.value);
   }
 
+  Map<String, dynamic> toMap() {
+    return {};
+  }
+
   dispose() {
     _timebankController.close();
   }
@@ -599,7 +602,7 @@ class CommunityCreateEditBloc {
   getCommunityPrimaryTimebank() async {
     var community = this._createEditCommunity.value;
     var timebank = await _repository
-        .getTimebankDetailsById(community.selectedCommunity.primary_timebank);
+        .getTimebankDetailsById(community.selectedCommunity!.primary_timebank);
     community.timebank = timebank;
     _createEditCommunity.add(community);
   }
@@ -627,7 +630,7 @@ class CommunityCreateEditBloc {
 
     await _repository.updateCommunityWithUserId(
       communitytemp.id,
-      this._createEditCommunity.value.loggedinuser.sevaUserID,
+      this._createEditCommunity.value.loggedinuser!.sevaUserID,
     );
 
     await _repository.updateUserWithTimeBankIdCommunityId(
@@ -649,31 +652,36 @@ class CommunityCreateEditBloc {
         // timabnk code exists , check its validity
 
         snapshot.docs.forEach((f) async {
-          if (DateTime.now().millisecondsSinceEpoch > f.data()['validUpto']) {
+          if (DateTime.now().millisecondsSinceEpoch >
+              (f.data() as Map<String, dynamic>)['validUpto']) {
             await func("code_expired");
           } else {
             //code matche and is alive
             // add to usersOnBoarded
-            if ((f.data()['usersOnboarded'] ?? []).contains(
-                this._createEditCommunity.value.loggedinuser.sevaUserID)) {
+            if (((f.data() as Map<String, dynamic>)['usersOnboarded'] ?? [])
+                .contains(
+                    this._createEditCommunity.value.loggedinuser!.sevaUserID)) {
               func("code_already_redeemed");
             } else {
               CollectionRef.timebankCodes.doc(f.id).update({
                 'usersOnboarded': FieldValue.arrayUnion(
-                    [this._createEditCommunity.value.loggedinuser.sevaUserID])
-              });
-
-              CollectionRef.timebank.doc(f.data()['timebankId']).update({
-                'members': FieldValue.arrayUnion(
-                    [this._createEditCommunity.value.loggedinuser.sevaUserID])
+                    [this._createEditCommunity.value.loggedinuser!.sevaUserID])
               });
 
               CollectionRef.timebank
-                  .doc(f.data()['timebankId'])
+                  .doc((f.data() as Map<String, dynamic>)['timebankId'])
+                  .update({
+                'members': FieldValue.arrayUnion(
+                    [this._createEditCommunity.value.loggedinuser!.sevaUserID])
+              });
+
+              CollectionRef.timebank
+                  .doc((f.data() as Map<String, dynamic>)['timebankId'])
                   .get()
                   .then((DocumentSnapshot timeBank) async {
-                updateUser(timeBank.data);
-                await func(timeBank.data()['name'].toString());
+                updateUser(timeBank.data() as Map<String, dynamic>);
+                await func((timeBank.data() as Map<String, dynamic>)['name']
+                    .toString());
               });
             }
           }

@@ -22,20 +22,20 @@ class JoinRequestBloc {
 
   //TODO: move database operation to repository
   Future<void> rejectMemberJoinRequest({
-    String timebankId,
-    String joinRequestId,
-    String notificaitonId,
-    String communityId,
-    String memberFullName,
-    String memberPhotoUrl,
-    String adminEmail,
-    String adminId,
-    String adminFullName,
-    String adminPhotoUrl,
-    String timebankTitle,
-    String memberEmail,
-    String memberId,
-    TimebankModel timebankModel,
+    required String timebankId,
+    required String joinRequestId,
+    required String notificaitonId,
+    required String communityId,
+    required String memberFullName,
+    required String memberPhotoUrl,
+    required String adminEmail,
+    required String adminId,
+    required String adminFullName,
+    required String adminPhotoUrl,
+    required String timebankTitle,
+    required String memberEmail,
+    required String memberId,
+    required TimebankModel timebankModel,
   }) {
     log('REJECT COMES HERE!');
 
@@ -91,21 +91,21 @@ class JoinRequestBloc {
 
   //TODO: move database operation to repository
   Future<void> addMemberToTimebank({
-    String timebankId,
-    String memberJoiningSevaUserId,
-    String joinRequestId,
-    String communityId,
-    String newMemberJoinedEmail,
-    String notificaitonId,
-    bool isFromGroup,
-    String memberFullName,
-    String memberPhotoUrl,
-    String adminEmail,
-    String adminId,
-    String adminFullName,
-    String adminPhotoUrl,
-    String timebankTitle,
-    TimebankModel timebankModel,
+    required String timebankId,
+    required String memberJoiningSevaUserId,
+    required String joinRequestId,
+    required String communityId,
+    required String newMemberJoinedEmail,
+    required String notificaitonId,
+    required bool isFromGroup,
+    required String memberFullName,
+    required String memberPhotoUrl,
+    required String adminEmail,
+    required String adminId,
+    required String adminFullName,
+    required String adminPhotoUrl,
+    required String timebankTitle,
+    required TimebankModel timebankModel,
   }) {
     WriteBatch batch = CollectionRef.batch;
     var timebankRef = CollectionRef.timebank.doc(timebankId);

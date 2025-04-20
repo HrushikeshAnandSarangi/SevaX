@@ -10,10 +10,10 @@ import 'package:sevaexchange/views/requests/request_accepted_view_one_to_many.da
 
 class RequestAcceptedTabsViewHolder extends StatelessWidget {
   final RequestModel requestItem;
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
 
   RequestAcceptedTabsViewHolder.of({
-    @required this.requestItem,
+    required this.requestItem,
     this.timebankModel,
   });
   //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
@@ -21,7 +21,7 @@ class RequestAcceptedTabsViewHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabarView(
-      timebankModel: timebankModel,
+      timebankModel: timebankModel!,
       requestItem: requestItem,
       context: context,
     );
@@ -33,7 +33,10 @@ class TabarView extends StatelessWidget {
   final TimebankModel timebankModel;
   final BuildContext context;
 
-  TabarView({this.requestItem, this.timebankModel, this.context});
+  TabarView(
+      {required this.requestItem,
+      required this.timebankModel,
+      required this.context});
 
   @override
   Widget build(BuildContext context) {

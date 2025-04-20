@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:http/http.dart' as http;
 // import 'package:location/location.dart';
 import 'package:meta/meta.dart';
@@ -27,13 +27,13 @@ import '../../flavor_config.dart';
 
 /// Create a [user]
 Future<void> createUser({
-  @required UserModel user,
+  required UserModel user,
 }) async {
   return await CollectionRef.users.doc(user.email).set(user.toMap());
 }
 
 Future<void> updateUser({
-  @required UserModel user,
+  required UserModel user,
 }) async {
   return await CollectionRef.users
       .doc(user.email)
@@ -41,7 +41,7 @@ Future<void> updateUser({
 }
 
 Future<void> updateUserLanguage({
-  @required UserModel user,
+  required UserModel user,
 }) async {
   return await CollectionRef.users.doc(user.email).update({
     'language': user.language,
@@ -49,29 +49,29 @@ Future<void> updateUserLanguage({
 }
 
 Future<int> getUserDonatedGoodsAndAmount({
-  @required String sevaUserId,
-  @required int timeFrame,
-  bool isLifeTime,
-  bool isGoods,
+  required String sevaUserId,
+  required int timeFrame,
+  bool? isLifeTime,
+  bool? isGoods,
 }) async {
   int totalGoodsOrAmount = 0;
   try {
     await CollectionRef.donations
-        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('donationType', isEqualTo: isGoods! ? 'GOODS' : 'CASH')
         .where('donorSevaUserId', isEqualTo: sevaUserId)
-        .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
+        .where('timestamp', isGreaterThan: isLifeTime! ? 0 : timeFrame)
         .get()
         .then((data) {
       data.docs.forEach((documentSnapshot) {
-        DonationModel donationModel =
-            DonationModel.fromMap(documentSnapshot.data());
+        DonationModel donationModel = DonationModel.fromMap(
+            documentSnapshot.data() as Map<String, dynamic>);
         if (donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
             totalGoodsOrAmount +=
-                donationModel.cashDetails.pledgedAmount.toInt();
+                donationModel.cashDetails!.pledgedAmount!.toInt();
           } else {
             totalGoodsOrAmount +=
-                donationModel.goodsDetails.donatedGoods.values.length;
+                donationModel.goodsDetails!.donatedGoods!.values.length;
           }
         }
       });
@@ -83,30 +83,30 @@ Future<int> getUserDonatedGoodsAndAmount({
 }
 
 Future<int> getTimebankRaisedAmountAndGoods({
-  @required String timebankId,
-  @required int timeFrame,
-  bool isLifeTime,
-  bool isGoods,
+  required String timebankId,
+  required int timeFrame,
+  bool? isLifeTime,
+  bool? isGoods,
 }) async {
   int totalGoodsOrAmount = 0;
   try {
     await CollectionRef.donations
-        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('donationType', isEqualTo: isGoods! ? 'GOODS' : 'CASH')
         .where('timebankId', isEqualTo: timebankId)
-        .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
+        .where('timestamp', isGreaterThan: isLifeTime! ? 0 : timeFrame)
         .get()
         .then((data) {
       data.docs.forEach((documentSnapshot) {
-        DonationModel donationModel =
-            DonationModel.fromMap(documentSnapshot.data());
-        if (donationModel.donatedToTimebank &&
+        DonationModel donationModel = DonationModel.fromMap(
+            documentSnapshot.data() as Map<String, dynamic>);
+        if (donationModel.donatedToTimebank! &&
             donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
             totalGoodsOrAmount +=
-                donationModel.cashDetails.pledgedAmount.toInt();
+                donationModel.cashDetails!.pledgedAmount!.toInt();
           } else if (donationModel.donationType == RequestType.GOODS) {
             totalGoodsOrAmount +=
-                donationModel.goodsDetails.donatedGoods.length;
+                donationModel.goodsDetails!.donatedGoods!.length;
           }
         }
       });
@@ -118,17 +118,21 @@ Future<int> getTimebankRaisedAmountAndGoods({
 }
 
 Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
-    {GeoFirePoint locationVal, String userEmailId}) async {
-  GeoFirePoint location;
-  Geoflutterfire geo = Geoflutterfire();
-
+    {GeoFirePoint? locationVal, String? userEmailId}) async {
+  GeoFirePoint? location;
+  GeoFirePoint geo = GeoFirePoint(
+      GeoPoint(locationVal?.latitude ?? 0, locationVal?.longitude ?? 0));
+  // Initialize location if provided
+  if (locationVal != null) {
+    location = locationVal as GeoFirePoint;
+  }
   String userEmail =
-      userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email;
+      userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email ?? '';
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     deviceDetails.deviceType = 'Android';
-    deviceDetails.deviceId = androidInfo.androidId;
+    deviceDetails.deviceId = androidInfo.id;
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
     deviceDetails.deviceType = 'IOS';
@@ -138,7 +142,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   if (locationVal == null) {
     LocationHelper.getLocation().then((value) {
       value.fold((l) => null, (r) {
-        location = geo.point(latitude: r.latitude, longitude: r.longitude);
+        location = GeoFirePoint(GeoPoint(r.latitude, r.longitude));
       });
     });
   } else {
@@ -154,18 +158,19 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
 }
 
 Future<DeviceDetails> addCreationSourceOfUser(
-    {GeoFirePoint locationVal, String userEmailId}) async {
-  GeoFirePoint location;
+    {GeoFirePoint? locationVal, String? userEmailId}) async {
+  GeoFirePoint? location;
   // PermissionStatus _permissionGranted;
-  Geoflutterfire geo = Geoflutterfire();
+  GeoFirePoint geo = GeoFirePoint(
+      GeoPoint(locationVal?.latitude ?? 0, locationVal?.longitude ?? 0));
 
   String userEmail =
-      userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email;
+      userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email ?? '';
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     deviceDetails.deviceType = 'Android';
-    deviceDetails.deviceId = androidInfo.androidId;
+    deviceDetails.deviceId = androidInfo.id;
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
     deviceDetails.deviceType = 'IOS';
@@ -176,15 +181,16 @@ Future<DeviceDetails> addCreationSourceOfUser(
     await LocationHelper.getLocation().then((value) {
       if (value != null) {
         value.fold((l) => null, (r) {
-          location = geo.point(
-            latitude: r.latitude,
-            longitude: r.longitude,
-          );
+          location = GeoFirePoint(GeoPoint(r.latitude, r.longitude));
         });
       }
     });
   } else {
     location = locationVal;
+  }
+  if (location == null) {
+    // Provide a default value or handle the error as needed
+    location = GeoFirePoint(GeoPoint(0, 0));
   }
   deviceDetails.location = location;
   deviceDetails.timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -195,7 +201,7 @@ Future<DeviceDetails> addCreationSourceOfUser(
 }
 
 Future<int> getRequestRaisedGoods({
-  @required String requestId,
+  required String requestId,
 }) async {
   int totalGoods = 0;
   try {
@@ -206,10 +212,10 @@ Future<int> getRequestRaisedGoods({
         .get()
         .then((data) {
       data.docs.forEach((documentSnapshot) {
-        DonationModel donationModel =
-            DonationModel.fromMap(documentSnapshot.data());
+        DonationModel donationModel = DonationModel.fromMap(
+            documentSnapshot.data() as Map<String, dynamic>);
 
-        totalGoods += donationModel.goodsDetails.donatedGoods.values.length;
+        totalGoods += donationModel.goodsDetails!.donatedGoods!.values.length;
       });
     });
   } on Exception catch (e) {
@@ -219,19 +225,19 @@ Future<int> getRequestRaisedGoods({
 }
 
 Stream<List<DonationModel>> getDonationList(
-    {String userId, String timebankId, bool isGoods}) async* {
+    {String? userId, String? timebankId, bool? isGoods}) async* {
   var data;
 
   if (userId != null) {
     data = CollectionRef.donations
         .where('donorSevaUserId', isEqualTo: userId)
-        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('donationType', isEqualTo: isGoods! ? 'GOODS' : 'CASH')
         .orderBy("timestamp", descending: true)
         .snapshots();
   } else {
     data = CollectionRef.donations
         .where('timebankId', isEqualTo: timebankId)
-        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('donationType', isEqualTo: isGoods! ? 'GOODS' : 'CASH')
         .where('donatedToTimebank', isEqualTo: true)
         .orderBy("timestamp", descending: true)
         .snapshots();
@@ -241,7 +247,8 @@ Stream<List<DonationModel>> getDonationList(
       handleData: (snapshot, donationSink) {
         List<DonationModel> donationsList = [];
         snapshot.docs.forEach((document) {
-          DonationModel model = DonationModel.fromMap(document.data());
+          DonationModel model =
+              DonationModel.fromMap(document.data() as Map<String, dynamic>);
           if (model.donationStatus == DonationStatus.ACKNOWLEDGED)
             donationsList.add(model);
         });
@@ -252,17 +259,17 @@ Stream<List<DonationModel>> getDonationList(
 }
 
 Future<Map<String, UserModel>> getUserForUserModels(
-    {@required List<String> admins}) async {
+    {required List<String> admins}) async {
   var map = Map<String, UserModel>();
   for (int i = 0; i < admins.length; i++) {
     UserModel user = await getUserForId(sevaUserId: admins[i]);
-    map[user.fullname.toLowerCase()] = user;
+    map[user.fullname!.toLowerCase()] = user;
   }
   return map;
 }
 
 Stream<List<UserModel>> getRecommendedUsersStream(
-    {@required String requestId}) async* {
+    {required String requestId}) async* {
   var data = CollectionRef.users
       .where('recommendedForRequestIds', arrayContains: requestId)
       .snapshots();
@@ -273,39 +280,43 @@ Stream<List<UserModel>> getRecommendedUsersStream(
         List<UserModel> modelList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            UserModel model =
-                UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
+            UserModel model = UserModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>,
+                'user_data_manager');
             modelList.add(model);
           },
         );
         modelList.sort((a, b) =>
-            a.fullname.toLowerCase().compareTo(b.fullname.toLowerCase()));
+            a.fullname!.toLowerCase().compareTo(b.fullname!.toLowerCase()));
         usersListSink.add(modelList);
       },
     ),
   );
 }
 
-Future<UserModel> getUserForId({@required String sevaUserId}) async {
+Future<UserModel> getUserForId({required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
 
-  UserModel userModel;
+  UserModel userModel = UserModel();
   await CollectionRef.users
       .where('sevauserid', isEqualTo: sevaUserId)
       .get()
       .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-      userModel =
-          UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
-    });
+    if (querySnapshot.docs.isNotEmpty) {
+      querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+        userModel = UserModel.fromMap(
+            documentSnapshot.data() as Map<String, dynamic>,
+            'user_data_manager');
+      });
+    }
   });
 
   return userModel;
 }
 
 Future<UserModel> getUserForEmail({
-  @required String emailAddress,
+  required String emailAddress,
 }) async {
   assert(emailAddress != null && emailAddress.isNotEmpty,
       'User Email cannot be null or empty');
@@ -314,9 +325,10 @@ Future<UserModel> getUserForEmail({
   var documentSnapshot = await CollectionRef.users.doc(emailAddress).get();
 
   if (documentSnapshot == null || documentSnapshot.data() == null) {
-    return null;
+    return null!;
   }
-  userModel = UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
+  userModel = UserModel.fromMap(
+      documentSnapshot.data() as Map<String, dynamic>, 'user_data_manager');
   return userModel;
 }
 
@@ -337,7 +349,7 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
 
   var res = await http
-      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+      .get(Uri.parse(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
     var rest = data["result"] as List;
@@ -363,7 +375,7 @@ Future<UserModelListMoreStatus>
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
   var res = await http
-      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+      .get(Uri.parse(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
     var rest = data["result"] as List;
@@ -384,7 +396,7 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
   var res = await http
-      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+      .get(Uri.parse(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
     var rest = data["result"] as List;
@@ -398,7 +410,7 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
   return UserModelListMoreStatus();
 }
 
-Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
+Stream<UserModel> getUserForIdStream({required String sevaUserId}) async* {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
   var data = CollectionRef.users
@@ -409,8 +421,9 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
     StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) async {
         DocumentSnapshot documentSnapshot = snapshot.docs[0];
-        UserModel model =
-            UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
+        UserModel model = UserModel.fromMap(
+            documentSnapshot.data() as Map<String, dynamic>,
+            'user_data_manager');
 
         model.sevaUserID = sevaUserId;
         userSink.add(model);
@@ -419,7 +432,7 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
   );
 }
 
-Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
+Future<UserModel> getUserForIdFuture({required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
   return CollectionRef.users
@@ -427,8 +440,8 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
       .get()
       .then((snapshot) {
     DocumentSnapshot documentSnapshot = snapshot.docs[0];
-    UserModel model =
-        UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
+    UserModel model = UserModel.fromMap(
+        documentSnapshot.data() as Map<String, dynamic>, 'user_data_manager');
     return model;
   }).catchError((onError) {
     return UserModel();
@@ -444,8 +457,8 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
   yield* userDataStream.transform(
     StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) {
-        UserModel model =
-            UserModel.fromMap(snapshot.data(), 'user_data_manager');
+        UserModel model = UserModel.fromMap(
+            snapshot.data() as Map<String, dynamic>, 'user_data_manager');
         // model.sevaUserID = snapshot.id;
         userSink.add(model);
       },
@@ -454,44 +467,44 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
 }
 
 Future<Map<String, dynamic>> removeMemberFromGroup({
-  String sevauserid,
-  String groupId,
+  String? sevauserid,
+  String? groupId,
 }) async {
   String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       "/removeMemberFromGroup?sevauserid=$sevauserid&groupId=$groupId";
 
   var res = await http
-      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+      .get(Uri.parse(urlLink), headers: {"Accept": "application/json"});
   var data = json.decode(res.body);
   return data;
 }
 
 Future<Map<String, dynamic>> removeMemberFromTimebank(
-    {String sevauserid, String timebankId, Timebank}) async {
+    {String? sevauserid, String? timebankId, Timebank}) async {
   String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
 
   var res = await http
-      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+      .get(Uri.parse(urlLink), headers: {"Accept": "application/json"});
   var data = json.decode(res.body);
   return data;
 }
 
 Future storeRemoveMemberLog({
-  TimebankModel timebankModel,
-  String communityId,
-  String memberEmail,
-  String memberUid,
-  String memberFullName,
-  String memberPhotoUrl,
-  String adminEmail,
-  String adminId,
-  String adminFullName,
-  String adminPhotoUrl,
-  String timebankTitle,
+  TimebankModel? timebankModel,
+  String? communityId,
+  String? memberEmail,
+  String? memberUid,
+  String? memberFullName,
+  String? memberPhotoUrl,
+  String? adminEmail,
+  String? adminId,
+  String? adminFullName,
+  String? adminPhotoUrl,
+  String? timebankTitle,
 }) async {
   var response = CollectionRef.timebank
-      .doc(timebankModel.id)
+      .doc(timebankModel!.id)
       .collection('entryExitLogs')
       .doc()
       .set({
@@ -524,9 +537,10 @@ Future storeRemoveMemberLog({
 }
 
 Future<Map<String, dynamic>> checkChangeOwnershipStatus(
-    {String timebankId, String sevauserid}) async {
+    {String? timebankId, String? sevauserid}) async {
   var result = await http.post(
-    "${FlavorConfig.values.cloudFunctionBaseURL}/checkTasksAndPaymentsForTransferOwnership",
+    Uri.parse(
+        "${FlavorConfig.values.cloudFunctionBaseURL}/checkTasksAndPaymentsForTransferOwnership"),
     body: {"timebankId": timebankId, "sevauserid": sevauserid},
   );
   var data = json.decode(result.body);
@@ -534,12 +548,12 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
 }
 
 Future<ProfanityImageModel> checkProfanityForImage(
-    {String imageUrl, String storagePath}) async {
+    {String? imageUrl, String? storagePath}) async {
   log("model ${imageUrl}");
 
   var result = await http.post(
-    "https://proxy.sevaexchange.com/" +
-        "https://us-central1-sevaxproject4sevax.cloudfunctions.net/visionApi",
+    Uri.parse("https://proxy.sevaexchange.com/" +
+        "https://us-central1-sevaxproject4sevax.cloudfunctions.net/visionApi"),
     headers: {
       "Content-Type": "application/json",
       "Access-Control": "Allow-Headers",
@@ -559,7 +573,7 @@ Future<ProfanityImageModel> checkProfanityForImage(
 
     if (data['safeSearchAnnotation'] == null) {
       logger.i(data['safeSearchAnnotation']);
-      return null;
+      return null!;
     }
     profanityImageModel =
         ProfanityImageModel.fromMap(data['safeSearchAnnotation']);
@@ -570,23 +584,24 @@ Future<ProfanityImageModel> checkProfanityForImage(
 //    return null;
   } on Exception catch (exception) {
     //other exception
-    return null;
+    return null!;
   }
 
   return profanityImageModel;
 }
 
 Future<String> updateChangeOwnerDetails(
-    {String communityId,
-    String email,
-    String streetAddress1,
-    String streetAddress2,
-    String country,
-    String city,
-    String pinCode,
-    String state}) async {
+    {String? communityId,
+    String? email,
+    String? streetAddress1,
+    String? streetAddress2,
+    String? country,
+    String? city,
+    String? pinCode,
+    String? state}) async {
   var result = await http.post(
-      "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe",
+      Uri.parse(
+          "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe"),
       body: jsonEncode(
         {
           "communityId": communityId,

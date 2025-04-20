@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -24,7 +24,7 @@ String failureTitle = "Request failed!";
 String reason = "";
 final GlobalKey<FormState> _formKey = GlobalKey();
 
-ProgressDialog progressDialog;
+ProgressDialog? progressDialog;
 
 enum SoftDelete {
   REQUEST_DELETE_GROUP,
@@ -33,14 +33,14 @@ enum SoftDelete {
 }
 
 Future<bool> checkExistingRequest({
-  String associatedId,
+  String? associatedId,
 }) async {
   return await CollectionRef.softDeleteRequests
       .where('requestStatus', isEqualTo: 'REQUESTED')
       .where('associatedId', isEqualTo: associatedId)
       .get()
       .then(
-        (onValue) {
+    (onValue) {
       return onValue.docs.length > 0;
     },
   ).catchError((onError) {
@@ -49,25 +49,25 @@ Future<bool> checkExistingRequest({
 }
 
 Future<bool> showAdvisoryBeforeDeletion({
-  BuildContext context,
-  SoftDelete softDeleteType,
-  String associatedId,
-  String email,
-  String associatedContentTitle,
-  bool isAccedentalDeleteEnabled,
+  BuildContext? context,
+  SoftDelete? softDeleteType,
+  String? associatedId,
+  String? email,
+  String? associatedContentTitle,
+  bool? isAccedentalDeleteEnabled,
 }) async {
   final profanityDetector = ProfanityDetector();
   progressDialog = ProgressDialog(
-    context,
-    type: ProgressDialogType.Normal,
+    context!,
+    type: ProgressDialogType.normal,
     isDismissible: false,
   );
 
-  progressDialog.show();
+  progressDialog?.show();
   var isAlreadyRequested = await checkExistingRequest(
     associatedId: associatedId,
   );
-  progressDialog.hide();
+  progressDialog!.hide();
 
   if (isAlreadyRequested) {
     await _showRequestProcessingWithStatus(context: context);
@@ -76,10 +76,10 @@ Future<bool> showAdvisoryBeforeDeletion({
 
   if (softDeleteType == SoftDelete.REQUEST_DELETE_GROUP ||
       softDeleteType == SoftDelete.REQUEST_DELETE_TIMEBANK) {
-    if (isAccedentalDeleteEnabled) {
+    if (isAccedentalDeleteEnabled!) {
       await _showAccedentalDeleteConfirmation(
         context: context,
-        softDeleteType: softDeleteType,
+        softDeleteType: softDeleteType!,
       );
       return true;
     }
@@ -90,9 +90,7 @@ Future<bool> showAdvisoryBeforeDeletion({
     builder: (BuildContext contextDialog) {
       return AlertDialog(
         title: Text(
-          S
-              .of(context)
-              .delete_confirmation + associatedContentTitle + "?",
+          S.of(context).delete_confirmation + associatedContentTitle! + "?",
           style: TextStyle(fontSize: 17),
         ),
         content: Form(
@@ -103,16 +101,14 @@ Future<bool> showAdvisoryBeforeDeletion({
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    _getContentFromType(softDeleteType, context),
+                    _getContentFromType(softDeleteType!, context),
                     style: TextStyle(fontSize: 15),
                   ),
                   TextFormField(
                     autofocus: true,
                     decoration: InputDecoration(
                       errorMaxLines: 2,
-                      hintText: S
-                          .of(context)
-                          .enter_reason_to_delete,
+                      hintText: S.of(context).enter_reason_to_delete,
                     ),
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.sentences,
@@ -122,14 +118,10 @@ Future<bool> showAdvisoryBeforeDeletion({
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
-                      if (value.isEmpty) {
-                        return S
-                            .of(context)
-                            .enter_reason_to_delete_error;
+                      if (value!.isEmpty) {
+                        return S.of(context).enter_reason_to_delete_error;
                       } else if (profanityDetector.isProfaneString(value)) {
-                        return S
-                            .of(context)
-                            .profanity_text_alert;
+                        return S.of(context).profanity_text_alert;
                       } else {
                         reason = value;
                         return null;
@@ -142,31 +134,31 @@ Future<bool> showAdvisoryBeforeDeletion({
         actions: <Widget>[
           CustomElevatedButton(
             color: HexColor("#d2d2d2"),
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2.0,
+            textColor: Colors.black,
             onPressed: () {
               Navigator.pop(contextDialog);
             },
             child: Text(
-              S
-                  .of(context)
-                  .cancel,
+              S.of(context).cancel,
             ),
           ),
           CustomTextButton(
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             textColor: Colors.white,
             onPressed: () async {
-              if (!_formKey.currentState.validate()) {
+              if (!_formKey.currentState!.validate()) {
                 return;
               }
               Navigator.pop(contextDialog);
-              progressDialog.show();
+              progressDialog!.show();
               try {
                 // MAKE REQUEST FOR SOFT DELETION//
                 await registerSoftDeleteRequestFor(
                   softDeleteRequest: SoftDeleteRequest.createRequest(
-                    associatedId: associatedId,
+                    associatedId: associatedId!,
                     requestType: _getModelType(softDeleteType),
                     reason: reason,
                   ),
@@ -178,12 +170,12 @@ Future<bool> showAdvisoryBeforeDeletion({
                   await sendMailToSevaTeam(
                     associatedContentTitle: associatedContentTitle,
                     associatedId: associatedId,
-                    senderEmail: email,
+                    senderEmail: email!,
                     softDeleteType: softDeleteType,
                   );
                 }
 
-                progressDialog.hide();
+                progressDialog!.hide();
 
                 showFinalResultConfirmation(
                   context,
@@ -192,60 +184,59 @@ Future<bool> showAdvisoryBeforeDeletion({
                   true,
                 );
               } catch (_) {
-                progressDialog.hide();
+                progressDialog!.hide();
                 showFinalResultConfirmation(
                   context,
                   softDeleteType,
-                  associatedId,
+                  associatedId!,
                   false,
                 );
               }
             },
             child: Text(
-              S
-                  .of(context)
-                  .delete + " " + associatedContentTitle,
-
+              S.of(context).delete + " " + associatedContentTitle,
             ),
           )
         ],
       );
     },
   );
+  return false;
 }
 
 Future<bool> sendMailToSevaTeam({
-  String senderEmail,
-  SoftDelete softDeleteType,
-  String associatedContentTitle,
-  String associatedId,
+  String? senderEmail,
+  SoftDelete? softDeleteType,
+  String? associatedContentTitle,
+  String? associatedId,
 }) async {
   return await SevaMailer.createAndSendEmail(
       mailContent: MailContent.createMail(
-        mailSender: senderEmail,
-        mailReciever: "delete-timebank@sevaexchange.com",
-        mailSubject:
-        "Deletion request for ${_getModelType(softDeleteType)} $associatedContentTitle by " +
+    mailSender: senderEmail!,
+    mailReciever: "delete-timebank@sevaexchange.com",
+    mailSubject:
+        "Deletion request for ${_getModelType(softDeleteType!)} $associatedContentTitle by " +
             senderEmail +
             ".",
-        mailContent: senderEmail +
-            " has requested to delete ${_getModelType(
-                softDeleteType)} $associatedContentTitle with unique-identity as $associatedId.",
-      ));
+    mailContent: senderEmail +
+        " has requested to delete ${_getModelType(softDeleteType)} $associatedContentTitle with unique-identity as $associatedId.",
+  ));
 }
 
 class SoftDeleteRequest extends DataModel {
-  String id;
-  String timestamp;
-  String requestStatus;
-  String reason;
+  late String id;
+  late String? timestamp;
+  late String? requestStatus;
+  String? reason;
 
-  final String associatedId;
-  final String requestType;
+  final String? associatedId;
+  final String? requestType;
 
-  SoftDeleteRequest.createRequest({this.associatedId, this.requestType, this.reason}) {
+  SoftDeleteRequest.createRequest(
+      {this.associatedId, this.requestType, this.reason}) {
     id = Utils.getUuid();
     requestStatus = "REQUESTED";
+    timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   }
 
   @override
@@ -256,23 +247,21 @@ class SoftDeleteRequest extends DataModel {
     map['requestType'] = this.requestType ?? "NA";
     map['id'] = this.id;
     map['reason'] = this.reason;
-    map['timestamp'] = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
     return map;
   }
 }
 
 WriteBatch registerSoftDeleteRequestFor({
-  @required SoftDeleteRequest softDeleteRequest,
-  @required SoftDelete softDeleteType,
+  required SoftDeleteRequest softDeleteRequest,
+  required SoftDelete softDeleteType,
 }) {
   WriteBatch batch = CollectionRef.batch;
   var registerRequestRef =
-  CollectionRef.softDeleteRequests.doc(softDeleteRequest.id);
+      CollectionRef.softDeleteRequests.doc(softDeleteRequest.id);
 
   var associatedEntity =
-  _getType(softDeleteType).doc(softDeleteRequest.associatedId);
+      _getType(softDeleteType).doc(softDeleteRequest.associatedId);
   batch.set(registerRequestRef, softDeleteRequest.toMap());
   batch.update(associatedEntity, {'requestedSoftDelete': true});
 
@@ -294,117 +283,112 @@ CollectionReference _getType(SoftDelete softDeleteType) {
 }
 
 Future<bool> _showAccedentalDeleteConfirmation({
-  BuildContext context,
-  SoftDelete softDeleteType,
-}) {
-  showDialog(
-    context: context,
+  BuildContext? context,
+  SoftDelete? softDeleteType,
+}) async {
+  bool result = false;
+  await showDialog(
+    context: context!,
     builder: (BuildContext accedentalDialogContext) {
       return AlertDialog(
         title: Text(
-          S
-              .of(context)
-              .accidental_delete_enabled,
+          S.of(context).accidental_delete_enabled,
         ),
         content: Text(
-          S
-              .of(context)
-              .accidental_delete_enabled_description
-              .replaceAll(
-            "**",
-            _getModelType(softDeleteType),
-          ),
+          S.of(context).accidental_delete_enabled_description.replaceAll(
+                "**",
+                _getModelType(softDeleteType!),
+              ),
         ),
         actions: <Widget>[
           CustomElevatedButton(
+            color: HexColor("#d2d2d2"),
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2.0,
+            textColor: Colors.black,
             onPressed: () {
+              result = true;
               Navigator.pop(accedentalDialogContext);
-              return true;
             },
             child: Text(
-              S
-                  .of(context)
-                  .dismiss,
+              S.of(context).dismiss,
             ),
           ),
         ],
       );
     },
   );
+  return result;
 }
 
-Future<bool> _showRequestProcessingWithStatus({BuildContext context}) {
-  showDialog(
-    context: context,
+Future<bool> _showRequestProcessingWithStatus({BuildContext? context}) async {
+  bool result = false;
+  await showDialog(
+    context: context!,
     builder: (BuildContext _showRequestProcessingWithStatusContext) {
       return AlertDialog(
         title: Text(
-          S
-              .of(context)
-              .deletion_request_being_processed,
+          S.of(context).deletion_request_being_processed,
         ),
         content: Text(
-          S
-              .of(context)
-              .deletion_request_progress_description,
+          S.of(context).deletion_request_progress_description,
         ),
         actions: <Widget>[
           CustomElevatedButton(
+            color: HexColor("#d2d2d2"),
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2.0,
+            textColor: Colors.black,
             onPressed: () {
+              result = true;
               Navigator.pop(_showRequestProcessingWithStatusContext);
-              return true;
             },
             child: Text(
-              S
-                  .of(context)
-                  .dismiss,
+              S.of(context).dismiss,
             ),
           ),
         ],
       );
     },
   );
+  return result;
 }
 
-BuildContext buildContextForLinearProgress;
+BuildContext? buildContextForLinearProgress;
 
-void showLinearProgress({BuildContext context}) {
+void showLinearProgress({BuildContext? context}) {
   showDialog(
-    context: context,
+    context: context!,
     builder: (BuildContext context) {
       buildContextForLinearProgress = context;
       return AlertDialog(
         title: Text(
-          S
-              .of(context)
-              .submitting_request,
+          S.of(context).submitting_request,
         ),
         content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Theme.of(context).primaryColor,
+          ),
         ),
-),
       );
     },
   );
 }
 
-String _getContentFromType(SoftDelete type,
-    BuildContext context,) {
+String _getContentFromType(
+  SoftDelete type,
+  BuildContext context,
+) {
   switch (type) {
     case SoftDelete.REQUEST_DELETE_GROUP:
-      return S
-          .of(context)
-          .advisory_for_timebank;
+      return S.of(context).advisory_for_timebank;
     case SoftDelete.REQUEST_DELETE_PROJECT:
-      return S
-          .of(context)
-          .advisory_for_projects;
+      return S.of(context).advisory_for_projects;
     case SoftDelete.REQUEST_DELETE_TIMEBANK:
-      return S
-          .of(context)
-          .advisory_for_timebank;
+      return S.of(context).advisory_for_timebank;
   }
 }
 
@@ -419,32 +403,33 @@ String _getModelType(SoftDelete type) {
   }
 }
 
-Future<bool> showFinalResultConfirmation(BuildContext context,
-    SoftDelete softDeleteType,
-    String associatedId,
-    bool didSuceed,) async {
+Future<bool> showFinalResultConfirmation(
+  BuildContext context,
+  SoftDelete softDeleteType,
+  String associatedId,
+  bool didSuceed,
+) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(
           didSuceed
-              ? S
-              .of(context)
-              .request_submitted
-              : S
-              .of(context)
-              .request_failed,
+              ? S.of(context).request_submitted
+              : S.of(context).request_failed,
         ),
         content: Text(
           didSuceed
               ? getSuccessMessage(softDeleteType, context)
-              : S
-              .of(context)
-              .request_failure_message,
+              : S.of(context).request_failure_message,
         ),
         actions: <Widget>[
           CustomElevatedButton(
+            color: HexColor("#d2d2d2"),
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2.0,
+            textColor: Colors.black,
             onPressed: () async {
               await Future.delayed(Duration(milliseconds: 800), () {
                 Navigator.pop(context);
@@ -462,9 +447,7 @@ Future<bool> showFinalResultConfirmation(BuildContext context,
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10),
               child: Text(
-                S
-                    .of(context)
-                    .dismiss,
+                S.of(context).dismiss,
               ),
             ),
           ),
@@ -475,44 +458,37 @@ Future<bool> showFinalResultConfirmation(BuildContext context,
   return true;
 }
 
-String getSuccessMessage(SoftDelete softDeleteType,
-    BuildContext context,) {
+String getSuccessMessage(
+  SoftDelete softDeleteType,
+  BuildContext context,
+) {
   return S
       .of(context)
       .deletion_request_recieved
       .replaceAll('***', _getModelType(softDeleteType));
 }
 
-Future<String> showProfanityImageAlert({BuildContext context, String content}) {
+Future<String?> showProfanityImageAlert(
+    {required BuildContext context, required String? content}) {
   return showDialog<String>(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext _context) {
         return AlertDialog(
-          title: Text(S
-              .of(context)
-              .profanity_alert),
+          title: Text(S.of(context).profanity_alert),
           content: Text(
-            S
-                .of(context)
-                .profanity_image_alert + ' ' + content,
+            S.of(context).profanity_image_alert + ' ' + (content ?? ''),
           ),
           actions: <Widget>[
             CustomTextButton(
               shape: StadiumBorder(),
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme
-                  .of(context)
-                  .accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                S
-                    .of(context)
-                    .ok,
-                style: TextStyle(
-                    fontSize: dialogButtonSize,
-                    color: Colors.white
-                ),
+                S.of(context).ok,
+                style:
+                    TextStyle(fontSize: dialogButtonSize, color: Colors.white),
               ),
               onPressed: () {
                 Navigator.pop(_context, 'Proceed');
@@ -524,20 +500,16 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
 }
 
 Future<void> showFailedLoadImage({
-  BuildContext context,
+  BuildContext? context,
 }) {
   return showDialog(
       barrierDismissible: false,
-      context: context,
+      context: context!,
       builder: (BuildContext _context) {
         return AlertDialog(
-          title: Text(S
-              .of(context)
-              .failed_load_image_title),
+          title: Text(S.of(context).failed_load_image_title),
           content: Text(
-            S
-                .of(context)
-                .failed_load_image,
+            S.of(context).failed_load_image,
           ),
           actions: <Widget>[
             Padding(
@@ -548,14 +520,10 @@ Future<void> showFailedLoadImage({
               child: CustomTextButton(
                 shape: StadiumBorder(),
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                color: Theme
-                    .of(context)
-                    .accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 textColor: Colors.white,
                 child: Text(
-                  S
-                      .of(context)
-                      .ok,
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: dialogButtonSize,
                     color: Colors.white,
@@ -571,10 +539,11 @@ Future<void> showFailedLoadImage({
       });
 }
 
-Future<ProfanityStatusModel> getProfanityStatus({ProfanityImageModel profanityImageModel}) async {
+Future<ProfanityStatusModel> getProfanityStatus(
+    {ProfanityImageModel? profanityImageModel}) async {
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
 
-  if (profanityImageModel.adult == ProfanityStrings.veryLikely ||
+  if (profanityImageModel!.adult == ProfanityStrings.veryLikely ||
       profanityImageModel.adult == ProfanityStrings.likely) {
     profanityStatusModel.isProfane = true;
     profanityStatusModel.category = ProfanityStrings.adult;

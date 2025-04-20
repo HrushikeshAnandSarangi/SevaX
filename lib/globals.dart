@@ -1,29 +1,29 @@
 library sevax.globals;
 
-//String sevaUserID;
+//String? sevaUserID;
 
 String appTitle = 'Seva X';
 bool isMobile = true;
 //USER PROFILE INFO
-//String bio;
+//String? bio;
 
 //AVATAR AND IMAGE STUFF
-String posterAvatarURL;
+String? posterAvatarURL;
 
-String timebankAvatarURL;
-String timebankCoverURL;
+String? timebankAvatarURL;
+String? timebankCoverURL;
 
-String projectsAvtaarURL;
-String projectsCoverURL;
+String? projectsAvtaarURL;
+String? projectsCoverURL;
 
-String campaignAvatarURL;
-String messagingRoomImageUrl;
+String? campaignAvatarURL;
+String? messagingRoomImageUrl;
 
-String newsImageURL;
-String newsDocumentURL;
-String newsDocumentName;
-String userExitReason;
-String webImageUrl;
+String? newsImageURL;
+String? newsDocumentURL;
+String? newsDocumentName;
+String? userExitReason;
+String? webImageUrl;
 
 //DYNAMIC LISTS
 List<dynamic> interests = [];
@@ -45,9 +45,9 @@ List<dynamic> currentCampaignMembersPhotoURL = [];
 
 //FLOW CONTROL PROPERTIES (tasks)
 int orCreateSelector = 0;
-int orTaskSelector;
+int? orTaskSelector;
 
-var onLoadResult;
+dynamic onLoadResult;
 
 bool isSame = false;
 bool isFromOnBoarding = false;
@@ -56,53 +56,53 @@ bool userRecordExists = false;
 bool isBillingDetailsProvided = false;
 
 // Google User Details
-//String photoURL;
-//String email;
-//String fullname;
-String phoneNumber;
-String profileLastUpdate;
-Object metaData;
-Type runtimeType;
-bool isEmailVerified;
-String providerID;
+//String? photoURL;
+//String? email;
+//String? fullname;
+String? phoneNumber;
+String? profileLastUpdate;
+Object? metaData;
+Type? typeRuntimeType;
+bool? isEmailVerified;
+String? providerID;
 
-String requestPhotoURL;
+String? requestPhotoURL;
 
-String tempDescriptionRequest;
+String? tempDescriptionRequest;
 
 // TIMEBANK
-String currentTimebankName;
-String currentTimebankMission;
-String currentTimebankNumber;
-String currentTimebankEmail;
-String currentTimebankAvatar;
-String currentTimebankAddress;
-String currentTimebankCreator;
-String currentTimebankOwnerFullname;
-String currentTimebankOwnerPhotoURL;
-String currentTimebankOwnerEmail;
+String? currentTimebankName;
+String? currentTimebankMission;
+String? currentTimebankNumber;
+String? currentTimebankEmail;
+String? currentTimebankAvatar;
+String? currentTimebankAddress;
+String? currentTimebankCreator;
+String? currentTimebankOwnerFullname;
+String? currentTimebankOwnerPhotoURL;
+String? currentTimebankOwnerEmail;
 List<dynamic> currentTimebankMembers = [];
-int currentCreatedTimeStamp;
+int? currentCreatedTimeStamp;
 
 dynamic currentTimebank;
 
 //CAMPAIGN
-String currentCampaignName;
-String currentCampaignMission;
-String currentCampaignNumber;
-String currentCampaignEmail;
-String currentCampaignAvatar;
-String currentCampaignAddress;
-String currentCampaignCreator;
-String currentCampaignOwnerFullname;
-String currentCampaignOwnerPhotoURL;
-String currentCampaignOwnerEmail;
+String? currentCampaignName;
+String? currentCampaignMission;
+String? currentCampaignNumber;
+String? currentCampaignEmail;
+String? currentCampaignAvatar;
+String? currentCampaignAddress;
+String? currentCampaignCreator;
+String? currentCampaignOwnerFullname;
+String? currentCampaignOwnerPhotoURL;
+String? currentCampaignOwnerEmail;
 List<dynamic> currentCampaignMembers = [];
-int currentCampaignCreatedTimeStamp;
+int? currentCampaignCreatedTimeStamp;
 
 dynamic currentCampaign;
 bool isNearme = false;
 String content = 'All';
-String currentVersionNumber;
+String? currentVersionNumber;
 
 int sharedValue = 0;

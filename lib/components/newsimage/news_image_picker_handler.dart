@@ -10,7 +10,7 @@ import 'package:sevaexchange/components/newsimage/news_image_picker_dialog.dart'
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class NewsImagePickerHandler {
-  NewsImagePickerDialog imagePicker;
+  late NewsImagePickerDialog imagePicker;
   AnimationController _controller;
   NewsImagePickerListener _listener;
 
@@ -19,15 +19,19 @@ class NewsImagePickerHandler {
   void openCamera() async {
     imagePicker.dismissDialog();
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    cropImage(pickedFile.path);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      cropImage(pickedFile.path);
+    }
   }
 
   void openGallery() async {
     imagePicker.dismissDialog();
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    cropImage(pickedFile.path);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      cropImage(pickedFile.path);
+    }
   }
 
   void openDocument() async {
@@ -44,7 +48,7 @@ class NewsImagePickerHandler {
     //File _file;
     //List<File> _files;
     String _fileName;
-    String _path;
+    String? _path;
 //    String _extension;
 //    bool _loadingPath = false;
 //    bool _multiPick = false;
@@ -66,7 +70,7 @@ class NewsImagePickerHandler {
 //      print("Unsupported operation" + e.toString());
 //    }
     try {
-      FilePickerResult result = await FilePicker.platform
+      FilePickerResult? result = await FilePicker.platform
           .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
       if (result != null) {
         _path = result.files.single.path;
@@ -89,7 +93,8 @@ class NewsImagePickerHandler {
 
   Future cropImage(String image) async {
     File croppedFile;
-    ImageCropper().cropImage(
+    ImageCropper()
+        .cropImage(
       sourcePath: image,
       aspectRatio: CropAspectRatio(
         ratioX: 1.0,
@@ -97,9 +102,10 @@ class NewsImagePickerHandler {
       ),
       maxWidth: 512,
       maxHeight: 512,
-    ).then((value) {
+    )
+        .then((value) {
       if (value != null) {
-        croppedFile = value;
+        croppedFile = File(value.path);
         _listener.userImage(croppedFile);
       }
     });

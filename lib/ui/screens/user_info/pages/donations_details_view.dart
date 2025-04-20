@@ -6,6 +6,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/dialog/transaction_details_dialog.dart';
@@ -22,18 +23,18 @@ import 'package:sevaexchange/widgets/loading_indicator.dart';
 
 class DonationsDetailsView extends StatefulWidget {
   DonationsDetailsView({
-    Key key,
-    @required this.id,
-    @required this.totalBalance,
+    Key? key,
+    required this.id,
+    required this.totalBalance,
     this.timebankModel,
-    @required this.fromTimebank,
-    @required this.isGoods,
+    required this.fromTimebank,
+    required this.isGoods,
   });
 
   final String id;
   final String totalBalance;
   final bool fromTimebank;
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
   final bool isGoods;
 
   @override
@@ -43,10 +44,10 @@ class DonationsDetailsView extends StatefulWidget {
 class _DonationsDetailsViewState extends State<DonationsDetailsView> {
   final DonationBloc _donationBloc = DonationBloc();
   double totalBalance = 0.0;
-  RequestModel requestModel;
-  TimebankModel timebankModel;
-  CommunityModel communityModel;
-  TimebankModel timebankModelNew;
+  RequestModel? requestModel;
+  TimebankModel? timebankModel;
+  CommunityModel? communityModel;
+  TimebankModel? timebankModelNew;
   bool isLoading = false;
 
   final TextStyle tableCellStyle = TextStyle(
@@ -61,40 +62,39 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
   double loadTotalBalance(List<DonationModel> transactions) {
     if (widget.isGoods) {
       return transactions.fold(
-            0.0,
-            (sum, element) => sum + element.goodsDetails.donatedGoods.length,
-          ) ??
-          0;
+        0.0,
+        (sum, element) =>
+            sum + (element.goodsDetails!.donatedGoods?.length ?? 0),
+      );
     } else {
       return transactions.fold(
-            0.0,
-            (sum, element) => sum + element.cashDetails.pledgedAmount,
-          ) ??
-          0;
+        0.0,
+        (sum, element) => sum + (element.cashDetails!.pledgedAmount ?? 0),
+      );
     }
   }
 
   Future<void> onRowTap(DonationModel donation) async {
-    showLoader;
+    setState(() => isLoading = true);
     if (donation.requestId != null) {
       try {
         requestModel = await FirestoreManager.getRequestFutureById(
-            requestId: donation.requestId);
+            requestId: donation.requestId!);
       } catch (e) {
         log('error fetching request model: ' + e.toString());
       }
       try {
         timebankModel = await FirestoreManager.getTimeBankForId(
-            timebankId: donation.timebankId);
+            timebankId: donation.timebankId!);
         communityModel =
             await FirestoreManager.getCommunityDetailsByCommunityId(
-                communityId: donation.communityId);
+                communityId: donation.communityId!);
       } catch (e) {
         log('error fetching timebank and/or community model: ' + e.toString());
       }
     }
 
-    hideLoader;
+    setState(() => isLoading = false);
 
     showDialog(
       context: context,
@@ -104,13 +104,13 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
         ),
         insetPadding: EdgeInsets.zero,
         child: TransactionDetailsDialog(
-          transactionModel: null,
+          transactionModel: TransactionModel(),
           donationModel: donation,
-          timebankModel: timebankModel,
-          requestModel: requestModel,
-          communityModel: communityModel,
-          loggedInEmail: SevaCore.of(context).loggedInUser.email,
-          loggedInUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+          timebankModel: timebankModel ?? TimebankModel(),
+          requestModel: requestModel ?? RequestModel(),
+          communityModel: communityModel ?? CommunityModel(),
+          loggedInEmail: SevaCore.of(context).loggedInUser.email ?? '',
+          loggedInUserId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
         ),
       ),
     );
@@ -119,19 +119,22 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      if (widget.fromTimebank) {
+      if (widget.fromTimebank && widget.timebankModel != null) {
         _donationBloc.init(
-            timebankId: widget.timebankModel.id, isGoods: widget.isGoods);
+            timebankId: widget.timebankModel!.id,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID!,
+            isGoods: widget.isGoods);
       } else {
         _donationBloc.init(
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            timebankId: widget.timebankModel!.id,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID!,
             isGoods: widget.isGoods);
       }
     });
     if (widget.timebankModel == null) {
       Future.delayed(Duration.zero, () {
         FirestoreManager.getTimeBankForId(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank!,
         ).then(
           (model) => timebankModel = model,
         );
@@ -154,17 +157,18 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
     borderRadius: BorderRadius.circular(16),
   );
 
-  void get showLoader => setState(() => isLoading = true);
-  void get hideLoader => setState(() => isLoading = false);
+  void setLoading(bool value) => setState(() => isLoading = value);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HexColor('#F8F8F8'),
       appBar: AppBar(
-        
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },

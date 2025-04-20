@@ -78,7 +78,10 @@ class ParentCommunityMessageBloc {
       _participantInfo.add(list);
     } else {
       x.add(timebankId);
-      list.add(allTimbankData[timebankId]);
+      final participant = allTimbankData[timebankId];
+      if (participant != null) {
+        list.add(participant);
+      }
       _participantInfo.add(list);
     }
     _selectedTimebanks.add(x);
@@ -91,20 +94,25 @@ class ParentCommunityMessageBloc {
     ];
     _selectedTimebanks.value.forEach(
       (String id) async {
-        participantInfos.add(
-          allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
-        );
+        final participant = allTimbankData[id];
+        if (participant != null) {
+          participant.type = ChatType.TYPE_MULTI_USER_MESSAGING;
+          participantInfos.add(participant);
+        }
       },
     );
     createAndOpenChat(
       isTimebankMessage: true,
       context: context,
-      timebankId: null,
-      communityId: null,
+      timebankId: '',
+      communityId: '',
       sender: creator,
       reciever: participantInfos[1],
       isFromRejectCompletion: false,
       isParentChildCommunication: true,
+      feedId: '', // Provide appropriate value if needed
+      showToCommunities: null!, // Provide appropriate value if needed
+      entityId: '', // Provide appropriate value if needed
       onChatCreate: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -112,22 +120,20 @@ class ParentCommunityMessageBloc {
     );
   }
 
-  Future<ChatModel> createMultiUserMessaging(
+  Future<ChatModel?> createMultiUserMessaging(
       BuildContext context, ParticipantInfo creator) async {
-    if (_groupName.value == null || _groupName.value.isEmpty) {
+    if (_groupName.value.isEmpty) {
       _groupName.addError("validation_error_room_name");
       return null;
     } else if (profanityDetector.isProfaneString(_groupName.value)) {
       _groupName.addError("profanity");
       return null;
     } else {
-      String imageUrl;
-      if (_file.value != null && _file.value.selectedImage != null) {
-        imageUrl = _file.value != null
-            ? await StorageRepository.uploadFile(
-                "multiUserMessagingLogo", _file.value.selectedImage)
-            : null;
-      } else if (_file.value != null && _file.value.stockImageUrl != null) {
+      String? imageUrl;
+      if (_file.value.selectedImage != null) {
+        imageUrl = await StorageRepository.uploadFile(
+            "multiUserMessagingLogo", _file.value.selectedImage);
+      } else if (_file.value.stockImageUrl != null) {
         imageUrl = _file.value.stockImageUrl;
       } else {
         imageUrl = null;
@@ -135,56 +141,64 @@ class ParentCommunityMessageBloc {
       List<ParticipantInfo> participantInfos = [
         creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
       ];
-      _selectedTimebanks.value.forEach(
-        (String id) async {
-          participantInfos.add(
-            allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
-          );
-        },
-      );
+      for (String id in _selectedTimebanks.value) {
+        final participant = allTimbankData[id];
+        if (participant != null) {
+          participant.type = ChatType.TYPE_MULTI_USER_MESSAGING;
+          participantInfos.add(participant);
+        }
+      }
       if (_selectedTimebanks.value.length == 1) {
         createAndOpenChat(
           isTimebankMessage: true,
           context: context,
-          timebankId: null,
-          communityId: null,
+          timebankId: _selectedTimebanks.value.first,
+          communityId:
+              allTimbankData[_selectedTimebanks.value.first]?.communityId ?? '',
           sender: creator,
-          reciever: participantInfos[1],
+          reciever: participantInfos.length > 1 ? participantInfos[1] : creator,
           isFromRejectCompletion: false,
           isParentChildCommunication: true,
+          feedId: '', // Provide appropriate value if needed
+          showToCommunities: null!, // Provide appropriate value if needed
+          entityId: '', // Provide appropriate value if needed
           onChatCreate: () {},
         );
+        return null;
       } else {
         MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
           name: _groupName.value,
-          imageUrl: imageUrl,
-          admins: [creator.id],
+          imageUrl: imageUrl ?? '',
+          admins: [creator.id ?? ''],
         );
 
         List<ParticipantInfo> participantInfos = [
           creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
         ];
-        _selectedTimebanks.value.forEach(
-          (String id) async {
-            participantInfos.add(
-              allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
-            );
+        for (String id in _selectedTimebanks.value) {
+          final participant = allTimbankData[id];
+          if (participant != null) {
+            participant.type = ChatType.TYPE_MULTI_USER_MESSAGING;
+            participantInfos.add(participant);
             await MessageRoomManager.addRemoveCommunityChatParticipant(
-                communityId: allTimbankData[id].communityId ?? '',
+                communityId: participant.communityId ?? '',
                 timebankId: id,
                 creatorDetails: creator,
-                messageRoomImageUrl: groupDetails.imageUrl,
-                messageRoomName: groupDetails.name,
+                messageRoomImageUrl: groupDetails.imageUrl ?? '',
+                messageRoomName: groupDetails.name ?? '',
                 notificationType:
                     NotificationType.COMMUNITY_ADDED_TO_MESSAGE_ROOM,
                 participantId: id,
                 context: context);
-          },
-        );
+          }
+        }
 
         ChatModel model = ChatModel(
-          participants: _selectedTimebanks.value..add(creator.id),
-          communityId: null,
+          participants: [
+            ..._selectedTimebanks.value.whereType<String>(),
+            if (creator.id != null) creator.id!
+          ],
+          communityId: '',
           showToCommunities: null,
           participantInfo: participantInfos,
           interCommunity: false,
@@ -204,62 +218,62 @@ class ParentCommunityMessageBloc {
     ChatModel chatModel,
     BuildContext context,
   ) async {
-    if (_groupName.value == null || _groupName.value.isEmpty) {
+    if (_groupName.value.isEmpty) {
       _groupName.addError("validation_error_room_name");
-      return null;
+      return;
     } else if (profanityDetector.isProfaneString(_groupName.value)) {
       _groupName.addError("profanity");
-      return null;
+      return;
     } else {
-      String imageUrl;
-      if (_file.value != null && _file.value.selectedImage != null) {
-        imageUrl = _file.value != null
-            ? await StorageRepository.uploadFile(
-                "multiUserMessagingLogo", _file.value.selectedImage)
-            : null;
-      } else if (_file.value != null && _file.value.stockImageUrl != null) {
+      String? imageUrl;
+      if (_file.value.selectedImage != null) {
+        imageUrl = await StorageRepository.uploadFile(
+            "multiUserMessagingLogo", _file.value.selectedImage);
+      } else if (_file.value.stockImageUrl != null) {
         imageUrl = _file.value.stockImageUrl;
       } else {
         imageUrl = null;
       }
       List<String> participantsIds =
-          List<String>.from(_participantInfo.value.map((x) => x.id));
-      _participantInfo.value.forEach((ParticipantInfo info) async {
+          List<String>.from(_participantInfo.value.map((x) => x.id ?? ''));
+      for (final info in _participantInfo.value) {
         if (!_previousSelectedTimebanks.value.contains(info.id)) {
           log('added here');
 
+          final participant = allTimbankData[info.id];
           await MessageRoomManager.addRemoveCommunityChatParticipant(
-              communityId: allTimbankData[info.id].communityId ?? '',
-              timebankId: info.id,
+              communityId: participant?.communityId ?? '',
+              timebankId: info.id ?? '',
               creatorDetails: creator,
-              messageRoomImageUrl: imageUrl,
+              messageRoomImageUrl: imageUrl ?? '',
               messageRoomName: _groupName.value,
               notificationType:
                   NotificationType.COMMUNITY_ADDED_TO_MESSAGE_ROOM,
-              participantId: info.id,
+              participantId: info.id ?? '',
               context: context);
         }
-      });
+      }
 
-      _previousSelectedTimebanks.value.forEach((element) async {
+      for (final element in _previousSelectedTimebanks.value) {
         if (!participantsIds.contains(element)) {
           log('remove here');
+          final participant = allTimbankData[element];
           await MessageRoomManager.addRemoveCommunityChatParticipant(
-              communityId: allTimbankData[element].communityId,
+              communityId: participant?.communityId ?? '',
               timebankId: element,
               creatorDetails: creator,
-              messageRoomImageUrl: imageUrl,
+              messageRoomImageUrl: imageUrl ?? '',
               messageRoomName: _groupName.value,
               notificationType:
                   NotificationType.COMMUNITY_REMOVED_FROM_MESSAGE_ROOM,
               participantId: element,
               context: context);
         }
-      });
+      }
       await ChatsRepository.editGroup(
-        chatModel.id,
+        chatModel.id ?? '',
         _groupName.value,
-        imageUrl,
+        imageUrl ?? '',
         _participantInfo.value,
       );
     }
@@ -280,8 +294,8 @@ class ParentCommunityMessageData {
   final String name;
 
   ParentCommunityMessageData({
-    this.id,
-    this.photoUrl,
-    this.name,
+    required this.id,
+    required this.photoUrl,
+    required this.name,
   });
 }

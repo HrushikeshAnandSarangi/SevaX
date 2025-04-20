@@ -10,7 +10,7 @@ import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 ParticipantInfo getUserInfo(
     String userId, List<ParticipantInfo> participantInfo) {
   return participantInfo.firstWhere((element) => element.id == userId,
-      orElse: () => null);
+      orElse: () => null!);
 }
 
 ParticipantInfo getSenderInfo(
@@ -18,26 +18,26 @@ ParticipantInfo getSenderInfo(
   List<ParticipantInfo> participantInfo,
 ) {
   return participantInfo.firstWhere((element) => element.id != userId,
-      orElse: () => null);
+      orElse: () => null!);
 }
 
 Future<void> createAndOpenChat({
-  BuildContext context,
-  ParticipantInfo sender,
-  ParticipantInfo reciever,
-  String timebankId,
-  String communityId,
+  required BuildContext context,
+  required ParticipantInfo sender,
+  required ParticipantInfo reciever,
+  required String timebankId,
+  required String communityId,
   bool isFromRejectCompletion = false,
   bool isTimebankMessage = false,
   bool isFromShare = false,
-  String feedId,
-  VoidCallback onChatCreate,
+  required String feedId,
+  required VoidCallback onChatCreate,
   bool interCommunity = false,
-  List<String> showToCommunities,
-  String entityId,
+  required List<String> showToCommunities,
+  required String entityId,
   bool isParentChildCommunication = false,
 }) async {
-  List<String> participants = [sender.id, reciever.id];
+  List<String> participants = [sender.id!, reciever.id!];
   participants.sort();
   ChatModel model = ChatModel(
       participants: participants,
@@ -57,17 +57,17 @@ Future<void> createAndOpenChat({
   assert(sender.id != reciever.id);
 
   await ChatsRepository.createNewChat(model, documentId: model.id);
-  if (onChatCreate != null) {
-    onChatCreate();
-  }
+  onChatCreate();
 
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => ChatPage(
+        key: UniqueKey(),
+        isAdminMessage: sender.id!.contains("-"),
         feedId: feedId,
         isFromShare: isFromShare,
-        senderId: sender.id,
+        senderId: sender.id!,
         chatModel: model,
         isFromRejectCompletion: isFromRejectCompletion,
         timebankId: timebankId,
@@ -77,14 +77,14 @@ Future<void> createAndOpenChat({
 }
 
 Future<void> sendBackgroundMessage({
-  ParticipantInfo sender,
-  ParticipantInfo reciever,
-  String timebankId,
-  String messageContent,
-  String communityId,
+  required ParticipantInfo sender,
+  required ParticipantInfo reciever,
+  required String timebankId,
+  required String messageContent,
+  required String communityId,
   bool isTimebankMessage = false,
 }) async {
-  List<String> participants = [sender.id, reciever.id];
+  List<String> participants = [sender.id!, reciever.id!];
   participants.sort();
   ChatModel chatModel = ChatModel(
     participants: participants,
@@ -98,20 +98,20 @@ Future<void> sendBackgroundMessage({
   await ChatsRepository.createNewChat(chatModel, documentId: chatModel.id);
 
   MessageModel messageModel = MessageModel(
-    fromId: sender.id,
-    toId: reciever.id,
+    fromId: sender.id!,
+    toId: reciever.id!,
     message: messageContent,
     type: MessageType.MESSAGE,
     timestamp: DateTime.now().toUtc().millisecondsSinceEpoch,
   );
 
   createNewMessage(
-    chatId: chatModel.id,
-    senderId: sender.id,
+    chatId: chatModel.id!,
+    senderId: sender.id!,
     messageModel: messageModel,
-    timebankId: sender.id,
-    isTimebankMessage: chatModel.isTimebankMessage,
-    isAdmin: sender.id.contains("-"), //timebank id contains "-"
-    participants: chatModel.participants,
+    timebankId: sender.id!,
+    isTimebankMessage: chatModel.isTimebankMessage ?? false,
+    isAdmin: sender.id!.contains("-"), //timebank id contains "-"
+    participants: chatModel.participants ?? [],
   );
 }

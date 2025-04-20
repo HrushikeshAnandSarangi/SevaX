@@ -5,12 +5,12 @@ import 'package:url_launcher/url_launcher.dart' as launcher;
 
 ///TODO: check performance impact bro !!!
 class LinkTextSpan extends TextSpan {
-  LinkTextSpan({TextStyle style, String url, String text})
+  LinkTextSpan({TextStyle? style, String? url, String? text})
       : super(
             style: style,
             text: text ?? url,
             recognizer: TapGestureRecognizer()
-              ..onTap = () => launcher.launch(url));
+              ..onTap = () => launcher.launch(url!));
 }
 
 class RichTextView extends StatelessWidget {
@@ -18,7 +18,7 @@ class RichTextView extends StatelessWidget {
 
   // RichTextView({Key key, this.text}) : super(key: key);
 
-  RichTextView({@required this.text});
+  RichTextView({required this.text});
 
   bool _isLink(String input) {
     final matcher = RegExp(
@@ -28,7 +28,7 @@ class RichTextView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _style = Theme.of(context).textTheme.bodyText1;
+    final _style = Theme.of(context).textTheme.bodyMedium;
     final words = text.split(' ');
     List<TextSpan> span = [];
     words.forEach((word) {
@@ -36,7 +36,7 @@ class RichTextView extends StatelessWidget {
           ? LinkTextSpan(
               text: ' $word  ',
               url: word,
-              style: _style.copyWith(color: Colors.blue))
+              style: _style?.copyWith(color: Colors.blue))
           : TextSpan(text: '$word ', style: _style));
     });
     if (span.length > 0) {
