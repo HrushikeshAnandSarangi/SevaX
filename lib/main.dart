@@ -17,7 +17,7 @@ Future<void> main() async {
   );
 
   // Initialize app configurations based on flavor
-  await initApp(Flavor.APP);
+  await initApp(Flavor.SEVA_DEV);
 
   // Run the app
   runApp(MainApplication(skipToHomePage: false));

@@ -2,20 +2,16 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        jcenter() // Optional: deprecated but still sometimes needed for legacy libs
     }
 
     dependencies {
-        // classpath 'com.android.tools.build:gradle:3.3.0'
-        classpath 'com.android.tools.build:gradle:4.0.1'
-        classpath 'com.google.gms:google-services:4.2.0'        
-        // classpath 'com.android.tools.build:gradle:4.1.0'
-        // classpath 'com.google.gms:google-services:4.3.4'
-        classpath 'io.fabric.tools:gradle:1.28.0'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
+        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'io.fabric.tools:gradle:1.31.2'
     }
 }
 
@@ -23,30 +19,17 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter() // Optional
     }
 }
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
 tasks.register("clean", Delete) {
     delete rootProject.layout.buildDirectory
-}
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-
-    project.evaluationDependsOn(':app')
-
-    afterEvaluate {project ->
-        if (project.hasProperty("android") && project.property("android").compileSdkVersion.equals("android-R")) {
-            android {
-                compileSdkVersion 30
-            }
-        }
-    }
 }

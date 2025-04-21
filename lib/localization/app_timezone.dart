@@ -17,9 +17,7 @@ class AppTimeZone extends ChangeNotifier {
                 timezoneName.toLowerCase(),
             orElse: () => TimezoneListData().timezonelist.first,
           );
-      if (exists == null) {
-        timezoneName = 'PACIFIC TIME'.toLowerCase();
-      }
+      timezoneName = exists.timezoneName ?? 'pacific time';
       _appTimezone = timezoneName;
       return _appTimezone ?? 'Pacific Standard Time';
     }

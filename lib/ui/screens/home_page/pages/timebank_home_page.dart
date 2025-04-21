@@ -93,7 +93,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           builder: (context) => TimebankCreate(
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank ?? '',
             communityCreatorId:
-                _homeDashBoardBloc?.selectedCommunityModel?.created_by ?? '',
+                _homeDashBoardBloc?.selectedCommunityModel!.created_by ?? '',
           ),
         ),
       );

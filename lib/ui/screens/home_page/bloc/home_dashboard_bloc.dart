@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 class HomeDashBoardBloc extends BlocBase {
   final _communities = BehaviorSubject<List<CommunityModel>>();
@@ -39,9 +40,9 @@ class HomeDashBoardBloc extends BlocBase {
   void getAllCommunities(UserModel user) async {
     Set<String> communitiesList = Set.from(user.communities ?? []);
 
-//    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
-//      await communitiesList.remove(FlavorConfig.values.timebankId);
-//    }
+    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
+      await communitiesList.remove(FlavorConfig.values.timebankId);
+    }
     List<CommunityModel> c = [];
     if (communitiesList != null) {
       communitiesList.forEach((id) async {

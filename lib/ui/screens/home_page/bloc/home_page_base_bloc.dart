@@ -149,7 +149,7 @@ class HomePageBaseBloc extends BlocBase
   }
 
   bool isUserCreator(String userId) {
-    return userId == primaryTimebankModel()?.creatorId;
+    return userId == primaryTimebankModel().creatorId;
   }
 
   TimebankModel timebankModel(String timebankId) {
