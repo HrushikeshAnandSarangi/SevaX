@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +19,14 @@ import 'package:sevaexchange/views/profile/timezone.dart';
 class SevaExploreFooter extends StatefulWidget {
   final bool? footerColor;
   SevaExploreFooter({this.footerColor});
+
   @override
   _SevaExploreFooterState createState() => _SevaExploreFooterState();
 }
 
 class _SevaExploreFooterState extends State<SevaExploreFooter> {
   String? timezoneName;
+
   final List<List<FooterData>> footerData = [
     [FooterData.SevaX, FooterData.Discover, FooterData.Hosting],
     [FooterData.About_Us, FooterData.Trust_Safety, FooterData.Host_community],
@@ -38,246 +39,77 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    timezoneName = DateTime.now().timeZoneName.toLowerCase();
-    var exists = TimezoneListData().timezonelist.firstWhere(
-          (element) =>
-              element.timezoneName!.toLowerCase() ==
-              timezoneName?.toLowerCase(),
+    super.initState();
+    String systemTimezone = DateTime.now().timeZoneName.toLowerCase();
+    var matched = TimezoneListData().timezonelist.firstWhere(
+          (element) => element.timezoneName?.toLowerCase() == systemTimezone,
           orElse: () => TimezoneListData().timezonelist.first,
         );
-    if (exists == null) {
-      timezoneName = 'PACIFIC TIME'.toLowerCase();
-    }
-
-    super.initState();
+    timezoneName = matched.timezoneName?.toLowerCase() ?? 'pacific time';
   }
 
   @override
   Widget build(BuildContext context) {
-    timezoneName = Provider.of<AppTimeZone>(context).appTimeZone.toString();
+    final appTimeZoneProvider =
+        Provider.of<AppTimeZone?>(context, listen: false);
+    timezoneName =
+        appTimeZoneProvider?.appTimeZone.toLowerCase() ?? timezoneName;
 
     return Container(
       width: MediaQuery.of(context).size.width,
       color: widget.footerColor == true
           ? Theme.of(context).primaryColor
-          : Color(0xFFF454684),
+          : const Color(0xFFF454684),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 20,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width / 2 - 16,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: Colors.white,
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      onChanged: (value) async {
-                        if (SevaCore.of(context).loggedInUser != null) {
-                          await updateUserLanguage(
-                            user: SevaCore.of(context).loggedInUser
-                              ..language = value,
-                          );
-                          Provider.of<AppLanguage>(context, listen: false)
-                              .changeLanguage(
-                            getLocaleFromCode(value!),
-                          );
-
-                          // Phoenix.rebirth(context);
-                        }
-                      },
-                      value: S.of(context).localeName,
-                      items: languageNames.keys
-                          .map(
-                            (key) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  languageNames[key]!,
-                                ),
-                              ),
-                              value: key,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 4),
-                Container(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width / 2 - 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: Colors.white,
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                      onChanged: (value) {
-                        setState(() {
-                          timezoneName = value as String;
-                        });
-                        Provider.of<AppTimeZone>(context, listen: false)
-                            .changeTimeZone(value as String);
-                      },
-                      value: timezoneName,
-                      isExpanded: true,
-                      items: TimezoneListData()
-                          .timezonelist
-                          .map(
-                            (model) => DropdownMenuItem(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  model!.timezoneName!,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              value: model.timezoneName!.toLowerCase(),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
+                _languageDropdown(context),
+                const SizedBox(width: 4),
+                _timezoneDropdown(context),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Table(
-              children: [
-                ...footerData
-                    .map(
-                      (row) => TableRow(
-                        children: row
-                            .map(
-                              (data) => TableRowInkWell(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom:
-                                        footerData[0].contains(data) ? 16 : 4,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      getFooterDataTitle(
-                                          data: data, context: context),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: footerData[0].contains(data)
-                                            ? 16
-                                            : 14,
-                                        fontWeight: footerData[0].contains(data)
-                                            ? FontWeight.w500
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => openUrl(
-                                  context: context,
-                                  data: data,
-                                )(),
-                              ),
-                            )
-                            .toList(),
+              children: footerData.map((row) {
+                return TableRow(
+                  children: row.map((data) {
+                    return TableRowInkWell(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom: footerData[0].contains(data) ? 16 : 4,
+                        ),
+                        child: Center(
+                          child: Text(
+                            getFooterDataTitle(data: data, context: context),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: footerData[0].contains(data) ? 16 : 14,
+                              fontWeight: footerData[0].contains(data)
+                                  ? FontWeight.w500
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ),
                       ),
-                    )
-                    .toList(),
-              ],
-            ),
-            Divider(
-              color: Colors.white,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                button(
-                  'Terms',
-                  () => getOnTap(
-                    context,
-                    S.of(context).login_agreement_terms_link,
-                    'termsAndConditionsLink',
-                  )(),
-                ),
-                button(
-                  'Privacy',
-                  getOnTap(
-                    context,
-                    S.of(context).login_agreement_privacy_link,
-                    'privacyPolicyLink',
-                  )(),
-                ),
-                button(
-                  'Site Map',
-                  getOnTap(context, 'Site Map', 'aboutSeva')(),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Image.network(
-                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Ffacebook.png?alt=media&token=2a2ee259-0c97-4fee-bda8-aecd56a857aa',
-                    width: 15,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    navigateToWebView(
-                      aboutMode: AboutMode(
-                          title: 'Facebook',
-                          urlToHit: 'https://www.facebook.com/sevaexchange/'),
-                      context: context,
+                      onTap: () => openUrl(context: context, data: data)(),
                     );
-                  },
-                ),
-                IconButton(
-                  icon: Image.network(
-                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Ftwitter.png?alt=media&token=4246c0d2-6971-474a-9096-3ccb2a7649a3',
-                    width: 15,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    navigateToWebView(
-                      aboutMode: AboutMode(
-                          title: 'Twitter',
-                          urlToHit: 'https://twitter.com/exchangeseva'),
-                      context: context,
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: Image.network(
-                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Finstagram-symbol.png?alt=media&token=7e08d6c7-00a6-4187-a2ff-a0883c13f1ac',
-                    width: 15,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    navigateToWebView(
-                      aboutMode: AboutMode(
-                          title: 'Instagram',
-                          urlToHit: 'https://www.instagram.com/sevaexchange/'),
-                      context: context,
-                    );
-                  },
-                ),
-              ],
+                  }).toList(),
+                );
+              }).toList(),
             ),
-            Text(
+            const Divider(color: Colors.white),
+            _bottomLinksRow(context),
+            _socialMediaRow(context),
+            const SizedBox(height: 8),
+            const Text(
               '© Seva Exchange Corporation',
-              style: TextStyle(
-                color: Colors.white,
-              ),
+              style: TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -285,28 +117,137 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     );
   }
 
-  TextButton button(
-    String text,
-    VoidCallback onTap,
-  ) {
-    return TextButton(
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
+  Widget _languageDropdown(BuildContext context) {
+    return Container(
+      height: 40,
+      width: MediaQuery.of(context).size.width / 2 - 16,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.white,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          onChanged: (value) async {
+            if (SevaCore.of(context).loggedInUser != null && value != null) {
+              await updateUserLanguage(
+                user: SevaCore.of(context).loggedInUser!..language = value,
+              );
+              Provider.of<AppLanguage>(context, listen: false)
+                  .changeLanguage(getLocaleFromCode(value));
+            }
+          },
+          value: S.of(context).localeName,
+          items: languageNames.entries
+              .map((entry) => DropdownMenuItem(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(entry.value),
+                    ),
+                    value: entry.key,
+                  ))
+              .toList(),
         ),
       ),
+    );
+  }
+
+  Widget _timezoneDropdown(BuildContext context) {
+    return Container(
+      height: 40,
+      width: MediaQuery.of(context).size.width / 2 - 4,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.white,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          onChanged: (value) {
+            if (value != null) {
+              setState(() => timezoneName = value);
+              Provider.of<AppTimeZone>(context, listen: false)
+                  .changeTimeZone(value);
+            }
+          },
+          value: timezoneName,
+          isExpanded: true,
+          items: TimezoneListData().timezonelist.map((model) {
+            return DropdownMenuItem<String>(
+              value: model.timezoneName?.toLowerCase(),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  model.timezoneName ?? '',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomLinksRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        button(
+            'Terms',
+            getOnTap(context, S.of(context).login_agreement_terms_link,
+                'termsAndConditionsLink') as VoidCallback),
+        button(
+            'Privacy',
+            getOnTap(context, S.of(context).login_agreement_privacy_link,
+                'privacyPolicyLink') as VoidCallback),
+        button('Site Map',
+            getOnTap(context, 'Site Map', 'aboutSeva') as VoidCallback),
+      ],
+    );
+  }
+
+  Widget _socialMediaRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _socialIconButton(
+            'facebook', 'https://www.facebook.com/sevaexchange/', context),
+        _socialIconButton(
+            'twitter', 'https://twitter.com/exchangeseva', context),
+        _socialIconButton('instagram-symbol',
+            'https://www.instagram.com/sevaexchange/', context),
+      ],
+    );
+  }
+
+  IconButton _socialIconButton(
+      String imageName, String url, BuildContext context) {
+    return IconButton(
+      icon: Image.network(
+        'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2F$imageName.png?alt=media',
+        width: 15,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        navigateToWebView(
+          aboutMode: AboutMode(title: imageName, urlToHit: url),
+          context: context,
+        );
+      },
+    );
+  }
+
+  TextButton button(String text, VoidCallback onTap) {
+    return TextButton(
       onPressed: onTap,
+      child: Text(text, style: const TextStyle(color: Colors.white)),
     );
   }
 
   Function getOnTap(BuildContext context, String title, String dynamicKey) {
     return () async {
-      var dynamicLinks;
-      dynamicLinks = json.decode(
-        AppConfig.remoteConfig!.getString(
-          'links_${S.of(context).localeName ?? 'en'}',
-        ),
+      var dynamicLinks = json.decode(
+        AppConfig.remoteConfig!
+            .getString('links_${S.of(context).localeName ?? 'en'}'),
       );
       log(dynamicLinks[dynamicKey]);
       navigateToWebView(
@@ -358,7 +299,6 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       case FooterData.Requests:
         return S.of(context).requests;
       case FooterData.EMPTY:
-        return '';
       default:
         return '';
     }
@@ -368,77 +308,47 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     switch (data) {
       case FooterData.About_Us:
         return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');
-
       case FooterData.Careers:
         return getOnTap(context, S.of(context).careers_explore, 'careersLink');
       case FooterData.Communities:
         return getOnTap(
             context, S.of(context).communities_explore, 'aboutSeva');
-
       case FooterData.Diversity_Belonging:
         return getOnTap(context, S.of(context).diversity_belonging_explore,
             'diversityLink');
-
       case FooterData.Events:
         return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
-
       case FooterData.Create_offer:
         return getOnTap(context, S.of(context).create_offer, 'offersInfoLink');
-
       case FooterData.Create_request:
         return getOnTap(
             context, S.of(context).create_request, 'requestsInfoLink');
-
       case FooterData.Discover:
-        return getOnTap(
-            context, S.of(context).discover_explore, 'trainingVideo');
-
       case FooterData.Guidebooks:
-        return getOnTap(
-            context, S.of(context).guidebooks_explore, 'trainingVideo');
-
       case FooterData.Help:
-        return getOnTap(
-          context,
-          S.of(context).help,
-          "trainingVideo",
-        );
-
+        return getOnTap(context, S.of(context).help, 'trainingVideo');
       case FooterData.Hosting:
+      case FooterData.Host_community:
         return getOnTap(
             context, S.of(context).hosting_explore, 'hostingCommunity');
-
-      case FooterData.Host_community:
-        return getOnTap(context, S.of(context).host_a_community_explore,
-            'hostingCommunity');
-
       case FooterData.Organize_event:
         return getOnTap(context, S.of(context).organize_an_event_explore,
             'projectsInfoLink');
-
       case FooterData.Policies:
         return getOnTap(
             context, S.of(context).policies_explore, 'privacyPolicyLink');
-
       case FooterData.Press:
         return getOnTap(context, S.of(context).news_explore, 'pressLink');
-
       case FooterData.Offers:
         return getOnTap(context, S.of(context).offers, 'offersInfoLink');
-
       case FooterData.Trust_Safety:
         return getOnTap(context, S.of(context).trust_and_safety_explore,
             'trustAndSafetyLink');
-
       case FooterData.SevaX:
         return getOnTap(context, 'SevaX', 'aboutSeva');
-
       case FooterData.Requests:
         return getOnTap(context, S.of(context).requests, 'requestsInfoLink');
-
       case FooterData.EMPTY:
-        return () {};
-
       default:
         return () {};
     }
@@ -465,5 +375,5 @@ enum FooterData {
   Events,
   Diversity_Belonging,
   Guidebooks,
-  EMPTY
+  EMPTY,
 }
