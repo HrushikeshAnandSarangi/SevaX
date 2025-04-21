@@ -203,9 +203,7 @@ class SearchManager {
 
   //searcch borrow agreement template
   static Stream<List<AgreementTemplateModel>> searchAgreementTemplate(
-      {@required queryString,
-      @required placeOrItem,
-      @required creatorId}) async* {
+      {required queryString, required placeOrItem, required creatorId}) async* {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
     dynamic body = json.encode({

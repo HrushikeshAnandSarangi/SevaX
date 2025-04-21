@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "305329613273",
+    "project_id": "testproject-99d69",
+    "storage_bucket": "testproject-99d69.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305329613273:android:d140ad1cb9c8824ca051c8",
+        "android_client_info": {
+          "package_name": "com.sevaexchange"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXRzc56Cs8GgICdi-_0Kxie_krJXJCMX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
