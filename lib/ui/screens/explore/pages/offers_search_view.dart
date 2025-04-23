@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/communities_categories.dart';
@@ -98,8 +97,8 @@ class OffersSearchView extends StatelessWidget {
           stream: _bloc.communityCategory,
           onTap: (value) {
             _bloc.onCommunityCategoryChanged(value.id);
-            Provider.of<ScrollController>(context, listen: false)?.animateTo(
-              0,
+            Provider.of<ScrollController>(context, listen: false).animateTo(
+              0.0,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeOut,
             );
