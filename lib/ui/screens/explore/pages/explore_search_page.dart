@@ -70,8 +70,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   widget.isUserSignedIn!),
             });
     _tabIndex.add(widget.tabIndex!);
-    _searchController.text = widget.searchText!;
-    _bloc.onSearchChange(widget.searchText!);
+    if (widget.searchText != null) {
+      _searchController.text = widget.searchText!;
+      _bloc.onSearchChange(widget.searchText!);
+    }
     _controller = TabController(
       initialIndex: widget.tabIndex!,
       length: 4,
@@ -737,36 +739,31 @@ class ExploreSearchTabBar extends StatelessWidget {
         SizedBox(height: 12),
         StreamBuilder<int>(
           initialData: _initialTabIndex,
-          stream: _tabIndex.stream!.cast<int>(),
+          stream: _tabIndex.stream.cast<int>(),
           builder: (context, snapshot) {
-            logger.wtf("tabIndex: ${snapshot.data!}");
-            switch (snapshot.data) {
+            logger.f("tabIndex: ${snapshot.data}");
+            switch (snapshot.data ?? 0) {
               case 0:
                 return CommunitiesSearchView(
                   isUserSignedIn: _isUserSignedIn,
                 );
-                break;
               case 1:
                 return EventsSearchView(
                   isUserSignedIn: _isUserSignedIn,
                 );
-                break;
               case 2:
                 return RequestsSearchView(
                   isUserSignedIn: _isUserSignedIn,
                 );
-                break;
               case 3:
                 return OffersSearchView(
                   isUserSignedIn: _isUserSignedIn,
                 );
-                break;
               default:
-                logger.wtf("default case");
+                logger.f("default case");
                 return CommunitiesSearchView(
                   isUserSignedIn: _isUserSignedIn,
                 );
-                break;
             }
           },
         ),

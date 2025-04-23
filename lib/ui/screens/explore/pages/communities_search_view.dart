@@ -22,7 +22,7 @@ class CommunitiesSearchView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         StreamBuilder<List<CommunityModel>>(
-          initialData: null,
+          initialData: [],
           stream: _bloc.communities,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
