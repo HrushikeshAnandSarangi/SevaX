@@ -272,14 +272,16 @@ class _RegisterPageState extends State<RegisterPage>
                                   child: ListTile(
                                     leading: Icon(Icons.attachment),
                                     title: Text(
-                                      cvName ?? S.of(context).cv_not_available,
+                                      cvName.isEmpty
+                                          ? S.of(context).cv_not_available
+                                          : cvName,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     trailing: IconButton(
                                       icon: Icon(Icons.clear),
                                       onPressed: () => setState(() {
-                                        cvName = null!;
-                                        cvUrl = null!;
+                                        cvName = '';
+                                        cvUrl = '';
                                       }),
                                     ),
                                   ),
@@ -420,19 +422,30 @@ class _RegisterPageState extends State<RegisterPage>
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },
-            shouldRestrictLength: true,
+            shouldRestrictLength: false, // Changed to allow more than 20 chars
             hint: S.of(context).full_name,
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_full_name;
-              } else if (profanityDetector.isProfaneString(value!)) {
+              } else if (profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
-              } else {
-                return null!;
               }
+
+              // Check if string contains only special characters
+              final specialCharsOnly = RegExp(r'^[^a-zA-Z0-9]+$');
+              if (specialCharsOnly.hasMatch(value)) {
+                return 'Name cannot contain only special characters';
+              }
+
+              // Check if string contains only numbers
+              final numbersOnly = RegExp(r'^[0-9]+$');
+              if (numbersOnly.hasMatch(value)) {
+                return 'Name cannot contain only numbers';
+              }
+
+              return null;
             },
-            capitalization: TextCapitalization.words,
-            onSave: (value) => this.fullName = value!,
+            onSave: (value) => this.fullName = value ?? '',
           ),
           getFormField(
             focusNode: emailFocus,
@@ -443,13 +456,18 @@ class _RegisterPageState extends State<RegisterPage>
             shouldRestrictLength: false,
             hint: S.of(context).email.firstWordUpperCase(),
             validator: (value) {
-              if (!isValidEmail(value!.trim())) {
+              if (value == null ||
+                  value.isEmpty ||
+                  !isValidEmail(value.trim())) {
                 return S.of(context).validation_error_invalid_email;
               }
-              return null!;
+              return null;
             },
-            capitalization: TextCapitalization.none,
-            onSave: (value) => this.email = value!.trim(),
+            onSave: (value) {
+              if (value != null) {
+                this.email = value.trim();
+              }
+            },
           ),
           getPasswordFormField(
             focusNode: pwdFocus,
@@ -458,18 +476,36 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
             shouldRestrictLength: false,
-            hint: S.of(context).password.firstWordUpperCase(),
-            shouldObscure: shouldObscurePassword,
+            hint: S.of(context).confirm.firstWordUpperCase() +
+                ' ' +
+                S.of(context).password.firstWordUpperCase(),
+            shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
-              this.password = '';
-              if (value!.length < 6) {
+              if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_invalid_password;
               }
-              this.password = value!;
-              return null!;
+
+              // Password regex that doesn't allow spaces and requires other criteria
+              final strongPasswordRegex = RegExp(
+                  r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~])[^\s]{8,}$');
+
+              // Add filter to prevent space input
+              if (value.contains(' ')) {
+                return 'Password cannot contain spaces';
+              }
+              if (!strongPasswordRegex.hasMatch(value)) {
+                return '''Password must:
+            • Be at least 8 characters
+            • Include uppercase letter
+            • Include lowercase letter  
+            • Include number
+            • Include special character (!@#\$&*~)''';
+              }
             },
             onSave: (value) {
-              this.password = value!;
+              if (value != null) {
+                this.password = value;
+              }
             },
             suffix: Container(
                 height: 30,
@@ -497,24 +533,35 @@ class _RegisterPageState extends State<RegisterPage>
                 S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
-              final strongPasswordRegex = RegExp(
-                  r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~])(?!.*\s).{8,}$');
               if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_invalid_password;
               }
-              if (value.length < 8) {
-                return S.of(context).validation_error_invalid_password;
-              }
+
+              // Password regex that doesn't allow spaces and requires other criteria
+              final strongPasswordRegex = RegExp(
+                  r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~])[^\s]{8,}$');
+
+              // Add filter to prevent space input
               if (value.contains(' ')) {
-                return 'Password must not contain spaces.';
+                return 'Password cannot contain spaces';
               }
               if (!strongPasswordRegex.hasMatch(value)) {
-                return 'Password must be at least 8 characters and include upper, lower, number, and special character, and no spaces.';
+                return '''Password must:
+            • Be at least 8 characters
+            • Include uppercase letter
+            • Include lowercase letter  
+            • Include number
+            • Include special character (!@#\$&*~)''';
               }
+
               if (value != password) {
                 return S.of(context).validation_error_password_mismatch;
               }
-              return null!;
+
+              return null;
+            },
+            onSave: (value) {
+              this.confirmPassword = value!;
             },
             suffix: Container(
                 height: 30,
@@ -536,17 +583,17 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-  Widget getFormField(
-      {focusNode,
-      onFieldSubmittedCB,
-      bool? shouldRestrictLength,
-      String? hint,
-      String? Function(String?)? validator,
-      void Function(String?)? onSave,
-      bool shouldObscure = false,
-      Widget? suffix,
-      TextCapitalization capitalization = TextCapitalization.none,
-      TextEditingController? controller}) {
+  Widget getFormField({
+    focusNode,
+    onFieldSubmittedCB,
+    bool? shouldRestrictLength,
+    String? hint,
+    String? Function(String?)? validator,
+    void Function(String?)? onSave,
+    bool shouldObscure = false,
+    Widget? suffix,
+    TextEditingController? controller,
+  }) {
     var size =
         (shouldRestrictLength != null && shouldRestrictLength) ? 20 : 150;
     return Padding(
@@ -574,7 +621,6 @@ class _RegisterPageState extends State<RegisterPage>
             borderSide: BorderSide(color: Colors.black),
           ),
         ),
-        textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
         formatters: [
@@ -780,7 +826,8 @@ class _RegisterPageState extends State<RegisterPage>
           return AlertDialog(
             title: Text(S.of(context).creating_account),
             content: LinearProgressIndicator(
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              backgroundColor:
+                  Theme.of(context).primaryColor.withValues(alpha: 128),
               valueColor: AlwaysStoppedAnimation<Color>(
                 Theme.of(context).primaryColor,
               ),
@@ -866,7 +913,7 @@ class _RegisterPageState extends State<RegisterPage>
 
       user.timezone =
           TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
-      Locale _sysLng = ui.window.locale;
+      Locale _sysLng = View.of(context).platformDispatcher.locale;
       Locale _language =
           S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
       appLanguage.changeLanguage(_language);
@@ -967,7 +1014,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   void userImage(io.File _image) {
-    if (_image == null) return;
+    if (_image == null || _image.path.isEmpty) return;
     setState(() {
       this.selectedImage = _image;
       this.webImageUrl = null!;
@@ -1298,7 +1345,7 @@ class _RegisterPageState extends State<RegisterPage>
         child: Container(
           width: 120,
           height: 1.0,
-          color: Colors.black26.withOpacity(.2),
+          color: Colors.black26.withValues(alpha: 51),
         ),
       );
 

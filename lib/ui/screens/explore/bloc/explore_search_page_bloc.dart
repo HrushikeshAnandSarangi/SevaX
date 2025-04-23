@@ -65,7 +65,7 @@ class ExploreSearchPageBloc {
   Function(bool) get onCompletedEventChanged => _completedEvents.sink.add;
 
   void onSearchChange(String value) {
-    if (value != null || value != "") {
+    if (value.isNotEmpty) {
       _debouncer.run(() {
         _searchText.sink.add(value);
       });
@@ -105,7 +105,7 @@ class ExploreSearchPageBloc {
           ElasticSearchApi.getPublicCommunities(
             distanceFilterData: distanceFilterData,
           ).then((value) {
-            if (categoryId == null || categoryId == '_') {
+            if (categoryId == '_') {
               _communities.add(value);
             } else {
               var x = value
@@ -161,12 +161,12 @@ class ExploreSearchPageBloc {
                 _requests.add(
                   value.where((element) {
                     bool cond1 = data.filter.checkFilter(element);
-                    if (data.categoryId != null && data.categoryId != '_') {
-                      logger.wtf("cond1 and 2 -> ${element.title}");
+                    if (data.categoryId != '_') {
+                      logger.f("cond1 and 2 -> ${element.title}");
                       return cond1 &&
                           element.categories!.contains(data.categoryId);
                     } else {
-                      logger.wtf("cond1 -> ${element.title}");
+                      logger.f("cond1 -> ${element.title}");
                       return cond1;
                     }
                   }).toList(),
@@ -193,7 +193,7 @@ class ExploreSearchPageBloc {
                       .where(
                         (element) =>
                             data.filter.checkFilter(element) &&
-                            (data.categoryId != null && data.categoryId != '_'
+                            (data.categoryId != '_'
                                 ? element.categories!.contains(data.categoryId)
                                 : true),
                       )
