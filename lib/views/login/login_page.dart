@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:ui' as ui;
-
+import 'package:universal_io/io.dart' as io;
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    if (Platform.isIOS) {
+    if (!kIsWeb && io.Platform.isIOS) {
       SignInWithApple.getCredentialState("").then((_) {});
     }
     fetchRemoteConfig();
@@ -715,7 +715,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget get socialMediaLogin {
-    if (Platform.isIOS) {
+    if (io.Platform.isIOS) {
       return Container(
         width: double.infinity,
         child: Column(

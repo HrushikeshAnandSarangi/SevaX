@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart' as material;
@@ -235,7 +235,7 @@ class ReportPdf {
     final String path = '$dir/report.pdf';
 //    final String path = 'C://report.pdf';
     log("path to pdf file is " + path);
-    final File file = File(path);
+    final io.File file = io.File(path);
     await file.writeAsBytes(await pdf.save());
     material.Navigator.of(context).push(
       material.MaterialPageRoute(

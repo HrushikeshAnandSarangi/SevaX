@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'package:flutter/material.dart' as material;
 
 import 'package:flutter/services.dart';
@@ -724,7 +724,7 @@ class TransactionsPdf {
     //     .catchError((e) => log(e));
 
     log("path to pdf file is " + path);
-    final File file = File(path);
+    final io.File file = io.File(path);
     await file.writeAsBytes(await pdf.save());
     material.Navigator.of(mainContext).push(
       material.MaterialPageRoute(

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -200,10 +200,10 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                     return ImagePickerDialogMobile(
                                       imagePickerType: ImagePickerType.PROJECT,
                                       color: widget.primaryColor,
-                                      storeImageFile: (File file) async {
+                                      storeImageFile: (io.File file) async {
                                         return await file.path;
                                       },
-                                      storPdfFile: (File file) async => null,
+                                      storPdfFile: (io.File file) async => null,
                                       onLinkCreated: (link) {
                                         newRequestCategoryLogo = link;
                                         if (this.mounted) {

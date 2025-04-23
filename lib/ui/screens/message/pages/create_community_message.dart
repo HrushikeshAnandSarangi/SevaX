@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
@@ -215,7 +215,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                           if (stockImageUrl != null) {
                             bloc.onImageChanged(MessageRoomImageModel(
                                 stockImageUrl: stockImageUrl,
-                                selectedImage: null as File));
+                                selectedImage: null as io.File));
                           }
                         },
                         onChanged: (file) {
@@ -356,7 +356,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
   }
 
   Future<void> profanityCheck({
-    File? file,
+    io.File? file,
     BuildContext? context,
   }) async {
     progressDialog = ProgressDialog(

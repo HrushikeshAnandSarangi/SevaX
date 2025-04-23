@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -427,7 +427,7 @@ class _ChatPageState extends State<ChatPage> {
   void pushNewMessage({
     required String messageContent,
     required MessageType type,
-    File? file,
+    io.File? file,
   }) {
     if (file != null) {
       _bloc.pushNewMessage(

@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart' as material;
@@ -229,7 +229,7 @@ class InvoicePdf {
     final String path = '$dir/invoice.pdf';
 //    final String path = 'C://invoice.pdf';
     log("path to pdf file is " + path);
-    final File file = File(path);
+    final io.File file = io.File(path);
     await file.writeAsBytes(await pdf.save());
     material.Navigator.of(context).push(
       material.MaterialPageRoute(

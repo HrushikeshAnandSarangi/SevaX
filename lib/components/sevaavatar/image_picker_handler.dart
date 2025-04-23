@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'
     show StaggeredGrid, StaggeredGridTile;
@@ -76,7 +76,7 @@ class ImagePickerHandler {
     if (isCover) {
       isCover ? imagePicker.dismissDialog(context) : null;
       //crop functionality for stock image selection for cover photo
-      File imageToCrop = await utils.urlToFile(image);
+      io.File imageToCrop = await utils.urlToFile(image);
       cropImage(imageToCrop.path);
 
       globals.isFromOnBoarding ? null : imagePicker.dismissDialog(context);
@@ -95,7 +95,7 @@ class ImagePickerHandler {
   Future cropImage(String path) async {
     log('event cover cropImage path ${path}');
 
-    File croppedFile;
+    io.File croppedFile;
     ImageCropper()
         .cropImage(
       sourcePath: path,
@@ -108,7 +108,7 @@ class ImagePickerHandler {
     )
         .then((value) {
       if (value != null) {
-        croppedFile = File(value.path);
+        croppedFile = io.File(value.path);
         log('event cover cropedImage path ${croppedFile.path}');
         _listener.userImage(croppedFile, '');
       }

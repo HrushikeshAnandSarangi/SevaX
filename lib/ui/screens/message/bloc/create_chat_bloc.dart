@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
@@ -216,7 +216,7 @@ class CreateChatBloc extends BlocBase {
 
 class MessageRoomImageModel {
   final String stockImageUrl;
-  final File selectedImage;
+  final io.File selectedImage;
 
   MessageRoomImageModel(
       {required this.stockImageUrl, required this.selectedImage});

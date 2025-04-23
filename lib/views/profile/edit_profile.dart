@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
@@ -66,7 +66,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   String? email;
   String? imageUrl;
   String? confirmPassword;
-  File? selectedImage;
+  io.File? selectedImage;
   String isImageSelected = 'Add Photo';
   late ImagePickerHandler imagePicker;
   late UserModel usermodel;
@@ -613,7 +613,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   void checkFileSize() async {
-    var file = File(_path!);
+    var file = io.File(_path!);
     final bytes = await file.lengthSync();
     if (bytes > tenMegaBytes) {
       this._isDocumentBeingUploaded = false;
@@ -636,7 +636,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     Reference ref =
         FirebaseStorage.instance.ref().child('cv_files').child(name);
     UploadTask uploadTask = ref.putFile(
-      File(_path!),
+      io.File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CV File'},
@@ -832,7 +832,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   @override
-  void userImage(File _image) {
+  void userImage(io.File _image) {
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;

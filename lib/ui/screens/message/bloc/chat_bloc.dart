@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +77,7 @@ class ChatBloc {
     required String senderId,
     required String recieverId,
     required MessageType type,
-    required File file,
+    required io.File file,
     required String timebankId,
   }) async {
     MessageModel messageModel = MessageModel(

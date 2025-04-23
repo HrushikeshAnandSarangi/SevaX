@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -18,8 +18,8 @@ class DocumentUpload extends StatefulWidget {
 
 class _DocumentUploadState extends State<DocumentUpload> {
   bool _isDocumentBeingUploaded = false;
-  File? _file;
-  List<File>? _files;
+  io.File? _file;
+  List<io.File>? _files;
   String? _fileName;
   String? _path;
   Map<String, String>? _paths;
@@ -49,7 +49,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
                 ? _extension!.replaceAll(' ', '').split(',')
                 : null);
         if (result != null) {
-          _files = result.paths.map((path) => File(path!)).toList();
+          _files = result.paths.map((path) => io.File(path!)).toList();
         } else {
           // User canceled the picker
         }
@@ -145,7 +145,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
             timestampString +
             _fileName!);
     UploadTask uploadTask = ref.putFile(
-      File(_path!),
+      io.File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Document'},

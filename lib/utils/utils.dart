@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -126,14 +126,15 @@ TextStyle get sectionTextStyle {
   );
 }
 
-Future<File> createFileOfPdfUrl(String documentUrl, String documentName) async {
+Future<io.File> createFileOfPdfUrl(
+    String documentUrl, String documentName) async {
   final url = documentUrl;
   final filename = documentName;
-  var request = await HttpClient().getUrl(Uri.parse(url));
+  var request = await io.HttpClient().getUrl(Uri.parse(url));
   var response = await request.close();
   var bytes = await consolidateHttpClientResponseBytes(response);
   String dir = (await getApplicationDocumentsDirectory()).path;
-  File file = new File('$dir/$filename.pdf');
+  io.File file = new io.File('$dir/$filename.pdf');
   return file.writeAsBytes(bytes).then((value) => value);
   // return file;
 }
@@ -182,15 +183,16 @@ void showAdminAccessMessage({BuildContext? context}) {
   );
 }
 
-Future<File> urlToFile(String imageUrl) async {
+Future<io.File> urlToFile(String imageUrl) async {
 // generate random number.
   var rng = new Random();
 // get temporary directory of device.
-  Directory tempDir = await getTemporaryDirectory();
+  io.Directory tempDir = await getTemporaryDirectory();
 // get temporary path from temporary directory.
   String tempPath = tempDir.path;
 // create a new file in temporary path with random file name.
-  File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+  io.File file =
+      new io.File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
 // call http.get method and pass imageUrl into it to get response.
   http.Response response = await http.get(Uri.parse(imageUrl));
 // write bodyBytes received in response to file.

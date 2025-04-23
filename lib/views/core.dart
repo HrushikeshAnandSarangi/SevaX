@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +13,7 @@ class SevaCore extends InheritedWidget {
     required this.loggedInUser,
     required Widget child,
     Key? key,
-  })  : assert(loggedInUser != null),
-        assert(child != null),
-        super(key: key, child: child);
+  }) : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(SevaCore oldWidget) {
@@ -28,11 +26,11 @@ class SevaCore extends InheritedWidget {
 
   Future<bool> get _checkInternet async {
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await io.InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         return true;
       }
-    } on SocketException catch (_) {
+    } on io.SocketException catch (_) {
       return false;
     }
     return false;

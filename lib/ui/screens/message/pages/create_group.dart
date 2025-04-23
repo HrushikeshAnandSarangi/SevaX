@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
@@ -113,7 +113,7 @@ class CreateGroupPage extends StatelessWidget {
                               ),
                         onStockImageChanged: (String stockImageUrl) {
                           bloc.onImageChanged(MessageRoomImageModel(
-                              selectedImage: File(''),
+                              selectedImage: io.File(''),
                               stockImageUrl: stockImageUrl));
                         },
                         onChanged: (file) {
@@ -207,7 +207,7 @@ class CreateGroupPage extends StatelessWidget {
   }
 
   Future<void> profanityCheck({
-    required File file,
+    required io.File file,
     required CreateChatBloc bloc,
     required BuildContext context,
   }) async {

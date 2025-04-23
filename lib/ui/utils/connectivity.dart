@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -35,13 +35,13 @@ class ConnectionStatusSingleton {
     bool previousConnection = hasConnection;
 
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await io.InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         hasConnection = true;
       } else {
         hasConnection = false;
       }
-    } on SocketException catch (_) {
+    } on io.SocketException catch (_) {
       hasConnection = false;
     }
 

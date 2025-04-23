@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class ProjectAvtaar extends StatefulWidget {
 class _ProjectsAvtaarState extends State<ProjectAvtaar>
     with TickerProviderStateMixin
     implements ImagePickerListener {
-  File? _image;
+  io.File? _image;
   late AnimationController _controller;
   late ImagePickerHandler? imagePicker;
   bool? _isImageBeingUploaded = false;
@@ -106,11 +106,11 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   void userImage(dynamic _image, String type) {
     if (type == 'stock_image') {
       setState(() {
-        globals.projectsAvtaarURL = (_image as File?)?.path;
+        globals.projectsAvtaarURL = (_image as io.File?)?.path;
       });
     } else {
       setState(() {
-        this._image = _image as File?;
+        this._image = _image as io.File?;
         this._isImageBeingUploaded = true;
         _uploadImage();
       });

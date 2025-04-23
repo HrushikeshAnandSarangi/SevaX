@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
@@ -55,7 +55,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
     _bloc.onImageChanged(
       MessageRoomImageModel(
         stockImageUrl: chatModel!.groupDetails!.imageUrl!,
-        selectedImage: File(chatModel!.groupDetails!.imageUrl!),
+        selectedImage: io.File(chatModel!.groupDetails!.imageUrl!),
       ),
     );
 
@@ -342,7 +342,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
   }
 
   Future<void> profanityCheck({
-    File? file,
+    io.File? file,
     EditGroupInfoBloc? bloc,
   }) async {
     progressDialog = ProgressDialog(

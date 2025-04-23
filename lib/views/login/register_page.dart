@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   bool hasImage() {
     return selectedImage != null ||
-        (webImageUrl != null && webImageUrl.isNotEmpty);
+        (webImageUrl != null && webImageUrl!.isNotEmpty);
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -81,9 +81,9 @@ class _RegisterPageState extends State<RegisterPage>
   late String password;
   String email = '';
   late String imageUrl;
-  late String webImageUrl;
+  String? webImageUrl;
   late String confirmPassword;
-  late File selectedImage;
+  io.File? selectedImage;
   late String isImageSelected;
 
   late ImagePickerHandler imagePicker;
@@ -326,10 +326,11 @@ class _RegisterPageState extends State<RegisterPage>
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: (webImageUrl != null && webImageUrl.isNotEmpty)
-                              ? CachedNetworkImageProvider(webImageUrl)
-                              : FileImage(selectedImage)
-                                  as ImageProvider<Object>,
+                          image:
+                              (webImageUrl != null && webImageUrl!.isNotEmpty)
+                                  ? CachedNetworkImageProvider(webImageUrl!)
+                                  : FileImage(selectedImage!)
+                                      as ImageProvider<Object>,
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [
@@ -806,7 +807,7 @@ class _RegisterPageState extends State<RegisterPage>
   Future<void> profanityCheck() async {
     // _newsImageURL = imageURL;
     showDialogForAccountCreation();
-    if (webImageUrl != null && webImageUrl.isNotEmpty) {
+    if (webImageUrl != null && webImageUrl!.isNotEmpty) {
       createUser(imageUrl: webImageUrl);
     } else {
       if (this.selectedImage != null) {
@@ -965,7 +966,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   @override
-  void userImage(File _image) {
+  void userImage(io.File _image) {
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
@@ -980,7 +981,7 @@ class _RegisterPageState extends State<RegisterPage>
         .child('profile_images')
         .child(email + '.jpg');
     UploadTask uploadTask = ref.putFile(
-      selectedImage,
+      selectedImage!,
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'Profile Image'},
@@ -1060,7 +1061,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void checkFileSize() async {
-    var file = File(_path);
+    var file = io.File(_path);
     final bytes = await file.lengthSync();
     if (bytes > tenMegaBytes) {
       getAlertDialog(parentContext);
@@ -1074,7 +1075,7 @@ class _RegisterPageState extends State<RegisterPage>
     Reference ref =
         FirebaseStorage.instance.ref().child('cv_files').child(name);
     UploadTask uploadTask = ref.putFile(
-      File(_path),
+      io.File(_path),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CV File'},
@@ -1112,7 +1113,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Widget get socialMediaLogin {
-    if (Platform.isIOS) {
+    if (io.Platform.isIOS) {
       return Container(
         width: double.infinity,
         child: Column(

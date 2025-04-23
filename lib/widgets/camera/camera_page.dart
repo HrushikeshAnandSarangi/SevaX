@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -73,12 +73,12 @@ class _CameraState extends State<CameraPage> {
   void _onTakePictureButtonPress() {
     _takePicture().then((filePath) {
       if (filePath != null) {
-        navigateToImagePreview(File(filePath));
+        navigateToImagePreview(io.File(filePath));
       }
     });
   }
 
-  void navigateToImagePreview(File file) {
+  void navigateToImagePreview(io.File file) {
     Navigator.push<ImageCaptionModel>(context, MaterialPageRoute(
       builder: (context) {
         return SelectedImagePreview(file: file);
@@ -92,7 +92,7 @@ class _CameraState extends State<CameraPage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile?.path != null) {
-      navigateToImagePreview(File(pickedFile!.path));
+      navigateToImagePreview(io.File(pickedFile!.path));
     }
   }
 

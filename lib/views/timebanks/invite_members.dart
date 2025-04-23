@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -128,8 +128,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Future<Null> setup() async {
     //_permissionReady = await _checkPermission();
-    _localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
-    final savedDir = Directory(_localPath!);
+    _localPath =
+        (await _findLocalPath()) + io.Platform.pathSeparator + 'Download';
+    final savedDir = io.Directory(_localPath!);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {
       savedDir.create();
@@ -143,8 +144,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 //  }
 
   Future<String> _findLocalPath() async {
-    Directory directory;
-    if (Platform.isAndroid) {
+    io.Directory directory;
+    if (io.Platform.isAndroid) {
       final dir = await getExternalStorageDirectory();
       if (dir == null) {
         throw Exception('Could not get external storage directory');
@@ -575,7 +576,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     Reference ref =
         FirebaseStorage.instance.ref().child('csv_files').child(name);
     UploadTask uploadTask = ref.putFile(
-      File(_path!),
+      io.File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CSV File'},
@@ -610,7 +611,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   void checkFileSize() async {
-    var file = File(_path!);
+    var file = io.File(_path!);
     final bytes = await file.lengthSync();
     if (bytes > oneMegaBytes) {
       this._isDocumentBeingUploaded = false;

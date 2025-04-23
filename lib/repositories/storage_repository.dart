@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -17,7 +17,7 @@ class StorageRepository {
   ///[Return] returns url of the uploaded image
   static Future<String> uploadFile(
     String directory,
-    File file, {
+    io.File file, {
     String? fileName,
   }) async {
     FirebaseStorage _storage = FirebaseStorage.instance;

@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -11,7 +11,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class ReportMemberBloc {
-  final _file = BehaviorSubject<File>();
+  final _file = BehaviorSubject<io.File>();
   final _message = BehaviorSubject<String>();
   final _buttonStatus = BehaviorSubject<bool>.seeded(false);
   final profanityDetector = ProfanityDetector();
@@ -40,11 +40,11 @@ class ReportMemberBloc {
     // }
   }
 
-  Stream<File> get image => _file.stream;
+  Stream<io.File> get image => _file.stream;
   Stream<String> get message => _message.stream;
   Stream<bool> get buttonStatus => _buttonStatus.stream;
 
-  void uploadImage(File file) {
+  void uploadImage(io.File file) {
     if (file != null || file != _file.value) {
       _file.add(file);
     }

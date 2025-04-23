@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -129,11 +129,11 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   String userEmail =
       userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email ?? '';
   DeviceDetails deviceDetails = DeviceDetails();
-  if (Platform.isAndroid) {
+  if (io.Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     deviceDetails.deviceType = 'Android';
     deviceDetails.deviceId = androidInfo.id;
-  } else if (Platform.isIOS) {
+  } else if (io.Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
     deviceDetails.deviceType = 'IOS';
     deviceDetails.deviceId = iosInfo.identifierForVendor;
@@ -167,11 +167,11 @@ Future<DeviceDetails> addCreationSourceOfUser(
   String userEmail =
       userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email ?? '';
   DeviceDetails deviceDetails = DeviceDetails();
-  if (Platform.isAndroid) {
+  if (io.Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     deviceDetails.deviceType = 'Android';
     deviceDetails.deviceId = androidInfo.id;
-  } else if (Platform.isIOS) {
+  } else if (io.Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
     deviceDetails.deviceType = 'IOS';
     deviceDetails.deviceId = iosInfo.identifierForVendor;

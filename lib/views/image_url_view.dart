@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -240,7 +240,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           showLoaderDialog();
           log('HERE 3');
           //crop functionality for stock image selection for cover photo
-          File imageToCrop = await utils.urlToFile(imageURL);
+          io.File imageToCrop = await utils.urlToFile(imageURL);
           await cropImage(imageToCrop
               .path); //also uploads the image after cropping to Storage
           log('HERE 4');
@@ -253,8 +253,8 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     }
   }
 
-  Future<File?> cropImage(String path) async {
-    File? croppedFile;
+  Future<io.File?> cropImage(String path) async {
+    io.File? croppedFile;
     await ImageCropper()
         .cropImage(
       sourcePath: path,
@@ -267,9 +267,9 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     )
         .then((value) async {
       if (value != null) {
-        croppedFile = File(value.path);
+        croppedFile = io.File(value.path);
         if (croppedFile != null) {
-          await _uploadImage(croppedFile as File, context).then((value) {
+          await _uploadImage(croppedFile as io.File, context).then((value) {
             imageUrls.add(value);
             setState(() {});
           });
@@ -333,7 +333,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     );
   }
 
-  Future<String> _uploadImage(File _image, BuildContext context) async {
+  Future<String> _uploadImage(io.File _image, BuildContext context) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     User? user = _firebaseAuth.currentUser;

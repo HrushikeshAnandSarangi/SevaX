@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,8 +73,8 @@ class _SplashViewState extends State<SplashView> {
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
-  late List<ConnectivityResult> connectivityResult;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  List<ConnectivityResult>? connectivityResult;
   @override
   void initState() {
     super.initState();
@@ -84,13 +84,13 @@ class _SplashViewState extends State<SplashView> {
       setState(() async {
         connectivityResult = result;
         try {
-          final result = await InternetAddress.lookup('google.com');
+          final result = await io.InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             hasConnection = true;
           } else {
             hasConnection = false;
           }
-        } on SocketException catch (_) {
+        } on io.SocketException catch (_) {
           hasConnection = false;
         }
       });
@@ -104,7 +104,7 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
+    _connectivitySubscription!.cancel();
     super.dispose();
   }
 
@@ -208,10 +208,10 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    if (connectivityResult == null || connectivityResult.isEmpty) {
+    if (connectivityResult == null || connectivityResult!.isEmpty) {
       return defaultWidget;
     }
-    switch (connectivityResult.first) {
+    switch (connectivityResult?.first) {
       case ConnectivityResult.none:
         return noInternet;
       case ConnectivityResult.wifi:
@@ -231,13 +231,13 @@ class _SplashViewState extends State<SplashView> {
     try {
       result = await _connectivity.checkConnectivity();
       try {
-        final result = await InternetAddress.lookup('google.com');
+        final result = await io.InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           hasConnection = true;
         } else {
           hasConnection = false;
         }
-      } on SocketException catch (_) {
+      } on io.SocketException catch (_) {
         hasConnection = false;
       }
       setState(() {
@@ -473,7 +473,7 @@ class _SplashViewState extends State<SplashView> {
     Map<String, dynamic> versionInfo =
         json.decode(AppConfig.remoteConfig!.getString('app_version'));
 
-    if (Platform.isAndroid) {
+    if (io.Platform.isAndroid) {
       if (AppConfig.buildNumber! < versionInfo['android']['build']) {
         if (versionInfo['android']['forceUpdate']) {
           await _navigateToUpdatePage(loggedInUser, true);
@@ -481,7 +481,7 @@ class _SplashViewState extends State<SplashView> {
           await _navigateToUpdatePage(loggedInUser, false);
         }
       } else {}
-    } else if (Platform.isIOS) {
+    } else if (io.Platform.isIOS) {
       if (AppConfig.buildNumber! < versionInfo['ios']['build']) {
         if (versionInfo['ios']['forceUpdate']) {
           await _navigateToUpdatePage(loggedInUser, true);

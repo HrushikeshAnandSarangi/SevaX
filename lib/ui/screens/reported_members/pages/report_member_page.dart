@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -137,14 +137,14 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
             SizedBox(height: 30),
             Align(
               alignment: Alignment.centerLeft,
-              child: StreamBuilder<File>(
+              child: StreamBuilder<io.File>(
                 stream: _bloc.image,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {}
                   return snapshot.data == null
                       ? ImagePickerWidget(
                           isAspectRatioFixed: false,
-                          onChanged: (File file) {
+                          onChanged: (io.File file) {
                             if (file != null) {
                               profanityCheck(file: file, bloc: _bloc);
                             }
@@ -257,7 +257,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
   }
 
   Future<void> profanityCheck({
-    File? file,
+    io.File? file,
     ReportMemberBloc? bloc,
   }) async {
     progressDialog = ProgressDialog(

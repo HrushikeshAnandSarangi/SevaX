@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
 
-  Future<String> _uploadImage(File croppedImage) async {
+  Future<String> _uploadImage(io.File croppedImage) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     Reference ref = FirebaseStorage.instance

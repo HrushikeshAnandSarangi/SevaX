@@ -1,26 +1,175 @@
 {
   "project_info": {
-    "project_number": "305329613273",
-    "project_id": "testproject-99d69",
-    "storage_bucket": "testproject-99d69.firebasestorage.app"
+    "project_number": "1030900930316",
+    "firebase_url": "https://sevaxproject4sevax.firebaseio.com",
+    "project_id": "sevaxproject4sevax",
+    "storage_bucket": "sevaxproject4sevax.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:305329613273:android:d140ad1cb9c8824ca051c8",
+        "mobilesdk_app_id": "1:1030900930316:android:7464c40ccff31aa34bdb29",
         "android_client_info": {
           "package_name": "com.sevaexchange"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBXRzc56Cs8GgICdi-_0Kxie_krJXJCMX4"
+          "current_key": "AIzaSyC_vek04VOXi_4bgXq9TxKLRI4ZQ_Nj7s0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sevaexchange.app",
+                "app_store_id": "1451705907"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030900930316:android:cd2643b96aa36fff4bdb29",
+        "android_client_info": {
+          "package_name": "com.sevaexchange.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030900930316-80jubfdre1241f0agsk38e0rfu16if76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.app",
+            "certificate_hash": "3be468344c03dce92cfb72b2d3fd8201afc5a2f0"
+          }
+        },
+        {
+          "client_id": "1030900930316-kbis3kske44te5rtan4nlt4tgrn7bkul.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.app",
+            "certificate_hash": "a932f9fb18d1a78f94d1141ff27a795f9d7c92e6"
+          }
+        },
+        {
+          "client_id": "1030900930316-medoo46po7dk5pn4uad3qeord0eufr3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.app",
+            "certificate_hash": "86ac8b9c985b44c14253675fac394173bf457496"
+          }
+        },
+        {
+          "client_id": "1030900930316-s9t7chf2npvkebgojd275qeqvfmojdof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.app",
+            "certificate_hash": "3b9f911a93dc84743cc09a2ea5a14614cacc075b"
+          }
+        },
+        {
+          "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_vek04VOXi_4bgXq9TxKLRI4ZQ_Nj7s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sevaexchange.app",
+                "app_store_id": "1451705907"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030900930316:android:08909c71ea1e73fb4bdb29",
+        "android_client_info": {
+          "package_name": "com.sevaexchange.sevax"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030900930316-e75jvuq409aio58qaehu3h2qrm8kdv9d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.sevax",
+            "certificate_hash": "5f3ab5ede4c2670dcee90f58ea86f0ea27feaea5"
+          }
+        },
+        {
+          "client_id": "1030900930316-e8u0mjb9ji6jbta8dlqc7r5gf7fbbp7k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.sevax",
+            "certificate_hash": "86ac8b9c985b44c14253675fac394173bf457496"
+          }
+        },
+        {
+          "client_id": "1030900930316-kmmul2p5pk55sb5vgd94qemvtsb7kvg7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.sevax",
+            "certificate_hash": "a932f9fb18d1a78f94d1141ff27a795f9d7c92e6"
+          }
+        },
+        {
+          "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_vek04VOXi_4bgXq9TxKLRI4ZQ_Nj7s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sevaexchange.app",
+                "app_store_id": "1451705907"
+              }
+            }
+          ]
         }
       }
     }

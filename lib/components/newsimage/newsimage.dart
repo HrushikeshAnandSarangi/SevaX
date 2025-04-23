@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,7 @@ class NewsImageState extends State<NewsImage>
   BuildContext? parentContext;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  File? _image;
+  io.File? _image;
   AnimationController? _controller;
 
   Future<String> uploadImage() async {
@@ -126,7 +126,7 @@ class NewsImageState extends State<NewsImage>
     }
   }
 
-  void userImage(File _image) {
+  void userImage(io.File _image) {
     setState(() {
       this._image = _image;
       this._isImageBeingUploaded = true;
@@ -152,7 +152,7 @@ class NewsImageState extends State<NewsImage>
 
   void checkPdfSize() async {
     if (_path == null) return;
-    var file = File(_path!);
+    var file = io.File(_path!);
     final bytes = await file.lengthSync();
     if (bytes > tenMegaBytes) {
       this._isDocumentBeingUploaded = false;
@@ -196,7 +196,7 @@ class NewsImageState extends State<NewsImage>
             timestampString +
             (_fileName ?? 'unnamed'));
     UploadTask uploadTask = ref.putFile(
-      File(_path!),
+      io.File(_path!),
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Document'},

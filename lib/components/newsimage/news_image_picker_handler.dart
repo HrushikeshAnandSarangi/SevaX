@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +92,7 @@ class NewsImagePickerHandler {
   }
 
   Future cropImage(String image) async {
-    File croppedFile;
+    io.File croppedFile;
     ImageCropper()
         .cropImage(
       sourcePath: image,
@@ -105,7 +105,7 @@ class NewsImagePickerHandler {
     )
         .then((value) {
       if (value != null) {
-        croppedFile = File(value.path);
+        croppedFile = io.File(value.path);
         _listener.userImage(croppedFile);
       }
     });
@@ -118,7 +118,7 @@ class NewsImagePickerHandler {
 }
 
 abstract class NewsImagePickerListener {
-  void userImage(File _image);
+  void userImage(io.File _image);
   void userDoc(String _doc, String fileName);
   addWebImageUrl();
 }

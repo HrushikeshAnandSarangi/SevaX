@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
@@ -188,8 +188,8 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                           builder: (BuildContext dialogContext) {
                             return ImagePickerDialogMobile(
                               imagePickerType: ImagePickerType.PROJECT,
-                              storeImageFile: (File file) => true,
-                              storPdfFile: (File file) => false,
+                              storeImageFile: (io.File file) => true,
+                              storPdfFile: (io.File file) => false,
                               color: widget.primaryColor,
                               onLinkCreated: (link) {
                                 newRequestCategoryLogo = link;

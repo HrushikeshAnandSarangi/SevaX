@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class TimebankAvatar extends StatefulWidget {
 @override
 class _TimebankAvatarState extends State<TimebankAvatar>
     with TickerProviderStateMixin, ImagePickerListener {
-  File? _image;
+  io.File? _image;
   AnimationController? _controller;
   ImagePickerHandler? imagePicker;
   bool _isImageBeingUploaded = false;

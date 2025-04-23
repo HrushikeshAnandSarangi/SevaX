@@ -2,6 +2,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_io/io.dart' as io;
 import 'package:flutter/services.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -693,16 +694,18 @@ class NewsCardViewState extends State<NewsCardView> {
             widget.newsModel.newsDocumentName!)
         .then((f) {
       progressDialog!.hide();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PDFScreen(
-                  docName: widget.newsModel.newsDocumentName!,
-                  pathPDF: f.path,
-                  isFromFeeds: true,
-                  pdfUrl: widget.newsModel.newsDocumentUrl!,
-                )),
-      );
+      if (f != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PDFScreen(
+                    docName: widget.newsModel.newsDocumentName!,
+                    pathPDF: (f as io.File).path,
+                    isFromFeeds: true,
+                    pdfUrl: widget.newsModel.newsDocumentUrl!,
+                  )),
+        );
+      }
     });
   }
 

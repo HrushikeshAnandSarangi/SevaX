@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +54,7 @@ class FlavorConfig {
     switch (appFlavor) {
       case Flavor.SEVA_DEV:
         return FlavorValues(
-          googleMapsKey: Platform.isIOS
+          googleMapsKey: io.Platform.isIOS
               ? "AIzaSyCK7MCjpmmpw1Zftm3YzIh-zM-9MR-j7lE"
               : "AIzaSyDqrcoceem6kuwknDPCt4ebO0Y9Hg5wMBs",
           bundleId: 'com.sevaexchange.dev',
@@ -133,7 +133,7 @@ class FlavorConfig {
 
       case Flavor.APP:
         return FlavorValues(
-          googleMapsKey: Platform.isIOS
+          googleMapsKey: io.Platform.isIOS
               ? "AIzaSyCK7MCjpmmpw1Zftm3YzIh-zM-9MR-j7lE"
               : "AIzaSyDqrcoceem6kuwknDPCt4ebO0Y9Hg5wMBs",
           bundleId: 'com.sevaexchange.app',

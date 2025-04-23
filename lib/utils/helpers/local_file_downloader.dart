@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:path_provider/path_provider.dart';
 
@@ -8,18 +8,18 @@ class LocalFileDownloader {
     String localFilePath, {
     String fileExtension = 'pdf', // Added explicit type
   }) async {
-    late Directory saveDir;
+    late io.Directory saveDir;
 
-    if (Platform.isAndroid) {
+    if (io.Platform.isAndroid) {
       final directory = await getExternalStorageDirectory();
       //get download folder on android
       final downloadPath = '${directory?.parent.parent.parent.parent.path}'
-          '${Platform.pathSeparator}Download';
-      saveDir = Directory(downloadPath);
-    } else if (Platform.isIOS) {
+          '${io.Platform.pathSeparator}Download';
+      saveDir = io.Directory(downloadPath);
+    } else if (io.Platform.isIOS) {
       final directory = await getApplicationDocumentsDirectory();
-      saveDir = Directory('${directory.path}'
-          '${Platform.pathSeparator}Download');
+      saveDir = io.Directory('${directory.path}'
+          '${io.Platform.pathSeparator}Download');
     } else {
       //TODO: update method for web
       throw UnsupportedError('Platform not supported');
@@ -29,10 +29,10 @@ class LocalFileDownloader {
       await saveDir.create(recursive: true);
     }
 
-    final file = File(localFilePath);
+    final file = io.File(localFilePath);
     await file.copy(
       '${saveDir.path}'
-      '${Platform.pathSeparator}$fileName.$fileExtension',
+      '${io.Platform.pathSeparator}$fileName.$fileExtension',
     );
   }
 }

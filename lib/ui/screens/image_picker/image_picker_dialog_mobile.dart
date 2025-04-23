@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -21,8 +21,8 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 class ImagePickerDialogMobile extends StatefulWidget {
   final ImagePickerType imagePickerType;
   final Function(String imageUrl) onLinkCreated;
-  final Function(File imageFile) storeImageFile;
-  final Function(File pdfFile) storPdfFile;
+  final Function(io.File imageFile) storeImageFile;
+  final Function(io.File pdfFile) storPdfFile;
   final Color color;
 
   ImagePickerDialogMobile({
@@ -39,7 +39,7 @@ class ImagePickerDialogMobile extends StatefulWidget {
 }
 
 class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
-  late File imagefile;
+  late io.File imagefile;
   late BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
@@ -248,7 +248,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
 
           if (_extension == 'gif' || _extension == '.gif') {
             showProgressDialog(parentContext);
-            uploadImage(File(pickedFile.path));
+            uploadImage(io.File(pickedFile.path));
           } else {
             cropImage(pickedFile.path);
           }
@@ -268,7 +268,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
 
         if (_extension == 'gif' || _extension == '.gif') {
           showProgressDialog(parentContext);
-          uploadImage(File(pickedFile.path));
+          uploadImage(io.File(pickedFile.path));
         } else {
           cropImage(pickedFile.path);
         }
@@ -289,7 +289,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
               _path = result.files.single.path;
             }
             if (_path != null && _path.isNotEmpty) {
-              widget.storPdfFile(File(_path));
+              widget.storPdfFile(io.File(_path));
             }
           } on PlatformException catch (e) {
             throw e;
@@ -352,7 +352,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         });
   }
 
-  Future<String> uploadImage(File file) async {
+  Future<String> uploadImage(io.File file) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String imageURL = '';
@@ -420,7 +420,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     if (croppedFile == null) return;
     showProgressDialog(parentContext);
 
-    uploadImage(File(croppedFile.path));
+    uploadImage(io.File(croppedFile.path));
   }
 
   Future<void> profanityCheck(

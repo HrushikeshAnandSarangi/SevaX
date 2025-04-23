@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -36,11 +36,11 @@ class FCMNotificationManager {
     String? token,
   }) async {
     DeviceDetails deviceDetails = DeviceDetails();
-    if (Platform.isAndroid) {
+    if (io.Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
       deviceDetails.deviceType = androidInfo.id;
       deviceDetails.deviceId = 'Android';
-    } else if (Platform.isIOS) {
+    } else if (io.Platform.isIOS) {
       var iosInfo = await DeviceInfoPlugin().iosInfo;
       deviceDetails.deviceType = iosInfo.identifierForVendor;
       deviceDetails.deviceId = 'IOS';

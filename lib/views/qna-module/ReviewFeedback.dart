@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:doseform/main.dart';
@@ -76,7 +76,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   void getDeviceDetails() async {
-    if (Platform.isAndroid) {
+    if (io.Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
 
       deviceModel.platform = 'Android';
@@ -85,7 +85,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       deviceModel.version = androidInfo.version.release;
     }
 
-    if (Platform.isIOS) {
+    if (io.Platform.isIOS) {
       var iosInfo = await DeviceInfoPlugin().iosInfo;
       deviceModel.platform = 'IOS';
       deviceModel.version = iosInfo.systemVersion;
@@ -562,13 +562,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 class Debouncer {
   final int? milliseconds;
   VoidCallback? action;
-  late Timer _timer;
+  Timer? _timer;
 
   Debouncer({this.milliseconds});
 
   run(VoidCallback action) {
     if (_timer != null) {
-      _timer.cancel();
+      _timer!.cancel();
     }
 
     _timer = Timer(Duration(milliseconds: milliseconds!), action);

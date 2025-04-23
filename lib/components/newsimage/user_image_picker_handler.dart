@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -84,7 +84,7 @@ class UserImagePickerHandler {
       maxHeight: isAspectRatioFixed ? 512 : 512,
     );
     if (croppedFile != null) {
-      _listener.userImage(File(croppedFile.path));
+      _listener.userImage(io.File(croppedFile.path));
     }
   }
 
@@ -94,7 +94,7 @@ class UserImagePickerHandler {
 }
 
 abstract class UserImagePickerListener {
-  void userImage(File _image);
+  void userImage(io.File _image);
   void stockImage(dynamic _image, String type);
 
   addWebImageUrl();

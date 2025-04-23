@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core' as prefix0;
 import 'dart:core';
 import 'dart:developer';
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -99,7 +99,7 @@ Future<void> createNewMessage({
   required String timebankId,
   required List<String> participants,
   bool isTimebankMessage = false,
-  File? file,
+  io.File? file,
 }) async {
   WriteBatch batch = CollectionRef.batch;
   DocumentReference messageRef =

@@ -200,13 +200,12 @@ class _ExplorePageState extends State<ExplorePage> {
                               //   borderRadius: BorderRadius.circular(20),
                               // ),
                               onPressed: () {
-                                if (_searchController.text != null ||
-                                    _searchController.text.isNotEmpty) {
+                                if (_searchController.text.isNotEmpty) {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => ExploreSearchPage(
                                         searchText: _searchController.text,
-                                        isUserSignedIn: widget.isUserSignedIn,
+                                        isUserSignedIn: widget.isUserSignedIn!,
                                       ),
                                     ),
                                   );
@@ -1012,7 +1011,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                   textColor: Colors.white,
                                   onbuttonPress: status ==
                                           CompareUserStatus.JOINED
-                                      ? null!
+                                      ? () {}
                                       : () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(

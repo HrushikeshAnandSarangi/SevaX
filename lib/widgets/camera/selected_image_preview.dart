@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -8,7 +8,7 @@ import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 
 class SelectedImagePreview extends StatefulWidget {
-  final File file;
+  final io.File file;
 
   const SelectedImagePreview({Key? key, required this.file}) : super(key: key);
 
@@ -17,7 +17,7 @@ class SelectedImagePreview extends StatefulWidget {
 }
 
 class _SelectedImagePreviewState extends State<SelectedImagePreview> {
-  late File _file;
+  late io.File _file;
   TextEditingController textController = TextEditingController();
   final profanityDetector = ProfanityDetector();
   bool isProfane = false;
@@ -42,7 +42,7 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
                   .then((croppedFile) {
                 if (croppedFile != null) {
                   setState(() {
-                    _file = File(croppedFile.path);
+                    _file = io.File(croppedFile.path);
                   });
                 }
               });
@@ -115,7 +115,7 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
     );
   }
 
-  void send(File file, String caption) {
+  void send(io.File file, String caption) {
     if (caption != null && caption.isNotEmpty) {
       if (profanityDetector.isProfaneString(caption)) {
         setState(() {

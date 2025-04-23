@@ -47,29 +47,35 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBwynVOHGnlfWyEkYR0HH3rhzzPp7h4Slo',
-    appId: '1:305329613273:web:d9348cda1006b40ca051c8',
-    messagingSenderId: '305329613273',
-    projectId: 'testproject-99d69',
-    authDomain: 'testproject-99d69.firebaseapp.com',
-    storageBucket: 'testproject-99d69.firebasestorage.app',
-    measurementId: 'G-54N98SH8QQ',
+    apiKey: 'AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU',
+    appId: '1:1030900930316:web:870654870f13683c4bdb29',
+    messagingSenderId: '1030900930316',
+    projectId: 'sevaxproject4sevax',
+    authDomain: 'sevaxproject4sevax.firebaseapp.com',
+    databaseURL: 'https://sevaxproject4sevax.firebaseio.com',
+    storageBucket: 'sevaxproject4sevax.appspot.com',
+    measurementId: 'G-P3NV8FZDY6',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBXRzc56Cs8GgICdi-_0Kxie_krJXJCMX4',
-    appId: '1:305329613273:android:d140ad1cb9c8824ca051c8',
-    messagingSenderId: '305329613273',
-    projectId: 'testproject-99d69',
-    storageBucket: 'testproject-99d69.firebasestorage.app',
+    apiKey: 'AIzaSyC_vek04VOXi_4bgXq9TxKLRI4ZQ_Nj7s0',
+    appId: '1:1030900930316:android:7464c40ccff31aa34bdb29',
+    messagingSenderId: '1030900930316',
+    projectId: 'sevaxproject4sevax',
+    databaseURL: 'https://sevaxproject4sevax.firebaseio.com',
+    storageBucket: 'sevaxproject4sevax.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA_xW-t4fQy4U02i4zLHus5og0xTWcuXkE',
-    appId: '1:305329613273:ios:0b73be277ddde4f9a051c8',
-    messagingSenderId: '305329613273',
-    projectId: 'testproject-99d69',
-    storageBucket: 'testproject-99d69.firebasestorage.app',
+    apiKey: 'AIzaSyAN1i87LDcy81Bh2dFi8eyfrziFHEltxA0',
+    appId: '1:1030900930316:ios:48e3764f4656cabe4bdb29',
+    messagingSenderId: '1030900930316',
+    projectId: 'sevaxproject4sevax',
+    databaseURL: 'https://sevaxproject4sevax.firebaseio.com',
+    storageBucket: 'sevaxproject4sevax.appspot.com',
+    androidClientId: '1030900930316-80jubfdre1241f0agsk38e0rfu16if76.apps.googleusercontent.com',
+    iosClientId: '1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com',
     iosBundleId: 'com.sevaexchange.app',
   );
+
 }

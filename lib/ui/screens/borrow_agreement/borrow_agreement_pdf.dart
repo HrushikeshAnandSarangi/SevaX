@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart' as io;
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -489,7 +489,7 @@ class BorrowAgreementPdf {
     final String path =
         '$dir/${(documentName ?? 'agreement_sevax') + '_' + SevaCore.of(contextMain).loggedInUser.sevaUserID!}.pdf';
 
-    final File file = File(path);
+    final io.File file = io.File(path);
     await file.writeAsBytes(await pdf.save());
 
     borrowAgreementLinkFinal = await uploadDocument(
@@ -530,7 +530,7 @@ class BorrowAgreementPdf {
   }
 
   Future<String> uploadDocument(
-      String requestId, File _path, String documentName) async {
+      String requestId, io.File _path, String documentName) async {
     // Generate a timestamp string for uniqueness
     String timestampString = DateTime.now().millisecondsSinceEpoch.toString();
 
