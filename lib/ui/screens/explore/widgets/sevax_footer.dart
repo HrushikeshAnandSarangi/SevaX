@@ -61,55 +61,110 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
           ? Theme.of(context).primaryColor
           : const Color(0xFFF454684),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Top row with dropdowns and footer data
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _languageDropdown(context),
-                const SizedBox(width: 4),
-                _timezoneDropdown(context),
+                // Left side with dropdowns
+                Container(
+                  width: 240,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _languageDropdown(context),
+                      const SizedBox(height: 16),
+                      _timezoneDropdown(context),
+                      const SizedBox(height: 16),
+                      Text(
+                        '© Seva Exchange Corporation',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Right side with footer content
+                Expanded(
+                  child: Table(
+                    children: footerData.map((row) {
+                      return TableRow(
+                        children: row.map((data) {
+                          return TableRowInkWell(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: footerData[0].contains(data) ? 16 : 8,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  getFooterDataTitle(
+                                      data: data, context: context),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:
+                                        footerData[0].contains(data) ? 16 : 14,
+                                    fontWeight: footerData[0].contains(data)
+                                        ? FontWeight.w500
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () =>
+                                openUrl(context: context, data: data)(),
+                          );
+                        }).toList(),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
+
             const SizedBox(height: 20),
-            Table(
-              children: footerData.map((row) {
-                return TableRow(
-                  children: row.map((data) {
-                    return TableRowInkWell(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: footerData[0].contains(data) ? 16 : 4,
-                        ),
-                        child: Center(
-                          child: Text(
-                            getFooterDataTitle(data: data, context: context),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: footerData[0].contains(data) ? 16 : 14,
-                              fontWeight: footerData[0].contains(data)
-                                  ? FontWeight.w500
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ),
-                      onTap: () => openUrl(context: context, data: data)(),
-                    );
-                  }).toList(),
-                );
-              }).toList(),
-            ),
             const Divider(color: Colors.white),
-            _bottomLinksRow(context),
-            _socialMediaRow(context),
-            const SizedBox(height: 8),
-            const Text(
-              '© Seva Exchange Corporation',
-              style: TextStyle(color: Colors.white),
+
+            // Bottom row with links and social media
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Terms, Privacy, Site Map buttons
+                Row(
+                  children: [
+                    button(
+                        'Terms',
+                        getOnTap(
+                            context,
+                            S.of(context).login_agreement_terms_link,
+                            'termsAndConditionsLink') as VoidCallback),
+                    button(
+                        'Privacy',
+                        getOnTap(
+                            context,
+                            S.of(context).login_agreement_privacy_link,
+                            'privacyPolicyLink') as VoidCallback),
+                    button(
+                        'Site Map',
+                        getOnTap(context, 'Site Map', 'aboutSeva')
+                            as VoidCallback),
+                  ],
+                ),
+
+                // Social media icons
+                Row(
+                  children: [
+                    _socialIconButton('facebook',
+                        'https://www.facebook.com/sevaexchange/', context),
+                    _socialIconButton(
+                        'twitter', 'https://twitter.com/exchangeseva', context),
+                    _socialIconButton('instagram-symbol',
+                        'https://www.instagram.com/sevaexchange/', context),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -120,7 +175,6 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
   Widget _languageDropdown(BuildContext context) {
     return Container(
       height: 40,
-      width: MediaQuery.of(context).size.width / 2 - 16,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         color: Colors.white,
@@ -128,20 +182,25 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           onChanged: (value) async {
-            if (SevaCore.of(context).loggedInUser != null && value != null) {
+            if (value != null) {
               await updateUserLanguage(
-                user: SevaCore.of(context).loggedInUser!..language = value,
+                user: SevaCore.of(context).loggedInUser..language = value,
               );
               Provider.of<AppLanguage>(context, listen: false)
                   .changeLanguage(getLocaleFromCode(value));
             }
           },
           value: S.of(context).localeName,
+          isExpanded: true,
           items: languageNames.entries
               .map((entry) => DropdownMenuItem(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(entry.value),
+                      child: Text(
+                        entry.value,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12),
+                      ),
                     ),
                     value: entry.key,
                   ))
@@ -154,7 +213,6 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
   Widget _timezoneDropdown(BuildContext context) {
     return Container(
       height: 40,
-      width: MediaQuery.of(context).size.width / 2 - 4,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         color: Colors.white,
@@ -187,35 +245,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     );
   }
 
-  Widget _bottomLinksRow(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        button(
-            'Terms',
-            getOnTap(context, S.of(context).login_agreement_terms_link,
-                'termsAndConditionsLink') as VoidCallback),
-        button(
-            'Privacy',
-            getOnTap(context, S.of(context).login_agreement_privacy_link,
-                'privacyPolicyLink') as VoidCallback),
-        button('Site Map',
-            getOnTap(context, 'Site Map', 'aboutSeva') as VoidCallback),
-      ],
-    );
-  }
-
-  Widget _socialMediaRow(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _socialIconButton(
-            'facebook', 'https://www.facebook.com/sevaexchange/', context),
-        _socialIconButton(
-            'twitter', 'https://twitter.com/exchangeseva', context),
-        _socialIconButton('instagram-symbol',
-            'https://www.instagram.com/sevaexchange/', context),
-      ],
+  TextButton button(String text, VoidCallback onTap) {
+    return TextButton(
+      onPressed: onTap,
+      child: Text(text, style: const TextStyle(color: Colors.white)),
     );
   }
 
@@ -233,13 +266,6 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
           context: context,
         );
       },
-    );
-  }
-
-  TextButton button(String text, VoidCallback onTap) {
-    return TextButton(
-      onPressed: onTap,
-      child: Text(text, style: const TextStyle(color: Colors.white)),
     );
   }
 

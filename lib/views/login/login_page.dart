@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Container(
           width: 120,
           height: 1.0,
-          color: Colors.black26.withOpacity(.2),
+          color: Colors.black26.withValues(alpha: 51), // .2 * 255 ≈ 51
         ),
       );
 
@@ -486,24 +486,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: isLoading
                             ? null!
-                            : () async {
-                                var connResult =
-                                    await Connectivity().checkConnectivity();
-                                if (connResult == ConnectivityResult.none) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text(S.of(context).check_internet),
-                                      action: SnackBarAction(
-                                        label: S.of(context).dismiss,
-                                        onPressed: () =>
-                                            ScaffoldMessenger.of(context)
-                                                .hideCurrentSnackBar(),
-                                      ),
-                                    ),
-                                  );
-                                  return;
-                                }
+                            : () {
                                 signInWithEmailAndPassword();
                               },
                       ),
@@ -524,7 +507,8 @@ class _LoginPageState extends State<LoginPage> {
             ignoring: true,
             child: isLoading
                 ? Container(
-                    color: Colors.grey.withOpacity(0.5),
+                    color:
+                        Colors.grey.withValues(alpha: 128), // 0.5 * 255 ≈ 128
                     child: Center(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -810,7 +794,7 @@ class _LoginPageState extends State<LoginPage> {
       height: 56,
       child: InkWell(
         customBorder: CircleBorder(),
-        onTap: operation as GestureTapCallback?,
+        onTap: operation == null ? null : () => operation(),
         child: Row(
           children: <Widget>[
             Column(
@@ -882,22 +866,23 @@ class _LoginPageState extends State<LoginPage> {
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
-    UserModel? user;
     try {
-      user = await auth.signInWithApple();
+      UserModel? user = await auth.signInWithApple();
       if (user == null) {
         isLoading = false;
         return;
       }
       await getAndUpdateDeviceDetailsOfUser(
           locationVal: location, userEmailId: user.email!);
-    } on FirebaseAuthException catch (erorr) {
-      handlePlatformException(erorr);
-    } on Exception catch (error) {
-      // FirebaseCrashlytics.instance.log(error.toString());
+      isLoading = false;
+      _processLogin(user);
+    } on FirebaseAuthException catch (error) {
+      isLoading = false;
+      handlePlatformException(error);
+    } on Exception {
+      isLoading = false;
+      // Handle exception without using error variable
     }
-    isLoading = false;
-    _processLogin(user!);
   }
 
   TextStyle get textStyle {
@@ -976,10 +961,9 @@ class _LoginPageState extends State<LoginPage> {
       // FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
-    if (user == null) {
-      return;
+    if (user != null) {
+      _processLogin(user);
     }
-    _processLogin(user!);
   }
 
   void handleException() {
@@ -1054,10 +1038,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _processLogin(UserModel userModel) {
-    if (userModel == null) {
-      return;
-    }
-
     logger.d("INSIDE PROCESS LOGIN ====");
 
     Navigator.of(context).pushReplacement(

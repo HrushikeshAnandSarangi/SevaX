@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage>
   bool _isLoading = false;
 
   late String fullName;
-  late String password;
+  String? password;
   String email = '';
   late String imageUrl;
   String? webImageUrl;
@@ -422,30 +422,34 @@ class _RegisterPageState extends State<RegisterPage>
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },
-            shouldRestrictLength: false, // Changed to allow more than 20 chars
+            shouldRestrictLength: false,
             hint: S.of(context).full_name,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
+            validator: (String? value) {
+              if (value == null || value.trim().isEmpty) {
                 return S.of(context).validation_error_full_name;
-              } else if (profanityDetector.isProfaneString(value)) {
+              }
+
+              String trimmedValue = value.trim();
+
+              if (profanityDetector.isProfaneString(trimmedValue)) {
                 return S.of(context).profanity_text_alert;
               }
 
-              // Check if string contains only special characters
               final specialCharsOnly = RegExp(r'^[^a-zA-Z0-9]+$');
-              if (specialCharsOnly.hasMatch(value)) {
+              if (specialCharsOnly.hasMatch(trimmedValue)) {
                 return 'Name cannot contain only special characters';
               }
 
-              // Check if string contains only numbers
               final numbersOnly = RegExp(r'^[0-9]+$');
-              if (numbersOnly.hasMatch(value)) {
+              if (numbersOnly.hasMatch(trimmedValue)) {
                 return 'Name cannot contain only numbers';
               }
 
               return null;
             },
-            onSave: (value) => this.fullName = value ?? '',
+            onSave: (String? value) {
+              this.fullName = value?.trim() ?? '';
+            },
           ),
           getFormField(
             focusNode: emailFocus,
@@ -469,17 +473,15 @@ class _RegisterPageState extends State<RegisterPage>
               }
             },
           ),
-          getPasswordFormField(
+          getFormField(
             focusNode: pwdFocus,
             controller: passwordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
             shouldRestrictLength: false,
-            hint: S.of(context).confirm.firstWordUpperCase() +
-                ' ' +
-                S.of(context).password.firstWordUpperCase(),
-            shouldObscure: shouldObscureConfirmPassword,
+            hint: S.of(context).password.firstWordUpperCase(),
+            shouldObscure: _shouldObscurePassword,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_invalid_password;
@@ -489,18 +491,18 @@ class _RegisterPageState extends State<RegisterPage>
               final strongPasswordRegex = RegExp(
                   r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~])[^\s]{8,}$');
 
-              // Add filter to prevent space input
               if (value.contains(' ')) {
                 return 'Password cannot contain spaces';
               }
               if (!strongPasswordRegex.hasMatch(value)) {
                 return '''Password must:
-            • Be at least 8 characters
-            • Include uppercase letter
-            • Include lowercase letter  
-            • Include number
-            • Include special character (!@#\$&*~)''';
+          • Be at least 8 characters
+          • Include uppercase letter
+          • Include lowercase letter  
+          • Include number
+          • Include special character (!@#\$&*~)''';
               }
+              return null;
             },
             onSave: (value) {
               if (value != null) {
@@ -531,53 +533,35 @@ class _RegisterPageState extends State<RegisterPage>
             hint: S.of(context).confirm.firstWordUpperCase() +
                 ' ' +
                 S.of(context).password.firstWordUpperCase(),
-            shouldObscure: shouldObscureConfirmPassword,
+            shouldObscure: _shouldObscureConfirmPassword,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return S.of(context).validation_error_invalid_password;
               }
 
-              // Password regex that doesn't allow spaces and requires other criteria
-              final strongPasswordRegex = RegExp(
-                  r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~])[^\s]{8,}$');
-
-              // Add filter to prevent space input
-              if (value.contains(' ')) {
-                return 'Password cannot contain spaces';
-              }
-              if (!strongPasswordRegex.hasMatch(value)) {
-                return '''Password must:
-            • Be at least 8 characters
-            • Include uppercase letter
-            • Include lowercase letter  
-            • Include number
-            • Include special character (!@#\$&*~)''';
-              }
-
-              if (value != password) {
+              if (value != passwordController.text) {
                 return S.of(context).validation_error_password_mismatch;
               }
 
               return null;
             },
             onSave: (value) {
-              this.confirmPassword = value!;
+              if (value != null) {
+                confirmPassword = value;
+              }
             },
-            suffix: Container(
-                height: 30,
-                child: GestureDetector(
-                  onTap: () {
-                    _shouldObscureConfirmPassword =
-                        !_shouldObscureConfirmPassword;
-                    setState(() {});
-                  },
-                  child: Icon(
-                    shouldObscureConfirmPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
-                )),
-          )
+            suffix: GestureDetector(
+              onTap: () {
+                _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
+                setState(() {});
+              },
+              child: Icon(
+                _shouldObscureConfirmPassword
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -622,11 +606,10 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
         validator: validator,
-        onSaved: onSave,
+        onSaved: onSave ?? (value) {},
         formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
-        obscureText: shouldObscure,
       ),
     );
   }
@@ -905,7 +888,7 @@ class _RegisterPageState extends State<RegisterPage>
     try {
       UserModel user = await auth.createUserWithEmailAndPassword(
         email: email.toLowerCase(),
-        password: password,
+        password: password!,
         displayName: fullName,
       );
 
