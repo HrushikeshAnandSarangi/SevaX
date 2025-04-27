@@ -1,24 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:ui' as ui;
 import 'package:universal_io/io.dart' as io;
-import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
+import 'dart:ui' as ui;
+
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart'
-    show FirebaseRemoteConfig;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_provider.dart' as seva_auth_provider;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
@@ -60,22 +58,16 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController(),
       passwordController = TextEditingController();
 
-  @override
   void initState() {
     super.initState();
 
-    if (!kIsWeb && io.Platform.isIOS) {
-      SignInWithApple.getCredentialState("").then((_) {});
+    if (io.Platform.isIOS) {
+      SignInWithApple.getCredentialState("");
     }
     fetchRemoteConfig();
   }
 
-  Future<void> fetchRemoteConfig() async {
-    AppConfig.remoteConfig = FirebaseRemoteConfig.instance;
-    await AppConfig.remoteConfig!.fetch();
-    await AppConfig.remoteConfig!.activate();
-  }
-
+//  Future<void> delete() async {
 //    await CollectionRef
 //        .communities
 //        .get()
@@ -88,15 +80,23 @@ class _LoginPageState extends State<LoginPage> {
 //    });
 //  }
 
-  Widget horizontalLine() => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          width: 120,
-          height: 1.0,
-          color: Colors.black26.withValues(alpha: 51), // .2 * 255 ≈ 51
-        ),
-      );
+  Future<void> fetchRemoteConfig() async {
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: Duration.zero,
+    ));
+    await remoteConfig.fetchAndActivate();
+    AppConfig.remoteConfig = remoteConfig;
+  }
 
+  Widget horizontalLine() => Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        width: 120,
+        height: 1.0,
+        color: Colors.black26.withOpacity(.2),
+      ));
   @override
   Widget build(BuildContext context) {
     parentContext = context;
@@ -106,6 +106,29 @@ class _LoginPageState extends State<LoginPage> {
     // appLanguage.changeLanguage(_language);
     //UserData.shared.isFromLogin = true;
     //Todo check this line
+    // Place image and email form side by side
+    Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Logo/Image
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16.0, top: 32.0),
+            child: Image.asset(
+              'lib/assets/images/seva-x-logo.png',
+              height: 120,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        // Email/password form
+        Expanded(
+          flex: 2,
+          child: content,
+        ),
+      ],
+    );
     // ScreenUtil.init(context);
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     // getDynamicLinkData(context);
@@ -139,18 +162,16 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () async {
               isLoading = true;
               logger.d("NAVIGATING TO REGISTER!");
-              UserModel? result = await Navigator.of(context).push(
+              UserModel? user = await Navigator.of(context).push(
                 MaterialPageRoute<UserModel>(
                   builder: (context) => RegisterPage(),
                 ),
               );
               isLoading = false;
-              if (result != null) {
-                UserModel user = result;
+              if (user != null)
                 _processLogin(user);
-              } else {
+              else
                 logger.d("USER IS NULL!");
-              }
             },
             child: Text(
               S.of(context).sign_up,
@@ -470,12 +491,12 @@ class _LoginPageState extends State<LoginPage> {
                       width: 145,
                       height: 50,
                       child: CustomElevatedButton(
-                        shape: StadiumBorder(),
-                        color: Color(0x0FF766FE0),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         elevation: 2.0,
                         textColor: Colors.white,
+                        shape: StadiumBorder(),
+                        color: Color(0x0FF766FE0),
                         child: Text(
                           S.of(context).sign_in,
                           style: TextStyle(
@@ -486,7 +507,24 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: isLoading
                             ? null!
-                            : () {
+                            : () async {
+                                var connResult =
+                                    await Connectivity().checkConnectivity();
+                                if (connResult == ConnectivityResult.none) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text(S.of(context).check_internet),
+                                      action: SnackBarAction(
+                                        label: S.of(context).dismiss,
+                                        onPressed: () =>
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar(),
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
                                 signInWithEmailAndPassword();
                               },
                       ),
@@ -507,8 +545,7 @@ class _LoginPageState extends State<LoginPage> {
             ignoring: true,
             child: isLoading
                 ? Container(
-                    color:
-                        Colors.grey.withValues(alpha: 128), // 0.5 * 255 ≈ 128
+                    color: Colors.grey.withOpacity(0.5),
                     child: Center(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -572,7 +609,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: textStyle,
                     // cursorColor: Colors.black54,
                     controller: emailController,
-                    validator: _validateEmailId,
+                    validator: (value) => _validateEmailId(value),
                     onSaved: _saveEmail,
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(pwdFocus);
@@ -794,7 +831,7 @@ class _LoginPageState extends State<LoginPage> {
       height: 56,
       child: InkWell(
         customBorder: CircleBorder(),
-        onTap: operation == null ? null : () => operation(),
+        onTap: () => operation!(),
         child: Row(
           children: <Widget>[
             Column(
@@ -865,23 +902,22 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     isLoading = true;
-    Auth auth = AuthProvider.of(context).auth;
+    Auth auth = seva_auth_provider.AuthProvider.of(context).auth;
+    UserModel? user;
     try {
-      UserModel? user = await auth.signInWithApple();
-      if (user == null) {
-        isLoading = false;
-        return;
+      user = await auth.signInWithApple();
+      if (user != null) {
+        await getAndUpdateDeviceDetailsOfUser(
+            locationVal: location, userEmailId: user.email);
       }
-      await getAndUpdateDeviceDetailsOfUser(
-          locationVal: location, userEmailId: user.email!);
-      isLoading = false;
+    } on FirebaseAuthException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {
+      // FirebaseCrashlytics.instance.log(error.toString());
+    }
+    isLoading = false;
+    if (user != null) {
       _processLogin(user);
-    } on FirebaseAuthException catch (error) {
-      isLoading = false;
-      handlePlatformException(error);
-    } on Exception {
-      isLoading = false;
-      // Handle exception without using error variable
     }
   }
 
@@ -907,44 +943,50 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     isLoading = true;
-    Auth auth = AuthProvider.of(context).auth;
+    Auth auth = seva_auth_provider.AuthProvider.of(context).auth;
     UserModel? user;
     try {
       user = await auth.handleGoogleSignIn();
-      if (user == null) {
-        isLoading = false;
-        return;
-      }
       logger.d("#user ${user}");
-      await getAndUpdateDeviceDetailsOfUser(
-          locationVal: location, userEmailId: user.email!);
+      if (user != null) {
+        await getAndUpdateDeviceDetailsOfUser(
+            locationVal: location, userEmailId: user.email);
+      }
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
       // FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
-    _processLogin(user!);
+    if (user != null) {
+      _processLogin(user);
+    }
   }
 
   void signInWithEmailAndPassword({validate = true}) async {
     if (!_formKey.currentState!.validate() && validate) return;
     FocusScope.of(context).unfocus();
     if (validate) _formKey.currentState!.save();
-    Auth auth = AuthProvider.of(context).auth;
-    UserModel? user = null;
+    Auth auth = seva_auth_provider.AuthProvider.of(context).auth;
+    UserModel? user;
     isLoading = true;
     try {
-      // Add null checks and type assertion
       if (emailId == null || password == null) {
-        throw Exception('Email or password cannot be null');
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(S.of(context).enter_email +
+                  ' & ' +
+                  S.of(context).enter_password)),
+        );
+        return;
       }
-      user = (await auth.signInWithEmailAndPassword(
+      user = await auth.signInWithEmailAndPassword(
         email: emailId!.trim().toLowerCase(),
         password: password!,
-      ))!;
+      );
       await getAndUpdateDeviceDetailsOfUser(
-              locationVal: location, userEmailId: user.email!)
+              locationVal: location, userEmailId: user!.email)
           .timeout(Duration(seconds: 3));
       logger.i('device details fixed');
     } on TimeoutException catch (e) {
@@ -956,14 +998,14 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      handlePlatformException(
-          FirebaseAuthException(code: 'unknown', message: error.toString()));
+      handlePlatformException(error.toString() as FirebaseAuthException);
       // FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
-    if (user != null) {
-      _processLogin(user);
+    if (user == null) {
+      return;
     }
+    _processLogin(user);
   }
 
   void handleException() {
@@ -1032,12 +1074,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _savePassword(String? value) {
-    if (value != null) {
-      this.password = value;
-    }
+    this.password = value;
   }
 
   void _processLogin(UserModel userModel) {
+    if (userModel == null) {
+      return;
+    }
+
     logger.d("INSIDE PROCESS LOGIN ====");
 
     Navigator.of(context).pushReplacement(
@@ -1108,17 +1152,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> fetchBulkInviteLinkData() async {
     // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
-    var link = await FirebaseDynamicLinksPlatform.instance.getInitialLink();
+    var link = await FirebaseDynamicLinks.instance.getInitialLink();
 
     //buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-    await handleBulkInviteLinkData(data: link);
-    FirebaseDynamicLinksPlatform.instance.onLink.listen(
-        (PendingDynamicLinkData? dynamicLink) async {
-      await handleBulkInviteLinkData(
-        data: dynamicLink,
-      );
-    }, onError: (error) async {});
+    await handleBulkInviteLinkData(data: link!);
+    FirebaseDynamicLinks.instance.onLink.listen(
+      (PendingDynamicLinkData dynamicLink) async {
+        await handleBulkInviteLinkData(
+          data: dynamicLink,
+        );
+      },
+      onError: (error) async {},
+    );
 
     // This will handle incoming links if the application is already opened
   }
@@ -1126,20 +1172,18 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> handleBulkInviteLinkData({
     PendingDynamicLinkData? data,
   }) async {
-    final Uri? uri = data?.link;
-    if (uri == null) {
-      return false;
-    }
-    final queryParams = uri.queryParameters;
-    if (queryParams.isNotEmpty) {
-      String? invitedMemberEmail = queryParams["invitedMemberEmail"];
+    final Uri uri = data!.link;
+    if (uri != null) {
+      final queryParams = uri.queryParameters;
+      if (queryParams.length > 0) {
+        String? invitedMemberEmail = queryParams["invitedMemberEmail"];
 
-      //   String communityId = queryParams["communityId"];
-      // String primaryTimebankId = queryParams["primaryTimebankId"];
-      if (queryParams.containsKey("isFromBulkInvite") &&
-          queryParams["isFromBulkInvite"] == 'true' &&
-          invitedMemberEmail != null) {
-        resetDynamicLinkPassword(invitedMemberEmail);
+        //   String communityId = queryParams["communityId"];
+        // String primaryTimebankId = queryParams["primaryTimebankId"];
+        if (queryParams.containsKey("isFromBulkInvite") &&
+            queryParams["isFromBulkInvite"] == 'true') {
+          resetDynamicLinkPassword(invitedMemberEmail!);
+        }
       }
     }
     return false;
@@ -1152,7 +1196,7 @@ class _LoginPageState extends State<LoginPage> {
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
       showDialog(
-        context: parentContext ?? context,
+        context: parentContext!,
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
