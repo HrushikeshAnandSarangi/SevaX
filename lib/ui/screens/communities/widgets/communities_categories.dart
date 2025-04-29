@@ -32,10 +32,10 @@ class CommunitiesCategory extends StatelessWidget {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                childAspectRatio: 4 / 0.5,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 8,
+                crossAxisCount: 2,
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
               ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) => SimpleCommunityCard(

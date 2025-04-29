@@ -17,10 +17,10 @@ import 'models.dart';
 enum OfferType { INDIVIDUAL_OFFER, GROUP_OFFER }
 
 extension OfferTypeExtension on OfferType {
-  String readbable(RequestType requestType, BuildContext context) {
-    if (this == OfferType.GROUP_OFFER)
+  String readbable(RequestType? requestType, BuildContext context) {
+    if (this == OfferType.GROUP_OFFER) {
       return S.of(context).one_to_many.sentenceCase();
-    else if (this == OfferType.INDIVIDUAL_OFFER)
+    } else if (this == OfferType.INDIVIDUAL_OFFER && requestType != null) {
       switch (requestType) {
         case RequestType.CASH:
           return S.of(context).cash;
@@ -33,8 +33,8 @@ extension OfferTypeExtension on OfferType {
         default:
           return 'Individual'; //Label to be created
       }
-    else
-      return 'Individual'; //Label to be created
+    }
+    return 'Individual'; //Label to be created
   }
 }
 

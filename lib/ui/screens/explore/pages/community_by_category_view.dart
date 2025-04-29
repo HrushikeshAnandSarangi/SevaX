@@ -69,8 +69,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                     ),
                   );
                 }
-                if (snapshot.data == null ||
-                    (snapshot.data as List<CommunityModel>?)?.isEmpty == true) {
+                if (snapshot.data == null || (snapshot.data as List).isEmpty) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 2,
                     child: Padding(
@@ -101,8 +100,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                     ),
                   );
                 }
-                if (snapshot.data == null ||
-                    (snapshot.data as List<CommunityModel>?)?.isEmpty == true) {
+                if (snapshot.data == null || (snapshot.data as List).isEmpty) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 2,
                     child: Padding(
