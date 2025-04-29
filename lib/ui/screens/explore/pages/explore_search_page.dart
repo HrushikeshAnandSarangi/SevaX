@@ -46,31 +46,11 @@ class ExploreSearchPage extends StatefulWidget {
 
 class _ExploreSearchPageState extends State<ExploreSearchPage>
     with SingleTickerProviderStateMixin {
-  TabController? _controller;
-  TextEditingController _searchController = TextEditingController();
-  late final ExploreSearchPageBloc _bloc;
+  late TabController _controller;
+  final TextEditingController _searchController = TextEditingController();
+  final ExploreSearchPageBloc _bloc = ExploreSearchPageBloc();
   final BehaviorSubject<int> _tabIndex = BehaviorSubject<int>.seeded(0);
-  ScrollController _scrollController = ScrollController();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _bloc = ExploreSearchPageBloc();
-    _initializeBloc();
-  }
-
-  void _initializeBloc() {
-    if (widget.isUserSignedIn != null) {
-      _bloc.load(
-        widget.isUserSignedIn!
-            ? SevaCore.of(context).loggedInUser.sevaUserID!
-            : '',
-        context,
-        widget.isUserSignedIn!,
-      );
-    }
-  }
-
+  final ScrollController _scrollController = ScrollController();
   final searchBorder = OutlineInputBorder(
     borderSide: BorderSide(color: Colors.grey),
     borderRadius: BorderRadius.circular(40),
@@ -761,8 +741,11 @@ class ExploreSearchTabBar extends StatelessWidget {
           initialData: _initialTabIndex,
           stream: _tabIndex.stream.cast<int>(),
           builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return CommunitiesSearchView(isUserSignedIn: _isUserSignedIn);
+            }
             logger.f("tabIndex: ${snapshot.data}");
-            switch (snapshot.data ?? 0) {
+            switch (snapshot.data!) {
               case 0:
                 return CommunitiesSearchView(
                   isUserSignedIn: _isUserSignedIn,

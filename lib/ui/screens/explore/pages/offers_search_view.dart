@@ -45,7 +45,7 @@ class OffersSearchView extends StatelessWidget {
                 // var date = DateTime.fromMillisecondsSinceEpoch(offer.timestamp);
                 return ExploreEventCard(
                   onTap: () {
-                    if (isUserSignedIn!) {
+                    if (isUserSignedIn ?? false) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
