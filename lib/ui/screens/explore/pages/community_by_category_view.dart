@@ -55,8 +55,8 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
       child: widget.isFromNearby
           ? StreamBuilder(
               stream: widget.isUserSignedIn
-                  ? _bloc!.nearyByCommunities!
-                  : Searches.getNearBYCommunities(geoPoint: widget.geoPoint!),
+                  ? _bloc!.nearyByCommunities
+                  : Searches.getNearBYCommunities(geoPoint: widget.geoPoint),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Container(
@@ -70,7 +70,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                   );
                 }
                 if (snapshot.data == null ||
-                    (snapshot.data as List<CommunityModel>).isEmpty) {
+                    (snapshot.data as List<CommunityModel>?)?.isEmpty == true) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 2,
                     child: Padding(
@@ -102,7 +102,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                   );
                 }
                 if (snapshot.data == null ||
-                    ((snapshot.data as List<CommunityModel>).isEmpty)) {
+                    (snapshot.data as List<CommunityModel>?)?.isEmpty == true) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 2,
                     child: Padding(
