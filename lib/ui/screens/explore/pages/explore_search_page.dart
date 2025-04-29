@@ -48,9 +48,29 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
     with SingleTickerProviderStateMixin {
   TabController? _controller;
   TextEditingController _searchController = TextEditingController();
-  ExploreSearchPageBloc _bloc = ExploreSearchPageBloc();
+  late final ExploreSearchPageBloc _bloc;
   final BehaviorSubject<int> _tabIndex = BehaviorSubject<int>.seeded(0);
   ScrollController _scrollController = ScrollController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bloc = ExploreSearchPageBloc();
+    _initializeBloc();
+  }
+
+  void _initializeBloc() {
+    if (widget.isUserSignedIn != null) {
+      _bloc.load(
+        widget.isUserSignedIn!
+            ? SevaCore.of(context).loggedInUser.sevaUserID!
+            : '',
+        context,
+        widget.isUserSignedIn!,
+      );
+    }
+  }
+
   final searchBorder = OutlineInputBorder(
     borderSide: BorderSide(color: Colors.grey),
     borderRadius: BorderRadius.circular(40),
