@@ -37,7 +37,7 @@ class ExplorePageAppBar extends PreferredSize {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 10),
         child: Column(
           children: [
             Row(
@@ -49,8 +49,8 @@ class ExplorePageAppBar extends PreferredSize {
                   },
                   child: Image.asset(
                     'images/seva-x-logo-white.png',
-                    width: 112,
-                    height: 32,
+                    width: 150,
+                    height: 60,
                   ),
                 ),
                 Spacer(),
@@ -162,12 +162,15 @@ class ExplorePageAppBar extends PreferredSize {
 
   CustomTextButton appBarButton(String text, VoidCallback onTap) {
     return CustomTextButton(
-      child: SizedBox(
-        height: 64,
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: SizedBox(
+          height: 64,
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
           ),
         ),
       ),

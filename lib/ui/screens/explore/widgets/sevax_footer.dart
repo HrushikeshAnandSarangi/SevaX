@@ -59,9 +59,9 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       width: MediaQuery.of(context).size.width,
       color: widget.footerColor == true
           ? Theme.of(context).primaryColor
-          : const Color(0xFFF454684),
+          : const Color.fromARGB(255, 84, 85, 170),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
         child: Column(
           children: [
             // Top row with dropdowns and footer data

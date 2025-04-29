@@ -57,8 +57,8 @@ class ExplorePageViewHolder extends StatelessWidget {
               secondChild: const SizedBox.shrink(),
             ),
             Padding(
-              padding:
-                  childPadding ?? const EdgeInsets.symmetric(horizontal: 12),
+              padding: childPadding ??
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: child,
             ),
             SizedBox(

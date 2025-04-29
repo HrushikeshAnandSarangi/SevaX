@@ -42,6 +42,23 @@ class CommunityCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 height: 80,
                 width: 80,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 80,
+                    width: 80,
+                    color: Colors.grey[300],
+                    child: Icon(Icons.error_outline, color: Colors.grey[600]),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 80,
+                    width: 80,
+                    color: Colors.grey[200],
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                },
               ),
             ),
             SizedBox(width: 16),
@@ -69,7 +86,7 @@ class CommunityCard extends StatelessWidget {
               elevation: 0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 8),
               child: Text(
                 buttonLabel,
                 style: TextStyle(
