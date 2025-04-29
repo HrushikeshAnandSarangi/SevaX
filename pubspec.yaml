@@ -100,7 +100,6 @@ dependency_overrides:
   geolocator_android: 4.6.2
   leak_tracker: 10.0.9
   material_color_utilities: 0.12.0
-  vm_service: 15.0.0
   intl: 0.20.2
 
 dev_dependencies:

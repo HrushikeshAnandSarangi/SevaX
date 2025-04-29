@@ -500,7 +500,7 @@ class ProfileViewerState extends State<ProfileViewer> {
           var updateUser = SevaCore.of(context).loggedInUser;
           var blockedMembers = List<String>.from(updateUser.blockedMembers!);
           blockedMembers.add(user!.sevaUserID!);
-          SevaCore.of(context).loggedInUser =
+          SevaCore.of(context)!.loggedInUser =
               updateUser.setBlockedMembers(blockedMembers);
         });
         break;
