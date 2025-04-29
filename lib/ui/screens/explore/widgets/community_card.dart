@@ -32,7 +32,7 @@ class CommunityCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipRRect(
@@ -82,21 +82,27 @@ class CommunityCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16),
-            CustomElevatedButton(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 8),
-              child: Text(
-                buttonLabel,
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: textColor),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 120),
+              child: CustomElevatedButton(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  buttonLabel,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: textColor),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onPressed: onbuttonPress,
+                color: buttonColor,
+                textColor: textColor,
               ),
-              onPressed: onbuttonPress,
-              color: buttonColor,
-              textColor: textColor,
             ),
           ],
         ),
