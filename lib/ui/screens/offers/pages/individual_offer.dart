@@ -214,7 +214,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
       } else {
         _one_to_many_bloc.loadData(widget.offerModel);
         _one_to_many_titleController.text =
-            widget.offerModel.groupOfferDataModel!.classTitle;
+            widget.offerModel.groupOfferDataModel!.classTitle!;
         _preparationController.text = widget
             .offerModel.groupOfferDataModel!.numberOfPreperationHours
             .toString();
@@ -224,7 +224,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         _sizeClassController.text =
             widget.offerModel.groupOfferDataModel!.sizeOfClass.toString();
         _classDescriptionController.text =
-            widget.offerModel.groupOfferDataModel!.classDescription;
+            widget.offerModel.groupOfferDataModel!.classDescription!;
         offerType = RequestType.ONE_TO_MANY_OFFER;
         _bloc.onTypeChanged(RequestType.ONE_TO_MANY_OFFER);
       }
@@ -1769,12 +1769,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.groupOfferDataModel!.startDate,
+                  widget.offerModel.groupOfferDataModel!.startDate!,
                 )
               : null,
           endTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.groupOfferDataModel!.endDate,
+                  widget.offerModel.groupOfferDataModel!.endDate!,
                 )
               : null,
         ),

@@ -38,7 +38,7 @@ class OfferEarnings extends StatelessWidget {
               return LoadingIndicator();
             }
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
-              offerModel!.groupOfferDataModel!.endDate,
+              offerModel!.groupOfferDataModel!.endDate!,
             );
             // Duration _durationLeft = _endTime.difference(DateTime.now());
             bool _isOfferOver = DateTime.now().isAfter(_endTime);
@@ -51,21 +51,21 @@ class OfferEarnings extends StatelessWidget {
                     SevaCoinStarWidget(
                       title: S.of(context).your_earnings,
                       amount: offerModel!.groupOfferDataModel!.creditStatus == 1
-                          ? (offerModel!
-                                      .groupOfferDataModel!.numberOfClassHours +
+                          ? (offerModel!.groupOfferDataModel!
+                                      .numberOfClassHours! +
                                   offerModel!.groupOfferDataModel!
-                                      .numberOfPreperationHours)
+                                      .numberOfPreperationHours!)!
                               .toString()
                           : '0',
                     ),
                     SevaCoinStarWidget(
                       title: S.of(context).timebank_earnings,
                       amount: offerModel!.groupOfferDataModel!.creditStatus == 1
-                          ? (offerModel!.groupOfferDataModel!.creditsApproved -
+                          ? (offerModel!.groupOfferDataModel!.creditsApproved! -
                                   (offerModel!.groupOfferDataModel!
-                                          .numberOfClassHours +
+                                          .numberOfClassHours! +
                                       offerModel!.groupOfferDataModel!
-                                          .numberOfPreperationHours))
+                                          .numberOfPreperationHours!))
                               .toString()
                           : '0',
                     ),
@@ -206,7 +206,7 @@ class OfferDonationRequest extends StatelessWidget {
               return LoadingIndicator();
             }
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
-              offerModel!.groupOfferDataModel!.endDate,
+              offerModel!.groupOfferDataModel!.endDate!,
             );
             // Duration _durationLeft = _endTime.difference(DateTime.now());
             bool _isOfferOver = DateTime.now().isAfter(_endTime);
@@ -219,21 +219,21 @@ class OfferDonationRequest extends StatelessWidget {
                     SevaCoinStarWidget(
                       title: S.of(context).your_earnings,
                       amount: offerModel!.groupOfferDataModel!.creditStatus == 1
-                          ? (offerModel!
-                                      .groupOfferDataModel!.numberOfClassHours +
+                          ? (offerModel!.groupOfferDataModel!
+                                      .numberOfClassHours! +
                                   offerModel!.groupOfferDataModel!
-                                      .numberOfPreperationHours)
+                                      .numberOfPreperationHours!)
                               .toString()
                           : '0',
                     ),
                     SevaCoinStarWidget(
                       title: S.of(context).timebank_earnings,
                       amount: offerModel!.groupOfferDataModel!.creditStatus == 1
-                          ? (offerModel!.groupOfferDataModel!.creditsApproved -
+                          ? (offerModel!.groupOfferDataModel!.creditsApproved! -
                                   (offerModel!.groupOfferDataModel!
-                                          .numberOfClassHours +
+                                          .numberOfClassHours! +
                                       offerModel!.groupOfferDataModel!
-                                          .numberOfPreperationHours))
+                                          .numberOfPreperationHours!))
                               .toString()
                           : '0',
                     ),

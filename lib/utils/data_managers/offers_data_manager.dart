@@ -367,8 +367,8 @@ Future<void> updateRecurrenceOffersFrontEnd({
   // s5 ---------- send notifications in case users have part of members
 
   upcomingEventsArr.forEach((upcomingEvent) {
-    if (upcomingEvent.groupOfferDataModel!.signedUpMembers.length > 0) {
-      upcomingEvent.groupOfferDataModel!.signedUpMembers
+    if (upcomingEvent.groupOfferDataModel!.signedUpMembers!.length > 0) {
+      upcomingEvent.groupOfferDataModel!.signedUpMembers!
           .forEach((signedUpMemberId) {
         usersIds.add(signedUpMemberId);
       });
@@ -399,7 +399,7 @@ Future<void> updateRecurrenceOffersFrontEnd({
       if (!snapUser.documents.isEmpty) {
         snapUser.docs.forEach((docUser) {
           upcomingEventsArr.forEach((OfferModel upcomingEvent) {
-            if (upcomingEvent.groupOfferDataModel!.signedUpMembers
+            if (upcomingEvent.groupOfferDataModel!.signedUpMembers!
                 .contains(docUser.data['sevauserid'])) {
               uuidvar = Uuid().generateV4();
               batch.set(

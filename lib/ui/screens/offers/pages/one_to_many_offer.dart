@@ -71,7 +71,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel!);
       _titleController.text =
-          widget.offerModel!.groupOfferDataModel!.classTitle;
+          widget.offerModel!.groupOfferDataModel!.classTitle!;
       _preparationController.text = widget
           .offerModel!.groupOfferDataModel!.numberOfPreperationHours
           .toString();
@@ -80,7 +80,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       _sizeClassController.text =
           widget.offerModel!.groupOfferDataModel!.sizeOfClass.toString();
       _classDescriptionController.text =
-          widget.offerModel!.groupOfferDataModel!.classDescription;
+          widget.offerModel!.groupOfferDataModel!.classDescription!;
     }
     super.initState();
     getCommunity();
@@ -206,13 +206,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             startTime: widget.offerModel != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
                                     widget!.offerModel!.groupOfferDataModel!
-                                        .startDate,
+                                        .startDate!,
                                   )
                                 : null,
                             endTime: widget.offerModel != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
                                     widget.offerModel!.groupOfferDataModel!
-                                        .endDate,
+                                        .endDate!,
                                   )
                                 : null,
                           ),

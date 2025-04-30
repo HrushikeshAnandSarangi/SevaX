@@ -39,24 +39,40 @@ extension OfferTypeExtension on OfferType {
 }
 
 class GroupOfferDataModel {
-  String classTitle = '';
-  String classDescription = '';
-  double creditsApproved = 0.0;
-  int creditStatus = 0;
-  int endDate = 0;
-  int numberOfClassHours = 0;
-  int numberOfPreperationHours = 0;
-  List<String> signedUpMembers = [];
-  int startDate = 0;
-  int sizeOfClass = 0;
+  String? classTitle;
+  String? classDescription;
+  double? creditsApproved;
+  int? creditStatus;
+  int? endDate;
+  int? numberOfClassHours;
+  int? numberOfPreperationHours;
+  List<String>? signedUpMembers;
+  int? startDate;
+  int? sizeOfClass;
 
-  int isReviewed = 0;
-  int membersNotified = 0;
-  int completedRefund = 0;
-  bool hostNotified = false;
-  bool isCanceled = false;
+  int? isReviewed;
+  int? membersNotified;
+  int? completedRefund;
+  bool? hostNotified;
+  bool? isCanceled;
 
-  GroupOfferDataModel();
+  GroupOfferDataModel({
+    this.classTitle = '',
+    this.classDescription = '',
+    this.creditsApproved = 0.0,
+    this.creditStatus = 0,
+    this.endDate = 0,
+    this.numberOfClassHours = 0,
+    this.numberOfPreperationHours = 0,
+    this.signedUpMembers = const [],
+    this.startDate = 0,
+    this.sizeOfClass = 0,
+    this.isReviewed = 0,
+    this.membersNotified = 0,
+    this.completedRefund = 0,
+    this.hostNotified = false,
+    this.isCanceled = false,
+  });
 
   @override
   Map<String, dynamic> toMap() {

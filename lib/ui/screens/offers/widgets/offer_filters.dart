@@ -28,7 +28,7 @@ class OfferFilters extends StatelessWidget {
     return StreamBuilder<OfferFilter>(
       stream: stream,
       builder: (context, snapshot) {
-        var filter = snapshot.data;
+        var filter = snapshot.data ?? OfferFilter();
         return Wrap(
           spacing: 8.0,
           children: [

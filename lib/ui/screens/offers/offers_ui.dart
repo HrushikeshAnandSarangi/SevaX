@@ -481,7 +481,7 @@ class OfferCardViewState extends State<OfferCardView> {
                         confirmationDialog(
                           context: context,
                           title:
-                              "You are signing up for this ${widget.offerModel!.groupOfferDataModel!.classTitle.trim()}. Doing so will debit a total of ${widget.offerModel!.groupOfferDataModel!.numberOfClassHours} credits from you after you say OK.",
+                              "You are signing up for this ${widget.offerModel!.groupOfferDataModel!.classTitle!.trim()}. Doing so will debit a total of ${widget.offerModel!.groupOfferDataModel!.numberOfClassHours} credits from you after you say OK.",
                           onConfirmed: () {
                             var myUserID =
                                 SevaCore.of(context).loggedInUser.sevaUserID;

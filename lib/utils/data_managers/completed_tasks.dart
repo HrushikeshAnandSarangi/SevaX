@@ -229,9 +229,9 @@ class CompletedTasks {
             title: element.groupOfferDataModel!.classTitle!,
             subTitle: element.groupOfferDataModel!.classDescription!,
             tag: S.of(context).one_to_many_offer_attende,
-            timeInMilliseconds: element.groupOfferDataModel!.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate!,
           ),
-          taskTimestamp: element.groupOfferDataModel!.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate!,
         ),
       );
     });
@@ -243,12 +243,12 @@ class CompletedTasks {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () async {},
-            title: element.groupOfferDataModel!.classTitle,
-            subTitle: element.groupOfferDataModel!.classDescription,
+            title: element.groupOfferDataModel!.classTitle!,
+            subTitle: element.groupOfferDataModel!.classDescription!,
             tag: S.of(context).one_to_many_offer_speaker,
-            timeInMilliseconds: element.groupOfferDataModel!.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate!,
           ),
-          taskTimestamp: element.groupOfferDataModel!.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate!,
         ),
       );
     });

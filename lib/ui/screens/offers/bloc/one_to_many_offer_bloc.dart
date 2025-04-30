@@ -249,7 +249,7 @@ class OneToManyOfferBloc extends BlocBase {
   ///[PRELOAD DATA FOR UPDATE]
   void loadData(OfferModel offerModel) {
     _title.add(
-      offerModel.groupOfferDataModel!.classTitle,
+      offerModel.groupOfferDataModel!.classTitle!,
     );
     _preparationHours.add(
       offerModel.groupOfferDataModel!.numberOfPreperationHours.toString(),
@@ -259,7 +259,7 @@ class OneToManyOfferBloc extends BlocBase {
     );
     _classSize.add(offerModel.groupOfferDataModel!.sizeOfClass.toString());
     _classDescription.add(
-      offerModel.groupOfferDataModel!.classDescription,
+      offerModel.groupOfferDataModel!.classDescription!,
     );
     _isVisible.add(offerModel.public!);
     _makePublic.add(offerModel.public!);

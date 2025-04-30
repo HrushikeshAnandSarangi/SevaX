@@ -321,11 +321,11 @@ class ToDo {
           taskCard: ToDoCard(
             onTap: () {},
             title: element.groupOfferDataModel!.classTitle!,
-            subTitle: element.groupOfferDataModel!.classDescription,
+            subTitle: element.groupOfferDataModel!.classDescription!,
             tag: S.of(context).one_to_many_offer_attende,
-            timeInMilliseconds: element.groupOfferDataModel!.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate!,
           ),
-          taskTimestamp: element.groupOfferDataModel!.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate!,
         ),
       );
     });
@@ -337,12 +337,12 @@ class ToDo {
         TasksCardWrapper(
           taskCard: ToDoCard(
             onTap: () {},
-            title: element.groupOfferDataModel!.classTitle,
-            subTitle: element.groupOfferDataModel!.classDescription,
+            title: element.groupOfferDataModel!.classTitle!,
+            subTitle: element.groupOfferDataModel!.classDescription!,
             tag: S.of(context).one_to_many_offer_speaker,
-            timeInMilliseconds: element.groupOfferDataModel!.startDate,
+            timeInMilliseconds: element.groupOfferDataModel!.startDate!,
           ),
-          taskTimestamp: element.groupOfferDataModel!.startDate,
+          taskTimestamp: element.groupOfferDataModel!.startDate!,
         ),
       );
     });

@@ -763,7 +763,9 @@ class ExploreSearchTabBar extends StatelessWidget {
                   isUserSignedIn: _isUserSignedIn,
                 );
               case 3:
-                return OffersSearchView();
+                return OffersSearchView(
+                  isUserSignedIn: _isUserSignedIn,
+                );
               default:
                 logger.f("default case");
                 return CommunitiesSearchView(

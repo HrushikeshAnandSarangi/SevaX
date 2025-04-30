@@ -247,7 +247,7 @@ Future<bool> offerActions(
       await confirmationDialog(
         context: context,
         title:
-            "${S.of(context).you_are_signing_up_for_this_test} ${model.groupOfferDataModel?.classTitle.trim()}. ${S.of(context).doing_so_will_debit_a_total_of} ${model.groupOfferDataModel?.numberOfClassHours} ${S.of(context).credits_from_you_after_you_say_ok}.",
+            "${S.of(context).you_are_signing_up_for_this_test} ${model.groupOfferDataModel?.classTitle!.trim()}. ${S.of(context).doing_so_will_debit_a_total_of} ${model.groupOfferDataModel?.numberOfClassHours} ${S.of(context).credits_from_you_after_you_say_ok}.",
         onConfirmed: () async {
           await updateOffer(
             offerId: model.id ?? '',

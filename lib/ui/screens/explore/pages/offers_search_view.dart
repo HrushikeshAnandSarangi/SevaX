@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/communities_categories.dart';
@@ -17,10 +18,9 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import '../../../../l10n/l10n.dart';
 
 class OffersSearchView extends StatelessWidget {
-  final bool isUserSignedIn;
+  final bool? isUserSignedIn;
 
-  const OffersSearchView({Key? key, this.isUserSignedIn = false})
-      : super(key: key);
+  const OffersSearchView({Key? key, this.isUserSignedIn}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
@@ -30,19 +30,11 @@ class OffersSearchView extends StatelessWidget {
         StreamBuilder<List<OfferModel>>(
           stream: _bloc.offers,
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
             }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(S.of(context).no_result_found),
-                ),
-              );
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
+              return Text(S.of(context).no_result_found);
             }
 
             return ListView.builder(
@@ -54,7 +46,7 @@ class OffersSearchView extends StatelessWidget {
                 // var date = DateTime.fromMillisecondsSinceEpoch(offer.timestamp);
                 return ExploreEventCard(
                   onTap: () {
-                    if (isUserSignedIn) {
+                    if (isUserSignedIn != null && isUserSignedIn!) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -106,8 +98,8 @@ class OffersSearchView extends StatelessWidget {
           stream: _bloc.communityCategory,
           onTap: (value) {
             _bloc.onCommunityCategoryChanged(value.id);
-            Provider.of<ScrollController>(context, listen: false).animateTo(
-              0.0,
+            Provider.of<ScrollController>(context, listen: false)?.animateTo(
+              0,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeOut,
             );
