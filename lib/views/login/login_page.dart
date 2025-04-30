@@ -1084,7 +1084,9 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => SplashView(),
+        builder: (context) => ExplorePage(
+          isUserSignedIn: true,
+        ),
       ),
     );
   }
