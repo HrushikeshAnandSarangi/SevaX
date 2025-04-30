@@ -240,11 +240,13 @@ class _OffersTabViewState extends State<OffersTabView> {
   }
 
   void _navigateToOfferDetails(OfferModel model) {
+    final bloc =
+        BlocProvider.of<HomeDashBoardBloc>(context) ?? HomeDashBoardBloc();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_context) => BlocProvider(
-            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+            bloc: bloc,
             child: OfferDetailsRouter(
               offerModel: model,
               comingFrom: ComingFrom.Elasticsearch,

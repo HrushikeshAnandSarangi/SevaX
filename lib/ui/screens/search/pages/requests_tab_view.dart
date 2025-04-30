@@ -125,7 +125,8 @@ class RequestsTabView extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (_context) => BlocProvider(
-              bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+              bloc:
+                  HomeDashBoardBloc(), // Create new instance instead of trying to access existing one
               child: RequestTabHolder(
                 isAdmin: true,
                 communityModel: communityModel,
@@ -138,7 +139,8 @@ class RequestsTabView extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (_context) => BlocProvider(
-              bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+              bloc:
+                  HomeDashBoardBloc(), // Create new instance instead of trying to access existing one
               child: RequestDetailsAboutPage(
                 requestItem: requestModel,
                 timebankModel: timebankModel,
