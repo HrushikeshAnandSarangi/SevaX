@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextButton extends StatelessWidget {
   const CustomTextButton({
     Key? key,
-    required this.onPressed,
+    this.onPressed,
     required this.child,
     this.color,
     this.shape,
@@ -11,7 +11,7 @@ class CustomTextButton extends StatelessWidget {
     this.padding,
   }) : super(key: key);
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Widget child;
   final Color? color;
   final OutlinedBorder? shape;
@@ -26,7 +26,7 @@ class CustomTextButton extends StatelessWidget {
         foregroundColor: textColor,
         // onSurface: Colors.black,
         // textStyle: TextStyle(color: textColor),
-        shape: shape,
+        shape: shape ?? StadiumBorder(),
         padding: padding ?? const EdgeInsets.fromLTRB(20, 0, 20, 0),
       ),
       onPressed: onPressed,
@@ -40,19 +40,19 @@ class CustomElevatedButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.child,
-    required this.color,
-    required this.shape,
-    required this.padding,
-    required this.elevation,
-    required this.textColor,
+    this.color,
+    this.shape,
+    this.padding,
+    this.elevation,
+    this.textColor,
   }) : super(key: key);
-  final Widget child;
-  final VoidCallback onPressed;
-  final Color color;
-  final OutlinedBorder shape;
-  final EdgeInsetsGeometry padding;
-  final double elevation;
-  final Color textColor;
+  final Widget? child;
+  final VoidCallback? onPressed;
+  final Color? color;
+  final OutlinedBorder? shape;
+  final EdgeInsetsGeometry? padding;
+  final double? elevation;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {

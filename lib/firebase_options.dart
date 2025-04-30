@@ -77,4 +77,5 @@ class DefaultFirebaseOptions {
     iosClientId: '1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com',
     iosBundleId: 'com.sevaexchange.app',
   );
+
 }
