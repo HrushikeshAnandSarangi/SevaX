@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:sevaexchange/ui/screens/feeds/share_feed_component/states/share_feed_screen.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_dashboard.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:universal_io/io.dart' as io;
 import 'dart:ui' as ui;
@@ -1084,11 +1085,7 @@ class _LoginPageState extends State<LoginPage> {
     logger.d("INSIDE PROCESS LOGIN ====");
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => ExplorePage(
-          isUserSignedIn: true,
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => HomeDashBoard()),
     );
   }
 
