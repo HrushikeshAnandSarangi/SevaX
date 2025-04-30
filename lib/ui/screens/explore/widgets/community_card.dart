@@ -33,7 +33,7 @@ class CommunityCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: SizedBox(
-          height: 100,
+          height: 40,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
