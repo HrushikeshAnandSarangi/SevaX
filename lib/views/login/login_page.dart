@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:sevaexchange/ui/screens/feeds/share_feed_component/states/share_feed_screen.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:universal_io/io.dart' as io;
 import 'dart:ui' as ui;
@@ -1084,9 +1085,7 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => ExplorePage(
-          isUserSignedIn: true,
-        ),
+        builder: (context) => ShareFeedsComponent(),
       ),
     );
   }
