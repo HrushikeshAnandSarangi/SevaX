@@ -1093,7 +1093,6 @@ class _RegisterPageState extends State<RegisterPage>
       // this._isDocumentBeingUploaded = true;
     });
     checkFileSize();
-    return null;
   }
 
   void checkFileSize() async {
