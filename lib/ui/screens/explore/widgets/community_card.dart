@@ -32,7 +32,8 @@ class CommunityCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: IntrinsicHeight(
+        child: SizedBox(
+          height: 100,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
