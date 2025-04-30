@@ -17,9 +17,10 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import '../../../../l10n/l10n.dart';
 
 class OffersSearchView extends StatelessWidget {
-  final bool? isUserSignedIn;
+  final bool isUserSignedIn;
 
-  const OffersSearchView({Key? key, this.isUserSignedIn}) : super(key: key);
+  const OffersSearchView({Key? key, this.isUserSignedIn = false})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
