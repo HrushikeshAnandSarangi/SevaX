@@ -934,6 +934,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                           final community =
                                               snapshot.data![index];
                                           return ExploreFeaturedCard(
+                                            padding: const EdgeInsets.all(8.0),
                                             imageUrl: community.logo_url ?? '',
                                             communityName: community.name ?? '',
                                             onTap: () {

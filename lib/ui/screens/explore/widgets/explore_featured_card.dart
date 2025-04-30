@@ -9,25 +9,25 @@ class ExploreFeaturedCard extends StatelessWidget {
     this.communityName,
     this.textStyle,
     this.onTap,
-    //this.padding,
+    required this.padding,
   }) : super(key: key);
 
   final VoidCallback? onTap;
   final String? imageUrl;
   final String? communityName;
   final TextStyle? textStyle;
-  //final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 0, right: 10),
+      padding: padding,
       child: InkWell(
         onTap: onTap,
-        child: SizedBox(
-          height: 300,
-          width: 150,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.4,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(3.0),
