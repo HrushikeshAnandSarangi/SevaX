@@ -30,11 +30,19 @@ class OffersSearchView extends StatelessWidget {
         StreamBuilder<List<OfferModel>>(
           stream: _bloc.offers,
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
             }
-            if (snapshot.data == null || snapshot.data!.isEmpty) {
-              return Text(S.of(context).no_result_found);
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(S.of(context).no_result_found),
+                ),
+              );
             }
 
             return ListView.builder(
@@ -46,7 +54,7 @@ class OffersSearchView extends StatelessWidget {
                 // var date = DateTime.fromMillisecondsSinceEpoch(offer.timestamp);
                 return ExploreEventCard(
                   onTap: () {
-                    if (isUserSignedIn ?? false) {
+                    if (isUserSignedIn) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
