@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:uni_links/uni_links.dart';
 import 'package:universal_io/io.dart' as io;
 import 'dart:ui' as ui;
-
+import 'package:flutter/foundation.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
@@ -95,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Container(
         width: 120,
         height: 1.0,
-        color: Colors.black26.withOpacity(.2),
+        color: Colors.black26.withAlpha(51), // 0.2 * 255 ≈ 51
       ));
   @override
   Widget build(BuildContext context) {
@@ -132,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
     // ScreenUtil.init(context);
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     // getDynamicLinkData(context);
-    fetchBulkInviteLinkData();
+    handleBulkInviteLinkData();
 
     bool textLengthCalculator(TextSpan span, size) {
       // Use a textpainter to determine if it will exceed max lines
@@ -506,7 +507,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         onPressed: isLoading
-                            ? null!
+                            ? null
                             : () async {
                                 var connResult =
                                     await Connectivity().checkConnectivity();
@@ -545,7 +546,7 @@ class _LoginPageState extends State<LoginPage> {
             ignoring: true,
             child: isLoading
                 ? Container(
-                    color: Colors.grey.withOpacity(0.5),
+                    color: Colors.grey.withAlpha(128), // 0.5 * 255 ≈ 128
                     child: Center(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -912,8 +913,8 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
-    } on Exception catch (error) {
-      // FirebaseCrashlytics.instance.log(error.toString());
+    } on Exception {
+      // Handle exception silently
     }
     isLoading = false;
     if (user != null) {
@@ -946,6 +947,7 @@ class _LoginPageState extends State<LoginPage> {
     Auth auth = seva_auth_provider.AuthProvider.of(context).auth;
     UserModel? user;
     try {
+      // Use same method for both web and mobile
       user = await auth.handleGoogleSignIn();
       logger.d("#user ${user}");
       if (user != null) {
@@ -1078,10 +1080,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _processLogin(UserModel userModel) {
-    if (userModel == null) {
-      return;
-    }
-
     logger.d("INSIDE PROCESS LOGIN ====");
 
     Navigator.of(context).pushReplacement(
@@ -1136,7 +1134,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void showPaymentPolicyPage() {
+  Future<void> showPaymentPolicyPage() async {
     var dynamicLinks = json.decode(
       AppConfig.remoteConfig!.getString(
         "links_" + S.of(context).localeName,
@@ -1148,50 +1146,39 @@ class _LoginPageState extends State<LoginPage> {
           urlToHit: dynamicLinks['paymentPolicyLink']),
       context: context,
     );
-  }
-
-  Future<void> fetchBulkInviteLinkData() async {
-    // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
-    var link = await FirebaseDynamicLinks.instance.getInitialLink();
-
-    //buildContext = context;
-    // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-    await handleBulkInviteLinkData(data: link!);
-    FirebaseDynamicLinks.instance.onLink.listen(
-      (PendingDynamicLinkData dynamicLink) async {
-        await handleBulkInviteLinkData(
-          data: dynamicLink,
-        );
-      },
-      onError: (error) async {},
-    );
-
-    // This will handle incoming links if the application is already opened
-  }
-
-  Future<bool> handleBulkInviteLinkData({
-    PendingDynamicLinkData? data,
-  }) async {
-    final Uri uri = data!.link;
-    if (uri != null) {
-      final queryParams = uri.queryParameters;
-      if (queryParams.length > 0) {
-        String? invitedMemberEmail = queryParams["invitedMemberEmail"];
-
-        //   String communityId = queryParams["communityId"];
-        // String primaryTimebankId = queryParams["primaryTimebankId"];
-        if (queryParams.containsKey("isFromBulkInvite") &&
-            queryParams["isFromBulkInvite"] == 'true') {
-          resetDynamicLinkPassword(invitedMemberEmail!);
-        }
+    // Use uni_links package for deep linking
+    try {
+      // Get any initial link that opened the app
+      final initialLink = await getInitialLink();
+      if (initialLink != null) {
+        final uri = Uri.parse(initialLink);
+        await handleBulkInviteLinkData(uri: uri);
       }
+    } catch (e) {
+      logger.e('Error handling deep link: $e');
+    }
+    // final initialLink = await getInitialLink();
+    // if (initialLink != null) {
+    //   final uri = Uri.parse(initialLink);
+    //   await handleBulkInviteLinkData(uri: uri);
+    // }
+  }
+
+  Future<bool> handleBulkInviteLinkData({Uri? uri}) async {
+    if (uri == null) return false;
+
+    final queryParams = uri.queryParameters;
+    final String? invitedMemberEmail = queryParams["email"];
+    if (queryParams.containsKey("isFromBulkInvite") &&
+        queryParams["isFromBulkInvite"] == 'true' &&
+        invitedMemberEmail != null) {
+      resetDynamicLinkPassword(invitedMemberEmail);
+      return true;
     }
     return false;
   }
 
-  void resetDynamicLinkPassword(
-    String email,
-  ) async {
+  Future<void> resetDynamicLinkPassword(String email) async {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email)
         .then((onValue) {

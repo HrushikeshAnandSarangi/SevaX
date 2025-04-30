@@ -886,11 +886,17 @@ class _RegisterPageState extends State<RegisterPage>
     Auth auth = AuthProvider.of(context).auth;
 
     try {
-      UserModel user = await auth.createUserWithEmailAndPassword(
+      UserModel? result = await auth.createUserWithEmailAndPassword(
         email: email.toLowerCase(),
         password: password!,
         displayName: fullName,
       );
+
+      if (result == null) {
+        throw Exception('Failed to create user');
+      }
+
+      UserModel user = result;
 
       user.photoURL = imageUrl!;
 

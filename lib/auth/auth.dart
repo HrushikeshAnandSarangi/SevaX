@@ -25,65 +25,71 @@ class Auth {
     GoogleSignInAccount? googleUser;
     try {
       googleUser = await _googleSignIn.signIn();
-    } on Exception catch (error) {
-      // FirebaseCrashlytics.instance.log(error.toString());
-      error;
     } catch (error) {
       log('Google sign in exception. Error: ${error.toString()}');
+      return null;
     }
 
     if (googleUser == null) return null;
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    AuthCredential credential = GoogleAuthProvider.credential(
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    //UserCredential user = await _firebaseAuth.signInWithCredential(credential);
-
-//    User user = (await _firebaseAuth.signInWithCredential(
-//      credential,
-//    )) as User;
-//
-//    return _processGoogleUser(user);
-    UserCredential _result =
+    UserCredential result =
         await _firebaseAuth.signInWithCredential(credential);
 
-    if (_result.user == null) return null;
-    return await _processGoogleUser(_result.user!);
+    return _processGoogleUser(result.user);
   }
 
   Future<UserModel?> signInWithApple() async {
-    if (await SignInWithApple.isAvailable()) {
-      final AuthorizationCredentialAppleID credential =
-          await SignInWithApple.getAppleIDCredential(
+    try {
+      // Check if Apple Sign In is available on this device
+      final isAvailable = await SignInWithApple.isAvailable();
+      if (!isAvailable) {
+        return null;
+      }
+
+      // Request credentials
+      final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
       );
+
+      // Create OAuthCredential
       final oAuthProvider = OAuthProvider('apple.com');
-      final AuthCredential authCredential = oAuthProvider.credential(
+      final authCredential = oAuthProvider.credential(
         idToken: credential.identityToken,
         accessToken: credential.authorizationCode,
       );
-      UserCredential _result =
-          await _firebaseAuth.signInWithCredential(authCredential);
 
-      if (_result.user == null) return null;
-      return _processGoogleUser(
-        _result.user!,
-        name: nameBuilder(credential.givenName ?? '') +
-            nameBuilder(credential.familyName ?? ''),
-      );
-    } else {
+      // Sign in to Firebase with the credential
+      final result = await _firebaseAuth.signInWithCredential(authCredential);
+
+      // Build name from credential
+      String? fullName;
+      if (credential.givenName != null) {
+        fullName =
+            '${credential.givenName ?? ''} ${credential.familyName ?? ''}'
+                .trim();
+        fullName = fullName.isNotEmpty ? fullName : null;
+      }
+
+      return _processGoogleUser(result.user, name: fullName);
+    } catch (error) {
+      log('Apple sign in error: ${error.toString()}');
       return null;
     }
   }
 
-  String nameBuilder(String text) {
-    return text != null ? ' $text ' : '';
+  String? nameBuilder(String? text) {
+    return text != null ? ' $text ' : null;
   }
 
   /// SignIn a User with his [email] and [password]
@@ -91,48 +97,41 @@ class Auth {
     required String email,
     required String password,
   }) async {
-    late UserCredential result;
     try {
-      result = await _firebaseAuth.signInWithEmailAndPassword(
+      final result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email.toLowerCase(),
         password: password,
       );
-      if (result.user == null) return null;
-      return _processGoogleUser(result.user!);
-    } on Exception catch (error) {
-      // FirebaseCrashlytics.instance.log(error.toString());
-      throw error;
+      return _processGoogleUser(result.user);
     } catch (error) {
-      //FirebaseCrashlytics.instance.log(error.toString());
-      return null;
+      log('Sign in error: ${error.toString()}');
+      rethrow;
     }
   }
 
   /// Register a User with [email] and [password]
-  Future<UserModel> createUserWithEmailAndPassword({
+  Future<UserModel?> createUserWithEmailAndPassword({
     required String email,
     required String password,
     required String displayName,
   }) async {
     try {
-      UserCredential result =
-          await _firebaseAuth.createUserWithEmailAndPassword(
+      final result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email.toLowerCase(),
         password: password,
       );
-      if (result.user == null) throw Exception('User registration failed');
-      return _processEmailPasswordUser(result.user!, displayName);
+      return _processEmailPasswordUser(result.user, displayName);
     } on FirebaseAuthException catch (error) {
       logger.i(
           "${error.code} ==================================================");
-      if (error.code == 'email-already-in-use')
-        // FirebaseCrashlytics.instance.log(error.toString());
+      if (error.code == 'email-already-in-use') {
         throw EmailAlreadyInUseException(
-            error.message ?? 'Email is already in use');
-      throw error;
+            error.message ?? 'Email already in use');
+      }
+      rethrow;
     } catch (error) {
-      log('createUserWithEmailAndPassword: error: ${error.toString()}');
-      throw Exception('Failed to create user: $error');
+      log('createUserWithEmailAndPassword error: ${error.toString()}');
+      return null;
     }
   }
 
@@ -141,15 +140,15 @@ class Auth {
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
     await PreferenceManager.logout();
-    return;
   }
 
   /// Returns the [UserModel] corresponding to the signed in user.
   Future<UserModel?> getLoggedInUser() async {
     User? user = _firebaseAuth.currentUser;
     if (user == null) return null;
+
     try {
-      UserModel loggedInUser = await FirestoreManager.getUserForId(
+      UserModel? loggedInUser = await FirestoreManager.getUserForId(
         sevaUserId: user.uid,
       );
       return loggedInUser;
@@ -159,15 +158,15 @@ class Auth {
     }
   }
 
-  Future<UserModel> _processEmailPasswordUser(
-    User user,
+  Future<UserModel?> _processEmailPasswordUser(
+    User? user,
     String displayName,
   ) async {
-    if (user == null) throw Exception('User cannot be null');
+    if (user == null) return null;
 
     UserModel userModel = UserModel(
-      photoURL: user.photoURL ?? '',
-      email: user.email?.toLowerCase() ?? '',
+      photoURL: user.photoURL,
+      email: user.email!.toLowerCase(),
       fullname: displayName,
       sevaUserID: user.uid,
     );
@@ -176,17 +175,20 @@ class Auth {
     return userModel;
   }
 
-  Future<UserModel> _processGoogleUser(User user, {String? name}) async {
+  Future<UserModel?> _processGoogleUser(User? user, {String? name}) async {
     if (user == null) {
-      throw Exception('User cannot be null');
+      return null;
+    }
+
+    if (user.email == null) {
+      log('Error: User email is null');
+      return null;
     }
 
     UserModel userModel = UserModel(
-      photoURL: user.photoURL ?? '',
-      fullname: (name != null && name.isNotEmpty)
-          ? name
-          : (user.displayName ?? 'Unknown User'),
-      email: user.email?.toLowerCase() ?? '',
+      photoURL: user.photoURL,
+      fullname: (name != null && name.isNotEmpty) ? name : user.displayName,
+      email: user.email!.toLowerCase(),
       sevaUserID: user.uid,
     );
     await _saveSignedInUser(userModel);
@@ -194,56 +196,64 @@ class Auth {
   }
 
   Future<bool> _saveSignedInUser(UserModel signedInUser) async {
-    UserModel _userDoc = await FirestoreManager.getUserForEmail(
-      emailAddress: signedInUser.email ?? '',
+    UserModel? _userDoc = await FirestoreManager.getUserForEmail(
+      emailAddress: signedInUser.email!,
     );
 
     if (_userDoc == null) {
       await _createUserDoc(signedInUser);
     }
 
-    // updating the sevaX global timebank community with user Id;
-    CommunityModel cmodel =
+    // updating the sevaX global timebank community with user Id
+    CommunityModel? cmodel =
         await FirestoreManager.getCommunityDetailsByCommunityId(
       communityId: FlavorConfig.values.timebankId,
     );
 
-    List<String> cmembers = cmodel.members;
-    if (!cmembers.contains(signedInUser.sevaUserID)) {
-      List<String> tbMembers = cmembers.map((m) => m).toList();
-      if (!tbMembers.contains(signedInUser.sevaUserID)) {
-        tbMembers.add(signedInUser.sevaUserID ?? '');
+    if (cmodel != null) {
+      List<String> cmembers = cmodel.members;
+      if (!cmembers.contains(signedInUser.sevaUserID)) {
+        List<String> tbMembers = cmembers.map((m) => m).toList();
+        if (!tbMembers.contains(signedInUser.sevaUserID)) {
+          tbMembers.add(signedInUser.sevaUserID!);
+        }
+        cmodel.members = tbMembers;
+        await FirestoreManager.updateCommunity(communityModel: cmodel);
       }
-      cmodel.members = tbMembers;
-      await FirestoreManager.updateCommunity(communityModel: cmodel);
     }
 
-    // updating the sevaX global timebank with user Id;
+    // updating the sevaX global timebank with user Id
     TimebankModel? model = await FirestoreManager.getTimeBankForId(
       timebankId: FlavorConfig.values.timebankId,
     );
-    if (model == null) {
-      throw Exception(
-          'TimebankModel not found for id: ${FlavorConfig.values.timebankId}');
-    }
-    List<String> members = model.members;
-    if (!members.contains(signedInUser.sevaUserID)) {
-      List<String> tbMembers = members.map((m) => m).toList();
-      if (!tbMembers.contains(signedInUser.sevaUserID) &&
-          signedInUser.sevaUserID != null) {
-        tbMembers.add(signedInUser.sevaUserID!);
+
+    if (model != null) {
+      List<String> members = model.members;
+      if (!members.contains(signedInUser.sevaUserID)) {
+        List<String> tbMembers = members.map((m) => m).toList();
+        if (!tbMembers.contains(signedInUser.sevaUserID)) {
+          tbMembers.add(signedInUser.sevaUserID!);
+        }
+        model.members = tbMembers;
+        await FirestoreManager.updateTimebank(timebankModel: model);
       }
-      model.members = tbMembers;
-      await FirestoreManager.updateTimebank(timebankModel: model);
     }
 
     return await PreferenceManager.setLoggedInUser(
-      userId: signedInUser.sevaUserID ?? '',
-      emailId: signedInUser.email ?? '',
+      userId: signedInUser.sevaUserID!,
+      emailId: signedInUser.email!,
     );
   }
 
-  Future _createUserDoc(UserModel userModel) async {
+  Future<void> _createUserDoc(UserModel userModel) async {
     await FirestoreManager.createUser(user: userModel);
   }
+}
+
+class EmailAlreadyInUseException implements Exception {
+  final String message;
+  EmailAlreadyInUseException(this.message);
+
+  @override
+  String toString() => 'EmailAlreadyInUseException: $message';
 }
