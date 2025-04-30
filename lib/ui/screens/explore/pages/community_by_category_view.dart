@@ -11,6 +11,8 @@ import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.d
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+// Import the ExploreCommunityCard (assumed to be in this file)
+import 'package:sevaexchange/ui/screens/explore/widgets/community_card.dart';
 
 class CommunityByCategoryView extends StatefulWidget {
   final CommunityCategoryModel model;
@@ -80,7 +82,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                   );
                 }
 
-                return communitiesWidget(
+                return _buildCommunitiesWidget(
                   snapshot.data as List<CommunityModel>,
                   widget.isUserSignedIn,
                 );
@@ -111,7 +113,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                   );
                 }
 
-                return communitiesWidget(
+                return _buildCommunitiesWidget(
                   snapshot.data as List<CommunityModel>,
                   widget.isUserSignedIn,
                   child: Padding(
@@ -134,23 +136,30 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
             ),
     );
   }
-}
 
-Widget communitiesWidget(
-    List<CommunityModel> communityList, bool isUserSignedIn,
-    {Widget? child}) {
-  return Column(
-    children: [
-      child ?? Container(),
-      ...List.generate(
-        communityList.length,
-        (index) {
-          return ExploreCommunityCard(
-            model: communityList[index],
-            isSignedUser: isUserSignedIn, //to be updated
-          );
-        },
-      ),
-    ],
-  );
+  // Move the communitiesWidget function inside the class
+  Widget _buildCommunitiesWidget(
+      List<CommunityModel> communityList, bool isUserSignedIn,
+      {Widget? child}) {
+    return Column(
+      children: [
+        child ?? Container(),
+        ...List.generate(
+          communityList.length,
+          (index) {
+            return ExploreCommunityCard(
+              model: communityList[index],
+              isSignedUser: isUserSignedIn,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _bloc?.dispose(); // Add disposal of the bloc if needed
+    super.dispose();
+  }
 }

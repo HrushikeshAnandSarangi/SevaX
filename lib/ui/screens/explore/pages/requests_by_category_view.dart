@@ -65,7 +65,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FutureBuilder(
+          FutureBuilder<List<RequestModel>>(
             future: requests,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -85,7 +85,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                   ],
                 );
               }
-              if (snapshot.data == null || (snapshot.data as List).isEmpty) {
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return WidgetWrapper(
                   categoryTitle: widget.model.title_en!,
                   page: 'Request Category',
@@ -108,10 +108,9 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: (snapshot.data as List).length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      var request =
-                          (snapshot.data as List<RequestModel>)[index];
+                      var request = snapshot.data![index];
                       // var date = DateTime.fromMillisecondsSinceEpoch(
                       //     request.requestStart);
                       return widget.isUserSignedIn
