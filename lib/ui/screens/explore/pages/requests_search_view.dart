@@ -65,9 +65,12 @@ class RequestsSearchView extends StatelessWidget {
                           }*/
                           return ExploreEventCard(
                             onTap: () {
-                              bool isAdmin = snapshot.data!.admins.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                              );
+                              bool isAdmin = snapshot.data?.admins.contains(
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID,
+                                  ) ??
+                                  false;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
