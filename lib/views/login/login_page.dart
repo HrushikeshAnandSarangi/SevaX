@@ -1085,11 +1085,8 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => ShareFeedsComponent(
-          feedToShare: null,
-          timebankId: null,
-          searchSegmentBloc: null,
-          loggedInUser: userModel,
+        builder: (context) => ExplorePage(
+          isUserSignedIn: true,
         ),
       ),
     );
