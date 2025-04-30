@@ -252,7 +252,11 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
-          onChanged: (int? value) {},
+          onChanged: (int? value) {
+            if (value != null) {
+              setState(() {});
+            }
+          },
           value: 0,
           icon: Icon(Icons.keyboard_arrow_down),
           iconEnabledColor: Theme.of(context).primaryColor,
@@ -443,7 +447,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                     stream: _bloc.distance,
                     builder: (context, snapshot) {
                       DistancType _type = snapshot.data!.type!;
-                      int _distance = _type == "km"
+                      int _distance = _type == DistancType.km
                           ? (snapshot.data?.distance ?? 0 / 1.609).round()
                           : (snapshot.data?.distance ?? 0).round();
                       return Container(

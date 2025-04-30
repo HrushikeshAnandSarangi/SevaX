@@ -577,7 +577,7 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                               SizedBox(height: 10),
                               Container(
-                                height: 520,
+                                height: 260,
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: (snapshot.data?.length ?? 0) > 6
@@ -776,7 +776,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             SizedBox(height: 20),
                             Container(
                               alignment: Alignment.centerLeft,
-                              height: 580,
+                              height: 290,
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: snapshot.data!.length > 6
@@ -925,7 +925,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     ),
                                     SizedBox(height: 20),
                                     Container(
-                                      height: 600,
+                                      height: 300,
                                       child: ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: snapshot.data?.length ?? 0,
